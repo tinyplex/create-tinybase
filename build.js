@@ -1,5 +1,5 @@
 import * as esbuild from "esbuild";
-import { chmod, rm, mkdir } from "fs/promises";
+import { chmod, rm, mkdir, readFile, writeFile } from "fs/promises";
 
 await rm("dist", { recursive: true, force: true });
 await mkdir("dist", { recursive: true });
@@ -18,5 +18,12 @@ await esbuild.build({
 });
 
 await chmod("dist/cli.js", 0o755);
+
+const pkg = JSON.parse(await readFile("package.json", "utf-8"));
+delete pkg.devDependencies;
+delete pkg.scripts;
+delete pkg.private;
+pkg.bin["create-tinybase"] = "./cli.js";
+await writeFile("dist/package.json", JSON.stringify(pkg, null, 2));
 
 console.log("✅ Built and minified CLI");

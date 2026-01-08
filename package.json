@@ -15,9 +15,10 @@
     "data",
     "react"
   ],
+  "private": true,
   "type": "module",
   "bin": {
-    "create-tinybase": "./dist/cli.js"
+    "create-tinybase": "./cli.js"
   },
   "scripts": {
     "build": "node build.js",
