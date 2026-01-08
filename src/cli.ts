@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import prompts from "prompts";
 import { cp, readFile, writeFile } from "fs/promises";
 import { join, dirname } from "path";
@@ -15,39 +13,49 @@ if (!nonInteractive) {
   console.log("🎉 Welcome to TinyBase!\n");
 }
 
+type Language = "typescript" | "javascript";
+type Framework = "react" | "vanilla";
+
+interface Answers {
+  projectName: string;
+  language: Language;
+  framework: Framework;
+}
+
 const questions = [
   {
-    type: "text",
-    name: "projectName",
+    type: "text" as const,
+    name: "projectName" as const,
     message: "Project name:",
     initial: "my-tinybase-app",
-    validate: (value) => (value.length > 0 ? true : "Project name is required"),
+    validate: (value: string) =>
+      value.length > 0 ? true : "Project name is required",
   },
   {
-    type: "select",
-    name: "language",
+    type: "select" as const,
+    name: "language" as const,
     message: "Language:",
     choices: [
-      { title: "TypeScript", value: "typescript" },
-      { title: "JavaScript", value: "javascript" },
+      { title: "TypeScript", value: "typescript" as Language },
+      { title: "JavaScript", value: "javascript" as Language },
     ],
     initial: 0,
   },
   {
-    type: "select",
-    name: "framework",
+    type: "select" as const,
+    name: "framework" as const,
     message: "Framework:",
     choices: [
-      { title: "React", value: "react" },
-      { title: "Vanilla", value: "vanilla" },
+      { title: "React", value: "react" as Framework },
+      { title: "Vanilla", value: "vanilla" as Framework },
     ],
     initial: 0,
   },
 ];
 
 // Map answers to template directories
-function getTemplateName(language, framework) {
-  const templates = {
+function getTemplateName(language: Language, framework: Framework): string {
+  const templates: Record<`${Language}-${Framework}`, string> = {
     "javascript-vanilla": "vite-tinybase",
     "javascript-react": "vite-tinybase-react",
     "typescript-vanilla": "vite-tinybase-ts",
@@ -89,7 +97,8 @@ async function main() {
   }
 
   const projectPath = join(process.cwd(), answers.projectName);
-  const templatePath = join(__dirname, "..", templateName);
+  // Go up two levels: dist -> create-tinybase -> tinyplex
+  const templatePath = join(__dirname, "..", "..", templateName);
 
   try {
     await createProject(projectPath, templatePath, answers);
@@ -102,12 +111,17 @@ async function main() {
       console.log(`  npm run dev`);
     }
   } catch (error) {
-    console.error("❌ Error creating project:", error.message);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("❌ Error creating project:", errorMessage);
     process.exit(1);
   }
 }
 
-async function createProject(projectPath, templatePath, config) {
+async function createProject(
+  projectPath: string,
+  templatePath: string,
+  config: Answers,
+) {
   // Copy template directory
   await cp(templatePath, projectPath, {
     recursive: true,

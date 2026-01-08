@@ -20,7 +20,7 @@ async function runCLI(projectName, language, framework) {
     const cli = spawn(
       "node",
       [
-        join(__dirname, "..", "cli.js"),
+        join(__dirname, "..", "dist", "cli.js"),
         "--non-interactive",
         "--project-name",
         projectName,
