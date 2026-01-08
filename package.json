@@ -1,0 +1,28 @@
+{
+  "name": "create-tinybase",
+  "version": "0.1.0",
+  "author": "jamesgpearce",
+  "repository": "github:tinyplex/tinybase",
+  "license": "MIT",
+  "homepage": "https://tinybase.org",
+  "description": "The CLI to build a new app using TinyBase, a reactive data store and sync engine.",
+  "keywords": [
+    "tiny",
+    "sync engine",
+    "local-first",
+    "reactive",
+    "state",
+    "data",
+    "react"
+  ],
+  "type": "module",
+  "bin": {
+    "create-tinybase": "./cli.js"
+  },
+  "dependencies": {
+    "prompts": "^2.4.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
