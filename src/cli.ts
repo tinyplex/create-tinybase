@@ -5,7 +5,6 @@ import {fileURLToPath} from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// Support non-interactive mode for testing
 const args = process.argv.slice(2);
 const nonInteractive = args.includes('--non-interactive');
 
@@ -53,7 +52,6 @@ const questions = [
   },
 ];
 
-// Map answers to template directories
 function getTemplateName(language: Language, framework: Framework): string {
   const templates: Record<`${Language}-${Framework}`, string> = {
     'javascript-vanilla': 'vite-tinybase',
@@ -68,7 +66,6 @@ async function main() {
   let answers;
 
   if (nonInteractive) {
-    // Parse command line arguments for testing
     const projectNameIndex = args.indexOf('--project-name');
     const languageIndex = args.indexOf('--language');
     const frameworkIndex = args.indexOf('--framework');
@@ -97,7 +94,6 @@ async function main() {
   }
 
   const projectPath = join(process.cwd(), answers.projectName);
-  // Go up two levels: dist -> create-tinybase -> tinyplex
   const templatePath = join(__dirname, '..', '..', templateName);
 
   try {
@@ -122,11 +118,9 @@ async function createProject(
   templatePath: string,
   config: Answers,
 ) {
-  // Copy template directory
   await cp(templatePath, projectPath, {
     recursive: true,
     filter: (src) => {
-      // Skip node_modules, .git, and lock files
       return (
         !src.includes('node_modules') &&
         !src.includes('.git') &&
@@ -136,7 +130,6 @@ async function createProject(
     },
   });
 
-  // Update package.json with new project name
   const pkgPath = join(projectPath, 'package.json');
   const pkg = JSON.parse(await readFile(pkgPath, 'utf-8'));
   pkg.name = config.projectName;

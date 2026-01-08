@@ -136,7 +136,6 @@ describe('create-tinybase', () => {
 
         expect(srcFiles.length).toBeGreaterThan(0);
 
-        // At least one source file should contain tinybase
         let hasTinybase = false;
         for (const file of srcFiles) {
           const content = await readFile(join(projectPath, file), 'utf-8');
