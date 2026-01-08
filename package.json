@@ -19,10 +19,16 @@
   "bin": {
     "create-tinybase": "./cli.js"
   },
+  "scripts": {
+    "test": "vitest run"
+  },
   "dependencies": {
     "prompts": "^2.4.2"
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "vitest": "^4.0.16"
   }
 }

@@ -7,7 +7,13 @@ import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-console.log("🎉 Welcome to TinyBase!\n");
+// Support non-interactive mode for testing
+const args = process.argv.slice(2);
+const nonInteractive = args.includes("--non-interactive");
+
+if (!nonInteractive) {
+  console.log("🎉 Welcome to TinyBase!\n");
+}
 
 const questions = [
   {
@@ -51,26 +57,50 @@ function getTemplateName(language, framework) {
 }
 
 async function main() {
-  const answers = await prompts(questions, {
-    onCancel: () => {
-      console.log("\n❌ Cancelled");
-      process.exit(0);
-    },
-  });
+  let answers;
+
+  if (nonInteractive) {
+    // Parse command line arguments for testing
+    const projectNameIndex = args.indexOf("--project-name");
+    const languageIndex = args.indexOf("--language");
+    const frameworkIndex = args.indexOf("--framework");
+
+    answers = {
+      projectName:
+        projectNameIndex !== -1
+          ? args[projectNameIndex + 1]
+          : "my-tinybase-app",
+      language: languageIndex !== -1 ? args[languageIndex + 1] : "typescript",
+      framework: frameworkIndex !== -1 ? args[frameworkIndex + 1] : "react",
+    };
+  } else {
+    answers = await prompts(questions, {
+      onCancel: () => {
+        console.log("\n❌ Cancelled");
+        process.exit(0);
+      },
+    });
+  }
 
   const templateName = getTemplateName(answers.language, answers.framework);
-  console.log(`\n📦 Creating your TinyBase app from ${templateName}...\n`);
+
+  if (!nonInteractive) {
+    console.log(`\n📦 Creating your TinyBase app from ${templateName}...\n`);
+  }
 
   const projectPath = join(process.cwd(), answers.projectName);
   const templatePath = join(__dirname, "..", templateName);
 
   try {
     await createProject(projectPath, templatePath, answers);
-    console.log("✅ Done!\n");
-    console.log(`Next steps:`);
-    console.log(`  cd ${answers.projectName}`);
-    console.log(`  npm install`);
-    console.log(`  npm run dev`);
+
+    if (!nonInteractive) {
+      console.log("✅ Done!\n");
+      console.log(`Next steps:`);
+      console.log(`  cd ${answers.projectName}`);
+      console.log(`  npm install`);
+      console.log(`  npm run dev`);
+    }
   } catch (error) {
     console.error("❌ Error creating project:", error.message);
     process.exit(1);
