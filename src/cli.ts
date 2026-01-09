@@ -170,7 +170,7 @@ const config = {
   },
 };
 
-createCLI(config).catch((error) => {
+createCLI(config).catch((error: unknown) => {
   console.error(error);
   process.exit(1);
 });
