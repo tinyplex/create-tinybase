@@ -28,7 +28,9 @@
     "ts": "tsc --noEmit",
     "prettier": "prettier --check .",
     "lint": "eslint .",
-    "test": "npm run build && vitest run",
+    "test": "npm run build && vitest run --exclude test/e2e.test.js",
+    "test:e2e": "npm run build && vitest run test/e2e.test.js",
+    "test:manual": "npm run build && ./test/manual-test.sh",
     "prePublishPackage": "npm run ts && npm run prettier && npm run lint && npm run test"
   },
   "dependencies": {
@@ -46,6 +48,7 @@
     "globals": "^16.5.0",
     "prettier": "^3.7.4",
     "prettier-plugin-organize-imports": "^4.3.0",
+    "puppeteer": "^24.0.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.51.0",
     "vitest": "^4.0.16"

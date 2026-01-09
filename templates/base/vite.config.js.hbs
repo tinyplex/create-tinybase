@@ -1,10 +1,10 @@
 {{addImport "import {defineConfig} from 'vite';"}}
-{{#if isReact}}
+{{#if react}}
   {{addImport "import react from '@vitejs/plugin-react';"}}
 {{/if}}
 
 export default defineConfig({
-{{#if isReact}}
+{{#if react}}
   plugins: [react()],
 {{/if}}
 });

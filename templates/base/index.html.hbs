@@ -10,6 +10,19 @@
 <body>
   {{#if react}}
     <div id="app"></div>
+  {{else}}
+    <h1>TinyBase</h1>
+    <div class="buttons">
+      <button id="countButton">Count</button>
+      <button id="randomButton">Random</button>
+      <button id="addPetButton">Add Pet</button>
+    </div>
+    <div class="display">
+      <h2>Values</h2>
+      <pre id="valuesJson"></pre>
+      <h2>Tables</h2>
+      <pre id="tablesJson"></pre>
+    </div>
   {{/if}}
   <script type="module" src="/src/index.{{ext}}"></script>
 </body>
