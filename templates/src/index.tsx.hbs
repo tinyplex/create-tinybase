@@ -1,15 +1,15 @@
-/// addImport("import './index.css';");
+{{addImport "import './index.css';"}}
 
-/// IF context.isReact
-/// addImport("import ReactDOM from 'react-dom/client';");
-/// addImport("import {App} from './App';");
+{{#if isReact}}
+{{addImport "import ReactDOM from 'react-dom/client';"}}
+{{addImport "import {App} from './App';"}}
 
 addEventListener('load', () =>
   ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
 );
 
-/// ELSE
-/// addImport("import {createStore} from 'tinybase';");
+{{else}}
+{{addImport "import {createStore} from 'tinybase';"}}
 
 const onClick = (id: string, onClick: () => void) =>
   document.getElementById(id)!.addEventListener('click', onClick);
@@ -45,4 +45,4 @@ addEventListener('load', () => {
       parrot: {price: 3},
     });
 });
-/// ENDIF
+{{/if}}

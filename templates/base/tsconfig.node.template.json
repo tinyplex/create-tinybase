@@ -1,1 +1,0 @@
-/// return JSON.stringify({compilerOptions: {module: 'ESNext', moduleResolution: 'bundler', allowSyntheticDefaultImports: true, strict: true, skipLibCheck: true}}, null, 2);

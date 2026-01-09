@@ -93,27 +93,27 @@ const config = {
 
     const files = [
       {
-        template: 'base/package.template.json',
+        template: 'base/package.json.hbs',
         output: 'package.json',
         prettier: true,
       },
       {
-        template: 'base/index.template.html',
+        template: 'base/index.html.hbs',
         output: 'index.html',
         prettier: true,
       },
       {
-        template: 'base/README.template.md',
+        template: 'base/README.md.hbs',
         output: 'README.md',
         prettier: true,
       },
       {
-        template: 'src/index.template.css',
+        template: 'src/index.css.hbs',
         output: 'src/index.css',
         prettier: true,
       },
       {
-        template: 'src/index.template.tsx',
+        template: 'src/index.tsx.hbs',
         output: `src/index.${ext}`,
         prettier: true,
         transpile: true,
@@ -122,14 +122,14 @@ const config = {
 
     if (prettier) {
       files.push({
-        template: 'base/.prettierrc.template',
+        template: 'base/.prettierrc.hbs',
         output: '.prettierrc',
       });
     }
 
     if (eslint) {
       files.push({
-        template: 'base/eslint.config.template.js',
+        template: 'base/eslint.config.js.hbs',
         output: 'eslint.config.js',
         prettier: true,
       });
@@ -138,13 +138,13 @@ const config = {
     if (isReact) {
       files.push(
         {
-          template: 'src/App.template.tsx',
+          template: 'src/App.tsx.hbs',
           output: `src/App.${ext}`,
           prettier: true,
           transpile: true,
         },
         {
-          template: 'base/vite.config.template.js',
+          template: 'base/vite.config.js.hbs',
           output: 'vite.config.js',
           prettier: true,
         },
@@ -153,9 +153,9 @@ const config = {
 
     if (isTypescript) {
       files.push(
-        {template: 'base/tsconfig.template.json', output: 'tsconfig.json'},
+        {template: 'base/tsconfig.json.hbs', output: 'tsconfig.json'},
         {
-          template: 'base/tsconfig.node.template.json',
+          template: 'base/tsconfig.node.json.hbs',
           output: 'tsconfig.node.json',
         },
       );

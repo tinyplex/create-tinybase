@@ -6,9 +6,9 @@
     <title>TinyBase</title>
   </head>
   <body>
-/// IF context.isReact
+{{#if isReact}}
     <div id="app"></div>
-/// ENDIF
-    <script type="module" src="/src/index./*/ context.ext /*/"></script>
+{{/if}}
+    <script type="module" src="/src/index.{{ext}}"></script>
   </body>
 </html>

@@ -4,7 +4,7 @@ exports[`create-tinybase > js-react > should match snapshot 1`] = `
 {
   "README.md": "# test-js-react
 
-A TinyBase app built with JavaScript and /_/ context.isReact ? 'React' : 'Vanilla JS' /_/.
+A TinyBase app built with JavaScript and React.
 
 ## Getting Started
 
@@ -103,7 +103,7 @@ exports[`create-tinybase > js-vanilla > should match snapshot 1`] = `
 {
   "README.md": "# test-js-vanilla
 
-A TinyBase app built with JavaScript and /_/ context.isReact ? 'React' : 'Vanilla JS' /_/.
+A TinyBase app built with JavaScript and Vanilla JS.
 
 ## Getting Started
 
@@ -188,7 +188,7 @@ exports[`create-tinybase > ts-react > should match snapshot 1`] = `
 {
   "README.md": "# test-ts-react
 
-A TinyBase app built with TypeScript and /_/ context.isReact ? 'React' : 'Vanilla JS' /_/.
+A TinyBase app built with TypeScript and React.
 
 ## Getting Started
 
@@ -281,11 +281,7 @@ addEventListener('load', () =>
     "target": "ES2020",
     "useDefineForClassFields": true,
     "module": "ESNext",
-    "lib": [
-      "ES2020",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -299,9 +295,7 @@ addEventListener('load', () =>
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }
 ",
   "tsconfig.node.json": "{
@@ -328,7 +322,7 @@ exports[`create-tinybase > ts-vanilla > should match snapshot 1`] = `
 {
   "README.md": "# test-ts-vanilla
 
-A TinyBase app built with TypeScript and /_/ context.isReact ? 'React' : 'Vanilla JS' /_/.
+A TinyBase app built with TypeScript and Vanilla JS.
 
 ## Getting Started
 
@@ -420,11 +414,7 @@ addEventListener('load', () => {
     "target": "ES2020",
     "useDefineForClassFields": true,
     "module": "ESNext",
-    "lib": [
-      "ES2020",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -437,9 +427,7 @@ addEventListener('load', () => {
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }
 ",
   "tsconfig.node.json": "{

@@ -1,19 +1,20 @@
+{{#if isTypescript}}{{addImport "import tseslint from 'typescript-eslint';"}}{{/if}}
+{{#if isReact}}{{addImport "import pluginReact from 'eslint-plugin-react';"}}{{/if}}
+{{#if isReact}}{{addImport "import pluginReactHooks from 'eslint-plugin-react-hooks';"}}{{/if}}
+
 export default [
-  /// IF context.isTypescript
-  /// addImport("import tseslint from 'typescript-eslint';");
+{{#if isTypescript}}
   ...tseslint.configs.recommended,
-  /// ELSE
+{{else}}
   {
     rules: {
       'no-unused-vars': 'warn',
       'no-undef': 'error',
     },
   },
-  /// ENDIF
+{{/if}}
 
-  /// IF context.isReact
-  /// addImport("import pluginReact from 'eslint-plugin-react';");
-  /// addImport("import pluginReactHooks from 'eslint-plugin-react-hooks';");
+{{#if isReact}}
   pluginReact.configs.flat.recommended,
   {
     plugins: {
@@ -29,5 +30,5 @@ export default [
       },
     },
   },
-  /// ENDIF
+{{/if}}
 ];
