@@ -1,24 +1,35 @@
 {{addImport "import {createStore} from 'tinybase';"}}
 {{addImport "import {Provider, useValue} from 'tinybase/ui-react';"}}
 
-const store = createStore().setValue('count', 0);
+const store = createStore().setValue('counter', 0);
 
 export const App = () => (
 <Provider store={store}>
-  <h1>TinyBase + React</h1>
-  <Counter />
+  <header>
+    <h1>
+      <img src="/favicon.svg" />
+      TinyBase / {{#if typescript}}TypeScript{{else}}JavaScript{{/if}} + React
+    </h1>
+  </header>
+  <p>
+    This is more or less the simplest TinyBase app you could imagine. It
+    contains a handful of key-values and tables which are mutated with the
+    buttons below. See the full set of{' '}
+    <a href="https://tinybase.org/demos/">TinyBase demos</a> for more
+    interesting examples!
+  </p>
+  <div id="buttons">
+    <Counter />
+  </div>
 </Provider>
 );
 
 const Counter = () => {
-const count = useValue('count', store);
+const counter = useValue('counter', store);
 
 return (
-<div>
-  <p>Count: {count}</p>
-  <button onClick={()=> store.setValue('count', (c: number) => c + 1)}>
-    Increment
-  </button>
-</div>
+<button onClick={()=> store.setValue('counter', (c: number) => c + 1)}>
+  Increment counter: {counter}
+</button>
 );
 };

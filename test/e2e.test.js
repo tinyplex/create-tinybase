@@ -195,7 +195,8 @@ async function checkPageLoads(port, framework) {
       expect(hasReactRoot).toBe(true);
 
       const hasReactContent = await page.evaluate(() =>
-        document.body.textContent.includes('TinyBase + React'),
+        document.body.textContent.includes('TinyBase') &&
+        document.body.textContent.includes('React'),
       );
       expect(hasReactContent).toBe(true);
     }
