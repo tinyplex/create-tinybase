@@ -4,22 +4,22 @@ The create-tinybase CLI now has a flexible, scalable template system that suppor
 
 ## Features
 
-### 1. Template Directives with `///`
+### 1. Template Directives with `///` and `/*/`
 
-Templates use triple-slash comments (`///`) to execute JavaScript code during generation:
+Templates use special comment syntax to execute JavaScript code during generation:
 
-**Start-of-line directives:**
+**Start-of-line directives** use triple-slash (`///`):
 
 ```typescript
 /// if (context.isReact) addImport("import React from 'react';");
 /// return when(context.isTypescript, 'const typed: string = "yes";');
 ```
 
-**Inline directives:**
+**Inline directives** use comment-slash markers (`/*/ ... /*/`):
 
 ```typescript
-const ext = "/// return context.ext;";
-const name = /// return context.projectName;
+const ext = "/*/ return context.ext; /*/";
+const name = /*/ return context.projectName; /*/
 ```
 
 ### 2. Context Access

@@ -7,6 +7,6 @@
   </head>
   <body>
     /// return when(context.isReact, '<div id="app"></div>');
-    <script type="module" src="/src/index./// return context.ext;"></script>
+    <script type="module" src="/src/index./*/ return context.ext; /*/"></script>
   </body>
 </html>

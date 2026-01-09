@@ -40,7 +40,7 @@ const Counter = () => {
 exports[`template files > js-react > should generate README.md 1`] = `
 "# test-js-react
 
-A TinyBase app built with JavaScript and /// return context.isReact ? 'React' : 'Vanilla JS';.
+A TinyBase app built with JavaScript and /_/ return context.isReact ? 'React' : 'Vanilla JS'; /_/.
 
 ## Getting Started
 
@@ -136,7 +136,7 @@ exports[`template files > js-vanilla > should generate .prettierrc 1`] = `
 exports[`template files > js-vanilla > should generate README.md 1`] = `
 "# test-js-vanilla
 
-A TinyBase app built with JavaScript and /// return context.isReact ? 'React' : 'Vanilla JS';.
+A TinyBase app built with JavaScript and /_/ return context.isReact ? 'React' : 'Vanilla JS'; /_/.
 
 ## Getting Started
 
@@ -283,7 +283,7 @@ const Counter = () => {
 exports[`template files > ts-react > should generate README.md 1`] = `
 "# test-ts-react
 
-A TinyBase app built with TypeScript and /// return context.isReact ? 'React' : 'Vanilla JS';.
+A TinyBase app built with TypeScript and /_/ return context.isReact ? 'React' : 'Vanilla JS'; /_/.
 
 ## Getting Started
 
@@ -427,7 +427,7 @@ exports[`template files > ts-vanilla > should generate .prettierrc 1`] = `
 exports[`template files > ts-vanilla > should generate README.md 1`] = `
 "# test-ts-vanilla
 
-A TinyBase app built with TypeScript and /// return context.isReact ? 'React' : 'Vanilla JS';.
+A TinyBase app built with TypeScript and /_/ return context.isReact ? 'React' : 'Vanilla JS'; /_/.
 
 ## Getting Started
 

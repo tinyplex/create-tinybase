@@ -92,8 +92,8 @@ export class TemplateEngine {
           processedLines.push(result);
         }
       } else {
-        // Check for inline directives (/// ... within the line)
-        const directiveRegex = /\/\/\/\s*(.+?);/g;
+        // Check for inline directives (/*/ ... /*/ within the line)
+        const directiveRegex = /\/\*\/\s*(.+?)\s*\/\*\//g;
         let match;
         while ((match = directiveRegex.exec(line)) !== null) {
           const directive = match[1].trim();

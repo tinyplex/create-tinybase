@@ -10,7 +10,7 @@ exports[`create-tinybase > js-react > should match snapshot 1`] = `
 ",
   "README.md": "# test-js-react
 
-A TinyBase app built with JavaScript and /// return context.isReact ? 'React' : 'Vanilla JS';.
+A TinyBase app built with JavaScript and /_/ return context.isReact ? 'React' : 'Vanilla JS'; /_/.
 
 ## Getting Started
 
@@ -115,7 +115,7 @@ exports[`create-tinybase > js-vanilla > should match snapshot 1`] = `
 ",
   "README.md": "# test-js-vanilla
 
-A TinyBase app built with JavaScript and /// return context.isReact ? 'React' : 'Vanilla JS';.
+A TinyBase app built with JavaScript and /_/ return context.isReact ? 'React' : 'Vanilla JS'; /_/.
 
 ## Getting Started
 
@@ -221,7 +221,7 @@ exports[`create-tinybase > ts-react > should match snapshot 1`] = `
 ",
   "README.md": "# test-ts-react
 
-A TinyBase app built with TypeScript and /// return context.isReact ? 'React' : 'Vanilla JS';.
+A TinyBase app built with TypeScript and /_/ return context.isReact ? 'React' : 'Vanilla JS'; /_/.
 
 ## Getting Started
 
@@ -368,7 +368,7 @@ exports[`create-tinybase > ts-vanilla > should match snapshot 1`] = `
 ",
   "README.md": "# test-ts-vanilla
 
-A TinyBase app built with TypeScript and /// return context.isReact ? 'React' : 'Vanilla JS';.
+A TinyBase app built with TypeScript and /_/ return context.isReact ? 'React' : 'Vanilla JS'; /_/.
 
 ## Getting Started
 
