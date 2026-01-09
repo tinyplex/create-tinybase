@@ -16,14 +16,7 @@ const Counter = () => {
   return (
     <div>
       <p>Count: {count}</p>
-      <button
-        onClick={() =>
-          store.setValue(
-            'count',
-            (c /*/ return when(context.isTypescript, ': number'); /*/) => c + 1,
-          )
-        }
-      >
+      <button onClick={() => store.setValue('count', (c: number) => c + 1)}>
         Increment
       </button>
     </div>

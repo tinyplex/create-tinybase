@@ -13,6 +13,7 @@ exports[`template files > js-react > should generate App.jsx 1`] = `
 "import {createStore} from 'tinybase';
 import {Provider, useValue} from 'tinybase/ui-react';
 
+
 const store = createStore().setValue('count', 0);
 
 export const App = () => (
@@ -28,7 +29,7 @@ const Counter = () => {
   return (
     <div>
       <p>Count: {count}</p>
-      <button onClick={() => store.setValue('count', (c) => c + 1)}>
+      <button onClick={() => store.setValue('count', (c: number) => c + 1)}>
         Increment
       </button>
     </div>
@@ -85,9 +86,11 @@ exports[`template files > js-react > should generate index.jsx 1`] = `
 import ReactDOM from 'react-dom/client';
 import {App} from './App';
 
+
 addEventListener('load', () =>
-  ReactDOM.createRoot(document.getElementById('app')).render(<App />),
+  ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
 );
+
 "
 `;
 
@@ -179,13 +182,15 @@ exports[`template files > js-vanilla > should generate index.js 1`] = `
 "import './index.css';
 import {createStore} from 'tinybase';
 
+
+
 // Convenience function for attaching an action to a button
-const onClick = (id, onClick) =>
-  document.getElementById(id).addEventListener('click', onClick);
+const onClick = (id: string, onClick: () => void) =>
+  document.getElementById(id)!.addEventListener('click', onClick);
 
 // Convenience function for writing out pretty JSON into an element
-const updateJson = (id, content) =>
-  (document.getElementById(id).innerText = JSON.stringify(content, null, 2));
+const updateJson = (id: string, content: unknown) =>
+  (document.getElementById(id)!.innerText = JSON.stringify(content, null, 2));
 
 // Convenience function for generating a random integer
 const getRandom = (max = 100) => Math.floor(Math.random() * max);

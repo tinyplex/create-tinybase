@@ -20,27 +20,7 @@ export async function postProcessFile(
   let processedContent = content;
   let processedPath = filePath;
 
-  // Prettier formatting
-  if (options.prettier) {
-    try {
-      const prettier = await import('prettier');
-      const prettierConfig = {
-        parser: inferParser(filePath),
-        singleQuote: true,
-        trailingComma: 'all' as const,
-        bracketSpacing: false,
-      };
-      processedContent = await prettier.format(
-        processedContent,
-        prettierConfig,
-      );
-    } catch (error) {
-      // If prettier fails, continue with unformatted content
-      console.warn(`Failed to format ${filePath}:`, error);
-    }
-  }
-
-  // Transpile TypeScript to JavaScript
+  // Transpile TypeScript to JavaScript FIRST (before prettier)
   if (options.transpileToJS && isTypeScriptFile(filePath)) {
     try {
       const result = await esbuild.transform(processedContent, {
@@ -54,6 +34,26 @@ export async function postProcessFile(
       throw new Error(
         `Failed to transpile ${filePath}: ${error instanceof Error ? error.message : String(error)}`,
       );
+    }
+  }
+
+  // Prettier formatting (after transpilation so it formats JS not TS)
+  if (options.prettier) {
+    try {
+      const prettier = await import('prettier');
+      const prettierConfig = {
+        parser: inferParser(processedPath),
+        singleQuote: true,
+        trailingComma: 'all' as const,
+        bracketSpacing: false,
+      };
+      processedContent = await prettier.format(
+        processedContent,
+        prettierConfig,
+      );
+    } catch (error) {
+      // If prettier fails, continue with unformatted content
+      console.warn(`Failed to format ${processedPath}:`, error);
     }
   }
 
