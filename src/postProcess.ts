@@ -21,10 +21,11 @@ export async function postProcessFile(
   let processedPath = filePath;
 
   // Transpile TypeScript to JavaScript FIRST (before prettier)
-  if (options.transpileToJS && isTypeScriptFile(filePath)) {
+  // Only transpile actual TypeScript/TSX files (not JSON, CSS, HTML, etc.)
+  if (options.transpileToJS && canTranspile(filePath)) {
     try {
       const result = await esbuild.transform(processedContent, {
-        loader: inferLoader(filePath),
+        loader: 'tsx', // Always use tsx loader since templates are TypeScript
         format: 'esm',
         target: 'es2020',
       });
@@ -83,6 +84,10 @@ export async function postProcessProject(
   }
 
   return processedFiles;
+}
+
+function canTranspile(filePath: string): boolean {
+  return /\.(tsx?|jsx?)$/.test(filePath);
 }
 
 function isTypeScriptFile(filePath: string): boolean {

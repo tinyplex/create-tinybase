@@ -59,29 +59,28 @@ npm run dev
 ",
   "src/App.jsx": "import {createStore} from 'tinybase';
 import {Provider, useValue} from 'tinybase/ui-react';
-
-
 const store = createStore().setValue('count', 0);
-
-export const App = () => (
-  <Provider store={store}>
-    <h1>TinyBase + React</h1>
-    <Counter />
-  </Provider>
-);
-
+const App = () =>
+  /* @__PURE__ */ React.createElement(
+    Provider,
+    {store},
+    /* @__PURE__ */ React.createElement('h1', null, 'TinyBase + React'),
+    /* @__PURE__ */ React.createElement(Counter, null),
+  );
 const Counter = () => {
   const count = useValue('count', store);
-
-  return (
-    <div>
-      <p>Count: {count}</p>
-      <button onClick={() => store.setValue('count', (c: number) => c + 1)}>
-        Increment
-      </button>
-    </div>
+  return /* @__PURE__ */ React.createElement(
+    'div',
+    null,
+    /* @__PURE__ */ React.createElement('p', null, 'Count: ', count),
+    /* @__PURE__ */ React.createElement(
+      'button',
+      {onClick: () => store.setValue('count', (c) => c + 1)},
+      'Increment',
+    ),
   );
 };
+export {App};
 ",
   "src/index.css": "body {
   font-family: system-ui;
@@ -91,19 +90,18 @@ const Counter = () => {
   "src/index.jsx": "import './index.css';
 import ReactDOM from 'react-dom/client';
 import {App} from './App';
-
-
 addEventListener('load', () =>
-  ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
+  ReactDOM.createRoot(document.getElementById('app')).render(
+    /* @__PURE__ */ React.createElement(App, null),
+  ),
 );
-
 ",
   "vite.config.js": "import react from '@vitejs/plugin-react';
 import {defineConfig} from 'vite';
-
-export default defineConfig({
+var stdin_default = defineConfig({
   plugins: [react()],
 });
+export {stdin_default as default};
 ",
 }
 `;
@@ -168,25 +166,13 @@ npm run dev
 ",
   "src/index.js": "import './index.css';
 import {createStore} from 'tinybase';
-
-
-
-// Convenience function for attaching an action to a button
-const onClick = (id: string, onClick: () => void) =>
-  document.getElementById(id)!.addEventListener('click', onClick);
-
-// Convenience function for writing out pretty JSON into an element
-const updateJson = (id: string, content: unknown) =>
-  (document.getElementById(id)!.innerText = JSON.stringify(content, null, 2));
-
-// Convenience function for generating a random integer
+const onClick = (id, onClick2) =>
+  document.getElementById(id).addEventListener('click', onClick2);
+const updateJson = (id, content) =>
+  (document.getElementById(id).innerText = JSON.stringify(content, null, 2));
 const getRandom = (max = 100) => Math.floor(Math.random() * max);
-
 addEventListener('load', () => {
-  // Create the TinyBase Store
   const store = createStore();
-
-  // Attach events to the buttons to mutate the data in the TinyBase Store
   onClick('countButton', () => store.setValue('counter', (value) => value + 1));
   onClick('randomButton', () => store.setValue('random', getRandom()));
   onClick('addPetButton', () =>
@@ -195,12 +181,8 @@ addEventListener('load', () => {
       species: store.getRowIds('species')[getRandom(5)],
     }),
   );
-
-  // Bind listeners to all Values and Tables in the Store to print the content
   store.addValuesListener(() => updateJson('valuesJson', store.getValues()));
   store.addTablesListener(() => updateJson('tablesJson', store.getTables()));
-
-  // Initialize the Store's data
   store
     .setValue('counter', 0)
     .setRow('pets', '0', {name: 'fido', species: 'dog'})
