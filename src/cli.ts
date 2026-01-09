@@ -115,6 +115,7 @@ const config = {
         template: 'src/index.tsx.hbs',
         output: `src/index.${ext}`,
         prettier: true,
+        transpile: !typescript,
       },
     ];
 
@@ -140,6 +141,7 @@ const config = {
           template: 'src/App.tsx.hbs',
           output: `src/App.${ext}`,
           prettier: true,
+          transpile: !typescript,
         },
         {
           template: 'base/vite.config.js.hbs',
@@ -150,18 +152,11 @@ const config = {
     }
 
     if (typescript) {
-      files.push(
-        {
-          template: 'base/tsconfig.json.hbs',
-          output: 'tsconfig.json',
-          prettier: true,
-        },
-        {
-          template: 'base/tsconfig.node.json.hbs',
-          output: 'tsconfig.node.json',
-          prettier: true,
-        },
-      );
+      files.push({
+        template: 'base/tsconfig.json.hbs',
+        output: 'tsconfig.json',
+        prettier: true,
+      });
     }
 
     return files;
