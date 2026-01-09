@@ -183,16 +183,8 @@ async function checkPageLoads(port, framework) {
     const bodyText = await page.evaluate(() => document.body.textContent);
     const html = await page.content();
 
-    if (title !== 'TinyBase') {
-      console.log(`\nTitle check failed for ${framework} on port ${port}`);
-      console.log(`Expected: "TinyBase", Got: "${title}"`);
-      console.log(`Console messages:`, consoleMessages);
-      console.log(`Console errors:`, consoleErrors);
-      console.log(`Page errors:`, pageErrors);
-      console.log(`HTML snippet:`, html.substring(0, 500));
-    }
-
-    expect(title).toBe('TinyBase');
+    // Title includes tech stack like "TinyBase / JavaScript" or "TinyBase / TypeScript + React"
+    expect(title).toContain('TinyBase');
     expect(bodyText).toContain('TinyBase');
 
     if (framework === 'react') {
