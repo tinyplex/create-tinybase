@@ -128,16 +128,16 @@ async function generateProject(
 
   // Process and write all template files
   const files: Array<{template: string; output: string; prettier?: boolean}> = [
-    {template: 'base/package.json.template', output: 'package.json'},
+    {template: 'base/package.template.json', output: 'package.json'},
     {
-      template: 'base/index.html.template',
+      template: 'base/index.template.html',
       output: 'index.html',
       prettier: true,
     },
-    {template: 'base/README.md.template', output: 'README.md', prettier: true},
+    {template: 'base/README.template.md', output: 'README.md', prettier: true},
     {template: 'base/.prettierrc.template', output: '.prettierrc'},
     {
-      template: 'src/index.css.template',
+      template: 'src/index.template.css',
       output: 'src/index.css',
       prettier: true,
     },
@@ -156,7 +156,7 @@ async function generateProject(
         prettier: true,
       },
       {
-        template: 'base/vite.config.js.template',
+        template: 'base/vite.config.template.js',
         output: 'vite.config.js',
         prettier: true,
       },
@@ -165,9 +165,9 @@ async function generateProject(
 
   if (isTypescript) {
     files.push(
-      {template: 'base/tsconfig.json.template', output: 'tsconfig.json'},
+      {template: 'base/tsconfig.template.json', output: 'tsconfig.json'},
       {
-        template: 'base/tsconfig.node.json.template',
+        template: 'base/tsconfig.node.template.json',
         output: 'tsconfig.node.json',
       },
     );

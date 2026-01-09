@@ -43,7 +43,7 @@ describe('template files', () => {
       it('should generate package.json', async () => {
         const engine = new TemplateEngine(context, './templates');
         const processed = await engine.processTemplate(
-          'base/package.json.template',
+          'base/package.template.json',
         );
 
         const {content} = await postProcessFile('package.json', processed, {
@@ -57,7 +57,7 @@ describe('template files', () => {
       it('should generate index.html', async () => {
         const engine = new TemplateEngine(context, './templates');
         const processed = await engine.processTemplate(
-          'base/index.html.template',
+          'base/index.template.html',
         );
 
         const {content} = await postProcessFile('index.html', processed, {
@@ -71,7 +71,7 @@ describe('template files', () => {
       it('should generate README.md', async () => {
         const engine = new TemplateEngine(context, './templates');
         const processed = await engine.processTemplate(
-          'base/README.md.template',
+          'base/README.template.md',
         );
 
         const {content} = await postProcessFile('README.md', processed, {
@@ -99,7 +99,7 @@ describe('template files', () => {
       it('should generate index.css', async () => {
         const engine = new TemplateEngine(context, './templates');
         const processed = await engine.processTemplate(
-          'src/index.css.template',
+          'src/index.template.css',
         );
 
         const {content} = await postProcessFile('index.css', processed, {
@@ -150,7 +150,7 @@ describe('template files', () => {
         it('should generate vite.config.js', async () => {
           const engine = new TemplateEngine(context, './templates');
           const processed = await engine.processTemplate(
-            'base/vite.config.js.template',
+            'base/vite.config.template.js',
           );
 
           const {content} = await postProcessFile('vite.config.js', processed, {
@@ -166,7 +166,7 @@ describe('template files', () => {
         it('should generate tsconfig.json', async () => {
           const engine = new TemplateEngine(context, './templates');
           const processed = await engine.processTemplate(
-            'base/tsconfig.json.template',
+            'base/tsconfig.template.json',
           );
 
           const {content} = await postProcessFile('tsconfig.json', processed, {
@@ -180,7 +180,7 @@ describe('template files', () => {
         it('should generate tsconfig.node.json', async () => {
           const engine = new TemplateEngine(context, './templates');
           const processed = await engine.processTemplate(
-            'base/tsconfig.node.json.template',
+            'base/tsconfig.node.template.json',
           );
 
           const {content} = await postProcessFile(
