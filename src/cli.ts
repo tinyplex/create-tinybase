@@ -21,7 +21,9 @@ const config = {
         }
         const targetPath = join(process.cwd(), value);
         if (existsSync(targetPath)) {
-          return `Directory "${value}" already exists. Please choose a different name.`;
+          return `Directory "${
+            value
+          }" already exists. Please choose a different name.`;
         }
         return true;
       },
@@ -113,7 +115,6 @@ const config = {
         template: 'src/index.tsx.hbs',
         output: `src/index.${ext}`,
         prettier: true,
-        transpile: true,
       },
     ];
 
@@ -139,7 +140,6 @@ const config = {
           template: 'src/App.tsx.hbs',
           output: `src/App.${ext}`,
           prettier: true,
-          transpile: true,
         },
         {
           template: 'base/vite.config.js.hbs',

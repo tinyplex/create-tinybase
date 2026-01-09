@@ -5,6 +5,8 @@
 
 export default defineConfig({
 {{#if react}}
-  plugins: [react()],
+  plugins: [react({
+    jsxRuntime: 'automatic',
+  })],
 {{/if}}
 });
