@@ -146,6 +146,18 @@ describe('create-tinybase', () => {
         }
         expect(hasTinybase).toBe(true);
       });
+
+      it('should match snapshot', async () => {
+        const files = await getFileList(projectPath);
+        const snapshot = {};
+
+        for (const file of files) {
+          const content = await readFile(join(projectPath, file), 'utf-8');
+          snapshot[file] = content;
+        }
+
+        expect(snapshot).toMatchSnapshot();
+      });
     });
   }
 });

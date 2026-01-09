@@ -1,0 +1,490 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`create-tinybase > js-react > should match snapshot 1`] = `
+{
+  ".prettierrc": "{
+  "bracketSpacing": false,
+  "singleQuote": true,
+  "trailingComma": "all"
+}",
+  "README.md": "# test-js-react
+
+A TinyBase app built with JavaScript and React.
+
+## Getting Started
+
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TinyBase</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/index.jsx"></script>
+  </body>
+</html>
+",
+  "package.json": "{
+  "name": "test-js-react",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.1.3",
+    "@vitejs/plugin-react": "^4.3.4"
+  },
+  "dependencies": {
+    "tinybase": "^6.6.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}",
+  "src/App.jsx": "import {createStore} from 'tinybase';
+import {Provider, useValue} from 'tinybase/ui-react';
+
+const store = createStore().setValue('count', 0);
+
+export const App = () => (
+  <Provider store={store}>
+    <h1>TinyBase + React</h1>
+    <Counter />
+  </Provider>
+);
+
+const Counter = () => {
+  const count = useValue('count', store);
+  
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={() => store.setValue('count', (c) => c + 1)}>
+        Increment
+      </button>
+    </div>
+  );
+};
+",
+  "src/index.css": "body {
+  font-family: system-ui;
+  padding: 2rem;
+}
+",
+  "src/index.jsx": "import './index.css';
+import ReactDOM from 'react-dom/client';
+import {App} from './App';
+
+addEventListener('load', () =>
+  ReactDOM.createRoot(document.getElementById('app')).render(<App />),
+);
+",
+  "vite.config.js": "import react from '@vitejs/plugin-react';
+import {defineConfig} from 'vite';
+
+export default defineConfig({
+  plugins: [react()],
+});
+",
+}
+`;
+
+exports[`create-tinybase > js-vanilla > should match snapshot 1`] = `
+{
+  ".prettierrc": "{
+  "bracketSpacing": false,
+  "singleQuote": true,
+  "trailingComma": "all"
+}",
+  "README.md": "# test-js-vanilla
+
+A TinyBase app built with JavaScript and Vanilla JS.
+
+## Getting Started
+
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TinyBase</title>
+  </head>
+  <body>
+    
+    <script type="module" src="/src/index.js"></script>
+  </body>
+</html>
+",
+  "package.json": "{
+  "name": "test-js-vanilla",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.1.3"
+  },
+  "dependencies": {
+    "tinybase": "^6.6.0"
+  }
+}",
+  "src/index.css": "body {
+  font-family: system-ui;
+  padding: 2rem;
+}
+",
+  "src/index.js": "import './index.css';
+import {createStore} from 'tinybase';
+
+// Convenience function for attaching an action to a button
+const onClick = (id, onClick) =>
+  document.getElementById(id).addEventListener('click', onClick);
+
+// Convenience function for writing out pretty JSON into an element
+const updateJson = (id, content) =>
+  (document.getElementById(id).innerText = JSON.stringify(content, null, 2));
+
+// Convenience function for generating a random integer
+const getRandom = (max = 100) => Math.floor(Math.random() * max);
+
+addEventListener('load', () => {
+  // Create the TinyBase Store
+  const store = createStore();
+
+  // Attach events to the buttons to mutate the data in the TinyBase Store
+  onClick('countButton', () => store.setValue('counter', (value) => value + 1));
+  onClick('randomButton', () => store.setValue('random', getRandom()));
+  onClick('addPetButton', () =>
+    store.addRow('pets', {
+      name: ['fido', 'felix', 'bubbles', 'lowly', 'polly'][getRandom(5)],
+      species: store.getRowIds('species')[getRandom(5)],
+    }),
+  );
+
+  // Bind listeners to all Values and Tables in the Store to print the content
+  store.addValuesListener(() => updateJson('valuesJson', store.getValues()));
+  store.addTablesListener(() => updateJson('tablesJson', store.getTables()));
+
+  // Initialize the Store's data
+  store
+    .setValue('counter', 0)
+    .setRow('pets', '0', {name: 'fido', species: 'dog'})
+    .setTable('species', {
+      dog: {price: 5},
+      cat: {price: 4},
+      fish: {price: 2},
+      worm: {price: 1},
+      parrot: {price: 3},
+    });
+});
+",
+}
+`;
+
+exports[`create-tinybase > ts-react > should match snapshot 1`] = `
+{
+  ".prettierrc": "{
+  "bracketSpacing": false,
+  "singleQuote": true,
+  "trailingComma": "all"
+}",
+  "README.md": "# test-ts-react
+
+A TinyBase app built with TypeScript and React.
+
+## Getting Started
+
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TinyBase</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
+</html>
+",
+  "package.json": "{
+  "name": "test-ts-react",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.1.3",
+    "typescript": "^5.9.3",
+    "@types/node": "^25.0.3",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4"
+  },
+  "dependencies": {
+    "tinybase": "^6.6.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}",
+  "src/App.tsx": "import {createStore} from 'tinybase';
+import {Provider, useValue} from 'tinybase/ui-react';
+
+const store = createStore().setValue('count', 0);
+
+export const App = () => (
+  <Provider store={store}>
+    <h1>TinyBase + React</h1>
+    <Counter />
+  </Provider>
+);
+
+const Counter = () => {
+  const count = useValue('count', store);
+  
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={() => store.setValue('count', (c: number) => c + 1)}>
+        Increment
+      </button>
+    </div>
+  );
+};
+",
+  "src/index.css": "body {
+  font-family: system-ui;
+  padding: 2rem;
+}
+",
+  "src/index.tsx": "import './index.css';
+import ReactDOM from 'react-dom/client';
+import {App} from './App';
+
+addEventListener('load', () =>
+  ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
+);
+",
+  "tsconfig.json": "{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": [
+    "src"
+  ]
+}",
+  "tsconfig.node.json": "{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "skipLibCheck": true
+  }
+}",
+  "vite.config.js": "import react from '@vitejs/plugin-react';
+import {defineConfig} from 'vite';
+
+export default defineConfig({
+  plugins: [react()],
+});
+",
+}
+`;
+
+exports[`create-tinybase > ts-vanilla > should match snapshot 1`] = `
+{
+  ".prettierrc": "{
+  "bracketSpacing": false,
+  "singleQuote": true,
+  "trailingComma": "all"
+}",
+  "README.md": "# test-ts-vanilla
+
+A TinyBase app built with TypeScript and Vanilla JS.
+
+## Getting Started
+
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TinyBase</title>
+  </head>
+  <body>
+    
+    <script type="module" src="/src/index.ts"></script>
+  </body>
+</html>
+",
+  "package.json": "{
+  "name": "test-ts-vanilla",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.1.3",
+    "typescript": "^5.9.3",
+    "@types/node": "^25.0.3"
+  },
+  "dependencies": {
+    "tinybase": "^6.6.0"
+  }
+}",
+  "src/index.css": "body {
+  font-family: system-ui;
+  padding: 2rem;
+}
+",
+  "src/index.ts": "import './index.css';
+import {createStore} from 'tinybase';
+
+// Convenience function for attaching an action to a button
+const onClick = (id: string, onClick: () => void) =>
+  document.getElementById(id)!.addEventListener('click', onClick);
+
+// Convenience function for writing out pretty JSON into an element
+const updateJson = (id: string, content: unknown) =>
+  (document.getElementById(id)!.innerText = JSON.stringify(content, null, 2));
+
+// Convenience function for generating a random integer
+const getRandom = (max = 100) => Math.floor(Math.random() * max);
+
+addEventListener('load', () => {
+  // Create the TinyBase Store
+  const store = createStore();
+
+  // Attach events to the buttons to mutate the data in the TinyBase Store
+  onClick('countButton', () => store.setValue('counter', (value) => value + 1));
+  onClick('randomButton', () => store.setValue('random', getRandom()));
+  onClick('addPetButton', () =>
+    store.addRow('pets', {
+      name: ['fido', 'felix', 'bubbles', 'lowly', 'polly'][getRandom(5)],
+      species: store.getRowIds('species')[getRandom(5)],
+    }),
+  );
+
+  // Bind listeners to all Values and Tables in the Store to print the content
+  store.addValuesListener(() => updateJson('valuesJson', store.getValues()));
+  store.addTablesListener(() => updateJson('tablesJson', store.getTables()));
+
+  // Initialize the Store's data
+  store
+    .setValue('counter', 0)
+    .setRow('pets', '0', {name: 'fido', species: 'dog'})
+    .setTable('species', {
+      dog: {price: 5},
+      cat: {price: 4},
+      fish: {price: 2},
+      worm: {price: 1},
+      parrot: {price: 3},
+    });
+});
+",
+  "tsconfig.json": "{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": [
+    "src"
+  ]
+}",
+  "tsconfig.node.json": "{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "skipLibCheck": true
+  }
+}",
+}
+`;

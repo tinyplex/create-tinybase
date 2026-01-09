@@ -1,0 +1,52 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`TemplateEngine > should add imports to top of file 1`] = `
+"import React from 'react';
+import type {FC} from 'react';
+
+
+export const Component = () => {
+  return null;
+};
+"
+`;
+
+exports[`TemplateEngine > should evaluate directives with context access 1`] = `
+"const project = "my-app";
+const isTS = true
+const ext = "tsx";
+"
+`;
+
+exports[`TemplateEngine > should handle when() conditional helper 1`] = `
+"const base = 'hello';
+const typed: string = "yes";
+const vanillaOnly = true;
+"
+`;
+
+exports[`TemplateEngine > should include entire files 1`] = `
+"export const helper = () => "imported";
+
+
+export const main = () => helper();
+"
+`;
+
+exports[`TemplateEngine > should include named blocks from files 1`] = `
+"import {createStore} from 'tinybase';
+
+const store = createStore();
+store.setValue('count', 0);
+
+export const init = () => {
+const increment = () => store.setValue('count', (c) => c + 1);
+};
+"
+`;
+
+exports[`TemplateEngine > should process a simple template 1`] = `
+"const name = "test";
+console.log(name);
+"
+`;

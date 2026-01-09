@@ -5,18 +5,23 @@ await rm('dist', {recursive: true, force: true});
 await mkdir('dist', {recursive: true});
 
 await esbuild.build({
-  entryPoints: ['src/cli.ts'],
+  entryPoints: [
+    'src/cli.ts',
+    'src/templates.ts',
+    'src/templateEngine.ts',
+    'src/postProcess.ts',
+  ],
   bundle: false,
   minify: true,
   platform: 'node',
   target: 'node18',
   format: 'esm',
-  outfile: 'dist/cli.js',
-  banner: {
-    js: '#!/usr/bin/env node\n',
-  },
+  outdir: 'dist',
 });
 
+// Add shebang to cli.js
+const cliCode = await readFile('dist/cli.js', 'utf-8');
+await writeFile('dist/cli.js', '#!/usr/bin/env node\n' + cliCode);
 await chmod('dist/cli.js', 0o755);
 
 const pkg = JSON.parse(await readFile('package.json', 'utf-8'));

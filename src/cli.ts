@@ -1,9 +1,7 @@
-import {cp, readFile, writeFile} from 'fs/promises';
-import {dirname, join} from 'path';
+import {mkdir} from 'fs/promises';
+import {join} from 'path';
 import prompts from 'prompts';
-import {fileURLToPath} from 'url';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import {generateProject} from './templates.js';
 
 const args = process.argv.slice(2);
 const nonInteractive = args.includes('--non-interactive');
@@ -52,16 +50,6 @@ const questions = [
   },
 ];
 
-function getTemplateName(language: Language, framework: Framework): string {
-  const templates: Record<`${Language}-${Framework}`, string> = {
-    'javascript-vanilla': 'vite-tinybase',
-    'javascript-react': 'vite-tinybase-react',
-    'typescript-vanilla': 'vite-tinybase-ts',
-    'typescript-react': 'vite-tinybase-ts-react',
-  };
-  return templates[`${language}-${framework}`];
-}
-
 async function main() {
   let answers;
 
@@ -87,17 +75,15 @@ async function main() {
     });
   }
 
-  const templateName = getTemplateName(answers.language, answers.framework);
-
   if (!nonInteractive) {
-    console.log(`\n📦 Creating your TinyBase app from ${templateName}...\n`);
+    console.log(`\n📦 Creating your TinyBase app...\n`);
   }
 
   const projectPath = join(process.cwd(), answers.projectName);
-  const templatePath = join(__dirname, '..', '..', templateName);
 
   try {
-    await createProject(projectPath, templatePath, answers);
+    await mkdir(projectPath, {recursive: true});
+    await generateProject(projectPath, answers);
 
     if (!nonInteractive) {
       console.log('✅ Done!\n');
@@ -111,29 +97,6 @@ async function main() {
     console.error('❌ Error creating project:', errorMessage);
     process.exit(1);
   }
-}
-
-async function createProject(
-  projectPath: string,
-  templatePath: string,
-  config: Answers,
-) {
-  await cp(templatePath, projectPath, {
-    recursive: true,
-    filter: (src) => {
-      return (
-        !src.includes('node_modules') &&
-        !src.includes('.git') &&
-        !src.includes('package-lock.json') &&
-        !src.includes('.DS_Store')
-      );
-    },
-  });
-
-  const pkgPath = join(projectPath, 'package.json');
-  const pkg = JSON.parse(await readFile(pkgPath, 'utf-8'));
-  pkg.name = config.projectName;
-  await writeFile(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
 }
 
 main().catch((error) => {
