@@ -1,48 +1,48 @@
 {{addImport "import './index.css';"}}
 
-{{#if isReact}}
-{{addImport "import ReactDOM from 'react-dom/client';"}}
-{{addImport "import {App} from './App';"}}
+{{#if react}}
+  {{addImport "import ReactDOM from 'react-dom/client';"}}
+  {{addImport "import {App} from './App';"}}
 
-addEventListener('load', () =>
-  ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
-);
-
-{{else}}
-{{addImport "import {createStore} from 'tinybase';"}}
-
-const onClick = (id: string, onClick: () => void) =>
-  document.getElementById(id)!.addEventListener('click', onClick);
-
-const updateJson = (id: string, content: unknown) =>
-  (document.getElementById(id)!.innerText = JSON.stringify(content, null, 2));
-
-const getRandom = (max = 100) => Math.floor(Math.random() * max);
-
-addEventListener('load', () => {
-  const store = createStore();
-
-  onClick('countButton', () => store.setValue('counter', (value) => value + 1));
-  onClick('randomButton', () => store.setValue('random', getRandom()));
-  onClick('addPetButton', () =>
-    store.addRow('pets', {
-      name: ['fido', 'felix', 'bubbles', 'lowly', 'polly'][getRandom(5)],
-      species: store.getRowIds('species')[getRandom(5)],
-    }),
+  addEventListener('load', () =>
+    ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
   );
 
-  store.addValuesListener(() => updateJson('valuesJson', store.getValues()));
-  store.addTablesListener(() => updateJson('tablesJson', store.getTables()));
+{{else}}
+  {{addImport "import {createStore} from 'tinybase';"}}
 
-  store
-    .setValue('counter', 0)
-    .setRow('pets', '0', {name: 'fido', species: 'dog'})
-    .setTable('species', {
-      dog: {price: 5},
-      cat: {price: 4},
-      fish: {price: 2},
-      worm: {price: 1},
-      parrot: {price: 3},
-    });
-});
+  const onClick = (id: string, onClick: () => void) =>
+    document.getElementById(id)!.addEventListener('click', onClick);
+
+  const updateJson = (id: string, content: unknown) =>
+    (document.getElementById(id)!.innerText = JSON.stringify(content, null, 2));
+
+  const getRandom = (max = 100) => Math.floor(Math.random() * max);
+
+  addEventListener('load', () => {
+    const store = createStore();
+
+    onClick('countButton', () => store.setValue('counter', (value) => value + 1));
+    onClick('randomButton', () => store.setValue('random', getRandom()));
+    onClick('addPetButton', () =>
+      store.addRow('pets', {
+        name: ['fido', 'felix', 'bubbles', 'lowly', 'polly'][getRandom(5)],
+        species: store.getRowIds('species')[getRandom(5)],
+      }),
+    );
+
+    store.addValuesListener(() => updateJson('valuesJson', store.getValues()));
+    store.addTablesListener(() => updateJson('tablesJson', store.getTables()));
+
+    store
+      .setValue('counter', 0)
+      .setRow('pets', '0', {name: 'fido', species: 'dog'})
+      .setTable('species', {
+        dog: {price: 5},
+        cat: {price: 4},
+        fish: {price: 2},
+        worm: {price: 1},
+        parrot: {price: 3},
+      });
+  });
 {{/if}}

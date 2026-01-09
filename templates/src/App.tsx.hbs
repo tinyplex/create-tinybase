@@ -1,5 +1,5 @@
-{{#if isReact}}{{addImport "import {createStore} from 'tinybase';"}}{{/if}}
-{{#if isReact}}{{addImport "import {Provider, useValue} from 'tinybase/ui-react';"}}{{/if}}
+{{addImport "import {createStore} from 'tinybase';"}}
+{{addImport "import {Provider, useValue} from 'tinybase/ui-react';"}}
 
 const store = createStore().setValue('count', 0);
 

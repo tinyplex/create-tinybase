@@ -1,34 +1,38 @@
-{{#if isTypescript}}{{addImport "import tseslint from 'typescript-eslint';"}}{{/if}}
-{{#if isReact}}{{addImport "import pluginReact from 'eslint-plugin-react';"}}{{/if}}
-{{#if isReact}}{{addImport "import pluginReactHooks from 'eslint-plugin-react-hooks';"}}{{/if}}
+{{#if typescript}}
+  {{addImport "import tseslint from 'typescript-eslint';"}}
+{{/if}}
+{{#if react}}
+  {{addImport "import pluginReact from 'eslint-plugin-react';"}}
+  {{addImport "import pluginReactHooks from 'eslint-plugin-react-hooks';"}}
+{{/if}}
 
 export default [
-{{#if isTypescript}}
-  ...tseslint.configs.recommended,
-{{else}}
-  {
-    rules: {
-      'no-unused-vars': 'warn',
-      'no-undef': 'error',
-    },
-  },
-{{/if}}
-
-{{#if isReact}}
-  pluginReact.configs.flat.recommended,
-  {
-    plugins: {
-      'react-hooks': pluginReactHooks,
-    },
-    rules: {
-      ...pluginReactHooks.configs.recommended.rules,
-      'react/react-in-jsx-scope': 'off',
-    },
-    settings: {
-      react: {
-        version: 'detect',
+  {{#if typescript}}
+    ...tseslint.configs.recommended,
+  {{else}}
+    {
+      rules: {
+        'no-unused-vars': 'warn',
+        'no-undef': 'error',
       },
     },
-  },
-{{/if}}
+  {{/if}}
+
+  {{#if react}}
+    pluginReact.configs.flat.recommended,
+    {
+      plugins: {
+        'react-hooks': pluginReactHooks,
+      },
+      rules: {
+        ...pluginReactHooks.configs.recommended.rules,
+        'react/react-in-jsx-scope': 'off',
+      },
+      settings: {
+        react: {
+          version: 'detect',
+        },
+      },
+    },
+  {{/if}}
 ];

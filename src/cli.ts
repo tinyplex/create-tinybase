@@ -63,20 +63,14 @@ const config = {
   ],
 
   createContext: (answers: TinyBaseAnswers) => {
-    const isTypescript = answers.language === 'typescript';
-    const isReact = answers.framework === 'react';
-    const ext = isTypescript
-      ? isReact
-        ? 'tsx'
-        : 'ts'
-      : isReact
-        ? 'jsx'
-        : 'js';
+    const typescript = answers.language === 'typescript';
+    const react = answers.framework === 'react';
+    const ext = typescript ? (react ? 'tsx' : 'ts') : react ? 'jsx' : 'js';
 
     return {
       ...answers,
-      isTypescript,
-      isReact,
+      typescript,
+      react,
       ext,
     };
   },
@@ -89,7 +83,7 @@ const config = {
   },
 
   getFiles: (context: Record<string, unknown>) => {
-    const {isTypescript, isReact, ext, prettier, eslint} = context;
+    const {typescript, react, ext, prettier, eslint} = context;
 
     const files = [
       {
@@ -135,7 +129,7 @@ const config = {
       });
     }
 
-    if (isReact) {
+    if (react) {
       files.push(
         {
           template: 'src/App.tsx.hbs',
@@ -151,7 +145,7 @@ const config = {
       );
     }
 
-    if (isTypescript) {
+    if (typescript) {
       files.push(
         {template: 'base/tsconfig.json.hbs', output: 'tsconfig.json'},
         {
