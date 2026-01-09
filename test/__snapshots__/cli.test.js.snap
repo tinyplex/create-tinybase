@@ -48,7 +48,8 @@ npm run dev
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   }
-}",
+}
+",
   "src/App.jsx": "import {createStore} from 'tinybase';
 import {Provider, useValue} from 'tinybase/ui-react';
 const store = createStore().setValue('count', 0);
@@ -142,7 +143,8 @@ npm run dev
   "dependencies": {
     "tinybase": "^6.6.0"
   }
-}",
+}
+",
   "src/index.css": "body {
   font-family: system-ui;
   padding: 2rem;
@@ -234,7 +236,8 @@ npm run dev
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   }
-}",
+}
+",
   "src/App.tsx": "import {createStore} from 'tinybase';
 import {Provider, useValue} from 'tinybase/ui-react';
 
@@ -367,7 +370,8 @@ npm run dev
   "dependencies": {
     "tinybase": "^6.6.0"
   }
-}",
+}
+",
   "src/index.css": "body {
   font-family: system-ui;
   padding: 2rem;

@@ -92,7 +92,11 @@ const config = {
     const {isTypescript, isReact, ext, prettier, eslint} = context;
 
     const files = [
-      {template: 'base/package.template.json', output: 'package.json'},
+      {
+        template: 'base/package.template.json',
+        output: 'package.json',
+        prettier: true,
+      },
       {
         template: 'base/index.template.html',
         output: 'index.html',
