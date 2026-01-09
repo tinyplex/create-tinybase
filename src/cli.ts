@@ -65,6 +65,7 @@ const config = {
   createContext: (answers: Record<string, unknown>) => {
     const {projectName, language, framework, prettier, eslint} = answers;
     const typescript = language === 'typescript';
+    const javascript = !typescript;
     const react = framework === 'react';
     const ext = typescript ? (react ? 'tsx' : 'ts') : react ? 'jsx' : 'js';
 
@@ -75,6 +76,7 @@ const config = {
       prettier,
       eslint,
       typescript,
+      javascript,
       react,
       ext,
     };
@@ -140,19 +142,11 @@ const config = {
     }
 
     if (react) {
-      files.push(
-        {
-          template: 'src/App.tsx.hbs',
-          output: `src/App.${ext}`,
-          prettier: true,
-          transpile: !typescript,
-        },
-        {
-          template: 'base/vite.config.js.hbs',
-          output: 'vite.config.js',
-          prettier: true,
-        },
-      );
+      files.push({
+        template: 'base/vite.config.js.hbs',
+        output: 'vite.config.js',
+        prettier: true,
+      });
     }
 
     if (typescript) {
@@ -164,6 +158,23 @@ const config = {
     }
 
     return files;
+  },
+
+  processIncludedFile: (file, context) => {
+    const {javascript} = context;
+
+    // Apply smart defaults based on file extension
+    const prettier =
+      file.prettier ?? /\.(js|jsx|ts|tsx|css|json|html|md)$/.test(file.output);
+    // Transpile if the template is TypeScript but we're generating JavaScript
+    const transpile =
+      file.transpile ?? (/\.(ts|tsx)\.hbs$/.test(file.template) && javascript === true);
+
+    return {
+      ...file,
+      prettier,
+      transpile,
+    };
   },
 
   templateRoot: join(__dirname, 'templates'),

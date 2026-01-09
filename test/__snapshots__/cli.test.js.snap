@@ -23,7 +23,14 @@ npm run dev
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TinyBase</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase / JavaScript + React</title>
   </head>
 
   <body>
@@ -51,27 +58,43 @@ npm run dev
   }
 }
 ",
+  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
   "src/App.jsx": "import {createStore} from 'tinybase';
 import {Provider, useValue} from 'tinybase/ui-react';
-const store = createStore().setValue('count', 0);
-const App = () =>
-  /* @__PURE__ */ React.createElement(
-    Provider,
-    {store},
-    /* @__PURE__ */ React.createElement('h1', null, 'TinyBase + React'),
-    /* @__PURE__ */ React.createElement(Counter, null),
-  );
+const store = createStore().setValue('counter', 0);
+const App = () => (
+  <Provider store={store}>
+    <header>
+      <h1>
+        <img src="/favicon.svg" />
+        TinyBase / JavaScript + React
+      </h1>
+    </header>
+    <p>
+      This is more or less the simplest TinyBase app you could imagine. It
+      contains a handful of key-values and tables which are mutated with the
+      buttons below. See the full set of{' '}
+      <a href="https://tinybase.org/demos/">TinyBase demos</a> for more
+      interesting examples!
+    </p>
+    <div id="buttons">
+      <Counter />
+    </div>
+  </Provider>
+);
 const Counter = () => {
-  const count = useValue('count', store);
-  return /* @__PURE__ */ React.createElement(
-    'div',
-    null,
-    /* @__PURE__ */ React.createElement('p', null, 'Count: ', count),
-    /* @__PURE__ */ React.createElement(
-      'button',
-      {onClick: () => store.setValue('count', (c) => c + 1)},
-      'Increment',
-    ),
+  const counter = useValue('counter', store);
+  return (
+    <button onClick={() => store.setValue('counter', (c) => c + 1)}>
+      Increment counter: {counter}
+    </button>
   );
 };
 export {App};
@@ -107,10 +130,38 @@ h1 {
 }
 
 h2 {
-  text-align: center;
   font-weight: 800;
   font-size: 1.3rem;
   margin: 1rem 0 0;
+}
+
+p {
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+details {
+  border: 1px solid #333;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 800;
+  margin: -0.5rem -0.5rem 0;
+  padding: 0.5rem;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #333;
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 #buttons {
@@ -191,14 +242,19 @@ table.sortedTable thead th {
 import ReactDOM from 'react-dom/client';
 import {App} from './App';
 addEventListener('load', () =>
-  ReactDOM.createRoot(document.getElementById('app')).render(
-    /* @__PURE__ */ React.createElement(App, null),
-  ),
+  ReactDOM.createRoot(document.getElementById('app')).render(<App />),
 );
 ",
   "vite.config.js": "import {defineConfig} from 'vite';
+import react from '@vitejs/plugin-react';
 
-export default defineConfig({});
+export default defineConfig({
+  plugins: [
+    react({
+      jsxRuntime: 'automatic',
+    }),
+  ],
+});
 ",
 }
 `;
@@ -226,10 +282,46 @@ npm run dev
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TinyBase</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase / JavaScript</title>
   </head>
 
   <body>
+    <div id="app">
+      <header>
+        <h1>
+          <img src="/favicon.svg" />
+          TinyBase / JavaScript
+        </h1>
+      </header>
+      <p>
+        This is more or less the simplest TinyBase app you could imagine. It
+        contains a handful of key-values and tables which are mutated with the
+        buttons below. There's no fancy rendering - just the raw JSON of the
+        underlying store. See the full set of
+        <a href="https://tinybase.org/demos/">TinyBase demos</a> for more
+        interesting examples!
+      </p>
+      <div id="buttons">
+        <button id="countButton">Increment number</button>
+        <button id="randomButton">Random number</button>
+        <button id="addPetButton">Add a pet</button>
+      </div>
+      <details open>
+        <summary>Values</summary>
+        <pre id="valuesJson"></pre>
+      </details>
+      <details open>
+        <summary>Tables</summary>
+        <pre id="tablesJson"></pre>
+      </details>
+    </div>
     <script type="module" src="/src/index.js"></script>
   </body>
 </html>
@@ -249,6 +341,45 @@ npm run dev
     "tinybase": "^7.3.1"
   }
 }
+",
+  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "src/app.js": "import {createStore} from 'tinybase';
+const onClick = (id, onClick2) =>
+  document.getElementById(id).addEventListener('click', onClick2);
+const updateJson = (id, content) =>
+  (document.getElementById(id).innerText = JSON.stringify(content, null, 2));
+const getRandom = (max = 100) => Math.floor(Math.random() * max);
+const app = () => {
+  const store = createStore();
+  onClick('countButton', () => store.setValue('counter', (value) => value + 1));
+  onClick('randomButton', () => store.setValue('random', getRandom()));
+  onClick('addPetButton', () =>
+    store.addRow('pets', {
+      name: ['fido', 'felix', 'bubbles', 'lowly', 'polly'][getRandom(5)],
+      species: store.getRowIds('species')[getRandom(5)],
+    }),
+  );
+  store.addValuesListener(() => updateJson('valuesJson', store.getValues()));
+  store.addTablesListener(() => updateJson('tablesJson', store.getTables()));
+  store
+    .setValue('counter', 0)
+    .setRow('pets', '0', {name: 'fido', species: 'dog'})
+    .setTable('species', {
+      dog: {price: 5},
+      cat: {price: 4},
+      fish: {price: 2},
+      worm: {price: 1},
+      parrot: {price: 3},
+    });
+};
+export {app};
 ",
   "src/index.css": "body {
   color: #bbb;
@@ -281,10 +412,38 @@ h1 {
 }
 
 h2 {
-  text-align: center;
   font-weight: 800;
   font-size: 1.3rem;
   margin: 1rem 0 0;
+}
+
+p {
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+details {
+  border: 1px solid #333;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 800;
+  margin: -0.5rem -0.5rem 0;
+  padding: 0.5rem;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #333;
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 #buttons {
@@ -362,35 +521,8 @@ table.sortedTable thead th {
 }
 ",
   "src/index.js": "import './index.css';
-import {createStore} from 'tinybase';
-const onClick = (id, onClick2) =>
-  document.getElementById(id).addEventListener('click', onClick2);
-const updateJson = (id, content) =>
-  (document.getElementById(id).innerText = JSON.stringify(content, null, 2));
-const getRandom = (max = 100) => Math.floor(Math.random() * max);
-addEventListener('load', () => {
-  const store = createStore();
-  onClick('countButton', () => store.setValue('counter', (value) => value + 1));
-  onClick('randomButton', () => store.setValue('random', getRandom()));
-  onClick('addPetButton', () =>
-    store.addRow('pets', {
-      name: ['fido', 'felix', 'bubbles', 'lowly', 'polly'][getRandom(5)],
-      species: store.getRowIds('species')[getRandom(5)],
-    }),
-  );
-  store.addValuesListener(() => updateJson('valuesJson', store.getValues()));
-  store.addTablesListener(() => updateJson('tablesJson', store.getTables()));
-  store
-    .setValue('counter', 0)
-    .setRow('pets', '0', {name: 'fido', species: 'dog'})
-    .setTable('species', {
-      dog: {price: 5},
-      cat: {price: 4},
-      fish: {price: 2},
-      worm: {price: 1},
-      parrot: {price: 3},
-    });
-});
+import {app} from './app';
+addEventListener('load', app);
 ",
 }
 `;
@@ -418,7 +550,14 @@ npm run dev
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TinyBase</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase / TypeScript + React</title>
   </head>
 
   <body>
@@ -450,30 +589,49 @@ npm run dev
   }
 }
 ",
-  "src/App.jsx": "import {createStore} from 'tinybase';
+  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "src/App.tsx": "import {createStore} from 'tinybase';
 import {Provider, useValue} from 'tinybase/ui-react';
-const store = createStore().setValue('count', 0);
-const App = () =>
-  /* @__PURE__ */ React.createElement(
-    Provider,
-    {store},
-    /* @__PURE__ */ React.createElement('h1', null, 'TinyBase + React'),
-    /* @__PURE__ */ React.createElement(Counter, null),
-  );
+
+const store = createStore().setValue('counter', 0);
+
+export const App = () => (
+  <Provider store={store}>
+    <header>
+      <h1>
+        <img src="/favicon.svg" />
+        TinyBase / TypeScript + React
+      </h1>
+    </header>
+    <p>
+      This is more or less the simplest TinyBase app you could imagine. It
+      contains a handful of key-values and tables which are mutated with the
+      buttons below. See the full set of{' '}
+      <a href="https://tinybase.org/demos/">TinyBase demos</a> for more
+      interesting examples!
+    </p>
+    <div id="buttons">
+      <Counter />
+    </div>
+  </Provider>
+);
+
 const Counter = () => {
-  const count = useValue('count', store);
-  return /* @__PURE__ */ React.createElement(
-    'div',
-    null,
-    /* @__PURE__ */ React.createElement('p', null, 'Count: ', count),
-    /* @__PURE__ */ React.createElement(
-      'button',
-      {onClick: () => store.setValue('count', (c) => c + 1)},
-      'Increment',
-    ),
+  const counter = useValue('counter', store);
+
+  return (
+    <button onClick={() => store.setValue('counter', (c: number) => c + 1)}>
+      Increment counter: {counter}
+    </button>
   );
 };
-export {App};
 ",
   "src/index.css": "body {
   color: #bbb;
@@ -506,10 +664,38 @@ h1 {
 }
 
 h2 {
-  text-align: center;
   font-weight: 800;
   font-size: 1.3rem;
   margin: 1rem 0 0;
+}
+
+p {
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+details {
+  border: 1px solid #333;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 800;
+  margin: -0.5rem -0.5rem 0;
+  padding: 0.5rem;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #333;
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 #buttons {
@@ -586,13 +772,12 @@ table.sortedTable thead th {
   }
 }
 ",
-  "src/index.jsx": "import './index.css';
+  "src/index.tsx": "import './index.css';
 import ReactDOM from 'react-dom/client';
 import {App} from './App';
+
 addEventListener('load', () =>
-  ReactDOM.createRoot(document.getElementById('app')).render(
-    /* @__PURE__ */ React.createElement(App, null),
-  ),
+  ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
 );
 ",
   "tsconfig.json": "{
@@ -617,19 +802,16 @@ addEventListener('load', () =>
   "include": ["src"]
 }
 ",
-  "tsconfig.node.json": "{
-  "compilerOptions": {
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "skipLibCheck": true
-  }
-}
-",
   "vite.config.js": "import {defineConfig} from 'vite';
+import react from '@vitejs/plugin-react';
 
-export default defineConfig({});
+export default defineConfig({
+  plugins: [
+    react({
+      jsxRuntime: 'automatic',
+    }),
+  ],
+});
 ",
 }
 `;
@@ -657,10 +839,46 @@ npm run dev
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TinyBase</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase / TypeScript</title>
   </head>
 
   <body>
+    <div id="app">
+      <header>
+        <h1>
+          <img src="/favicon.svg" />
+          TinyBase / TypeScript
+        </h1>
+      </header>
+      <p>
+        This is more or less the simplest TinyBase app you could imagine. It
+        contains a handful of key-values and tables which are mutated with the
+        buttons below. There's no fancy rendering - just the raw JSON of the
+        underlying store. See the full set of
+        <a href="https://tinybase.org/demos/">TinyBase demos</a> for more
+        interesting examples!
+      </p>
+      <div id="buttons">
+        <button id="countButton">Increment number</button>
+        <button id="randomButton">Random number</button>
+        <button id="addPetButton">Add a pet</button>
+      </div>
+      <details open>
+        <summary>Values</summary>
+        <pre id="valuesJson"></pre>
+      </details>
+      <details open>
+        <summary>Tables</summary>
+        <pre id="tablesJson"></pre>
+      </details>
+    </div>
     <script type="module" src="/src/index.ts"></script>
   </body>
 </html>
@@ -682,6 +900,51 @@ npm run dev
     "tinybase": "^7.3.1"
   }
 }
+",
+  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "src/app.ts": "import {createStore} from 'tinybase';
+
+const onClick = (id: string, onClick: () => void) =>
+  document.getElementById(id)!.addEventListener('click', onClick);
+
+const updateJson = (id: string, content: unknown) =>
+  (document.getElementById(id)!.innerText = JSON.stringify(content, null, 2));
+
+const getRandom = (max = 100) => Math.floor(Math.random() * max);
+
+export const app = () => {
+  const store = createStore();
+
+  onClick('countButton', () => store.setValue('counter', (value) => value + 1));
+  onClick('randomButton', () => store.setValue('random', getRandom()));
+  onClick('addPetButton', () =>
+    store.addRow('pets', {
+      name: ['fido', 'felix', 'bubbles', 'lowly', 'polly'][getRandom(5)],
+      species: store.getRowIds('species')[getRandom(5)],
+    }),
+  );
+
+  store.addValuesListener(() => updateJson('valuesJson', store.getValues()));
+  store.addTablesListener(() => updateJson('tablesJson', store.getTables()));
+
+  store
+    .setValue('counter', 0)
+    .setRow('pets', '0', {name: 'fido', species: 'dog'})
+    .setTable('species', {
+      dog: {price: 5},
+      cat: {price: 4},
+      fish: {price: 2},
+      worm: {price: 1},
+      parrot: {price: 3},
+    });
+};
 ",
   "src/index.css": "body {
   color: #bbb;
@@ -714,10 +977,38 @@ h1 {
 }
 
 h2 {
-  text-align: center;
   font-weight: 800;
   font-size: 1.3rem;
   margin: 1rem 0 0;
+}
+
+p {
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+details {
+  border: 1px solid #333;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 800;
+  margin: -0.5rem -0.5rem 0;
+  padding: 0.5rem;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #333;
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 #buttons {
@@ -794,36 +1085,10 @@ table.sortedTable thead th {
   }
 }
 ",
-  "src/index.js": "import './index.css';
-import {createStore} from 'tinybase';
-const onClick = (id, onClick2) =>
-  document.getElementById(id).addEventListener('click', onClick2);
-const updateJson = (id, content) =>
-  (document.getElementById(id).innerText = JSON.stringify(content, null, 2));
-const getRandom = (max = 100) => Math.floor(Math.random() * max);
-addEventListener('load', () => {
-  const store = createStore();
-  onClick('countButton', () => store.setValue('counter', (value) => value + 1));
-  onClick('randomButton', () => store.setValue('random', getRandom()));
-  onClick('addPetButton', () =>
-    store.addRow('pets', {
-      name: ['fido', 'felix', 'bubbles', 'lowly', 'polly'][getRandom(5)],
-      species: store.getRowIds('species')[getRandom(5)],
-    }),
-  );
-  store.addValuesListener(() => updateJson('valuesJson', store.getValues()));
-  store.addTablesListener(() => updateJson('tablesJson', store.getTables()));
-  store
-    .setValue('counter', 0)
-    .setRow('pets', '0', {name: 'fido', species: 'dog'})
-    .setTable('species', {
-      dog: {price: 5},
-      cat: {price: 4},
-      fish: {price: 2},
-      worm: {price: 1},
-      parrot: {price: 3},
-    });
-});
+  "src/index.ts": "import './index.css';
+import {app} from './app';
+
+addEventListener('load', app);
 ",
   "tsconfig.json": "{
   "compilerOptions": {
@@ -844,16 +1109,6 @@ addEventListener('load', () => {
     "noUncheckedSideEffectImports": true
   },
   "include": ["src"]
-}
-",
-  "tsconfig.node.json": "{
-  "compilerOptions": {
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "skipLibCheck": true
-  }
 }
 ",
 }
