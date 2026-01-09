@@ -102,6 +102,10 @@ const config = {
         prettier: true,
       },
       {
+        template: 'public/favicon.svg',
+        output: 'public/favicon.svg',
+      },
+      {
         template: 'base/README.md.hbs',
         output: 'README.md',
         prettier: true,
