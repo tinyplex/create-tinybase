@@ -7,32 +7,32 @@
 {{/if}}
 
 export default [
-  {{#if typescript}}
-    ...tseslint.configs.recommended,
-  {{else}}
-    {
-      rules: {
-        'no-unused-vars': 'warn',
-        'no-undef': 'error',
-      },
-    },
-  {{/if}}
+{{#if typescript}}
+  ...tseslint.configs.recommended,
+{{else}}
+  {
+  rules: {
+  'no-unused-vars': 'warn',
+  'no-undef': 'error',
+  },
+  },
+{{/if}}
 
-  {{#if react}}
-    pluginReact.configs.flat.recommended,
-    {
-      plugins: {
-        'react-hooks': pluginReactHooks,
-      },
-      rules: {
-        ...pluginReactHooks.configs.recommended.rules,
-        'react/react-in-jsx-scope': 'off',
-      },
-      settings: {
-        react: {
-          version: 'detect',
-        },
-      },
-    },
-  {{/if}}
+{{#if react}}
+  pluginReact.configs.flat.recommended,
+  {
+  plugins: {
+  'react-hooks': pluginReactHooks,
+  },
+  rules: {
+  ...pluginReactHooks.configs.recommended.rules,
+  'react/react-in-jsx-scope': 'off',
+  },
+  settings: {
+  react: {
+  version: 'detect',
+  },
+  },
+  },
+{{/if}}
 ];

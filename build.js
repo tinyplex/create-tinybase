@@ -25,7 +25,8 @@ const pkg = JSON.parse(await readFile('package.json', 'utf-8'));
 delete pkg.devDependencies;
 delete pkg.scripts;
 delete pkg.private;
-pkg.bin['create-tinybase'] = './cli.js';
+pkg.bin['create-tinybase'] = 'cli.js';
+pkg.files = ['cli.js', 'templates'];
 await writeFile('dist/package.json', JSON.stringify(pkg, null, 2));
 
 console.log('✅ Built and minified CLI');

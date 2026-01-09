@@ -5,17 +5,6 @@ import {fileURLToPath} from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-type Language = 'typescript' | 'javascript';
-type Framework = 'react' | 'vanilla';
-
-interface TinyBaseAnswers {
-  projectName: string;
-  language: Language;
-  framework: Framework;
-  prettier: boolean;
-  eslint: boolean;
-}
-
 const config = {
   welcomeMessage: '🎉 Welcome to TinyBase!\n',
 
@@ -62,13 +51,18 @@ const config = {
     },
   ],
 
-  createContext: (answers: TinyBaseAnswers) => {
-    const typescript = answers.language === 'typescript';
-    const react = answers.framework === 'react';
+  createContext: (answers: Record<string, unknown>) => {
+    const {projectName, language, framework, prettier, eslint} = answers;
+    const typescript = language === 'typescript';
+    const react = framework === 'react';
     const ext = typescript ? (react ? 'tsx' : 'ts') : react ? 'jsx' : 'js';
 
     return {
-      ...answers,
+      projectName,
+      language,
+      framework,
+      prettier,
+      eslint,
       typescript,
       react,
       ext,
@@ -89,22 +83,27 @@ const config = {
       {
         template: 'base/package.json.hbs',
         output: 'package.json',
+        prettier: true,
       },
       {
         template: 'base/index.html.hbs',
         output: 'index.html',
+        prettier: true,
       },
       {
         template: 'base/README.md.hbs',
         output: 'README.md',
+        prettier: true,
       },
       {
         template: 'src/index.css.hbs',
         output: 'src/index.css',
+        prettier: true,
       },
       {
         template: 'src/index.tsx.hbs',
         output: `src/index.${ext}`,
+        prettier: true,
         transpile: true,
       },
     ];
@@ -113,6 +112,7 @@ const config = {
       files.push({
         template: 'base/.prettierrc.hbs',
         output: '.prettierrc',
+        prettier: true,
       });
     }
 
@@ -120,6 +120,7 @@ const config = {
       files.push({
         template: 'base/eslint.config.js.hbs',
         output: 'eslint.config.js',
+        prettier: true,
       });
     }
 
@@ -128,11 +129,13 @@ const config = {
         {
           template: 'src/App.tsx.hbs',
           output: `src/App.${ext}`,
+          prettier: true,
           transpile: true,
         },
         {
           template: 'base/vite.config.js.hbs',
           output: 'vite.config.js',
+          prettier: true,
         },
       );
     }
@@ -142,10 +145,12 @@ const config = {
         {
           template: 'base/tsconfig.json.hbs',
           output: 'tsconfig.json',
+          prettier: true,
         },
         {
           template: 'base/tsconfig.node.json.hbs',
           output: 'tsconfig.node.json',
+          prettier: true,
         },
       );
     }
@@ -153,7 +158,7 @@ const config = {
     return files;
   },
 
-  templateRoot: join(__dirname, '../templates'),
+  templateRoot: join(__dirname, 'templates'),
 
   onSuccess: (projectName: string) => {
     console.log(`Next steps:`);

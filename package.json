@@ -1,8 +1,11 @@
 {
   "name": "create-tinybase",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "author": "jamesgpearce",
-  "repository": "github:tinyplex/tinybase",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tinyplex/tinybase.git"
+  },
   "license": "MIT",
   "homepage": "https://tinybase.org",
   "description": "The CLI to build a new app using TinyBase, a reactive data store and sync engine.",
