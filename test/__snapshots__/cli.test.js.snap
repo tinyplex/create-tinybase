@@ -2,12 +2,6 @@
 
 exports[`create-tinybase > js-react > should match snapshot 1`] = `
 {
-  ".prettierrc": "{
-  "bracketSpacing": false,
-  "singleQuote": true,
-  "trailingComma": "all"
-}
-",
   "README.md": "# test-js-react
 
 A TinyBase app built with JavaScript and /_/ return context.isReact ? 'React' : 'Vanilla JS'; /_/.
@@ -54,9 +48,7 @@ npm run dev
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   }
-}
-
-",
+}",
   "src/App.jsx": "import {createStore} from 'tinybase';
 import {Provider, useValue} from 'tinybase/ui-react';
 const store = createStore().setValue('count', 0);
@@ -98,22 +90,16 @@ addEventListener('load', () =>
 ",
   "vite.config.js": "import react from '@vitejs/plugin-react';
 import {defineConfig} from 'vite';
-var stdin_default = defineConfig({
+
+export default defineConfig({
   plugins: [react()],
 });
-export {stdin_default as default};
 ",
 }
 `;
 
 exports[`create-tinybase > js-vanilla > should match snapshot 1`] = `
 {
-  ".prettierrc": "{
-  "bracketSpacing": false,
-  "singleQuote": true,
-  "trailingComma": "all"
-}
-",
   "README.md": "# test-js-vanilla
 
 A TinyBase app built with JavaScript and /_/ return context.isReact ? 'React' : 'Vanilla JS'; /_/.
@@ -156,9 +142,7 @@ npm run dev
   "dependencies": {
     "tinybase": "^6.6.0"
   }
-}
-
-",
+}",
   "src/index.css": "body {
   font-family: system-ui;
   padding: 2rem;
@@ -200,12 +184,6 @@ addEventListener('load', () => {
 
 exports[`create-tinybase > ts-react > should match snapshot 1`] = `
 {
-  ".prettierrc": "{
-  "bracketSpacing": false,
-  "singleQuote": true,
-  "trailingComma": "all"
-}
-",
   "README.md": "# test-ts-react
 
 A TinyBase app built with TypeScript and /_/ return context.isReact ? 'React' : 'Vanilla JS'; /_/.
@@ -256,9 +234,7 @@ npm run dev
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   }
-}
-
-",
+}",
   "src/App.tsx": "import {createStore} from 'tinybase';
 import {Provider, useValue} from 'tinybase/ui-react';
 
@@ -347,12 +323,6 @@ export default defineConfig({
 
 exports[`create-tinybase > ts-vanilla > should match snapshot 1`] = `
 {
-  ".prettierrc": "{
-  "bracketSpacing": false,
-  "singleQuote": true,
-  "trailingComma": "all"
-}
-",
   "README.md": "# test-ts-vanilla
 
 A TinyBase app built with TypeScript and /_/ return context.isReact ? 'React' : 'Vanilla JS'; /_/.
@@ -397,9 +367,7 @@ npm run dev
   "dependencies": {
     "tinybase": "^6.6.0"
   }
-}
-
-",
+}",
   "src/index.css": "body {
   font-family: system-ui;
   padding: 2rem;

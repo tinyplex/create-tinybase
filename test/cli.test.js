@@ -15,6 +15,16 @@ const combinations = [
 ];
 
 async function runCLI(projectName, language, framework) {
+  return runCLIWithOptions(projectName, language, framework, false, false);
+}
+
+async function runCLIWithOptions(
+  projectName,
+  language,
+  framework,
+  prettier,
+  eslint,
+) {
   return new Promise((resolve, reject) => {
     const cli = spawn(
       'node',
@@ -27,6 +37,10 @@ async function runCLI(projectName, language, framework) {
         language,
         '--framework',
         framework,
+        '--prettier',
+        prettier.toString(),
+        '--eslint',
+        eslint.toString(),
       ],
       {
         cwd: TEST_DIR,
@@ -160,4 +174,41 @@ describe('create-tinybase', () => {
       });
     });
   }
+
+  describe('with prettier and eslint', () => {
+    const projectName = 'test-with-tools';
+    const projectPath = join(TEST_DIR, projectName);
+
+    it('should create project with prettier and eslint (ts-react)', async () => {
+      await runCLIWithOptions(projectName, 'typescript', 'react', true, true);
+      const files = await getFileList(projectPath);
+
+      expect(files).toContain('.prettierrc');
+      expect(files).toContain('eslint.config.js');
+      expect(files).toContain('package.json');
+
+      // Check package.json has the right dependencies and scripts
+      const pkg = JSON.parse(
+        await readFile(join(projectPath, 'package.json'), 'utf-8'),
+      );
+      expect(pkg.devDependencies).toHaveProperty('prettier');
+      expect(pkg.devDependencies).toHaveProperty('eslint');
+      expect(pkg.devDependencies).toHaveProperty('typescript-eslint');
+      expect(pkg.devDependencies).toHaveProperty('eslint-plugin-react');
+      expect(pkg.scripts).toHaveProperty('format');
+      expect(pkg.scripts).toHaveProperty('lint');
+
+      // Check eslint config has correct imports
+      const eslintConfig = await readFile(
+        join(projectPath, 'eslint.config.js'),
+        'utf-8',
+      );
+      expect(eslintConfig).toContain(
+        "import tseslint from 'typescript-eslint'",
+      );
+      expect(eslintConfig).toContain(
+        "import pluginReact from 'eslint-plugin-react'",
+      );
+    });
+  });
 });

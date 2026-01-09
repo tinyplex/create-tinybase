@@ -10,6 +10,8 @@ const configs = {
     isTypescript: true,
     isReact: true,
     ext: 'tsx',
+    prettier: false,
+    eslint: false,
   },
   'ts-vanilla': {
     projectName: 'test-ts-vanilla',
@@ -18,6 +20,8 @@ const configs = {
     isTypescript: true,
     isReact: false,
     ext: 'ts',
+    prettier: false,
+    eslint: false,
   },
   'js-react': {
     projectName: 'test-js-react',
@@ -26,6 +30,8 @@ const configs = {
     isTypescript: false,
     isReact: true,
     ext: 'jsx',
+    prettier: false,
+    eslint: false,
   },
   'js-vanilla': {
     projectName: 'test-js-vanilla',
@@ -34,6 +40,8 @@ const configs = {
     isTypescript: false,
     isReact: false,
     ext: 'js',
+    prettier: false,
+    eslint: false,
   },
 };
 
@@ -197,4 +205,128 @@ describe('template files', () => {
       }
     });
   }
+
+  describe('prettier config', () => {
+    it('should generate .prettierrc', async () => {
+      const context = {
+        projectName: 'test-project',
+        language: 'typescript',
+        framework: 'react',
+        isTypescript: true,
+        isReact: true,
+        ext: 'tsx',
+        prettier: true,
+        eslint: false,
+      };
+      const engine = new TemplateEngine(context, './templates');
+      const processed = await engine.processTemplate(
+        'base/.prettierrc.template',
+      );
+
+      const {content} = await postProcessFile('.prettierrc', processed, {
+        prettier: false,
+        transpileToJS: false,
+      });
+
+      expect(content).toMatchSnapshot();
+    });
+  });
+
+  describe('eslint config', () => {
+    it('should generate eslint.config.js for TypeScript + React', async () => {
+      const context = {
+        projectName: 'test-project',
+        language: 'typescript',
+        framework: 'react',
+        isTypescript: true,
+        isReact: true,
+        ext: 'tsx',
+        prettier: false,
+        eslint: true,
+      };
+      const engine = new TemplateEngine(context, './templates');
+      const processed = await engine.processTemplate(
+        'base/eslint.config.template.js',
+      );
+
+      const {content} = await postProcessFile('eslint.config.js', processed, {
+        prettier: true,
+        transpileToJS: false,
+      });
+
+      expect(content).toMatchSnapshot();
+    });
+
+    it('should generate eslint.config.js for TypeScript + Vanilla', async () => {
+      const context = {
+        projectName: 'test-project',
+        language: 'typescript',
+        framework: 'vanilla',
+        isTypescript: true,
+        isReact: false,
+        ext: 'ts',
+        prettier: false,
+        eslint: true,
+      };
+      const engine = new TemplateEngine(context, './templates');
+      const processed = await engine.processTemplate(
+        'base/eslint.config.template.js',
+      );
+
+      const {content} = await postProcessFile('eslint.config.js', processed, {
+        prettier: true,
+        transpileToJS: false,
+      });
+
+      expect(content).toMatchSnapshot();
+    });
+
+    it('should generate eslint.config.js for JavaScript + React', async () => {
+      const context = {
+        projectName: 'test-project',
+        language: 'javascript',
+        framework: 'react',
+        isTypescript: false,
+        isReact: true,
+        ext: 'jsx',
+        prettier: false,
+        eslint: true,
+      };
+      const engine = new TemplateEngine(context, './templates');
+      const processed = await engine.processTemplate(
+        'base/eslint.config.template.js',
+      );
+
+      const {content} = await postProcessFile('eslint.config.js', processed, {
+        prettier: true,
+        transpileToJS: false,
+      });
+
+      expect(content).toMatchSnapshot();
+    });
+
+    it('should generate eslint.config.js for JavaScript + Vanilla', async () => {
+      const context = {
+        projectName: 'test-project',
+        language: 'javascript',
+        framework: 'vanilla',
+        isTypescript: false,
+        isReact: false,
+        ext: 'js',
+        prettier: false,
+        eslint: true,
+      };
+      const engine = new TemplateEngine(context, './templates');
+      const processed = await engine.processTemplate(
+        'base/eslint.config.template.js',
+      );
+
+      const {content} = await postProcessFile('eslint.config.js', processed, {
+        prettier: true,
+        transpileToJS: false,
+      });
+
+      expect(content).toMatchSnapshot();
+    });
+  });
 });

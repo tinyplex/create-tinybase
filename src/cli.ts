@@ -21,6 +21,8 @@ interface Answers {
   projectName: string;
   language: Language;
   framework: Framework;
+  prettier: boolean;
+  eslint: boolean;
 }
 
 const questions = [
@@ -52,6 +54,18 @@ const questions = [
     ],
     initial: 0,
   },
+  {
+    type: 'confirm' as const,
+    name: 'prettier' as const,
+    message: 'Include Prettier?',
+    initial: false,
+  },
+  {
+    type: 'confirm' as const,
+    name: 'eslint' as const,
+    message: 'Include ESLint?',
+    initial: false,
+  },
 ];
 
 async function main() {
@@ -61,6 +75,8 @@ async function main() {
     const projectNameIndex = args.indexOf('--project-name');
     const languageIndex = args.indexOf('--language');
     const frameworkIndex = args.indexOf('--framework');
+    const prettierIndex = args.indexOf('--prettier');
+    const eslintIndex = args.indexOf('--eslint');
 
     answers = {
       projectName:
@@ -69,6 +85,9 @@ async function main() {
           : 'my-tinybase-app',
       language: languageIndex !== -1 ? args[languageIndex + 1] : 'typescript',
       framework: frameworkIndex !== -1 ? args[frameworkIndex + 1] : 'react',
+      prettier:
+        prettierIndex !== -1 ? args[prettierIndex + 1] === 'true' : false,
+      eslint: eslintIndex !== -1 ? args[eslintIndex + 1] === 'true' : false,
     };
   } else {
     answers = await prompts(questions, {
@@ -118,6 +137,8 @@ async function generateProject(
     isTypescript,
     isReact,
     ext,
+    prettier: answers.prettier,
+    eslint: answers.eslint,
   };
 
   const engine = new TemplateEngine(context, join(__dirname, '../templates'));
@@ -127,7 +148,12 @@ async function generateProject(
   await mkdir(join(targetDir, 'public'), {recursive: true});
 
   // Process and write all template files
-  const files: Array<{template: string; output: string; prettier?: boolean}> = [
+  const files: Array<{
+    template: string;
+    output: string;
+    prettier?: boolean;
+    transpile?: boolean;
+  }> = [
     {template: 'base/package.template.json', output: 'package.json'},
     {
       template: 'base/index.template.html',
@@ -135,7 +161,6 @@ async function generateProject(
       prettier: true,
     },
     {template: 'base/README.template.md', output: 'README.md', prettier: true},
-    {template: 'base/.prettierrc.template', output: '.prettierrc'},
     {
       template: 'src/index.template.css',
       output: 'src/index.css',
@@ -145,8 +170,21 @@ async function generateProject(
       template: 'src/index.template.tsx',
       output: `src/index.${ext}`,
       prettier: true,
+      transpile: true,
     },
   ];
+
+  if (answers.prettier) {
+    files.push({template: 'base/.prettierrc.template', output: '.prettierrc'});
+  }
+
+  if (answers.eslint) {
+    files.push({
+      template: 'base/eslint.config.template.js',
+      output: 'eslint.config.js',
+      prettier: true,
+    });
+  }
 
   if (isReact) {
     files.push(
@@ -154,6 +192,7 @@ async function generateProject(
         template: 'src/App.template.tsx',
         output: `src/App.${ext}`,
         prettier: true,
+        transpile: true,
       },
       {
         template: 'base/vite.config.template.js',
@@ -173,11 +212,11 @@ async function generateProject(
     );
   }
 
-  for (const {template, output, prettier = false} of files) {
+  for (const {template, output, prettier = false, transpile = false} of files) {
     const processed = await engine.processTemplate(template);
     const {content, filePath} = await postProcessFile(output, processed, {
       prettier,
-      transpileToJS: !isTypescript,
+      transpileToJS: !isTypescript && transpile,
     });
     await writeFile(join(targetDir, filePath), content);
   }

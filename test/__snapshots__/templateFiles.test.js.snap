@@ -1,5 +1,80 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`template files > eslint config > should generate eslint.config.js for JavaScript + React 1`] = `
+"import pluginReact from 'eslint-plugin-react';
+import pluginReactHooks from 'eslint-plugin-react-hooks';
+
+export default [
+  {
+    rules: {
+      'no-unused-vars': 'warn',
+      'no-undef': 'error',
+    },
+  },
+  pluginReact.configs.flat.recommended,
+  {
+    plugins: {
+      'react-hooks': pluginReactHooks,
+    },
+    rules: {
+      ...pluginReactHooks.configs.recommended.rules,
+      'react/react-in-jsx-scope': 'off',
+    },
+    settings: {
+      react: {
+        version: 'detect',
+      },
+    },
+  },
+];
+"
+`;
+
+exports[`template files > eslint config > should generate eslint.config.js for JavaScript + Vanilla 1`] = `
+"export default [
+  {
+    rules: {
+      'no-unused-vars': 'warn',
+      'no-undef': 'error',
+    },
+  },
+];
+"
+`;
+
+exports[`template files > eslint config > should generate eslint.config.js for TypeScript + React 1`] = `
+"import tseslint from 'typescript-eslint';
+import pluginReact from 'eslint-plugin-react';
+import pluginReactHooks from 'eslint-plugin-react-hooks';
+
+export default [
+  ...tseslint.configs.recommended,
+  pluginReact.configs.flat.recommended,
+  {
+    plugins: {
+      'react-hooks': pluginReactHooks,
+    },
+    rules: {
+      ...pluginReactHooks.configs.recommended.rules,
+      'react/react-in-jsx-scope': 'off',
+    },
+    settings: {
+      react: {
+        version: 'detect',
+      },
+    },
+  },
+];
+"
+`;
+
+exports[`template files > eslint config > should generate eslint.config.js for TypeScript + Vanilla 1`] = `
+"import tseslint from 'typescript-eslint';
+
+export default [...tseslint.configs.recommended];
+"
+`;
+
 exports[`template files > js-react > should generate .prettierrc 1`] = `
 "{
   "bracketSpacing": false,
@@ -110,9 +185,7 @@ exports[`template files > js-react > should generate package.json 1`] = `
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   }
-}
-
-"
+}"
 `;
 
 exports[`template files > js-react > should generate vite.config.js 1`] = `
@@ -225,8 +298,15 @@ exports[`template files > js-vanilla > should generate package.json 1`] = `
   "dependencies": {
     "tinybase": "^6.6.0"
   }
-}
+}"
+`;
 
+exports[`template files > prettier config > should generate .prettierrc 1`] = `
+"{
+  "bracketSpacing": false,
+  "singleQuote": true,
+  "trailingComma": "all"
+}
 "
 `;
 
@@ -343,9 +423,7 @@ exports[`template files > ts-react > should generate package.json 1`] = `
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   }
-}
-
-"
+}"
 `;
 
 exports[`template files > ts-react > should generate tsconfig.json 1`] = `
@@ -518,9 +596,7 @@ exports[`template files > ts-vanilla > should generate package.json 1`] = `
   "dependencies": {
     "tinybase": "^6.6.0"
   }
-}
-
-"
+}"
 `;
 
 exports[`template files > ts-vanilla > should generate tsconfig.json 1`] = `
