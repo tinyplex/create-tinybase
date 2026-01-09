@@ -1,63 +1,16 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`create-tinybase > js-react > should match snapshot 1`] = `
-{
-  ".prettierrc": "{
+exports[`template files > js-react > should generate .prettierrc 1`] = `
+"{
   "bracketSpacing": false,
   "singleQuote": true,
   "trailingComma": "all"
 }
-",
-  "README.md": "# test-js-react
+"
+`;
 
-A TinyBase app built with JavaScript and /// return context.isReact ? 'React' : 'Vanilla JS';.
-
-## Getting Started
-
-\`\`\`bash
-npm install
-npm run dev
-\`\`\`
-
-## Learn More
-
-- [TinyBase Documentation](https://tinybase.org)
-- [TinyBase Examples](https://tinybase.org/demos/)
-",
-  "index.html": "<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TinyBase</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/index.jsx"></script>
-  </body>
-</html>
-",
-  "package.json": "{
-  "name": "test-js-react",
-  "version": "1.0.0",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "devDependencies": {
-    "vite": "^7.1.3",
-    "@vitejs/plugin-react": "^4.3.4"
-  },
-  "dependencies": {
-    "tinybase": "^6.6.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
-  }
-}
-
-",
-  "src/App.jsx": "import {createStore} from 'tinybase';
+exports[`template files > js-react > should generate App.jsx 1`] = `
+"import {createStore} from 'tinybase';
 import {Provider, useValue} from 'tinybase/ui-react';
 
 const store = createStore().setValue('count', 0);
@@ -81,39 +34,11 @@ const Counter = () => {
     </div>
   );
 };
-",
-  "src/index.css": "body {
-  font-family: system-ui;
-  padding: 2rem;
-}
-",
-  "src/index.jsx": "import './index.css';
-import ReactDOM from 'react-dom/client';
-import {App} from './App';
-
-addEventListener('load', () =>
-  ReactDOM.createRoot(document.getElementById('app')).render(<App />),
-);
-",
-  "vite.config.js": "import react from '@vitejs/plugin-react';
-import {defineConfig} from 'vite';
-
-export default defineConfig({
-  plugins: [react()],
-});
-",
-}
+"
 `;
 
-exports[`create-tinybase > js-vanilla > should match snapshot 1`] = `
-{
-  ".prettierrc": "{
-  "bracketSpacing": false,
-  "singleQuote": true,
-  "trailingComma": "all"
-}
-",
-  "README.md": "# test-js-vanilla
+exports[`template files > js-react > should generate README.md 1`] = `
+"# test-js-react
 
 A TinyBase app built with JavaScript and /// return context.isReact ? 'React' : 'Vanilla JS';.
 
@@ -128,8 +53,115 @@ npm run dev
 
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
-",
-  "index.html": "<!doctype html>
+"
+`;
+
+exports[`template files > js-react > should generate index.css 1`] = `
+"body {
+  font-family: system-ui;
+  padding: 2rem;
+}
+"
+`;
+
+exports[`template files > js-react > should generate index.html 1`] = `
+"<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TinyBase</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/index.jsx"></script>
+  </body>
+</html>
+"
+`;
+
+exports[`template files > js-react > should generate index.jsx 1`] = `
+"import './index.css';
+import ReactDOM from 'react-dom/client';
+import {App} from './App';
+
+addEventListener('load', () =>
+  ReactDOM.createRoot(document.getElementById('app')).render(<App />),
+);
+"
+`;
+
+exports[`template files > js-react > should generate package.json 1`] = `
+"{
+  "name": "test-js-react",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.1.3",
+    "@vitejs/plugin-react": "^4.3.4"
+  },
+  "dependencies": {
+    "tinybase": "^6.6.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}
+
+"
+`;
+
+exports[`template files > js-react > should generate vite.config.js 1`] = `
+"import react from '@vitejs/plugin-react';
+import {defineConfig} from 'vite';
+
+export default defineConfig({
+  plugins: [react()],
+});
+"
+`;
+
+exports[`template files > js-vanilla > should generate .prettierrc 1`] = `
+"{
+  "bracketSpacing": false,
+  "singleQuote": true,
+  "trailingComma": "all"
+}
+"
+`;
+
+exports[`template files > js-vanilla > should generate README.md 1`] = `
+"# test-js-vanilla
+
+A TinyBase app built with JavaScript and /// return context.isReact ? 'React' : 'Vanilla JS';.
+
+## Getting Started
+
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+"
+`;
+
+exports[`template files > js-vanilla > should generate index.css 1`] = `
+"body {
+  font-family: system-ui;
+  padding: 2rem;
+}
+"
+`;
+
+exports[`template files > js-vanilla > should generate index.html 1`] = `
+"<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -140,30 +172,11 @@ npm run dev
     <script type="module" src="/src/index.js"></script>
   </body>
 </html>
-",
-  "package.json": "{
-  "name": "test-js-vanilla",
-  "version": "1.0.0",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "devDependencies": {
-    "vite": "^7.1.3"
-  },
-  "dependencies": {
-    "tinybase": "^6.6.0"
-  }
-}
+"
+`;
 
-",
-  "src/index.css": "body {
-  font-family: system-ui;
-  padding: 2rem;
-}
-",
-  "src/index.js": "import './index.css';
+exports[`template files > js-vanilla > should generate index.js 1`] = `
+"import './index.css';
 import {createStore} from 'tinybase';
 
 // Convenience function for attaching an action to a button
@@ -207,72 +220,40 @@ addEventListener('load', () => {
       parrot: {price: 3},
     });
 });
-",
-}
+"
 `;
 
-exports[`create-tinybase > ts-react > should match snapshot 1`] = `
-{
-  ".prettierrc": "{
+exports[`template files > js-vanilla > should generate package.json 1`] = `
+"{
+  "name": "test-js-vanilla",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.1.3"
+  },
+  "dependencies": {
+    "tinybase": "^6.6.0"
+  }
+}
+
+"
+`;
+
+exports[`template files > ts-react > should generate .prettierrc 1`] = `
+"{
   "bracketSpacing": false,
   "singleQuote": true,
   "trailingComma": "all"
 }
-",
-  "README.md": "# test-ts-react
+"
+`;
 
-A TinyBase app built with TypeScript and /// return context.isReact ? 'React' : 'Vanilla JS';.
-
-## Getting Started
-
-\`\`\`bash
-npm install
-npm run dev
-\`\`\`
-
-## Learn More
-
-- [TinyBase Documentation](https://tinybase.org)
-- [TinyBase Examples](https://tinybase.org/demos/)
-",
-  "index.html": "<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TinyBase</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/index.tsx"></script>
-  </body>
-</html>
-",
-  "package.json": "{
-  "name": "test-ts-react",
-  "version": "1.0.0",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
-  },
-  "devDependencies": {
-    "vite": "^7.1.3",
-    "typescript": "^5.9.3",
-    "@types/node": "^25.0.3",
-    "@types/react": "^18.3.18",
-    "@types/react-dom": "^18.3.5",
-    "@vitejs/plugin-react": "^4.3.4"
-  },
-  "dependencies": {
-    "tinybase": "^6.6.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
-  }
-}
-
-",
-  "src/App.tsx": "import {createStore} from 'tinybase';
+exports[`template files > ts-react > should generate App.tsx 1`] = `
+"import {createStore} from 'tinybase';
 import {Provider, useValue} from 'tinybase/ui-react';
 
 const store = createStore().setValue('count', 0);
@@ -296,21 +277,92 @@ const Counter = () => {
     </div>
   );
 };
-",
-  "src/index.css": "body {
+"
+`;
+
+exports[`template files > ts-react > should generate README.md 1`] = `
+"# test-ts-react
+
+A TinyBase app built with TypeScript and /// return context.isReact ? 'React' : 'Vanilla JS';.
+
+## Getting Started
+
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+"
+`;
+
+exports[`template files > ts-react > should generate index.css 1`] = `
+"body {
   font-family: system-ui;
   padding: 2rem;
 }
-",
-  "src/index.tsx": "import './index.css';
+"
+`;
+
+exports[`template files > ts-react > should generate index.html 1`] = `
+"<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TinyBase</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
+</html>
+"
+`;
+
+exports[`template files > ts-react > should generate index.tsx 1`] = `
+"import './index.css';
 import ReactDOM from 'react-dom/client';
 import {App} from './App';
 
 addEventListener('load', () =>
   ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
 );
-",
-  "tsconfig.json": "{
+"
+`;
+
+exports[`template files > ts-react > should generate package.json 1`] = `
+"{
+  "name": "test-ts-react",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.1.3",
+    "typescript": "^5.9.3",
+    "@types/node": "^25.0.3",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4"
+  },
+  "dependencies": {
+    "tinybase": "^6.6.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}
+
+"
+`;
+
+exports[`template files > ts-react > should generate tsconfig.json 1`] = `
+"{
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -337,8 +389,11 @@ addEventListener('load', () =>
     "src"
   ]
 }
-",
-  "tsconfig.node.json": "{
+"
+`;
+
+exports[`template files > ts-react > should generate tsconfig.node.json 1`] = `
+"{
   "compilerOptions": {
     "module": "ESNext",
     "moduleResolution": "bundler",
@@ -347,26 +402,30 @@ addEventListener('load', () =>
     "skipLibCheck": true
   }
 }
-",
-  "vite.config.js": "import react from '@vitejs/plugin-react';
+"
+`;
+
+exports[`template files > ts-react > should generate vite.config.js 1`] = `
+"import react from '@vitejs/plugin-react';
 import {defineConfig} from 'vite';
 
 export default defineConfig({
   plugins: [react()],
 });
-",
-}
+"
 `;
 
-exports[`create-tinybase > ts-vanilla > should match snapshot 1`] = `
-{
-  ".prettierrc": "{
+exports[`template files > ts-vanilla > should generate .prettierrc 1`] = `
+"{
   "bracketSpacing": false,
   "singleQuote": true,
   "trailingComma": "all"
 }
-",
-  "README.md": "# test-ts-vanilla
+"
+`;
+
+exports[`template files > ts-vanilla > should generate README.md 1`] = `
+"# test-ts-vanilla
 
 A TinyBase app built with TypeScript and /// return context.isReact ? 'React' : 'Vanilla JS';.
 
@@ -381,8 +440,19 @@ npm run dev
 
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
-",
-  "index.html": "<!doctype html>
+"
+`;
+
+exports[`template files > ts-vanilla > should generate index.css 1`] = `
+"body {
+  font-family: system-ui;
+  padding: 2rem;
+}
+"
+`;
+
+exports[`template files > ts-vanilla > should generate index.html 1`] = `
+"<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -393,32 +463,11 @@ npm run dev
     <script type="module" src="/src/index.ts"></script>
   </body>
 </html>
-",
-  "package.json": "{
-  "name": "test-ts-vanilla",
-  "version": "1.0.0",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
-  },
-  "devDependencies": {
-    "vite": "^7.1.3",
-    "typescript": "^5.9.3",
-    "@types/node": "^25.0.3"
-  },
-  "dependencies": {
-    "tinybase": "^6.6.0"
-  }
-}
+"
+`;
 
-",
-  "src/index.css": "body {
-  font-family: system-ui;
-  padding: 2rem;
-}
-",
-  "src/index.ts": "import './index.css';
+exports[`template files > ts-vanilla > should generate index.ts 1`] = `
+"import './index.css';
 import {createStore} from 'tinybase';
 
 // Convenience function for attaching an action to a button
@@ -462,8 +511,33 @@ addEventListener('load', () => {
       parrot: {price: 3},
     });
 });
-",
-  "tsconfig.json": "{
+"
+`;
+
+exports[`template files > ts-vanilla > should generate package.json 1`] = `
+"{
+  "name": "test-ts-vanilla",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.1.3",
+    "typescript": "^5.9.3",
+    "@types/node": "^25.0.3"
+  },
+  "dependencies": {
+    "tinybase": "^6.6.0"
+  }
+}
+
+"
+`;
+
+exports[`template files > ts-vanilla > should generate tsconfig.json 1`] = `
+"{
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -489,8 +563,11 @@ addEventListener('load', () => {
     "src"
   ]
 }
-",
-  "tsconfig.node.json": "{
+"
+`;
+
+exports[`template files > ts-vanilla > should generate tsconfig.node.json 1`] = `
+"{
   "compilerOptions": {
     "module": "ESNext",
     "moduleResolution": "bundler",
@@ -499,6 +576,5 @@ addEventListener('load', () => {
     "skipLibCheck": true
   }
 }
-",
-}
+"
 `;

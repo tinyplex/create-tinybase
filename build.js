@@ -1,16 +1,11 @@
 import * as esbuild from 'esbuild';
-import {chmod, mkdir, readFile, rm, writeFile} from 'fs/promises';
+import {chmod, cp, mkdir, readFile, rm, writeFile} from 'fs/promises';
 
 await rm('dist', {recursive: true, force: true});
 await mkdir('dist', {recursive: true});
 
 await esbuild.build({
-  entryPoints: [
-    'src/cli.ts',
-    'src/templates.ts',
-    'src/templateEngine.ts',
-    'src/postProcess.ts',
-  ],
+  entryPoints: ['src/cli.ts', 'src/templateEngine.ts', 'src/postProcess.ts'],
   bundle: false,
   minify: true,
   platform: 'node',
@@ -23,6 +18,9 @@ await esbuild.build({
 const cliCode = await readFile('dist/cli.js', 'utf-8');
 await writeFile('dist/cli.js', '#!/usr/bin/env node\n' + cliCode);
 await chmod('dist/cli.js', 0o755);
+
+// Copy templates directory to dist
+await cp('templates', 'dist/templates', {recursive: true});
 
 const pkg = JSON.parse(await readFile('package.json', 'utf-8'));
 delete pkg.devDependencies;

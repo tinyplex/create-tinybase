@@ -1,7 +1,11 @@
-import {mkdir} from 'fs/promises';
-import {join} from 'path';
+import {mkdir, writeFile} from 'fs/promises';
+import {dirname, join} from 'path';
 import prompts from 'prompts';
-import {generateProject} from './templates.js';
+import {fileURLToPath} from 'url';
+import {postProcessFile} from './postProcess.js';
+import {TemplateEngine} from './templateEngine.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const args = process.argv.slice(2);
 const nonInteractive = args.includes('--non-interactive');
@@ -96,6 +100,86 @@ async function main() {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error('❌ Error creating project:', errorMessage);
     process.exit(1);
+  }
+}
+
+async function generateProject(
+  targetDir: string,
+  answers: Answers,
+): Promise<void> {
+  const isTypescript = answers.language === 'typescript';
+  const isReact = answers.framework === 'react';
+  const ext = isTypescript ? (isReact ? 'tsx' : 'ts') : isReact ? 'jsx' : 'js';
+
+  const context = {
+    projectName: answers.projectName,
+    language: answers.language,
+    framework: answers.framework,
+    isTypescript,
+    isReact,
+    ext,
+  };
+
+  const engine = new TemplateEngine(context, join(__dirname, '../templates'));
+
+  // Create directory structure
+  await mkdir(join(targetDir, 'src'), {recursive: true});
+  await mkdir(join(targetDir, 'public'), {recursive: true});
+
+  // Process and write all template files
+  const files: Array<{template: string; output: string; prettier?: boolean}> = [
+    {template: 'base/package.json.template', output: 'package.json'},
+    {
+      template: 'base/index.html.template',
+      output: 'index.html',
+      prettier: true,
+    },
+    {template: 'base/README.md.template', output: 'README.md', prettier: true},
+    {template: 'base/.prettierrc.template', output: '.prettierrc'},
+    {
+      template: 'src/index.css.template',
+      output: 'src/index.css',
+      prettier: true,
+    },
+    {
+      template: 'src/index.template.tsx',
+      output: `src/index.${ext}`,
+      prettier: true,
+    },
+  ];
+
+  if (isReact) {
+    files.push(
+      {
+        template: 'src/App.template.tsx',
+        output: `src/App.${ext}`,
+        prettier: true,
+      },
+      {
+        template: 'base/vite.config.js.template',
+        output: 'vite.config.js',
+        prettier: true,
+      },
+    );
+  }
+
+  if (isTypescript) {
+    files.push(
+      {template: 'base/tsconfig.json.template', output: 'tsconfig.json'},
+      {
+        template: 'base/tsconfig.node.json.template',
+        output: 'tsconfig.node.json',
+      },
+    );
+  }
+
+  for (const {template, output, prettier = false} of files) {
+    const processed = await engine.processTemplate(template);
+    const {content, filePath} = await postProcessFile(output, processed, {
+      prettier,
+      transpileToJS: !isTypescript,
+    });
+    await writeFile(join(targetDir, filePath), content);
   }
 }
 
