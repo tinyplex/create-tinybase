@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import {existsSync} from 'fs';
 import {dirname, join} from 'path';
 import {createCLI} from 'tinycreate';
 import {fileURLToPath} from 'url';
@@ -14,8 +15,16 @@ const config = {
       name: 'projectName',
       message: 'Project name:',
       initial: 'my-tinybase-app',
-      validate: (value: string) =>
-        value.length > 0 ? true : 'Project name is required',
+      validate: (value: string) => {
+        if (value.length === 0) {
+          return 'Project name is required';
+        }
+        const targetPath = join(process.cwd(), value);
+        if (existsSync(targetPath)) {
+          return `Directory "${value}" already exists. Please choose a different name.`;
+        }
+        return true;
+      },
     },
     {
       type: 'select' as const,
