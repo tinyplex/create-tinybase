@@ -1,1 +1,5 @@
-/// return JSON.stringify({bracketSpacing: false, singleQuote: true, trailingComma: 'all'}, null, 2);
+{
+  "bracketSpacing": false,
+  "singleQuote": true,
+  "trailingComma": "all"
+}
