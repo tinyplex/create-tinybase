@@ -187,7 +187,6 @@ describe('create-tinybase', () => {
       expect(files).toContain('eslint.config.js');
       expect(files).toContain('package.json');
 
-      // Check package.json has the right dependencies and scripts
       const pkg = JSON.parse(
         await readFile(join(projectPath, 'package.json'), 'utf-8'),
       );
@@ -198,7 +197,6 @@ describe('create-tinybase', () => {
       expect(pkg.scripts).toHaveProperty('format');
       expect(pkg.scripts).toHaveProperty('lint');
 
-      // Check eslint config has correct imports
       const eslintConfig = await readFile(
         join(projectPath, 'eslint.config.js'),
         'utf-8',

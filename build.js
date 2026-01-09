@@ -14,13 +14,11 @@ await esbuild.build({
   outdir: 'dist',
 });
 
-// Add shebang to cli.js (replace any existing shebang)
 const cliCode = await readFile('dist/cli.js', 'utf-8');
 const cleanedCode = cliCode.replace(/^#!.*\n/g, '');
 await writeFile('dist/cli.js', '#!/usr/bin/env node\n' + cleanedCode);
 await chmod('dist/cli.js', 0o755);
 
-// Copy templates directory to dist
 await cp('templates', 'dist/templates', {recursive: true});
 
 const pkg = JSON.parse(await readFile('package.json', 'utf-8'));
