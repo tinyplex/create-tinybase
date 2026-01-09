@@ -5,7 +5,7 @@ await rm('dist', {recursive: true, force: true});
 await mkdir('dist', {recursive: true});
 
 await esbuild.build({
-  entryPoints: ['src/cli.ts', 'src/templateEngine.ts', 'src/postProcess.ts'],
+  entryPoints: ['src/cli.ts'],
   bundle: false,
   minify: true,
   platform: 'node',
@@ -14,9 +14,10 @@ await esbuild.build({
   outdir: 'dist',
 });
 
-// Add shebang to cli.js
+// Add shebang to cli.js (replace any existing shebang)
 const cliCode = await readFile('dist/cli.js', 'utf-8');
-await writeFile('dist/cli.js', '#!/usr/bin/env node\n' + cliCode);
+const cleanedCode = cliCode.replace(/^#!.*\n/g, '');
+await writeFile('dist/cli.js', '#!/usr/bin/env node\n' + cleanedCode);
 await chmod('dist/cli.js', 0o755);
 
 // Copy templates directory to dist

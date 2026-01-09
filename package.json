@@ -29,7 +29,8 @@
     "prePublishPackage": "npm run ts && npm run prettier && npm run lint && npm run test"
   },
   "dependencies": {
-    "prompts": "^2.4.2"
+    "prompts": "^2.4.2",
+    "tinycreate": "^0.1.0"
   },
   "engines": {
     "node": ">=18.0.0"

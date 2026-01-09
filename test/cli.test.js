@@ -31,7 +31,7 @@ async function runCLIWithOptions(
       [
         join(__dirname, '..', 'dist', 'cli.js'),
         '--non-interactive',
-        '--project-name',
+        '--projectName',
         projectName,
         '--language',
         language,

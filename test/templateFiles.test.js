@@ -1,6 +1,5 @@
+import {postProcessFile, TemplateEngine} from 'tinycreate';
 import {describe, expect, it} from 'vitest';
-import {postProcessFile} from '../src/postProcess.js';
-import {TemplateEngine} from '../src/templateEngine.js';
 
 const configs = {
   'ts-react': {
