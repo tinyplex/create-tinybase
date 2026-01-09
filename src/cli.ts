@@ -168,7 +168,8 @@ const config = {
       file.prettier ?? /\.(js|jsx|ts|tsx|css|json|html|md)$/.test(file.output);
     // Transpile if the template is TypeScript but we're generating JavaScript
     const transpile =
-      file.transpile ?? (/\.(ts|tsx)\.hbs$/.test(file.template) && javascript === true);
+      file.transpile ??
+      (/\.(ts|tsx)\.hbs$/.test(file.template) && javascript === true);
 
     return {
       ...file,
@@ -178,6 +179,9 @@ const config = {
   },
 
   templateRoot: join(__dirname, 'templates'),
+
+  installCommand: '{pm} install',
+  devCommand: '{pm} run dev',
 
   onSuccess: (projectName: string) => {
     console.log(`Next steps:`);
