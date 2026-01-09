@@ -1,8 +1,48 @@
 /// addImport("import './index.css';");
-/// if (context.isReact) addImport("import ReactDOM from 'react-dom/client';");
-/// if (context.isReact) addImport("import {App} from './App';");
-/// if (!context.isReact) addImport("import {createStore} from 'tinybase';");
 
-/// return when(context.isReact, `addEventListener('load', () =>\n  ReactDOM.createRoot(document.getElementById('app')!).render(<App />),\n);`);
+/// IF context.isReact
+/// addImport("import ReactDOM from 'react-dom/client';");
+/// addImport("import {App} from './App';");
 
-/// return when(!context.isReact, `// Convenience function for attaching an action to a button\nconst onClick = (id: string, onClick: () => void) =>\n  document.getElementById(id)!.addEventListener('click', onClick);\n\n// Convenience function for writing out pretty JSON into an element\nconst updateJson = (id: string, content: unknown) =>\n  (document.getElementById(id)!.innerText = JSON.stringify(content, null, 2));\n\n// Convenience function for generating a random integer\nconst getRandom = (max = 100) => Math.floor(Math.random() * max);\n\naddEventListener('load', () => {\n  // Create the TinyBase Store\n  const store = createStore();\n\n  // Attach events to the buttons to mutate the data in the TinyBase Store\n  onClick('countButton', () => store.setValue('counter', (value) => value + 1));\n  onClick('randomButton', () => store.setValue('random', getRandom()));\n  onClick('addPetButton', () =>\n    store.addRow('pets', {\n      name: ['fido', 'felix', 'bubbles', 'lowly', 'polly'][getRandom(5)],\n      species: store.getRowIds('species')[getRandom(5)],\n    }),\n  );\n\n  // Bind listeners to all Values and Tables in the Store to print the content\n  store.addValuesListener(() => updateJson('valuesJson', store.getValues()));\n  store.addTablesListener(() => updateJson('tablesJson', store.getTables()));\n\n  // Initialize the Store's data\n  store\n    .setValue('counter', 0)\n    .setRow('pets', '0', {name: 'fido', species: 'dog'})\n    .setTable('species', {\n      dog: {price: 5},\n      cat: {price: 4},\n      fish: {price: 2},\n      worm: {price: 1},\n      parrot: {price: 3},\n    });\n});`);
+addEventListener('load', () =>
+  ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
+);
+
+/// ELSE
+/// addImport("import {createStore} from 'tinybase';");
+
+const onClick = (id: string, onClick: () => void) =>
+  document.getElementById(id)!.addEventListener('click', onClick);
+
+const updateJson = (id: string, content: unknown) =>
+  (document.getElementById(id)!.innerText = JSON.stringify(content, null, 2));
+
+const getRandom = (max = 100) => Math.floor(Math.random() * max);
+
+addEventListener('load', () => {
+  const store = createStore();
+
+  onClick('countButton', () => store.setValue('counter', (value) => value + 1));
+  onClick('randomButton', () => store.setValue('random', getRandom()));
+  onClick('addPetButton', () =>
+    store.addRow('pets', {
+      name: ['fido', 'felix', 'bubbles', 'lowly', 'polly'][getRandom(5)],
+      species: store.getRowIds('species')[getRandom(5)],
+    }),
+  );
+
+  store.addValuesListener(() => updateJson('valuesJson', store.getValues()));
+  store.addTablesListener(() => updateJson('tablesJson', store.getTables()));
+
+  store
+    .setValue('counter', 0)
+    .setRow('pets', '0', {name: 'fido', species: 'dog'})
+    .setTable('species', {
+      dog: {price: 5},
+      cat: {price: 4},
+      fish: {price: 2},
+      worm: {price: 1},
+      parrot: {price: 3},
+    });
+});
+/// ENDIF
