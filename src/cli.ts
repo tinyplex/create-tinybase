@@ -89,27 +89,22 @@ const config = {
       {
         template: 'base/package.json.hbs',
         output: 'package.json',
-        prettier: true,
       },
       {
         template: 'base/index.html.hbs',
         output: 'index.html',
-        prettier: true,
       },
       {
         template: 'base/README.md.hbs',
         output: 'README.md',
-        prettier: true,
       },
       {
         template: 'src/index.css.hbs',
         output: 'src/index.css',
-        prettier: true,
       },
       {
         template: 'src/index.tsx.hbs',
         output: `src/index.${ext}`,
-        prettier: true,
         transpile: true,
       },
     ];
@@ -125,7 +120,6 @@ const config = {
       files.push({
         template: 'base/eslint.config.js.hbs',
         output: 'eslint.config.js',
-        prettier: true,
       });
     }
 
@@ -134,20 +128,21 @@ const config = {
         {
           template: 'src/App.tsx.hbs',
           output: `src/App.${ext}`,
-          prettier: true,
           transpile: true,
         },
         {
           template: 'base/vite.config.js.hbs',
           output: 'vite.config.js',
-          prettier: true,
         },
       );
     }
 
     if (typescript) {
       files.push(
-        {template: 'base/tsconfig.json.hbs', output: 'tsconfig.json'},
+        {
+          template: 'base/tsconfig.json.hbs',
+          output: 'tsconfig.json',
+        },
         {
           template: 'base/tsconfig.node.json.hbs',
           output: 'tsconfig.node.json',

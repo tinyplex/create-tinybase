@@ -29,7 +29,6 @@
     "prePublishPackage": "npm run ts && npm run prettier && npm run lint && npm run test"
   },
   "dependencies": {
-    "prompts": "^2.4.2",
     "tinycreate": "^0.1.0"
   },
   "engines": {
@@ -38,7 +37,6 @@
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@types/node": "^25.0.3",
-    "@types/prompts": "^2.4.9",
     "esbuild": "^0.27.2",
     "eslint": "^9.39.2",
     "eslint-plugin-import": "^2.32.0",
