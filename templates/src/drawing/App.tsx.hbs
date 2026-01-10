@@ -1,7 +1,9 @@
+{{includeFile template="src/components/Button.tsx.hbs" output="src/components/Button.{{ext}}"}}
 import {StrictMode, useCallback, useEffect, useRef} from 'react';
 import {createStore} from 'tinybase';
 import {Provider, useAddRowCallback, useCreateStore, useDelTableCallback, useRow, useRowIds, useStore} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
+import {Button} from './components/Button';
 
 const Canvas = () => {
 const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -106,7 +108,7 @@ const canvasRef = useRef<HTMLCanvasElement>(null);
 
     return (
     <div className="brush-size">
-      <label>Brush Size:</label>
+      <label>Size:</label>
       <input type="range" min="1" max="50" value={size} onChange={setSize} />
       <span id="brush-size-value">{size}</span>
     </div>
@@ -115,7 +117,7 @@ const canvasRef = useRef<HTMLCanvasElement>(null);
 
     const ClearButton = () => {
     const clearCanvas = useDelTableCallback('strokes');
-    return <button onClick={clearCanvas} className="clear-btn">Clear Canvas</button>;
+    return <Button onClick={clearCanvas} variant="primary">Clear</Button>;
     };
 
     {{#if typescript}}export {{/if}}const App = () => {

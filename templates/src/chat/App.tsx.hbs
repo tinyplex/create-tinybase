@@ -1,7 +1,9 @@
+{{includeFile template="src/components/Button.tsx.hbs" output="src/components/Button.{{ext}}"}}
 import {StrictMode, useState, useMemo} from 'react';
 import {createStore} from 'tinybase';
 import {Provider, useCreateStore, useAddRowCallback, useRow, useSetValueCallback, useValue, useRowIds, useStore} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
+import {Button} from './components/Button';
 
 const MessageInput = () => {
 const [message, setMessage] = useState('');
@@ -31,7 +33,7 @@ return (
   placeholder="Type a message..."
   autoFocus
   />
-  <button type="submit">Send</button>
+  <Button onClick={()=> handleSend()} variant="primary">Send</Button>
 </form>
 );
 };

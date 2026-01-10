@@ -1,4 +1,6 @@
+{{includeFile template="src/components/button.ts.hbs" output="src/components/button.{{ext}}"}}
 import {createStore} from 'tinybase';
+import {createButton} from './components/button';
 
 const updateMessages = (store: any) => {
 const messages = document.getElementById('messages')!;
@@ -36,7 +38,6 @@ const store = createStore()
 
 const usernameInput = document.getElementById('username-input') as HTMLInputElement;
 const messageInput = document.getElementById('message-input') as HTMLInputElement;
-const sendButton = document.getElementById('send-button')!;
 
 usernameInput!.value = store.getValue('username') as string;
 usernameInput!.addEventListener('input', () => {
@@ -59,7 +60,10 @@ messageInput!.value = '';
 }
 };
 
-sendButton.addEventListener('click', sendMessage);
+const messageInputContainer = document.querySelector('.message-input')!;
+const sendButton = createButton('Send', sendMessage, 'primary');
+messageInputContainer.appendChild(sendButton);
+
 messageInput!.addEventListener('keypress', (e) => {
 if (e.key === 'Enter') {
 sendMessage();

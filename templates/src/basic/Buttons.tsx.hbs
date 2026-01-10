@@ -1,5 +1,7 @@
 import {useAddRowCallback, useSetValueCallback} from 'tinybase/ui-react';
 import type {ValueOrUndefined} from 'tinybase';
+{{includeFile template="src/components/Button.tsx.hbs" output="src/components/Button.{{ext}}"}}
+import {Button} from './components/Button';
 
 // Convenience function for generating a random integer
 const getRandom = (max = 100) => Math.floor(Math.random() * max);
@@ -18,9 +20,9 @@ species: store.getRowIds('species')[getRandom(5)],
 
 return (
 <div id="buttons">
-  <button onClick={handleCount}>Increment number</button>
-  <button onClick={handleRandom}>Random number</button>
-  <button onClick={handleAddPet}>Add a pet</button>
+  <Button onClick={handleCount}>Increment number</Button>
+  <Button onClick={handleRandom}>Random number</Button>
+  <Button onClick={handleAddPet}>Add a pet</Button>
 </div>
 );
 };

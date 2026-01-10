@@ -32,10 +32,163 @@ npm run dev
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>TinyBase / JavaScript + React</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
   </head>
 
   <body>
-    <div id="app"></div>
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Demo</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
+            i
+            <div id="infoTooltip">
+              A simple TinyBase app with key-values and tables mutated with
+              buttons. See the full set of
+              <a href="https://tinybase.org/demos/" target="_blank"
+                >TinyBase demos</a
+              >
+              for more examples. <br /><br />
+              Built with JavaScript + React.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.jsx"></script>
   </body>
@@ -74,17 +227,6 @@ import {Provider, useCreateStore} from 'tinybase/ui-react';
 import {SortedTableInHtmlTable, ValuesInHtmlTable} from 'tinybase/ui-react-dom';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {Buttons} from './Buttons';
-const TopBar = ({title, tech}) => (
-  <div className="top-bar">
-    <img src="/favicon.svg" className="top-bar-logo" alt="TinyBase" />
-    <div className="top-bar-title">{title}</div>
-    <div className="top-bar-info">
-      <div className="info-icon">
-        i<div className="info-tooltip">{tech}</div>
-      </div>
-    </div>
-  </div>
-);
 const App = () => {
   const store = useCreateStore(() => {
     return createStore()
@@ -100,44 +242,32 @@ const App = () => {
   });
   return (
     <StrictMode>
-      <div className="app-container">
-        <TopBar title="TinyBase Demo" tech="JavaScript + React" />
-        <div id="app">
-          <Provider store={store}>
-            <p>
-              This is more or less the simplest TinyBase app you could imagine.
-              It contains a handful of key-values and tables which are mutated
-              with the buttons below, and rendered with plain table components.
-              See the full set of{' '}
-              <a href="https://tinybase.org/demos/">TinyBase demos</a> for more
-              interesting examples!
-            </p>
-            <Buttons />
-            <div>
-              <h2>Values</h2>
-              <ValuesInHtmlTable />
-            </div>
-            <div>
-              <h2>Pets Table</h2>
-              <SortedTableInHtmlTable
-                tableId="pets"
-                cellId="name"
-                limit={5}
-                sortOnClick={true}
-                className="sortedTable"
-                paginator={true}
-              />
-            </div>
-            <Inspector />
-          </Provider>
+      <Provider store={store}>
+        <Buttons />
+        <div>
+          <h2>Values</h2>
+          <ValuesInHtmlTable />
         </div>
-      </div>
+        <div>
+          <h2>Pets Table</h2>
+          <SortedTableInHtmlTable
+            tableId="pets"
+            cellId="name"
+            limit={5}
+            sortOnClick={true}
+            className="sortedTable"
+            paginator={true}
+          />
+        </div>
+        <Inspector />
+      </Provider>
     </StrictMode>
   );
 };
 export {App};
 ",
   "src/Buttons.jsx": "import {useAddRowCallback, useSetValueCallback} from 'tinybase/ui-react';
+import {Button} from './components/Button';
 const getRandom = (max = 100) => Math.floor(Math.random() * max);
 const Buttons = () => {
   const handleCount = useSetValueCallback(
@@ -151,9 +281,9 @@ const Buttons = () => {
   }));
   return (
     <div id="buttons">
-      <button onClick={handleCount}>Increment number</button>
-      <button onClick={handleRandom}>Random number</button>
-      <button onClick={handleAddPet}>Add a pet</button>
+      <Button onClick={handleCount}>Increment number</Button>
+      <Button onClick={handleRandom}>Random number</Button>
+      <Button onClick={handleAddPet}>Add a pet</Button>
     </div>
   );
 };
@@ -163,22 +293,7 @@ export {Buttons};
   border: solid #666;
   border-width: 1px 0;
   text-align: center;
-}
-
-#buttons button {
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  padding: 0.5rem 1rem;
-  background: #222;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  font-size: 0.8rem;
-  width: 10rem;
-  margin: 1rem;
-}
-#buttons button:hover {
-  border-color: #d81b60;
+  padding: 1rem 0;
 }
 
 table {
@@ -229,129 +344,50 @@ table.sortedTable thead th {
     gap: 2rem;
     align-items: start;
   }
-  p,
   #buttons {
     grid-column: span 2;
   }
 }
 ",
-  "src/index.css": "* {
-  box-sizing: border-box;
-}
-
-body {
-  color: #bbb;
-  background: #0a0a0a;
-  font-family: 'Inter', sans-serif;
-  user-select: none;
-  margin: 0;
-  padding: 0;
-}
-
-.app-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.top-bar {
-  background: linear-gradient(180deg, #1a1a1a 0%, #151515 100%);
-  border-bottom: 1px solid #2a2a2a;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  padding: 0.75rem 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.top-bar-logo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-.top-bar-title {
-  font-size: 1.1rem;
-  font-weight: 600;
+  "src/components/Button.jsx": "import './button.css';
+const Button = ({children, onClick, variant = 'default'}) => (
+  <button
+    onClick={onClick}
+    className={variant === 'primary' ? 'primary' : void 0}
+  >
+    {children}
+  </button>
+);
+export {Button};
+",
+  "src/components/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
   color: #fff;
-  flex: 1;
-}
-
-.top-bar-info {
-  position: relative;
-}
-
-.info-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  border: 2px solid #666;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
+  font-family: inherit;
   font-weight: 800;
-  color: #666;
-  cursor: help;
-  transition: all 0.2s;
-  user-select: none;
+  cursor: pointer;
+  margin: 0.5rem;
 }
 
-.info-icon:hover {
+button:hover {
   border-color: #d81b60;
-  color: #d81b60;
 }
 
-.info-icon:hover .info-tooltip {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
 }
 
-.info-tooltip {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 0.5rem);
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 0.375rem;
-  padding: 0.75rem 1rem;
-  font-size: 0.85rem;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-0.25rem);
-  transition: all 0.2s;
-  pointer-events: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+button.primary:hover {
+  background: #c2185b;
 }
-
-.info-tooltip::before {
-  content: '';
-  position: absolute;
-  right: 0.75rem;
-  top: -0.375rem;
-  width: 0.75rem;
-  height: 0.75rem;
-  background: #1a1a1a;
-  border-left: 1px solid #333;
-  border-top: 1px solid #333;
-  transform: rotate(45deg);
-}
-
-#app {
-  max-width: 50rem;
-  width: 100%;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-  flex: 1;
-}
-
-a {
-  color: #bbb;
+",
+  "src/index.css": "a {
+  color: var(--fg);
 }
 
 h1 {
@@ -375,7 +411,7 @@ p {
 }
 
 details {
-  border: 1px solid #333;
+  border: 1px solid var(--border);
   border-radius: 0.25rem;
   padding: 0.5rem;
 }
@@ -389,7 +425,7 @@ details summary {
 
 details[open] summary {
   margin-bottom: 0.5rem;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--border);
 }
 
 pre {
@@ -452,10 +488,160 @@ npm run dev
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>TinyBase / JavaScript + React</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
   </head>
 
   <body>
-    <div id="app"></div>
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Chat</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
+            i
+            <div id="infoTooltip">
+              A real-time chat application demonstrating TinyBase's reactive
+              data management.
+              <br /><br />
+              Built with JavaScript + React.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.jsx"></script>
   </body>
@@ -501,17 +687,7 @@ import {
   useStore,
 } from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
-const TopBar = ({title, tech}) => (
-  <div className="top-bar">
-    <img src="/favicon.svg" className="top-bar-logo" alt="TinyBase" />
-    <div className="top-bar-title">{title}</div>
-    <div className="top-bar-info">
-      <div className="info-icon">
-        i<div className="info-tooltip">{tech}</div>
-      </div>
-    </div>
-  </div>
-);
+import {Button} from './components/Button';
 const MessageInput = () => {
   const [message, setMessage] = useState('');
   const username = useValue('username') || 'Anonymous';
@@ -540,7 +716,9 @@ const MessageInput = () => {
         placeholder="Type a message..."
         autoFocus
       />
-      <button type="submit">Send</button>
+      <Button onClick={() => handleSend()} variant="primary">
+        Send
+      </Button>
     </form>
   );
 };
@@ -603,17 +781,12 @@ const App = () => {
   });
   return (
     <StrictMode>
-      <div className="app-container">
-        <TopBar title="TinyBase Chat" tech="JavaScript + React" />
-        <div id="app">
-          <Provider store={store}>
-            <UsernameInput />
-            <Messages />
-            <MessageInput />
-            <Inspector />
-          </Provider>
-        </div>
-      </div>
+      <Provider store={store}>
+        <UsernameInput />
+        <Messages />
+        <MessageInput />
+        <Inspector />
+      </Provider>
     </StrictMode>
   );
 };
@@ -669,6 +842,8 @@ export {App};
 
 .message-input {
   display: flex;
+  gap: 0.5rem;
+  padding: 1rem;
   border-top: 1px solid #666;
 }
 
@@ -680,138 +855,46 @@ export {App};
   color: #fff;
   font-family: inherit;
 }
-
-.message-input button {
-  padding: 0.75rem 1.5rem;
-  background: #d81b60;
-  border: none;
+",
+  "src/components/Button.jsx": "import './button.css';
+const Button = ({children, onClick, variant = 'default'}) => (
+  <button
+    onClick={onClick}
+    className={variant === 'primary' ? 'primary' : void 0}
+  >
+    {children}
+  </button>
+);
+export {Button};
+",
+  "src/components/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
   color: #fff;
   font-family: inherit;
   font-weight: 800;
   cursor: pointer;
+  margin: 0.5rem;
 }
 
-.message-input button:hover {
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/index.css": "* {
-  box-sizing: border-box;
-}
-
-body {
-  color: #bbb;
-  background: #0a0a0a;
-  font-family: 'Inter', sans-serif;
-  user-select: none;
-  margin: 0;
-  padding: 0;
-}
-
-.app-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.top-bar {
-  background: linear-gradient(180deg, #1a1a1a 0%, #151515 100%);
-  border-bottom: 1px solid #2a2a2a;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  padding: 0.75rem 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.top-bar-logo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-.top-bar-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
-}
-
-.top-bar-info {
-  position: relative;
-}
-
-.info-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  border: 2px solid #666;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: #666;
-  cursor: help;
-  transition: all 0.2s;
-  user-select: none;
-}
-
-.info-icon:hover {
-  border-color: #d81b60;
-  color: #d81b60;
-}
-
-.info-icon:hover .info-tooltip {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.info-tooltip {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 0.5rem);
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 0.375rem;
-  padding: 0.75rem 1rem;
-  font-size: 0.85rem;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-0.25rem);
-  transition: all 0.2s;
-  pointer-events: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-}
-
-.info-tooltip::before {
-  content: '';
-  position: absolute;
-  right: 0.75rem;
-  top: -0.375rem;
-  width: 0.75rem;
-  height: 0.75rem;
-  background: #1a1a1a;
-  border-left: 1px solid #333;
-  border-top: 1px solid #333;
-  transform: rotate(45deg);
-}
-
-#app {
-  max-width: 50rem;
-  width: 100%;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-  flex: 1;
-}
-
-a {
-  color: #bbb;
+  "src/index.css": "a {
+  color: var(--fg);
 }
 
 h1 {
@@ -835,7 +918,7 @@ p {
 }
 
 details {
-  border: 1px solid #333;
+  border: 1px solid var(--border);
   border-radius: 0.25rem;
   padding: 0.5rem;
 }
@@ -849,7 +932,7 @@ details summary {
 
 details[open] summary {
   margin-bottom: 0.5rem;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--border);
 }
 
 pre {
@@ -912,10 +995,160 @@ npm run dev
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>TinyBase / JavaScript + React</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
   </head>
 
   <body>
-    <div id="app"></div>
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Drawing</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
+            i
+            <div id="infoTooltip">
+              A collaborative drawing canvas showcasing TinyBase's state
+              synchronization.
+              <br /><br />
+              Built with JavaScript + React.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.jsx"></script>
   </body>
@@ -960,17 +1193,7 @@ import {
   useStore,
 } from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
-const TopBar = ({title, tech}) => (
-  <div className="top-bar">
-    <img src="/favicon.svg" className="top-bar-logo" alt="TinyBase" />
-    <div className="top-bar-title">{title}</div>
-    <div className="top-bar-info">
-      <div className="info-icon">
-        i<div className="info-tooltip">{tech}</div>
-      </div>
-    </div>
-  </div>
-);
+import {Button} from './components/Button';
 const Canvas = () => {
   const canvasRef = useRef(null);
   const isDrawing = useRef(false);
@@ -1053,7 +1276,6 @@ const ColorPicker = () => {
   ];
   const store = useStore();
   const currentBrush = useRow('settings', 'brush');
-  const currentColor = currentBrush.color;
   const setColor = (color) => {
     store.setRow('settings', 'brush', {...currentBrush, color});
   };
@@ -1062,7 +1284,7 @@ const ColorPicker = () => {
       {colors.map((color) => (
         <button
           key={color}
-          className={\`color-btn \${currentColor === color ? 'active' : ''}\`}
+          className="color-btn"
           style={{background: color}}
           onClick={() => setColor(color)}
         />
@@ -1082,18 +1304,18 @@ const BrushSize = () => {
   };
   return (
     <div className="brush-size">
-      <label>Brush Size:</label>
+      <label>Size:</label>
       <input type="range" min="1" max="50" value={size} onChange={setSize} />
-      <span className="brush-size-value">{size}</span>
+      <span id="brush-size-value">{size}</span>
     </div>
   );
 };
 const ClearButton = () => {
   const clearCanvas = useDelTableCallback('strokes');
   return (
-    <button onClick={clearCanvas} className="clear-btn">
-      Clear Canvas
-    </button>
+    <Button onClick={clearCanvas} variant="primary">
+      Clear
+    </Button>
   );
 };
 const App = () => {
@@ -1104,53 +1326,92 @@ const App = () => {
   });
   return (
     <StrictMode>
-      <div className="app-container">
-        <TopBar title="TinyBase Drawing" tech="JavaScript + React" />
-        <div id="app">
-          <Provider store={store}>
-            <div className="drawing-controls">
-              <ColorPicker />
-              <BrushSize />
-              <ClearButton />
-            </div>
-            <Canvas />
-            <Inspector />
-          </Provider>
-        </div>
-      </div>
+      <Provider store={store}>
+        <>
+          <div className="drawing-controls">
+            <ColorPicker />
+            <BrushSize />
+            <ClearButton />
+          </div>
+          <Canvas />
+          <Inspector />
+        </>
+      </Provider>
     </StrictMode>
   );
 };
 export {App};
 ",
-  "src/drawing.css": ".drawing-controls {
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-  margin-bottom: 1rem;
-  padding: 1rem;
+  "src/components/Button.jsx": "import './button.css';
+const Button = ({children, onClick, variant = 'default'}) => (
+  <button
+    onClick={onClick}
+    className={variant === 'primary' ? 'primary' : void 0}
+  >
+    {children}
+  </button>
+);
+export {Button};
+",
+  "src/components/button.css": "button {
+  padding: 0.5rem 1rem;
   border: 1px solid #666;
   border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "src/drawing.css": ".drawing-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin: 0 auto 1rem;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  justify-content: space-between;
+  max-width: 600px;
 }
 
 .color-picker {
   display: flex;
-  gap: 0.5rem;
+  gap: 0;
   align-items: center;
 }
 
 .color-btn {
   width: 2rem;
   height: 2rem;
-  border: 2px solid #666;
+  border: 2px solid var(--border);
   border-radius: 0.25rem;
   cursor: pointer;
   transition: border-color 0.2s;
+  margin: 0 0 0 0.5rem;
+  padding: 0;
 }
 
 .color-btn:hover,
 .color-btn.active {
-  border-color: #fff;
+  border-color: var(--accent);
 }
 
 .brush-size {
@@ -1164,154 +1425,28 @@ export {App};
 }
 
 .brush-size input {
-  width: 150px;
+  width: 100px;
+  vertical-align: middle;
 }
 
-.brush-size-value {
+#brush-size-value {
+  width: 2rem;
   min-width: 2rem;
   text-align: center;
-}
-
-.clear-btn {
-  padding: 0.5rem 1rem;
-  background: #d81b60;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.clear-btn:hover {
-  background: #c2185b;
+  display: inline-block;
 }
 
 .drawing-canvas {
-  border: 1px solid #666;
-  border-radius: 0.25rem;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
   cursor: crosshair;
   display: block;
   touch-action: none;
+  margin: 0 auto;
 }
 ",
-  "src/index.css": "* {
-  box-sizing: border-box;
-}
-
-body {
-  color: #bbb;
-  background: #0a0a0a;
-  font-family: 'Inter', sans-serif;
-  user-select: none;
-  margin: 0;
-  padding: 0;
-}
-
-.app-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.top-bar {
-  background: linear-gradient(180deg, #1a1a1a 0%, #151515 100%);
-  border-bottom: 1px solid #2a2a2a;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  padding: 0.75rem 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.top-bar-logo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-.top-bar-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
-}
-
-.top-bar-info {
-  position: relative;
-}
-
-.info-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  border: 2px solid #666;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: #666;
-  cursor: help;
-  transition: all 0.2s;
-  user-select: none;
-}
-
-.info-icon:hover {
-  border-color: #d81b60;
-  color: #d81b60;
-}
-
-.info-icon:hover .info-tooltip {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.info-tooltip {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 0.5rem);
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 0.375rem;
-  padding: 0.75rem 1rem;
-  font-size: 0.85rem;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-0.25rem);
-  transition: all 0.2s;
-  pointer-events: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-}
-
-.info-tooltip::before {
-  content: '';
-  position: absolute;
-  right: 0.75rem;
-  top: -0.375rem;
-  width: 0.75rem;
-  height: 0.75rem;
-  background: #1a1a1a;
-  border-left: 1px solid #333;
-  border-top: 1px solid #333;
-  transform: rotate(45deg);
-}
-
-#app {
-  max-width: 50rem;
-  width: 100%;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-  flex: 1;
-}
-
-a {
-  color: #bbb;
+  "src/index.css": "a {
+  color: var(--fg);
 }
 
 h1 {
@@ -1335,7 +1470,7 @@ p {
 }
 
 details {
-  border: 1px solid #333;
+  border: 1px solid var(--border);
   border-radius: 0.25rem;
   padding: 0.5rem;
 }
@@ -1349,7 +1484,7 @@ details summary {
 
 details[open] summary {
   margin-bottom: 0.5rem;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--border);
 }
 
 pre {
@@ -1412,34 +1547,163 @@ npm run dev
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>TinyBase / JavaScript</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
   </head>
 
   <body>
-    <div class="app-container">
-      <div class="top-bar">
-        <img src="/favicon.svg" class="top-bar-logo" alt="TinyBase" />
-        <div class="top-bar-title">TinyBase Demo</div>
-        <div class="top-bar-info">
-          <div class="info-icon">
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Demo</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
             i
-            <div class="info-tooltip">JavaScript</div>
+            <div id="infoTooltip">
+              A simple TinyBase app with key-values and tables mutated with
+              buttons. See the full set of
+              <a href="https://tinybase.org/demos/" target="_blank"
+                >TinyBase demos</a
+              >
+              for more examples. <br /><br />
+              Built with JavaScript.
+            </div>
           </div>
         </div>
       </div>
       <div id="app">
-        <p>
-          This is more or less the simplest TinyBase app you could imagine. It
-          contains a handful of key-values and tables which are mutated with the
-          buttons below. There's no fancy rendering - just the raw JSON of the
-          underlying store. See the full set of
-          <a href="https://tinybase.org/demos/">TinyBase demos</a> for more
-          interesting examples!
-        </p>
-        <div id="buttons">
-          <button id="countButton">Increment number</button>
-          <button id="randomButton">Random number</button>
-          <button id="addPetButton">Add a pet</button>
-        </div>
+        <div id="buttons"></div>
         <details open>
           <summary>Values</summary>
           <pre id="valuesJson"></pre>
@@ -1480,20 +1744,28 @@ npm run dev
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "src/app.js": "import {createStore} from 'tinybase';
-const onClick = (id, onClick2) =>
-  document.getElementById(id).addEventListener('click', onClick2);
+import {createButton} from './components/button';
 const updateJson = (id, content) =>
   (document.getElementById(id).innerText = JSON.stringify(content, null, 2));
 const getRandom = (max = 100) => Math.floor(Math.random() * max);
 const app = () => {
   const store = createStore();
-  onClick('countButton', () => store.setValue('counter', (value) => value + 1));
-  onClick('randomButton', () => store.setValue('random', getRandom()));
-  onClick('addPetButton', () =>
-    store.addRow('pets', {
-      name: ['fido', 'felix', 'bubbles', 'lowly', 'polly'][getRandom(5)],
-      species: store.getRowIds('species')[getRandom(5)],
-    }),
+  const buttonsContainer = document.getElementById('buttons');
+  buttonsContainer.appendChild(
+    createButton('Increment number', () =>
+      store.setValue('counter', (value) => value + 1),
+    ),
+  );
+  buttonsContainer.appendChild(
+    createButton('Random number', () => store.setValue('random', getRandom())),
+  );
+  buttonsContainer.appendChild(
+    createButton('Add a pet', () =>
+      store.addRow('pets', {
+        name: ['fido', 'felix', 'bubbles', 'lowly', 'polly'][getRandom(5)],
+        species: store.getRowIds('species')[getRandom(5)],
+      }),
+    ),
   );
   store.addValuesListener(() => updateJson('valuesJson', store.getValues()));
   store.addTablesListener(() => updateJson('tablesJson', store.getTables()));
@@ -1514,22 +1786,7 @@ export {app};
   border: solid #666;
   border-width: 1px 0;
   text-align: center;
-}
-
-#buttons button {
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  padding: 0.5rem 1rem;
-  background: #222;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  font-size: 0.8rem;
-  width: 10rem;
-  margin: 1rem;
-}
-#buttons button:hover {
-  border-color: #d81b60;
+  padding: 1rem 0;
 }
 
 table {
@@ -1580,129 +1837,51 @@ table.sortedTable thead th {
     gap: 2rem;
     align-items: start;
   }
-  p,
   #buttons {
     grid-column: span 2;
   }
 }
 ",
-  "src/index.css": "* {
-  box-sizing: border-box;
-}
-
-body {
-  color: #bbb;
-  background: #0a0a0a;
-  font-family: 'Inter', sans-serif;
-  user-select: none;
-  margin: 0;
-  padding: 0;
-}
-
-.app-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.top-bar {
-  background: linear-gradient(180deg, #1a1a1a 0%, #151515 100%);
-  border-bottom: 1px solid #2a2a2a;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  padding: 0.75rem 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.top-bar-logo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-.top-bar-title {
-  font-size: 1.1rem;
-  font-weight: 600;
+  "src/components/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
   color: #fff;
-  flex: 1;
-}
-
-.top-bar-info {
-  position: relative;
-}
-
-.info-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  border: 2px solid #666;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
+  font-family: inherit;
   font-weight: 800;
-  color: #666;
-  cursor: help;
-  transition: all 0.2s;
-  user-select: none;
+  cursor: pointer;
+  margin: 0.5rem;
 }
 
-.info-icon:hover {
+button:hover {
   border-color: #d81b60;
-  color: #d81b60;
 }
 
-.info-icon:hover .info-tooltip {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
 }
 
-.info-tooltip {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 0.5rem);
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 0.375rem;
-  padding: 0.75rem 1rem;
-  font-size: 0.85rem;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-0.25rem);
-  transition: all 0.2s;
-  pointer-events: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+button.primary:hover {
+  background: #c2185b;
 }
-
-.info-tooltip::before {
-  content: '';
-  position: absolute;
-  right: 0.75rem;
-  top: -0.375rem;
-  width: 0.75rem;
-  height: 0.75rem;
-  background: #1a1a1a;
-  border-left: 1px solid #333;
-  border-top: 1px solid #333;
-  transform: rotate(45deg);
-}
-
-#app {
-  max-width: 50rem;
-  width: 100%;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-  flex: 1;
-}
-
-a {
-  color: #bbb;
+",
+  "src/components/button.js": "import './button.css';
+const createButton = (text, onClick, variant = 'default') => {
+  const button = document.createElement('button');
+  button.textContent = text;
+  if (variant === 'primary') {
+    button.className = 'primary';
+  }
+  button.addEventListener('click', onClick);
+  return button;
+};
+export {createButton};
+",
+  "src/index.css": "a {
+  color: var(--fg);
 }
 
 h1 {
@@ -1726,7 +1905,7 @@ p {
 }
 
 details {
-  border: 1px solid #333;
+  border: 1px solid var(--border);
   border-radius: 0.25rem;
   padding: 0.5rem;
 }
@@ -1740,7 +1919,7 @@ details summary {
 
 details[open] summary {
   margin-bottom: 0.5rem;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--border);
 }
 
 pre {
@@ -1789,17 +1968,155 @@ npm run dev
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>TinyBase / JavaScript</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
   </head>
 
   <body>
-    <div class="app-container">
-      <div class="top-bar">
-        <img src="/favicon.svg" class="top-bar-logo" alt="TinyBase" />
-        <div class="top-bar-title">TinyBase Chat</div>
-        <div class="top-bar-info">
-          <div class="info-icon">
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Chat</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
             i
-            <div class="info-tooltip">JavaScript</div>
+            <div id="infoTooltip">
+              A real-time chat application demonstrating TinyBase's reactive
+              data management.
+              <br /><br />
+              Built with JavaScript.
+            </div>
           </div>
         </div>
       </div>
@@ -1820,7 +2137,6 @@ npm run dev
             placeholder="Type a message..."
             autofocus
           />
-          <button id="send-button">Send</button>
         </div>
       </div>
     </div>
@@ -1854,6 +2170,7 @@ npm run dev
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "src/app.js": "import {createStore} from 'tinybase';
+import {createButton} from './components/button';
 const updateMessages = (store) => {
   const messages = document.getElementById('messages');
   const messageRows = store.getTable('messages');
@@ -1883,7 +2200,6 @@ const app = () => {
     });
   const usernameInput = document.getElementById('username-input');
   const messageInput = document.getElementById('message-input');
-  const sendButton = document.getElementById('send-button');
   usernameInput.value = store.getValue('username');
   usernameInput.addEventListener('input', () => {
     store.setValue('username', usernameInput.value);
@@ -1902,7 +2218,9 @@ const app = () => {
       messageInput.value = '';
     }
   };
-  sendButton.addEventListener('click', sendMessage);
+  const messageInputContainer = document.querySelector('.message-input');
+  const sendButton = createButton('Send', sendMessage, 'primary');
+  messageInputContainer.appendChild(sendButton);
   messageInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
       sendMessage();
@@ -1963,6 +2281,8 @@ export {app};
 
 .message-input {
   display: flex;
+  gap: 0.5rem;
+  padding: 1rem;
   border-top: 1px solid #666;
 }
 
@@ -1974,138 +2294,47 @@ export {app};
   color: #fff;
   font-family: inherit;
 }
-
-.message-input button {
-  padding: 0.75rem 1.5rem;
-  background: #d81b60;
-  border: none;
+",
+  "src/components/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
   color: #fff;
   font-family: inherit;
   font-weight: 800;
   cursor: pointer;
+  margin: 0.5rem;
 }
 
-.message-input button:hover {
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/index.css": "* {
-  box-sizing: border-box;
-}
-
-body {
-  color: #bbb;
-  background: #0a0a0a;
-  font-family: 'Inter', sans-serif;
-  user-select: none;
-  margin: 0;
-  padding: 0;
-}
-
-.app-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.top-bar {
-  background: linear-gradient(180deg, #1a1a1a 0%, #151515 100%);
-  border-bottom: 1px solid #2a2a2a;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  padding: 0.75rem 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.top-bar-logo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-.top-bar-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
-}
-
-.top-bar-info {
-  position: relative;
-}
-
-.info-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  border: 2px solid #666;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: #666;
-  cursor: help;
-  transition: all 0.2s;
-  user-select: none;
-}
-
-.info-icon:hover {
-  border-color: #d81b60;
-  color: #d81b60;
-}
-
-.info-icon:hover .info-tooltip {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.info-tooltip {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 0.5rem);
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 0.375rem;
-  padding: 0.75rem 1rem;
-  font-size: 0.85rem;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-0.25rem);
-  transition: all 0.2s;
-  pointer-events: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-}
-
-.info-tooltip::before {
-  content: '';
-  position: absolute;
-  right: 0.75rem;
-  top: -0.375rem;
-  width: 0.75rem;
-  height: 0.75rem;
-  background: #1a1a1a;
-  border-left: 1px solid #333;
-  border-top: 1px solid #333;
-  transform: rotate(45deg);
-}
-
-#app {
-  max-width: 50rem;
-  width: 100%;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-  flex: 1;
-}
-
-a {
-  color: #bbb;
+  "src/components/button.js": "import './button.css';
+const createButton = (text, onClick, variant = 'default') => {
+  const button = document.createElement('button');
+  button.textContent = text;
+  if (variant === 'primary') {
+    button.className = 'primary';
+  }
+  button.addEventListener('click', onClick);
+  return button;
+};
+export {createButton};
+",
+  "src/index.css": "a {
+  color: var(--fg);
 }
 
 h1 {
@@ -2129,7 +2358,7 @@ p {
 }
 
 details {
-  border: 1px solid #333;
+  border: 1px solid var(--border);
   border-radius: 0.25rem;
   padding: 0.5rem;
 }
@@ -2143,7 +2372,7 @@ details summary {
 
 details[open] summary {
   margin-bottom: 0.5rem;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--border);
 }
 
 pre {
@@ -2192,17 +2421,155 @@ npm run dev
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>TinyBase / JavaScript</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
   </head>
 
   <body>
-    <div class="app-container">
-      <div class="top-bar">
-        <img src="/favicon.svg" class="top-bar-logo" alt="TinyBase" />
-        <div class="top-bar-title">TinyBase Drawing</div>
-        <div class="top-bar-info">
-          <div class="info-icon">
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Drawing</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
             i
-            <div class="info-tooltip">JavaScript</div>
+            <div id="infoTooltip">
+              A collaborative drawing canvas showcasing TinyBase's state
+              synchronization.
+              <br /><br />
+              Built with JavaScript.
+            </div>
           </div>
         </div>
       </div>
@@ -2210,11 +2577,10 @@ npm run dev
         <div class="drawing-controls">
           <div class="color-picker" id="color-picker"></div>
           <div class="brush-size">
-            <label>Brush Size:</label>
+            <label>Size:</label>
             <input type="range" id="brush-size" min="1" max="50" value="5" />
             <span id="brush-size-value">5</span>
           </div>
-          <button id="clear-button" class="clear-btn">Clear Canvas</button>
         </div>
         <canvas
           id="drawing-canvas"
@@ -2254,6 +2620,7 @@ npm run dev
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "src/app.js": "import {createStore} from 'tinybase';
+import {createButton} from './components/button';
 const app = () => {
   const store = createStore()
     .setRow('settings', 'brush', {color: '#d81b60', size: 5})
@@ -2335,42 +2702,88 @@ const app = () => {
     store.setRow('settings', 'brush', {...brush, size});
     sizeLabel.textContent = \`\${size}\`;
   });
-  document.getElementById('clear-button').addEventListener('click', () => {
-    store.delTable('strokes');
-  });
+  const clearButton = createButton(
+    'Clear',
+    () => store.delTable('strokes'),
+    'primary',
+  );
+  document.querySelector('.drawing-controls').appendChild(clearButton);
   store.addTablesListener(draw);
   draw();
 };
 export {app};
 ",
-  "src/drawing.css": ".drawing-controls {
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-  margin-bottom: 1rem;
-  padding: 1rem;
+  "src/components/button.css": "button {
+  padding: 0.5rem 1rem;
   border: 1px solid #666;
   border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "src/components/button.js": "import './button.css';
+const createButton = (text, onClick, variant = 'default') => {
+  const button = document.createElement('button');
+  button.textContent = text;
+  if (variant === 'primary') {
+    button.className = 'primary';
+  }
+  button.addEventListener('click', onClick);
+  return button;
+};
+export {createButton};
+",
+  "src/drawing.css": ".drawing-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin: 0 auto 1rem;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  justify-content: space-between;
+  max-width: 600px;
 }
 
 .color-picker {
   display: flex;
-  gap: 0.5rem;
+  gap: 0;
   align-items: center;
 }
 
 .color-btn {
   width: 2rem;
   height: 2rem;
-  border: 2px solid #666;
+  border: 2px solid var(--border);
   border-radius: 0.25rem;
   cursor: pointer;
   transition: border-color 0.2s;
+  margin: 0 0 0 0.5rem;
+  padding: 0;
 }
 
 .color-btn:hover,
 .color-btn.active {
-  border-color: #fff;
+  border-color: var(--accent);
 }
 
 .brush-size {
@@ -2384,154 +2797,28 @@ export {app};
 }
 
 .brush-size input {
-  width: 150px;
+  width: 100px;
+  vertical-align: middle;
 }
 
-.brush-size-value {
+#brush-size-value {
+  width: 2rem;
   min-width: 2rem;
   text-align: center;
-}
-
-.clear-btn {
-  padding: 0.5rem 1rem;
-  background: #d81b60;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.clear-btn:hover {
-  background: #c2185b;
+  display: inline-block;
 }
 
 .drawing-canvas {
-  border: 1px solid #666;
-  border-radius: 0.25rem;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
   cursor: crosshair;
   display: block;
   touch-action: none;
+  margin: 0 auto;
 }
 ",
-  "src/index.css": "* {
-  box-sizing: border-box;
-}
-
-body {
-  color: #bbb;
-  background: #0a0a0a;
-  font-family: 'Inter', sans-serif;
-  user-select: none;
-  margin: 0;
-  padding: 0;
-}
-
-.app-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.top-bar {
-  background: linear-gradient(180deg, #1a1a1a 0%, #151515 100%);
-  border-bottom: 1px solid #2a2a2a;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  padding: 0.75rem 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.top-bar-logo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-.top-bar-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
-}
-
-.top-bar-info {
-  position: relative;
-}
-
-.info-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  border: 2px solid #666;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: #666;
-  cursor: help;
-  transition: all 0.2s;
-  user-select: none;
-}
-
-.info-icon:hover {
-  border-color: #d81b60;
-  color: #d81b60;
-}
-
-.info-icon:hover .info-tooltip {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.info-tooltip {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 0.5rem);
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 0.375rem;
-  padding: 0.75rem 1rem;
-  font-size: 0.85rem;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-0.25rem);
-  transition: all 0.2s;
-  pointer-events: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-}
-
-.info-tooltip::before {
-  content: '';
-  position: absolute;
-  right: 0.75rem;
-  top: -0.375rem;
-  width: 0.75rem;
-  height: 0.75rem;
-  background: #1a1a1a;
-  border-left: 1px solid #333;
-  border-top: 1px solid #333;
-  transform: rotate(45deg);
-}
-
-#app {
-  max-width: 50rem;
-  width: 100%;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-  flex: 1;
-}
-
-a {
-  color: #bbb;
+  "src/index.css": "a {
+  color: var(--fg);
 }
 
 h1 {
@@ -2555,7 +2842,7 @@ p {
 }
 
 details {
-  border: 1px solid #333;
+  border: 1px solid var(--border);
   border-radius: 0.25rem;
   padding: 0.5rem;
 }
@@ -2569,7 +2856,7 @@ details summary {
 
 details[open] summary {
   margin-bottom: 0.5rem;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--border);
 }
 
 pre {
@@ -2618,10 +2905,163 @@ npm run dev
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>TinyBase / TypeScript + React</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
   </head>
 
   <body>
-    <div id="app"></div>
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Demo</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
+            i
+            <div id="infoTooltip">
+              A simple TinyBase app with key-values and tables mutated with
+              buttons. See the full set of
+              <a href="https://tinybase.org/demos/" target="_blank"
+                >TinyBase demos</a
+              >
+              for more examples. <br /><br />
+              Built with TypeScript + React.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.tsx"></script>
   </body>
@@ -2665,18 +3105,6 @@ import {SortedTableInHtmlTable, ValuesInHtmlTable} from 'tinybase/ui-react-dom';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {Buttons} from './Buttons';
 
-const TopBar = ({title, tech}: {title: string; tech: string}) => (
-  <div className="top-bar">
-    <img src="/favicon.svg" className="top-bar-logo" alt="TinyBase" />
-    <div className="top-bar-title">{title}</div>
-    <div className="top-bar-info">
-      <div className="info-icon">
-        i<div className="info-tooltip">{tech}</div>
-      </div>
-    </div>
-  </div>
-);
-
 export const App = () => {
   const store = useCreateStore(() => {
     // Create the TinyBase Store and initialize the Store's data
@@ -2694,44 +3122,33 @@ export const App = () => {
 
   return (
     <StrictMode>
-      <div className="app-container">
-        <TopBar title="TinyBase Demo" tech="TypeScript + React" />
-        <div id="app">
-          <Provider store={store}>
-            <p>
-              This is more or less the simplest TinyBase app you could imagine.
-              It contains a handful of key-values and tables which are mutated
-              with the buttons below, and rendered with plain table components.
-              See the full set of{' '}
-              <a href="https://tinybase.org/demos/">TinyBase demos</a> for more
-              interesting examples!
-            </p>
-            <Buttons />
-            <div>
-              <h2>Values</h2>
-              <ValuesInHtmlTable />
-            </div>
-            <div>
-              <h2>Pets Table</h2>
-              <SortedTableInHtmlTable
-                tableId="pets"
-                cellId="name"
-                limit={5}
-                sortOnClick={true}
-                className="sortedTable"
-                paginator={true}
-              />
-            </div>
-            <Inspector />
-          </Provider>
+      <Provider store={store}>
+        <Buttons />
+        <div>
+          <h2>Values</h2>
+          <ValuesInHtmlTable />
         </div>
-      </div>
+        <div>
+          <h2>Pets Table</h2>
+          <SortedTableInHtmlTable
+            tableId="pets"
+            cellId="name"
+            limit={5}
+            sortOnClick={true}
+            className="sortedTable"
+            paginator={true}
+          />
+        </div>
+        <Inspector />
+      </Provider>
     </StrictMode>
   );
 };
 ",
   "src/Buttons.tsx": "import {useAddRowCallback, useSetValueCallback} from 'tinybase/ui-react';
 import type {ValueOrUndefined} from 'tinybase';
+
+import {Button} from './components/Button';
 
 // Convenience function for generating a random integer
 const getRandom = (max = 100) => Math.floor(Math.random() * max);
@@ -2750,9 +3167,9 @@ export const Buttons = () => {
 
   return (
     <div id="buttons">
-      <button onClick={handleCount}>Increment number</button>
-      <button onClick={handleRandom}>Random number</button>
-      <button onClick={handleAddPet}>Add a pet</button>
+      <Button onClick={handleCount}>Increment number</Button>
+      <Button onClick={handleRandom}>Random number</Button>
+      <Button onClick={handleAddPet}>Add a pet</Button>
     </div>
   );
 };
@@ -2761,22 +3178,7 @@ export const Buttons = () => {
   border: solid #666;
   border-width: 1px 0;
   text-align: center;
-}
-
-#buttons button {
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  padding: 0.5rem 1rem;
-  background: #222;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  font-size: 0.8rem;
-  width: 10rem;
-  margin: 1rem;
-}
-#buttons button:hover {
-  border-color: #d81b60;
+  padding: 1rem 0;
 }
 
 table {
@@ -2827,129 +3229,61 @@ table.sortedTable thead th {
     gap: 2rem;
     align-items: start;
   }
-  p,
   #buttons {
     grid-column: span 2;
   }
 }
 ",
-  "src/index.css": "* {
-  box-sizing: border-box;
+  "src/components/Button.tsx": "import './button.css';
+import {ReactNode} from 'react';
+
+interface ButtonProps {
+  children: ReactNode;
+  onClick: () => void;
+  variant?: 'default' | 'primary';
 }
 
-body {
-  color: #bbb;
-  background: #0a0a0a;
-  font-family: 'Inter', sans-serif;
-  user-select: none;
-  margin: 0;
-  padding: 0;
-}
-
-.app-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.top-bar {
-  background: linear-gradient(180deg, #1a1a1a 0%, #151515 100%);
-  border-bottom: 1px solid #2a2a2a;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  padding: 0.75rem 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.top-bar-logo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-.top-bar-title {
-  font-size: 1.1rem;
-  font-weight: 600;
+export const Button = ({
+  children,
+  onClick,
+  variant = 'default',
+}: ButtonProps) => (
+  <button
+    onClick={onClick}
+    className={variant === 'primary' ? 'primary' : undefined}
+  >
+    {children}
+  </button>
+);
+",
+  "src/components/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
   color: #fff;
-  flex: 1;
-}
-
-.top-bar-info {
-  position: relative;
-}
-
-.info-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  border: 2px solid #666;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
+  font-family: inherit;
   font-weight: 800;
-  color: #666;
-  cursor: help;
-  transition: all 0.2s;
-  user-select: none;
+  cursor: pointer;
+  margin: 0.5rem;
 }
 
-.info-icon:hover {
+button:hover {
   border-color: #d81b60;
-  color: #d81b60;
 }
 
-.info-icon:hover .info-tooltip {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
 }
 
-.info-tooltip {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 0.5rem);
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 0.375rem;
-  padding: 0.75rem 1rem;
-  font-size: 0.85rem;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-0.25rem);
-  transition: all 0.2s;
-  pointer-events: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+button.primary:hover {
+  background: #c2185b;
 }
-
-.info-tooltip::before {
-  content: '';
-  position: absolute;
-  right: 0.75rem;
-  top: -0.375rem;
-  width: 0.75rem;
-  height: 0.75rem;
-  background: #1a1a1a;
-  border-left: 1px solid #333;
-  border-top: 1px solid #333;
-  transform: rotate(45deg);
-}
-
-#app {
-  max-width: 50rem;
-  width: 100%;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-  flex: 1;
-}
-
-a {
-  color: #bbb;
+",
+  "src/index.css": "a {
+  color: var(--fg);
 }
 
 h1 {
@@ -2973,7 +3307,7 @@ p {
 }
 
 details {
-  border: 1px solid #333;
+  border: 1px solid var(--border);
   border-radius: 0.25rem;
   padding: 0.5rem;
 }
@@ -2987,7 +3321,7 @@ details summary {
 
 details[open] summary {
   margin-bottom: 0.5rem;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--border);
 }
 
 pre {
@@ -3073,10 +3407,160 @@ npm run dev
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>TinyBase / TypeScript + React</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
   </head>
 
   <body>
-    <div id="app"></div>
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Chat</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
+            i
+            <div id="infoTooltip">
+              A real-time chat application demonstrating TinyBase's reactive
+              data management.
+              <br /><br />
+              Built with TypeScript + React.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.tsx"></script>
   </body>
@@ -3126,18 +3610,7 @@ import {
   useStore,
 } from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
-
-const TopBar = ({title, tech}: {title: string; tech: string}) => (
-  <div className="top-bar">
-    <img src="/favicon.svg" className="top-bar-logo" alt="TinyBase" />
-    <div className="top-bar-title">{title}</div>
-    <div className="top-bar-info">
-      <div className="info-icon">
-        i<div className="info-tooltip">{tech}</div>
-      </div>
-    </div>
-  </div>
-);
+import {Button} from './components/Button';
 
 const MessageInput = () => {
   const [message, setMessage] = useState('');
@@ -3170,7 +3643,9 @@ const MessageInput = () => {
         placeholder="Type a message..."
         autoFocus
       />
-      <button type="submit">Send</button>
+      <Button onClick={() => handleSend()} variant="primary">
+        Send
+      </Button>
     </form>
   );
 };
@@ -3246,17 +3721,12 @@ export const App = () => {
 
   return (
     <StrictMode>
-      <div className="app-container">
-        <TopBar title="TinyBase Chat" tech="TypeScript + React" />
-        <div id="app">
-          <Provider store={store}>
-            <UsernameInput />
-            <Messages />
-            <MessageInput />
-            <Inspector />
-          </Provider>
-        </div>
-      </div>
+      <Provider store={store}>
+        <UsernameInput />
+        <Messages />
+        <MessageInput />
+        <Inspector />
+      </Provider>
     </StrictMode>
   );
 };
@@ -3311,6 +3781,8 @@ export const App = () => {
 
 .message-input {
   display: flex;
+  gap: 0.5rem;
+  padding: 1rem;
   border-top: 1px solid #666;
 }
 
@@ -3322,138 +3794,57 @@ export const App = () => {
   color: #fff;
   font-family: inherit;
 }
+",
+  "src/components/Button.tsx": "import './button.css';
+import {ReactNode} from 'react';
 
-.message-input button {
-  padding: 0.75rem 1.5rem;
-  background: #d81b60;
-  border: none;
+interface ButtonProps {
+  children: ReactNode;
+  onClick: () => void;
+  variant?: 'default' | 'primary';
+}
+
+export const Button = ({
+  children,
+  onClick,
+  variant = 'default',
+}: ButtonProps) => (
+  <button
+    onClick={onClick}
+    className={variant === 'primary' ? 'primary' : undefined}
+  >
+    {children}
+  </button>
+);
+",
+  "src/components/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
   color: #fff;
   font-family: inherit;
   font-weight: 800;
   cursor: pointer;
+  margin: 0.5rem;
 }
 
-.message-input button:hover {
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/index.css": "* {
-  box-sizing: border-box;
-}
-
-body {
-  color: #bbb;
-  background: #0a0a0a;
-  font-family: 'Inter', sans-serif;
-  user-select: none;
-  margin: 0;
-  padding: 0;
-}
-
-.app-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.top-bar {
-  background: linear-gradient(180deg, #1a1a1a 0%, #151515 100%);
-  border-bottom: 1px solid #2a2a2a;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  padding: 0.75rem 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.top-bar-logo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-.top-bar-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
-}
-
-.top-bar-info {
-  position: relative;
-}
-
-.info-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  border: 2px solid #666;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: #666;
-  cursor: help;
-  transition: all 0.2s;
-  user-select: none;
-}
-
-.info-icon:hover {
-  border-color: #d81b60;
-  color: #d81b60;
-}
-
-.info-icon:hover .info-tooltip {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.info-tooltip {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 0.5rem);
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 0.375rem;
-  padding: 0.75rem 1rem;
-  font-size: 0.85rem;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-0.25rem);
-  transition: all 0.2s;
-  pointer-events: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-}
-
-.info-tooltip::before {
-  content: '';
-  position: absolute;
-  right: 0.75rem;
-  top: -0.375rem;
-  width: 0.75rem;
-  height: 0.75rem;
-  background: #1a1a1a;
-  border-left: 1px solid #333;
-  border-top: 1px solid #333;
-  transform: rotate(45deg);
-}
-
-#app {
-  max-width: 50rem;
-  width: 100%;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-  flex: 1;
-}
-
-a {
-  color: #bbb;
+  "src/index.css": "a {
+  color: var(--fg);
 }
 
 h1 {
@@ -3477,7 +3868,7 @@ p {
 }
 
 details {
-  border: 1px solid #333;
+  border: 1px solid var(--border);
   border-radius: 0.25rem;
   padding: 0.5rem;
 }
@@ -3491,7 +3882,7 @@ details summary {
 
 details[open] summary {
   margin-bottom: 0.5rem;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--border);
 }
 
 pre {
@@ -3577,10 +3968,160 @@ npm run dev
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>TinyBase / TypeScript + React</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
   </head>
 
   <body>
-    <div id="app"></div>
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Drawing</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
+            i
+            <div id="infoTooltip">
+              A collaborative drawing canvas showcasing TinyBase's state
+              synchronization.
+              <br /><br />
+              Built with TypeScript + React.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.tsx"></script>
   </body>
@@ -3629,18 +4170,7 @@ import {
   useStore,
 } from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
-
-const TopBar = ({title, tech}: {title: string; tech: string}) => (
-  <div className="top-bar">
-    <img src="/favicon.svg" className="top-bar-logo" alt="TinyBase" />
-    <div className="top-bar-title">{title}</div>
-    <div className="top-bar-info">
-      <div className="info-icon">
-        i<div className="info-tooltip">{tech}</div>
-      </div>
-    </div>
-  </div>
-);
+import {Button} from './components/Button';
 
 const Canvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -3737,7 +4267,6 @@ const ColorPicker = () => {
   ];
   const store = useStore();
   const currentBrush = useRow('settings', 'brush') as any;
-  const currentColor = currentBrush.color;
 
   const setColor = (color: string) => {
     store.setRow('settings', 'brush', {...currentBrush, color});
@@ -3748,7 +4277,7 @@ const ColorPicker = () => {
       {colors.map((color) => (
         <button
           key={color}
-          className={\`color-btn \${currentColor === color ? 'active' : ''}\`}
+          className="color-btn"
           style={{background: color}}
           onClick={() => setColor(color)}
         />
@@ -3771,9 +4300,9 @@ const BrushSize = () => {
 
   return (
     <div className="brush-size">
-      <label>Brush Size:</label>
+      <label>Size:</label>
       <input type="range" min="1" max="50" value={size} onChange={setSize} />
-      <span className="brush-size-value">{size}</span>
+      <span id="brush-size-value">{size}</span>
     </div>
   );
 };
@@ -3781,9 +4310,9 @@ const BrushSize = () => {
 const ClearButton = () => {
   const clearCanvas = useDelTableCallback('strokes');
   return (
-    <button onClick={clearCanvas} className="clear-btn">
-      Clear Canvas
-    </button>
+    <Button onClick={clearCanvas} variant="primary">
+      Clear
+    </Button>
   );
 };
 
@@ -3796,52 +4325,102 @@ export const App = () => {
 
   return (
     <StrictMode>
-      <div className="app-container">
-        <TopBar title="TinyBase Drawing" tech="TypeScript + React" />
-        <div id="app">
-          <Provider store={store}>
-            <div className="drawing-controls">
-              <ColorPicker />
-              <BrushSize />
-              <ClearButton />
-            </div>
-            <Canvas />
-            <Inspector />
-          </Provider>
-        </div>
-      </div>
+      <Provider store={store}>
+        <>
+          <div className="drawing-controls">
+            <ColorPicker />
+            <BrushSize />
+            <ClearButton />
+          </div>
+          <Canvas />
+          <Inspector />
+        </>
+      </Provider>
     </StrictMode>
   );
 };
 ",
-  "src/drawing.css": ".drawing-controls {
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-  margin-bottom: 1rem;
-  padding: 1rem;
+  "src/components/Button.tsx": "import './button.css';
+import {ReactNode} from 'react';
+
+interface ButtonProps {
+  children: ReactNode;
+  onClick: () => void;
+  variant?: 'default' | 'primary';
+}
+
+export const Button = ({
+  children,
+  onClick,
+  variant = 'default',
+}: ButtonProps) => (
+  <button
+    onClick={onClick}
+    className={variant === 'primary' ? 'primary' : undefined}
+  >
+    {children}
+  </button>
+);
+",
+  "src/components/button.css": "button {
+  padding: 0.5rem 1rem;
   border: 1px solid #666;
   border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "src/drawing.css": ".drawing-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin: 0 auto 1rem;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  justify-content: space-between;
+  max-width: 600px;
 }
 
 .color-picker {
   display: flex;
-  gap: 0.5rem;
+  gap: 0;
   align-items: center;
 }
 
 .color-btn {
   width: 2rem;
   height: 2rem;
-  border: 2px solid #666;
+  border: 2px solid var(--border);
   border-radius: 0.25rem;
   cursor: pointer;
   transition: border-color 0.2s;
+  margin: 0 0 0 0.5rem;
+  padding: 0;
 }
 
 .color-btn:hover,
 .color-btn.active {
-  border-color: #fff;
+  border-color: var(--accent);
 }
 
 .brush-size {
@@ -3855,154 +4434,28 @@ export const App = () => {
 }
 
 .brush-size input {
-  width: 150px;
+  width: 100px;
+  vertical-align: middle;
 }
 
-.brush-size-value {
+#brush-size-value {
+  width: 2rem;
   min-width: 2rem;
   text-align: center;
-}
-
-.clear-btn {
-  padding: 0.5rem 1rem;
-  background: #d81b60;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.clear-btn:hover {
-  background: #c2185b;
+  display: inline-block;
 }
 
 .drawing-canvas {
-  border: 1px solid #666;
-  border-radius: 0.25rem;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
   cursor: crosshair;
   display: block;
   touch-action: none;
+  margin: 0 auto;
 }
 ",
-  "src/index.css": "* {
-  box-sizing: border-box;
-}
-
-body {
-  color: #bbb;
-  background: #0a0a0a;
-  font-family: 'Inter', sans-serif;
-  user-select: none;
-  margin: 0;
-  padding: 0;
-}
-
-.app-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.top-bar {
-  background: linear-gradient(180deg, #1a1a1a 0%, #151515 100%);
-  border-bottom: 1px solid #2a2a2a;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  padding: 0.75rem 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.top-bar-logo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-.top-bar-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
-}
-
-.top-bar-info {
-  position: relative;
-}
-
-.info-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  border: 2px solid #666;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: #666;
-  cursor: help;
-  transition: all 0.2s;
-  user-select: none;
-}
-
-.info-icon:hover {
-  border-color: #d81b60;
-  color: #d81b60;
-}
-
-.info-icon:hover .info-tooltip {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.info-tooltip {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 0.5rem);
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 0.375rem;
-  padding: 0.75rem 1rem;
-  font-size: 0.85rem;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-0.25rem);
-  transition: all 0.2s;
-  pointer-events: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-}
-
-.info-tooltip::before {
-  content: '';
-  position: absolute;
-  right: 0.75rem;
-  top: -0.375rem;
-  width: 0.75rem;
-  height: 0.75rem;
-  background: #1a1a1a;
-  border-left: 1px solid #333;
-  border-top: 1px solid #333;
-  transform: rotate(45deg);
-}
-
-#app {
-  max-width: 50rem;
-  width: 100%;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-  flex: 1;
-}
-
-a {
-  color: #bbb;
+  "src/index.css": "a {
+  color: var(--fg);
 }
 
 h1 {
@@ -4026,7 +4479,7 @@ p {
 }
 
 details {
-  border: 1px solid #333;
+  border: 1px solid var(--border);
   border-radius: 0.25rem;
   padding: 0.5rem;
 }
@@ -4040,7 +4493,7 @@ details summary {
 
 details[open] summary {
   margin-bottom: 0.5rem;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--border);
 }
 
 pre {
@@ -4126,34 +4579,163 @@ npm run dev
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>TinyBase / TypeScript</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
   </head>
 
   <body>
-    <div class="app-container">
-      <div class="top-bar">
-        <img src="/favicon.svg" class="top-bar-logo" alt="TinyBase" />
-        <div class="top-bar-title">TinyBase Demo</div>
-        <div class="top-bar-info">
-          <div class="info-icon">
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Demo</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
             i
-            <div class="info-tooltip">TypeScript</div>
+            <div id="infoTooltip">
+              A simple TinyBase app with key-values and tables mutated with
+              buttons. See the full set of
+              <a href="https://tinybase.org/demos/" target="_blank"
+                >TinyBase demos</a
+              >
+              for more examples. <br /><br />
+              Built with TypeScript.
+            </div>
           </div>
         </div>
       </div>
       <div id="app">
-        <p>
-          This is more or less the simplest TinyBase app you could imagine. It
-          contains a handful of key-values and tables which are mutated with the
-          buttons below. There's no fancy rendering - just the raw JSON of the
-          underlying store. See the full set of
-          <a href="https://tinybase.org/demos/">TinyBase demos</a> for more
-          interesting examples!
-        </p>
-        <div id="buttons">
-          <button id="countButton">Increment number</button>
-          <button id="randomButton">Random number</button>
-          <button id="addPetButton">Add a pet</button>
-        </div>
+        <div id="buttons"></div>
         <details open>
           <summary>Values</summary>
           <pre id="valuesJson"></pre>
@@ -4196,9 +4778,7 @@ npm run dev
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "src/app.ts": "import {createStore} from 'tinybase';
-
-const onClick = (id: string, onClick: () => void) =>
-  document.getElementById(id)!.addEventListener('click', onClick);
+import {createButton} from './components/button';
 
 const updateJson = (id: string, content: unknown) =>
   (document.getElementById(id)!.innerText = JSON.stringify(content, null, 2));
@@ -4208,13 +4788,23 @@ const getRandom = (max = 100) => Math.floor(Math.random() * max);
 export const app = () => {
   const store = createStore();
 
-  onClick('countButton', () => store.setValue('counter', (value) => value + 1));
-  onClick('randomButton', () => store.setValue('random', getRandom()));
-  onClick('addPetButton', () =>
-    store.addRow('pets', {
-      name: ['fido', 'felix', 'bubbles', 'lowly', 'polly'][getRandom(5)],
-      species: store.getRowIds('species')[getRandom(5)],
-    }),
+  const buttonsContainer = document.getElementById('buttons')!;
+
+  buttonsContainer.appendChild(
+    createButton('Increment number', () =>
+      store.setValue('counter', (value) => value + 1),
+    ),
+  );
+  buttonsContainer.appendChild(
+    createButton('Random number', () => store.setValue('random', getRandom())),
+  );
+  buttonsContainer.appendChild(
+    createButton('Add a pet', () =>
+      store.addRow('pets', {
+        name: ['fido', 'felix', 'bubbles', 'lowly', 'polly'][getRandom(5)],
+        species: store.getRowIds('species')[getRandom(5)],
+      }),
+    ),
   );
 
   store.addValuesListener(() => updateJson('valuesJson', store.getValues()));
@@ -4236,22 +4826,7 @@ export const app = () => {
   border: solid #666;
   border-width: 1px 0;
   text-align: center;
-}
-
-#buttons button {
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  padding: 0.5rem 1rem;
-  background: #222;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  font-size: 0.8rem;
-  width: 10rem;
-  margin: 1rem;
-}
-#buttons button:hover {
-  border-color: #d81b60;
+  padding: 1rem 0;
 }
 
 table {
@@ -4302,129 +4877,55 @@ table.sortedTable thead th {
     gap: 2rem;
     align-items: start;
   }
-  p,
   #buttons {
     grid-column: span 2;
   }
 }
 ",
-  "src/index.css": "* {
-  box-sizing: border-box;
-}
-
-body {
-  color: #bbb;
-  background: #0a0a0a;
-  font-family: 'Inter', sans-serif;
-  user-select: none;
-  margin: 0;
-  padding: 0;
-}
-
-.app-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.top-bar {
-  background: linear-gradient(180deg, #1a1a1a 0%, #151515 100%);
-  border-bottom: 1px solid #2a2a2a;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  padding: 0.75rem 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.top-bar-logo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-.top-bar-title {
-  font-size: 1.1rem;
-  font-weight: 600;
+  "src/components/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
   color: #fff;
-  flex: 1;
-}
-
-.top-bar-info {
-  position: relative;
-}
-
-.info-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  border: 2px solid #666;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
+  font-family: inherit;
   font-weight: 800;
-  color: #666;
-  cursor: help;
-  transition: all 0.2s;
-  user-select: none;
+  cursor: pointer;
+  margin: 0.5rem;
 }
 
-.info-icon:hover {
+button:hover {
   border-color: #d81b60;
-  color: #d81b60;
 }
 
-.info-icon:hover .info-tooltip {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
 }
 
-.info-tooltip {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 0.5rem);
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 0.375rem;
-  padding: 0.75rem 1rem;
-  font-size: 0.85rem;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-0.25rem);
-  transition: all 0.2s;
-  pointer-events: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+button.primary:hover {
+  background: #c2185b;
 }
+",
+  "src/components/button.ts": "import './button.css';
 
-.info-tooltip::before {
-  content: '';
-  position: absolute;
-  right: 0.75rem;
-  top: -0.375rem;
-  width: 0.75rem;
-  height: 0.75rem;
-  background: #1a1a1a;
-  border-left: 1px solid #333;
-  border-top: 1px solid #333;
-  transform: rotate(45deg);
-}
-
-#app {
-  max-width: 50rem;
-  width: 100%;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-  flex: 1;
-}
-
-a {
-  color: #bbb;
+export const createButton = (
+  text: string,
+  onClick: () => void,
+  variant: 'default' | 'primary' = 'default',
+): HTMLButtonElement => {
+  const button = document.createElement('button');
+  button.textContent = text;
+  if (variant === 'primary') {
+    button.className = 'primary';
+  }
+  button.addEventListener('click', onClick);
+  return button;
+};
+",
+  "src/index.css": "a {
+  color: var(--fg);
 }
 
 h1 {
@@ -4448,7 +4949,7 @@ p {
 }
 
 details {
-  border: 1px solid #333;
+  border: 1px solid var(--border);
   border-radius: 0.25rem;
   padding: 0.5rem;
 }
@@ -4462,7 +4963,7 @@ details summary {
 
 details[open] summary {
   margin-bottom: 0.5rem;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--border);
 }
 
 pre {
@@ -4533,17 +5034,155 @@ npm run dev
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>TinyBase / TypeScript</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
   </head>
 
   <body>
-    <div class="app-container">
-      <div class="top-bar">
-        <img src="/favicon.svg" class="top-bar-logo" alt="TinyBase" />
-        <div class="top-bar-title">TinyBase Chat</div>
-        <div class="top-bar-info">
-          <div class="info-icon">
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Chat</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
             i
-            <div class="info-tooltip">TypeScript</div>
+            <div id="infoTooltip">
+              A real-time chat application demonstrating TinyBase's reactive
+              data management.
+              <br /><br />
+              Built with TypeScript.
+            </div>
           </div>
         </div>
       </div>
@@ -4564,7 +5203,6 @@ npm run dev
             placeholder="Type a message..."
             autofocus
           />
-          <button id="send-button">Send</button>
         </div>
       </div>
     </div>
@@ -4600,6 +5238,7 @@ npm run dev
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "src/app.ts": "import {createStore} from 'tinybase';
+import {createButton} from './components/button';
 
 const updateMessages = (store: any) => {
   const messages = document.getElementById('messages')!;
@@ -4637,7 +5276,6 @@ export const app = () => {
   const messageInput = document.getElementById(
     'message-input',
   ) as HTMLInputElement;
-  const sendButton = document.getElementById('send-button')!;
 
   usernameInput!.value = store.getValue('username') as string;
   usernameInput!.addEventListener('input', () => {
@@ -4660,7 +5298,10 @@ export const app = () => {
     }
   };
 
-  sendButton.addEventListener('click', sendMessage);
+  const messageInputContainer = document.querySelector('.message-input')!;
+  const sendButton = createButton('Send', sendMessage, 'primary');
+  messageInputContainer.appendChild(sendButton);
+
   messageInput!.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
       sendMessage();
@@ -4721,6 +5362,8 @@ export const app = () => {
 
 .message-input {
   display: flex;
+  gap: 0.5rem;
+  padding: 1rem;
   border-top: 1px solid #666;
 }
 
@@ -4732,138 +5375,51 @@ export const app = () => {
   color: #fff;
   font-family: inherit;
 }
-
-.message-input button {
-  padding: 0.75rem 1.5rem;
-  background: #d81b60;
-  border: none;
+",
+  "src/components/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
   color: #fff;
   font-family: inherit;
   font-weight: 800;
   cursor: pointer;
+  margin: 0.5rem;
 }
 
-.message-input button:hover {
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/index.css": "* {
-  box-sizing: border-box;
-}
+  "src/components/button.ts": "import './button.css';
 
-body {
-  color: #bbb;
-  background: #0a0a0a;
-  font-family: 'Inter', sans-serif;
-  user-select: none;
-  margin: 0;
-  padding: 0;
-}
-
-.app-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.top-bar {
-  background: linear-gradient(180deg, #1a1a1a 0%, #151515 100%);
-  border-bottom: 1px solid #2a2a2a;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  padding: 0.75rem 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.top-bar-logo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-.top-bar-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
-}
-
-.top-bar-info {
-  position: relative;
-}
-
-.info-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  border: 2px solid #666;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: #666;
-  cursor: help;
-  transition: all 0.2s;
-  user-select: none;
-}
-
-.info-icon:hover {
-  border-color: #d81b60;
-  color: #d81b60;
-}
-
-.info-icon:hover .info-tooltip {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.info-tooltip {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 0.5rem);
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 0.375rem;
-  padding: 0.75rem 1rem;
-  font-size: 0.85rem;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-0.25rem);
-  transition: all 0.2s;
-  pointer-events: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-}
-
-.info-tooltip::before {
-  content: '';
-  position: absolute;
-  right: 0.75rem;
-  top: -0.375rem;
-  width: 0.75rem;
-  height: 0.75rem;
-  background: #1a1a1a;
-  border-left: 1px solid #333;
-  border-top: 1px solid #333;
-  transform: rotate(45deg);
-}
-
-#app {
-  max-width: 50rem;
-  width: 100%;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-  flex: 1;
-}
-
-a {
-  color: #bbb;
+export const createButton = (
+  text: string,
+  onClick: () => void,
+  variant: 'default' | 'primary' = 'default',
+): HTMLButtonElement => {
+  const button = document.createElement('button');
+  button.textContent = text;
+  if (variant === 'primary') {
+    button.className = 'primary';
+  }
+  button.addEventListener('click', onClick);
+  return button;
+};
+",
+  "src/index.css": "a {
+  color: var(--fg);
 }
 
 h1 {
@@ -4887,7 +5443,7 @@ p {
 }
 
 details {
-  border: 1px solid #333;
+  border: 1px solid var(--border);
   border-radius: 0.25rem;
   padding: 0.5rem;
 }
@@ -4901,7 +5457,7 @@ details summary {
 
 details[open] summary {
   margin-bottom: 0.5rem;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--border);
 }
 
 pre {
@@ -4972,17 +5528,155 @@ npm run dev
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>TinyBase / TypeScript</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
   </head>
 
   <body>
-    <div class="app-container">
-      <div class="top-bar">
-        <img src="/favicon.svg" class="top-bar-logo" alt="TinyBase" />
-        <div class="top-bar-title">TinyBase Drawing</div>
-        <div class="top-bar-info">
-          <div class="info-icon">
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Drawing</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
             i
-            <div class="info-tooltip">TypeScript</div>
+            <div id="infoTooltip">
+              A collaborative drawing canvas showcasing TinyBase's state
+              synchronization.
+              <br /><br />
+              Built with TypeScript.
+            </div>
           </div>
         </div>
       </div>
@@ -4990,11 +5684,10 @@ npm run dev
         <div class="drawing-controls">
           <div class="color-picker" id="color-picker"></div>
           <div class="brush-size">
-            <label>Brush Size:</label>
+            <label>Size:</label>
             <input type="range" id="brush-size" min="1" max="50" value="5" />
             <span id="brush-size-value">5</span>
           </div>
-          <button id="clear-button" class="clear-btn">Clear Canvas</button>
         </div>
         <canvas
           id="drawing-canvas"
@@ -5036,6 +5729,7 @@ npm run dev
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "src/app.ts": "import {createStore} from 'tinybase';
+import {createButton} from './components/button';
 
 export const app = () => {
   const store = createStore()
@@ -5135,42 +5829,92 @@ export const app = () => {
   });
 
   // Clear button
-  document.getElementById('clear-button')!.addEventListener('click', () => {
-    store.delTable('strokes');
-  });
+  const clearButton = createButton(
+    'Clear',
+    () => store.delTable('strokes'),
+    'primary',
+  );
+  document.querySelector('.drawing-controls')!.appendChild(clearButton);
 
   store.addTablesListener(draw);
   draw();
 };
 ",
-  "src/drawing.css": ".drawing-controls {
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-  margin-bottom: 1rem;
-  padding: 1rem;
+  "src/components/button.css": "button {
+  padding: 0.5rem 1rem;
   border: 1px solid #666;
   border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "src/components/button.ts": "import './button.css';
+
+export const createButton = (
+  text: string,
+  onClick: () => void,
+  variant: 'default' | 'primary' = 'default',
+): HTMLButtonElement => {
+  const button = document.createElement('button');
+  button.textContent = text;
+  if (variant === 'primary') {
+    button.className = 'primary';
+  }
+  button.addEventListener('click', onClick);
+  return button;
+};
+",
+  "src/drawing.css": ".drawing-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin: 0 auto 1rem;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  justify-content: space-between;
+  max-width: 600px;
 }
 
 .color-picker {
   display: flex;
-  gap: 0.5rem;
+  gap: 0;
   align-items: center;
 }
 
 .color-btn {
   width: 2rem;
   height: 2rem;
-  border: 2px solid #666;
+  border: 2px solid var(--border);
   border-radius: 0.25rem;
   cursor: pointer;
   transition: border-color 0.2s;
+  margin: 0 0 0 0.5rem;
+  padding: 0;
 }
 
 .color-btn:hover,
 .color-btn.active {
-  border-color: #fff;
+  border-color: var(--accent);
 }
 
 .brush-size {
@@ -5184,154 +5928,28 @@ export const app = () => {
 }
 
 .brush-size input {
-  width: 150px;
+  width: 100px;
+  vertical-align: middle;
 }
 
-.brush-size-value {
+#brush-size-value {
+  width: 2rem;
   min-width: 2rem;
   text-align: center;
-}
-
-.clear-btn {
-  padding: 0.5rem 1rem;
-  background: #d81b60;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.clear-btn:hover {
-  background: #c2185b;
+  display: inline-block;
 }
 
 .drawing-canvas {
-  border: 1px solid #666;
-  border-radius: 0.25rem;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
   cursor: crosshair;
   display: block;
   touch-action: none;
+  margin: 0 auto;
 }
 ",
-  "src/index.css": "* {
-  box-sizing: border-box;
-}
-
-body {
-  color: #bbb;
-  background: #0a0a0a;
-  font-family: 'Inter', sans-serif;
-  user-select: none;
-  margin: 0;
-  padding: 0;
-}
-
-.app-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.top-bar {
-  background: linear-gradient(180deg, #1a1a1a 0%, #151515 100%);
-  border-bottom: 1px solid #2a2a2a;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  padding: 0.75rem 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.top-bar-logo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-.top-bar-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
-}
-
-.top-bar-info {
-  position: relative;
-}
-
-.info-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  border: 2px solid #666;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: #666;
-  cursor: help;
-  transition: all 0.2s;
-  user-select: none;
-}
-
-.info-icon:hover {
-  border-color: #d81b60;
-  color: #d81b60;
-}
-
-.info-icon:hover .info-tooltip {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.info-tooltip {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 0.5rem);
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 0.375rem;
-  padding: 0.75rem 1rem;
-  font-size: 0.85rem;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-0.25rem);
-  transition: all 0.2s;
-  pointer-events: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-}
-
-.info-tooltip::before {
-  content: '';
-  position: absolute;
-  right: 0.75rem;
-  top: -0.375rem;
-  width: 0.75rem;
-  height: 0.75rem;
-  background: #1a1a1a;
-  border-left: 1px solid #333;
-  border-top: 1px solid #333;
-  transform: rotate(45deg);
-}
-
-#app {
-  max-width: 50rem;
-  width: 100%;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-  flex: 1;
-}
-
-a {
-  color: #bbb;
+  "src/index.css": "a {
+  color: var(--fg);
 }
 
 h1 {
@@ -5355,7 +5973,7 @@ p {
 }
 
 details {
-  border: 1px solid #333;
+  border: 1px solid var(--border);
   border-radius: 0.25rem;
   padding: 0.5rem;
 }
@@ -5369,7 +5987,7 @@ details summary {
 
 details[open] summary {
   margin-bottom: 0.5rem;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--border);
 }
 
 pre {

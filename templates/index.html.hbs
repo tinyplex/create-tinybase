@@ -139,7 +139,7 @@
     }
 
     #app {
-      max-width: 50rem;
+      max-width: 60rem;
       width: 100%;
       margin: 0 auto;
       padding: 2rem 1.5rem;
@@ -196,11 +196,7 @@
       </div>
       {{#if (eq appType "basic")}}
         <div id="app">
-          <div id="buttons">
-            <button id="countButton">Increment number</button>
-            <button id="randomButton">Random number</button>
-            <button id="addPetButton">Add a pet</button>
-          </div>
+          <div id="buttons"></div>
           <details open>
             <summary>Values</summary>
             <pre id="valuesJson"></pre>
@@ -220,7 +216,6 @@
           <div class="messages" id="messages"></div>
           <div class="message-input">
             <input type="text" id="message-input" placeholder="Type a message..." autofocus />
-            <button id="send-button">Send</button>
           </div>
         </div>
       {{/if}}
@@ -229,11 +224,10 @@
           <div class="drawing-controls">
             <div class="color-picker" id="color-picker"></div>
             <div class="brush-size">
-              <label>Brush Size:</label>
+              <label>Size:</label>
               <input type="range" id="brush-size" min="1" max="50" value="5" />
               <span id="brush-size-value">5</span>
             </div>
-            <button id="clear-button" class="clear-btn">Clear Canvas</button>
           </div>
           <canvas id="drawing-canvas" class="drawing-canvas" width="600" height="400"></canvas>
         </div>

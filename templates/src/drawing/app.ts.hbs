@@ -1,4 +1,6 @@
+{{includeFile template="src/components/button.ts.hbs" output="src/components/button.{{ext}}"}}
 import {createStore} from 'tinybase';
+import {createButton} from './components/button';
 
 {{#if typescript}}
   export const app = () => {
@@ -89,9 +91,8 @@ sizeLabel.textContent = `${size}`;
 });
 
 // Clear button
-document.getElementById('clear-button')!.addEventListener('click', () => {
-store.delTable('strokes');
-});
+const clearButton = createButton('Clear', () => store.delTable('strokes'), 'primary');
+document.querySelector('.drawing-controls')!.appendChild(clearButton);
 
 store.addTablesListener(draw);
 draw();

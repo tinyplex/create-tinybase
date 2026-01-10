@@ -1,7 +1,6 @@
+{{includeFile template="src/components/button.ts.hbs" output="src/components/button.{{ext}}"}}
 import {createStore} from 'tinybase';
-
-const onClick = (id: string, onClick: () => void) =>
-document.getElementById(id)!.addEventListener('click', onClick);
+import {createButton} from './components/button';
 
 const updateJson = (id: string, content: unknown) =>
 (document.getElementById(id)!.innerText = JSON.stringify(content, null, 2));
@@ -11,13 +10,21 @@ const getRandom = (max = 100) => Math.floor(Math.random() * max);
 export const app = () => {
 const store = createStore();
 
-onClick('countButton', () => store.setValue('counter', (value) => value + 1));
-onClick('randomButton', () => store.setValue('random', getRandom()));
-onClick('addPetButton', () =>
+const buttonsContainer = document.getElementById('buttons')!;
+
+buttonsContainer.appendChild(
+createButton('Increment number', () => store.setValue('counter', (value) => value + 1))
+);
+buttonsContainer.appendChild(
+createButton('Random number', () => store.setValue('random', getRandom()))
+);
+buttonsContainer.appendChild(
+createButton('Add a pet', () =>
 store.addRow('pets', {
 name: ['fido', 'felix', 'bubbles', 'lowly', 'polly'][getRandom(5)],
 species: store.getRowIds('species')[getRandom(5)],
 }),
+)
 );
 
 store.addValuesListener(() => updateJson('valuesJson', store.getValues()));

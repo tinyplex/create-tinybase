@@ -1,0 +1,15 @@
+{{includeFile template="src/components/button.css.hbs" output="src/components/button.css"}}
+import './button.css';
+import {ReactNode} from 'react';
+
+interface ButtonProps {
+children: ReactNode;
+onClick: () => void;
+variant?: 'default' | 'primary';
+}
+
+export const Button = ({children, onClick, variant = 'default'}: ButtonProps) => (
+<button onClick={onClick} className={variant==='primary' ? 'primary' : undefined}>
+  {children}
+</button>
+);
