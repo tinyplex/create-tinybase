@@ -1,0 +1,62 @@
+.drawing-controls {
+display: flex;
+gap: 2rem;
+align-items: center;
+margin-bottom: 1rem;
+padding: 1rem;
+border: 1px solid #666;
+border-radius: 0.25rem;
+}
+
+.color-picker {
+display: flex;
+gap: 0.5rem;
+align-items: center;
+}
+
+.color-btn {
+width: 2rem;
+height: 2rem;
+border: 2px solid #666;
+border-radius: 0.25rem;
+cursor: pointer;
+transition: border-color 0.2s;
+}
+
+.color-btn:hover,
+.color-btn.active {
+border-color: #fff;
+}
+
+.brush-size {
+display: flex;
+flex-direction: column;
+gap: 0.25rem;
+}
+
+.brush-size input {
+width: 150px;
+}
+
+.clear-btn {
+padding: 0.5rem 1rem;
+background: #d81b60;
+border: 1px solid #666;
+border-radius: 0.25rem;
+color: #fff;
+font-family: inherit;
+font-weight: 800;
+cursor: pointer;
+}
+
+.clear-btn:hover {
+background: #c2185b;
+}
+
+.drawing-canvas {
+border: 1px solid #666;
+border-radius: 0.25rem;
+cursor: crosshair;
+display: block;
+touch-action: none;
+}

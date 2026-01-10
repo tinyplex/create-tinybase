@@ -1,0 +1,74 @@
+import {createStore} from 'tinybase';
+
+const updateMessages = (store: any) => {
+const messages = document.getElementById('messages')!;
+const messageRows = store.getTable('messages');
+const sortedIds = Object.keys(messageRows).sort(
+(a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
+);
+
+messages.innerHTML = sortedIds
+.map((id) => {
+const msg = messageRows[id];
+const time = new Date(msg.timestamp).toLocaleTimeString();
+return `
+<div class="message">
+  <span class="username">${msg.username}:</span>
+  <span class="text">${msg.text}</span>
+  <span class="time">${time}</span>
+</div>
+`;
+})
+.join('');
+};
+
+{{#if typescript}}
+  export const app = () => {
+{{else}}
+  const app = () => {
+{{/if}}
+const store = createStore()
+.setValue('username', 'User')
+.setTable('messages', {
+'1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
+'2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
+});
+
+const usernameInput = document.getElementById('username-input') as HTMLInputElement;
+const messageInput = document.getElementById('message-input') as HTMLInputElement;
+const sendButton = document.getElementById('send-button')!;
+
+usernameInput!.value = store.getValue('username') as string;
+usernameInput!.addEventListener('input', () => {
+store.setValue('username', usernameInput!.value);
+});
+
+store.addValuesListener(() => {
+usernameInput!.value = store.getValue('username') as string;
+});
+
+const sendMessage = () => {
+const text = messageInput!.value.trim();
+if (text) {
+store.addRow('messages', {
+username: store.getValue('username'),
+text,
+timestamp: Date.now(),
+});
+messageInput!.value = '';
+}
+};
+
+sendButton.addEventListener('click', sendMessage);
+messageInput!.addEventListener('keypress', (e) => {
+if (e.key === 'Enter') {
+sendMessage();
+}
+});
+
+store.addTablesListener(() => updateMessages(store));
+updateMessages(store);
+};
+{{#unless typescript}}
+  export {app};
+{{/unless}}

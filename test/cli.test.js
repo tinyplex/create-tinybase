@@ -8,20 +8,96 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const TEST_DIR = join(__dirname, '.test-output');
 
 const combinations = [
-  {language: 'javascript', framework: 'vanilla', name: 'js-vanilla'},
-  {language: 'javascript', framework: 'react', name: 'js-react'},
-  {language: 'typescript', framework: 'vanilla', name: 'ts-vanilla'},
-  {language: 'typescript', framework: 'react', name: 'ts-react'},
+  {
+    language: 'javascript',
+    framework: 'vanilla',
+    appType: 'basic',
+    name: 'js-vanilla-basic',
+  },
+  {
+    language: 'javascript',
+    framework: 'react',
+    appType: 'basic',
+    name: 'js-react-basic',
+  },
+  {
+    language: 'typescript',
+    framework: 'vanilla',
+    appType: 'basic',
+    name: 'ts-vanilla-basic',
+  },
+  {
+    language: 'typescript',
+    framework: 'react',
+    appType: 'basic',
+    name: 'ts-react-basic',
+  },
+  {
+    language: 'javascript',
+    framework: 'vanilla',
+    appType: 'chat',
+    name: 'js-vanilla-chat',
+  },
+  {
+    language: 'javascript',
+    framework: 'react',
+    appType: 'chat',
+    name: 'js-react-chat',
+  },
+  {
+    language: 'typescript',
+    framework: 'vanilla',
+    appType: 'chat',
+    name: 'ts-vanilla-chat',
+  },
+  {
+    language: 'typescript',
+    framework: 'react',
+    appType: 'chat',
+    name: 'ts-react-chat',
+  },
+  {
+    language: 'javascript',
+    framework: 'vanilla',
+    appType: 'drawing',
+    name: 'js-vanilla-drawing',
+  },
+  {
+    language: 'javascript',
+    framework: 'react',
+    appType: 'drawing',
+    name: 'js-react-drawing',
+  },
+  {
+    language: 'typescript',
+    framework: 'vanilla',
+    appType: 'drawing',
+    name: 'ts-vanilla-drawing',
+  },
+  {
+    language: 'typescript',
+    framework: 'react',
+    appType: 'drawing',
+    name: 'ts-react-drawing',
+  },
 ];
 
-async function runCLI(projectName, language, framework) {
-  return runCLIWithOptions(projectName, language, framework, false, false);
+async function runCLI(projectName, language, framework, appType = 'basic') {
+  return runCLIWithOptions(
+    projectName,
+    language,
+    framework,
+    appType,
+    false,
+    false,
+  );
 }
 
 async function runCLIWithOptions(
   projectName,
   language,
   framework,
+  appType,
   prettier,
   eslint,
 ) {
@@ -37,6 +113,8 @@ async function runCLIWithOptions(
         language,
         '--framework',
         framework,
+        '--appType',
+        appType,
         '--prettier',
         prettier.toString(),
         '--eslint',
@@ -105,7 +183,12 @@ describe('create-tinybase', () => {
       const projectPath = join(TEST_DIR, projectName);
 
       it('should create project successfully', async () => {
-        await runCLI(projectName, combo.language, combo.framework);
+        await runCLI(
+          projectName,
+          combo.language,
+          combo.framework,
+          combo.appType,
+        );
       }, 10000);
 
       it('should have correct package.json', async () => {
@@ -180,7 +263,14 @@ describe('create-tinybase', () => {
     const projectPath = join(TEST_DIR, projectName);
 
     it('should create project with prettier and eslint (ts-react)', async () => {
-      await runCLIWithOptions(projectName, 'typescript', 'react', true, true);
+      await runCLIWithOptions(
+        projectName,
+        'typescript',
+        'react',
+        'basic',
+        true,
+        true,
+      );
       const files = await getFileList(projectPath);
 
       expect(files).toContain('.prettierrc');

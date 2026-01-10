@@ -1,18 +1,22 @@
 {{includeFile template="src/index.css.hbs" output="src/index.css"}}
+{{includeFile template="src/{{appType}}/index.css.hbs" output="src/{{appType}}.css"}}
 import './index.css';
+import './{{appType}}.css';
 {{#if react}}
   import ReactDOM from 'react-dom/client';
   import {App} from './App';
-  {{includeFile template="src/App.tsx.hbs" output="src/App.{{ext}}"}}
-  {{includeFile template="src/Buttons.tsx.hbs" output="src/Buttons.{{ext}}"}}
+  {{includeFile template="src/{{appType}}/App.tsx.hbs" output="src/App.{{ext}}"}}
+  {{#if (eq appType "basic")}}
+    {{includeFile template="src/basic/Buttons.tsx.hbs" output="src/Buttons.{{ext}}"}}
+  {{/if}}
 
   addEventListener('load', () =>
-  ReactDOM.createRoot(document.getElementById('app')!).render(
+  ReactDOM.createRoot(document.getElementById('app'){{#if typescript}}!{{/if}}).render(
   <App />),
   );
 {{else}}
   import {app} from './app';
-  {{includeFile template="src/app.ts.hbs" output="src/app.{{ext}}"}}
+  {{includeFile template="src/{{appType}}/app.ts.hbs" output="src/app.{{ext}}"}}
 
   addEventListener('load', app);
 {{/if}}

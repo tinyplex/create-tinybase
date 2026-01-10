@@ -1,0 +1,155 @@
+import {StrictMode, useCallback, useEffect, useRef} from 'react';
+import {createStore} from 'tinybase';
+import {Provider, useAddRowCallback, useCreateStore, useDelTableCallback, useRow, useRowIds, useStore} from 'tinybase/ui-react';
+import {Inspector} from 'tinybase/ui-react-inspector';
+
+const Canvas = () => {
+const canvasRef = useRef<HTMLCanvasElement>(null);
+const isDrawing = useRef(false);
+const store = useStore();
+const strokes = useRowIds('strokes');
+
+const addStroke = useAddRowCallback(
+'strokes',
+(e: MouseEvent | TouchEvent) => {
+const canvas = canvasRef.current;
+if (!canvas) return null;
+
+const rect = canvas.getBoundingClientRect();
+const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+const brush = store.getRow('settings', 'brush') as any;
+
+return {
+x: clientX - rect.left,
+y: clientY - rect.top,
+color: brush.color,
+size: brush.size,
+};
+},
+[],
+);
+
+const draw = useCallback(() => {
+const canvas = canvasRef.current;
+if (!canvas) return;
+
+const ctx = canvas.getContext('2d');
+if (!ctx) return;
+
+ctx.fillStyle = '#111';
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+strokes.forEach((id) => {
+const stroke = store.getRow('strokes', id) as any;
+if (stroke) {
+ctx.fillStyle = stroke.color;
+ctx.beginPath();
+ctx.arc(stroke.x, stroke.y, stroke.size, 0, Math.PI * 2);
+ctx.fill();
+}
+});
+}, [strokes, store]);
+
+useEffect(() => {
+draw();
+}, [draw]);
+
+const handleStart = (e: React.MouseEvent | React.TouchEvent) => {
+isDrawing.current = true;
+addStroke(e.nativeEvent);
+};
+
+const handleMove = (e: React.MouseEvent | React.TouchEvent) => {
+if (isDrawing.current) {
+addStroke(e.nativeEvent);
+}
+};
+
+const handleEnd = () => {
+isDrawing.current = false;
+};
+
+return (
+<canvas ref={canvasRef} width={600} height={400} className="drawing-canvas" onMouseDown={handleStart} onMouseMove={handleMove} onMouseUp={handleEnd} onMouseLeave={handleEnd} onTouchStart={handleStart} onTouchMove={handleMove}
+  onTouchEnd={handleEnd} />
+);
+};
+
+const ColorPicker = () => {
+const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];
+const store = useStore();
+const currentBrush = useRow('settings', 'brush') as any;
+const currentColor = currentBrush.color;
+
+const setColor = (color: string) => {
+store.setRow('settings', 'brush', {...currentBrush, color});
+};
+
+return (
+<div className="color-picker">
+  <label>Color:</label>
+  {colors.map((color) => (
+  <button key={color} className={`color-btn ${currentColor===color ? 'active' : '' }`} style=\{{background: color}} onClick={()=> setColor(color)}
+    />
+    ))}
+</div>
+);
+};
+
+const BrushSize = () => {
+const store = useStore();
+const currentBrush = useRow('settings', 'brush') as any;
+const size = currentBrush.size;
+
+const setSize = (e: React.ChangeEvent<HTMLInputElement>) => {
+store.setRow('settings', 'brush', {...currentBrush, size: parseInt(e.target.value)});
+};
+
+return (
+<div className="brush-size">
+  <label>Size: {size}px</label>
+  <input type="range" min="1" max="20" value={size} onChange={setSize} />
+</div>
+);
+};
+
+const ClearButton = () => {
+const clearCanvas = useDelTableCallback('strokes');
+return <button onClick={clearCanvas} className="clear-btn">Clear</button>;
+};
+
+{{#if typescript}}export {{/if}}const App = () => {
+const store = useCreateStore(() => {
+return createStore()
+.setRow('settings', 'brush', {color: '#d81b60', size: 3})
+.setTable('strokes', {});
+});
+
+return (
+<StrictMode>
+  <Provider store={store}>
+    <header>
+      <h1>
+        <img src="/favicon.svg" />
+        TinyBase Drawing{{#if typescript}} / TypeScript{{else}} / JavaScript{{/if}} + React
+      </h1>
+    </header>
+    <p>
+      A simple drawing app built with TinyBase. Each stroke is stored as a row,
+      demonstrating how TinyBase can handle lots of small updates efficiently.
+    </p>
+    <div className="drawing-controls">
+      <ColorPicker />
+      <BrushSize />
+      <ClearButton />
+    </div>
+    <Canvas />
+    <Inspector />
+  </Provider>
+</StrictMode>
+);
+};
+{{#unless typescript}}
+  export {App};
+{{/unless}}

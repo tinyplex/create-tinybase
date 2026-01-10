@@ -49,6 +49,17 @@ const config = {
       initial: 0,
     },
     {
+      type: 'select' as const,
+      name: 'appType',
+      message: 'App type:',
+      choices: [
+        {title: 'Basic demo', value: 'basic'},
+        {title: 'Chat app', value: 'chat'},
+        {title: 'Drawing app', value: 'drawing'},
+      ],
+      initial: 0,
+    },
+    {
       type: 'confirm' as const,
       name: 'prettier',
       message: 'Include Prettier?',
@@ -63,7 +74,8 @@ const config = {
   ],
 
   createContext: (answers: Record<string, unknown>) => {
-    const {projectName, language, framework, prettier, eslint} = answers;
+    const {projectName, language, framework, appType, prettier, eslint} =
+      answers;
     const typescript = language === 'typescript';
     const javascript = !typescript;
     const react = framework === 'react';
@@ -73,6 +85,7 @@ const config = {
       projectName,
       language,
       framework,
+      appType,
       prettier,
       eslint,
       typescript,

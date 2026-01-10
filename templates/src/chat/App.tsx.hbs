@@ -1,0 +1,105 @@
+import {StrictMode, useState} from 'react';
+import {createStore} from 'tinybase';
+import {Provider, useCreateStore, useAddRowCallback, useRow, useSetValueCallback, useValue} from 'tinybase/ui-react';
+import {SortedTableInHtmlTable, useCell} from 'tinybase/ui-react-dom';
+import {Inspector} from 'tinybase/ui-react-inspector';
+
+const MessageInput = () => {
+const [message, setMessage] = useState('');
+const username = useValue('username') || 'Anonymous';
+
+const handleSend = useAddRowCallback(
+'messages',
+() => ({
+username,
+text: message,
+timestamp: Date.now(),
+}),
+[message, username],
+);
+
+const onSubmit = (e: React.FormEvent) => {
+e.preventDefault();
+if (message.trim()) {
+handleSend();
+setMessage('');
+}
+};
+
+return (
+<form onSubmit={onSubmit} className="message-input">
+  <input type="text" value={message} onChange={(e)=> setMessage(e.target.value)}
+  placeholder="Type a message..."
+  autoFocus
+  />
+  <button type="submit">Send</button>
+</form>
+);
+};
+
+const Message = ({rowId}: {rowId: string}) => {
+const row = useRow('messages', rowId);
+const time = new Date((row as any).timestamp).toLocaleTimeString();
+
+return (
+<div className="message">
+  <span className="username">{(row as any).username}:</span>
+  <span className="text">{(row as any).text}</span>
+  <span className="time">{time}</span>
+</div>
+);
+};
+
+const UsernameInput = () => {
+const username = useValue('username') || '';
+const handleChange = useSetValueCallback(
+'username',
+(e: React.ChangeEvent<HTMLInputElement>) => e.target.value,[]);
+
+  return (
+  <div className="username-input">
+    <label>
+      Your name:
+      <input type="text" value={username} onChange={handleChange} placeholder="Enter your name" />
+    </label>
+  </div>
+  );
+  };
+
+  export const App = () => {
+  const store = useCreateStore(() => {
+  return createStore()
+  .setValue('username', 'User')
+  .setTable('messages', {
+  '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
+  '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
+  });
+  });
+
+  return (
+  <StrictMode>
+    <Provider store={store}>
+      <header>
+        <h1>
+          <img src="/favicon.svg" />
+          TinyBase Chat{{#if typescript}} / TypeScript{{else}} / JavaScript{{/if}} + React
+        </h1>
+      </header>
+      <p>
+        A simple chat app built with TinyBase. Messages are stored in a Table,
+        and you can change your username to see how data flows through the app.
+      </p>
+      <UsernameInput />
+      <div className="chat-container">
+        <div className="messages">
+          <SortedTableInHtmlTable tableId="messages" cellId="timestamp" descending={false} customCell={(tableId, rowId)=>
+            <Message rowId={rowId} />}
+            />
+        </div>
+        <MessageInput />
+      </div>
+      <Inspector />
+    </Provider>
+  </StrictMode>
+  );
+  };

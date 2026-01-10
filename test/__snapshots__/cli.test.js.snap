@@ -1,8 +1,8 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`create-tinybase > js-react > should match snapshot 1`] = `
+exports[`create-tinybase > js-react-basic > should match snapshot 1`] = `
 {
-  "README.md": "# test-js-react
+  "README.md": "# test-js-react-basic
 
 A TinyBase app built with JavaScript and React.
 
@@ -42,7 +42,7 @@ npm run dev
 </html>
 ",
   "package.json": "{
-  "name": "test-js-react",
+  "name": "test-js-react-basic",
   "version": "1.0.0",
   "scripts": {
     "dev": "vite",
@@ -148,72 +148,7 @@ const Buttons = () => {
 };
 export {Buttons};
 ",
-  "src/index.css": "body {
-  color: #bbb;
-  background: #111;
-  font-family: 'Inter', sans-serif;
-  user-select: none;
-}
-
-#app {
-  max-width: 40rem;
-  margin: 2rem auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 2rem;
-  align-items: start;
-  row-gap: 1rem;
-}
-
-a {
-  color: #bbb;
-}
-
-h1 {
-  font-weight: 600;
-  img {
-    margin-right: 1rem;
-    height: 2.5rem;
-    vertical-align: text-bottom;
-  }
-}
-
-h2 {
-  font-weight: 800;
-  font-size: 1.3rem;
-  margin: 1rem 0 0;
-}
-
-p {
-  margin: 0 0 1rem;
-  line-height: 1.5;
-}
-
-details {
-  border: 1px solid #333;
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-}
-
-details summary {
-  cursor: pointer;
-  font-weight: 800;
-  margin: -0.5rem -0.5rem 0;
-  padding: 0.5rem;
-}
-
-details[open] summary {
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid #333;
-}
-
-pre {
-  margin: 0;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-
-#buttons {
+  "src/basic.css": "#buttons {
   border: solid #666;
   border-width: 1px 0;
   text-align: center;
@@ -287,7 +222,73 @@ table.sortedTable thead th {
   }
 }
 ",
+  "src/index.css": "body {
+  color: #bbb;
+  background: #111;
+  font-family: 'Inter', sans-serif;
+  user-select: none;
+}
+
+#app {
+  max-width: 40rem;
+  margin: 2rem auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: 2rem;
+  align-items: start;
+  row-gap: 1rem;
+}
+
+a {
+  color: #bbb;
+}
+
+h1 {
+  font-weight: 600;
+  img {
+    margin-right: 1rem;
+    height: 2.5rem;
+    vertical-align: text-bottom;
+  }
+}
+
+h2 {
+  font-weight: 800;
+  font-size: 1.3rem;
+  margin: 1rem 0 0;
+}
+
+p {
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+details {
+  border: 1px solid #333;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 800;
+  margin: -0.5rem -0.5rem 0;
+  padding: 0.5rem;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #333;
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+",
   "src/index.jsx": "import './index.css';
+import './basic.css';
 import ReactDOM from 'react-dom/client';
 import {App} from './App';
 addEventListener('load', () =>
@@ -308,9 +309,753 @@ export default defineConfig({
 }
 `;
 
-exports[`create-tinybase > js-vanilla > should match snapshot 1`] = `
+exports[`create-tinybase > js-react-chat > should match snapshot 1`] = `
 {
-  "README.md": "# test-js-vanilla
+  "README.md": "# test-js-react-chat
+
+A TinyBase app built with JavaScript and React.
+
+## Getting Started
+
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase / JavaScript + React</title>
+  </head>
+
+  <body>
+    <div id="app"></div>
+
+    <script type="module" src="/src/index.jsx"></script>
+  </body>
+</html>
+",
+  "package.json": "{
+  "name": "test-js-react-chat",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.1.3",
+    "@vitejs/plugin-react": "^4.3.4"
+  },
+  "dependencies": {
+    "tinybase": "^7.3.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
+  }
+}
+",
+  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "src/App.jsx": "import {StrictMode, useState} from 'react';
+import {createStore} from 'tinybase';
+import {
+  Provider,
+  useCreateStore,
+  useAddRowCallback,
+  useRow,
+  useSetValueCallback,
+  useValue,
+} from 'tinybase/ui-react';
+import {SortedTableInHtmlTable} from 'tinybase/ui-react-dom';
+import {Inspector} from 'tinybase/ui-react-inspector';
+const MessageInput = () => {
+  const [message, setMessage] = useState('');
+  const username = useValue('username') || 'Anonymous';
+  const handleSend = useAddRowCallback(
+    'messages',
+    () => ({
+      username,
+      text: message,
+      timestamp: Date.now(),
+    }),
+    [message, username],
+  );
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if (message.trim()) {
+      handleSend();
+      setMessage('');
+    }
+  };
+  return (
+    <form onSubmit={onSubmit} className="message-input">
+      <input
+        type="text"
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        placeholder="Type a message..."
+        autoFocus
+      />
+      <button type="submit">Send</button>
+    </form>
+  );
+};
+const Message = ({rowId}) => {
+  const row = useRow('messages', rowId);
+  const time = new Date(row.timestamp).toLocaleTimeString();
+  return (
+    <div className="message">
+      <span className="username">{row.username}:</span>
+      <span className="text">{row.text}</span>
+      <span className="time">{time}</span>
+    </div>
+  );
+};
+const UsernameInput = () => {
+  const username = useValue('username') || '';
+  const handleChange = useSetValueCallback(
+    'username',
+    (e) => e.target.value,
+    [],
+  );
+  return (
+    <div className="username-input">
+      <label>
+        Your name:
+        <input
+          type="text"
+          value={username}
+          onChange={handleChange}
+          placeholder="Enter your name"
+        />
+      </label>
+    </div>
+  );
+};
+const App = () => {
+  const store = useCreateStore(() => {
+    return createStore()
+      .setValue('username', 'User')
+      .setTable('messages', {
+        1: {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 6e4},
+        2: {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 3e4},
+      });
+  });
+  return (
+    <StrictMode>
+      <Provider store={store}>
+        <header>
+          <h1>
+            <img src="/favicon.svg" />
+            TinyBase Chat / JavaScript + React
+          </h1>
+        </header>
+        <p>
+          A simple chat app built with TinyBase. Messages are stored in a Table,
+          and you can change your username to see how data flows through the
+          app.
+        </p>
+        <UsernameInput />
+        <div className="chat-container">
+          <div className="messages">
+            <SortedTableInHtmlTable
+              tableId="messages"
+              cellId="timestamp"
+              descending={false}
+              customCell={(tableId, rowId) => <Message rowId={rowId} />}
+            />
+          </div>
+          <MessageInput />
+        </div>
+        <Inspector />
+      </Provider>
+    </StrictMode>
+  );
+};
+export {App};
+",
+  "src/chat.css": ".username-input {
+  margin-bottom: 1rem;
+}
+
+.username-input label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.username-input input {
+  flex: 1;
+  padding: 0.5rem;
+  background: #222;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  color: #fff;
+  font-family: inherit;
+}
+
+.chat-container {
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.message {
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.message .username {
+  font-weight: 800;
+  color: #d81b60;
+}
+
+.message .text {
+  flex: 1;
+}
+
+.message .time {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.message-input {
+  display: flex;
+  border-top: 1px solid #666;
+}
+
+.message-input input {
+  flex: 1;
+  padding: 0.75rem;
+  background: #222;
+  border: none;
+  color: #fff;
+  font-family: inherit;
+}
+
+.message-input button {
+  padding: 0.75rem 1.5rem;
+  background: #d81b60;
+  border: none;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.message-input button:hover {
+  background: #c2185b;
+}
+",
+  "src/index.css": "body {
+  color: #bbb;
+  background: #111;
+  font-family: 'Inter', sans-serif;
+  user-select: none;
+}
+
+#app {
+  max-width: 40rem;
+  margin: 2rem auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: 2rem;
+  align-items: start;
+  row-gap: 1rem;
+}
+
+a {
+  color: #bbb;
+}
+
+h1 {
+  font-weight: 600;
+  img {
+    margin-right: 1rem;
+    height: 2.5rem;
+    vertical-align: text-bottom;
+  }
+}
+
+h2 {
+  font-weight: 800;
+  font-size: 1.3rem;
+  margin: 1rem 0 0;
+}
+
+p {
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+details {
+  border: 1px solid #333;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 800;
+  margin: -0.5rem -0.5rem 0;
+  padding: 0.5rem;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #333;
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+",
+  "src/index.jsx": "import './index.css';
+import './chat.css';
+import ReactDOM from 'react-dom/client';
+import {App} from './App';
+addEventListener('load', () =>
+  ReactDOM.createRoot(document.getElementById('app')).render(<App />),
+);
+",
+  "vite.config.js": "import {defineConfig} from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [
+    react({
+      jsxRuntime: 'automatic',
+    }),
+  ],
+});
+",
+}
+`;
+
+exports[`create-tinybase > js-react-drawing > should match snapshot 1`] = `
+{
+  "README.md": "# test-js-react-drawing
+
+A TinyBase app built with JavaScript and React.
+
+## Getting Started
+
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase / JavaScript + React</title>
+  </head>
+
+  <body>
+    <div id="app"></div>
+
+    <script type="module" src="/src/index.jsx"></script>
+  </body>
+</html>
+",
+  "package.json": "{
+  "name": "test-js-react-drawing",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.1.3",
+    "@vitejs/plugin-react": "^4.3.4"
+  },
+  "dependencies": {
+    "tinybase": "^7.3.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
+  }
+}
+",
+  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "src/App.jsx": "import {StrictMode, useCallback, useEffect, useRef} from 'react';
+import {createStore} from 'tinybase';
+import {
+  Provider,
+  useAddRowCallback,
+  useCreateStore,
+  useDelTableCallback,
+  useRow,
+  useRowIds,
+  useStore,
+} from 'tinybase/ui-react';
+import {Inspector} from 'tinybase/ui-react-inspector';
+const Canvas = () => {
+  const canvasRef = useRef(null);
+  const isDrawing = useRef(false);
+  const store = useStore();
+  const strokes = useRowIds('strokes');
+  const addStroke = useAddRowCallback(
+    'strokes',
+    (e) => {
+      const canvas = canvasRef.current;
+      if (!canvas) return null;
+      const rect = canvas.getBoundingClientRect();
+      const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+      const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+      const brush = store.getRow('settings', 'brush');
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top,
+        color: brush.color,
+        size: brush.size,
+      };
+    },
+    [],
+  );
+  const draw = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.fillStyle = '#111';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    strokes.forEach((id) => {
+      const stroke = store.getRow('strokes', id);
+      if (stroke) {
+        ctx.fillStyle = stroke.color;
+        ctx.beginPath();
+        ctx.arc(stroke.x, stroke.y, stroke.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    });
+  }, [strokes, store]);
+  useEffect(() => {
+    draw();
+  }, [draw]);
+  const handleStart = (e) => {
+    isDrawing.current = true;
+    addStroke(e.nativeEvent);
+  };
+  const handleMove = (e) => {
+    if (isDrawing.current) {
+      addStroke(e.nativeEvent);
+    }
+  };
+  const handleEnd = () => {
+    isDrawing.current = false;
+  };
+  return (
+    <canvas
+      ref={canvasRef}
+      width={600}
+      height={400}
+      className="drawing-canvas"
+      onMouseDown={handleStart}
+      onMouseMove={handleMove}
+      onMouseUp={handleEnd}
+      onMouseLeave={handleEnd}
+      onTouchStart={handleStart}
+      onTouchMove={handleMove}
+      onTouchEnd={handleEnd}
+    />
+  );
+};
+const ColorPicker = () => {
+  const colors = [
+    '#d81b60',
+    '#1976d2',
+    '#388e3c',
+    '#f57c00',
+    '#7b1fa2',
+    '#fff',
+  ];
+  const store = useStore();
+  const currentBrush = useRow('settings', 'brush');
+  const currentColor = currentBrush.color;
+  const setColor = (color) => {
+    store.setRow('settings', 'brush', {...currentBrush, color});
+  };
+  return (
+    <div className="color-picker">
+      <label>Color:</label>
+      {colors.map((color) => (
+        <button
+          key={color}
+          className={\`color-btn \${currentColor === color ? 'active' : ''}\`}
+          style={{background: color}}
+          onClick={() => setColor(color)}
+        />
+      ))}
+    </div>
+  );
+};
+const BrushSize = () => {
+  const store = useStore();
+  const currentBrush = useRow('settings', 'brush');
+  const size = currentBrush.size;
+  const setSize = (e) => {
+    store.setRow('settings', 'brush', {
+      ...currentBrush,
+      size: parseInt(e.target.value),
+    });
+  };
+  return (
+    <div className="brush-size">
+      <label>Size: {size}px</label>
+      <input type="range" min="1" max="20" value={size} onChange={setSize} />
+    </div>
+  );
+};
+const ClearButton = () => {
+  const clearCanvas = useDelTableCallback('strokes');
+  return (
+    <button onClick={clearCanvas} className="clear-btn">
+      Clear
+    </button>
+  );
+};
+const App = () => {
+  const store = useCreateStore(() => {
+    return createStore()
+      .setRow('settings', 'brush', {color: '#d81b60', size: 3})
+      .setTable('strokes', {});
+  });
+  return (
+    <StrictMode>
+      <Provider store={store}>
+        <header>
+          <h1>
+            <img src="/favicon.svg" />
+            TinyBase Drawing / JavaScript + React
+          </h1>
+        </header>
+        <p>
+          A simple drawing app built with TinyBase. Each stroke is stored as a
+          row, demonstrating how TinyBase can handle lots of small updates
+          efficiently.
+        </p>
+        <div className="drawing-controls">
+          <ColorPicker />
+          <BrushSize />
+          <ClearButton />
+        </div>
+        <Canvas />
+        <Inspector />
+      </Provider>
+    </StrictMode>
+  );
+};
+export {App};
+",
+  "src/drawing.css": ".drawing-controls {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+}
+
+.color-picker {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.color-btn {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid #666;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.color-btn:hover,
+.color-btn.active {
+  border-color: #fff;
+}
+
+.brush-size {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.brush-size input {
+  width: 150px;
+}
+
+.clear-btn {
+  padding: 0.5rem 1rem;
+  background: #d81b60;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.clear-btn:hover {
+  background: #c2185b;
+}
+
+.drawing-canvas {
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  cursor: crosshair;
+  display: block;
+  touch-action: none;
+}
+",
+  "src/index.css": "body {
+  color: #bbb;
+  background: #111;
+  font-family: 'Inter', sans-serif;
+  user-select: none;
+}
+
+#app {
+  max-width: 40rem;
+  margin: 2rem auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: 2rem;
+  align-items: start;
+  row-gap: 1rem;
+}
+
+a {
+  color: #bbb;
+}
+
+h1 {
+  font-weight: 600;
+  img {
+    margin-right: 1rem;
+    height: 2.5rem;
+    vertical-align: text-bottom;
+  }
+}
+
+h2 {
+  font-weight: 800;
+  font-size: 1.3rem;
+  margin: 1rem 0 0;
+}
+
+p {
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+details {
+  border: 1px solid #333;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 800;
+  margin: -0.5rem -0.5rem 0;
+  padding: 0.5rem;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #333;
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+",
+  "src/index.jsx": "import './index.css';
+import './drawing.css';
+import ReactDOM from 'react-dom/client';
+import {App} from './App';
+addEventListener('load', () =>
+  ReactDOM.createRoot(document.getElementById('app')).render(<App />),
+);
+",
+  "vite.config.js": "import {defineConfig} from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [
+    react({
+      jsxRuntime: 'automatic',
+    }),
+  ],
+});
+",
+}
+`;
+
+exports[`create-tinybase > js-vanilla-basic > should match snapshot 1`] = `
+{
+  "README.md": "# test-js-vanilla-basic
 
 A TinyBase app built with JavaScript and Vanilla JS.
 
@@ -378,7 +1123,7 @@ npm run dev
 </html>
 ",
   "package.json": "{
-  "name": "test-js-vanilla",
+  "name": "test-js-vanilla-basic",
   "version": "1.0.0",
   "scripts": {
     "dev": "vite",
@@ -432,72 +1177,7 @@ const app = () => {
 };
 export {app};
 ",
-  "src/index.css": "body {
-  color: #bbb;
-  background: #111;
-  font-family: 'Inter', sans-serif;
-  user-select: none;
-}
-
-#app {
-  max-width: 40rem;
-  margin: 2rem auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 2rem;
-  align-items: start;
-  row-gap: 1rem;
-}
-
-a {
-  color: #bbb;
-}
-
-h1 {
-  font-weight: 600;
-  img {
-    margin-right: 1rem;
-    height: 2.5rem;
-    vertical-align: text-bottom;
-  }
-}
-
-h2 {
-  font-weight: 800;
-  font-size: 1.3rem;
-  margin: 1rem 0 0;
-}
-
-p {
-  margin: 0 0 1rem;
-  line-height: 1.5;
-}
-
-details {
-  border: 1px solid #333;
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-}
-
-details summary {
-  cursor: pointer;
-  font-weight: 800;
-  margin: -0.5rem -0.5rem 0;
-  padding: 0.5rem;
-}
-
-details[open] summary {
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid #333;
-}
-
-pre {
-  margin: 0;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-
-#buttons {
+  "src/basic.css": "#buttons {
   border: solid #666;
   border-width: 1px 0;
   text-align: center;
@@ -571,16 +1251,687 @@ table.sortedTable thead th {
   }
 }
 ",
+  "src/index.css": "body {
+  color: #bbb;
+  background: #111;
+  font-family: 'Inter', sans-serif;
+  user-select: none;
+}
+
+#app {
+  max-width: 40rem;
+  margin: 2rem auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: 2rem;
+  align-items: start;
+  row-gap: 1rem;
+}
+
+a {
+  color: #bbb;
+}
+
+h1 {
+  font-weight: 600;
+  img {
+    margin-right: 1rem;
+    height: 2.5rem;
+    vertical-align: text-bottom;
+  }
+}
+
+h2 {
+  font-weight: 800;
+  font-size: 1.3rem;
+  margin: 1rem 0 0;
+}
+
+p {
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+details {
+  border: 1px solid #333;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 800;
+  margin: -0.5rem -0.5rem 0;
+  padding: 0.5rem;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #333;
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+",
   "src/index.js": "import './index.css';
+import './basic.css';
 import {app} from './app';
 addEventListener('load', app);
 ",
 }
 `;
 
-exports[`create-tinybase > ts-react > should match snapshot 1`] = `
+exports[`create-tinybase > js-vanilla-chat > should match snapshot 1`] = `
 {
-  "README.md": "# test-ts-react
+  "README.md": "# test-js-vanilla-chat
+
+A TinyBase app built with JavaScript and Vanilla JS.
+
+## Getting Started
+
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase / JavaScript</title>
+  </head>
+
+  <body>
+    <div id="app">
+      <header>
+        <h1>
+          <img src="/favicon.svg" />
+          TinyBase Chat / JavaScript
+        </h1>
+      </header>
+      <div class="username-input">
+        <label>Username:</label>
+        <input type="text" id="username-input" placeholder="Enter your name" />
+      </div>
+      <div id="messages"></div>
+      <div class="message-input">
+        <input type="text" id="message-input" placeholder="Type a message..." />
+        <button id="send-button">Send</button>
+      </div>
+    </div>
+
+    <script type="module" src="/src/index.js"></script>
+  </body>
+</html>
+",
+  "package.json": "{
+  "name": "test-js-vanilla-chat",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.1.3"
+  },
+  "dependencies": {
+    "tinybase": "^7.3.1"
+  }
+}
+",
+  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "src/app.js": "import {createStore} from 'tinybase';
+const updateMessages = (store) => {
+  const messages = document.getElementById('messages');
+  const messageRows = store.getTable('messages');
+  const sortedIds = Object.keys(messageRows).sort(
+    (a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
+  );
+  messages.innerHTML = sortedIds
+    .map((id) => {
+      const msg = messageRows[id];
+      const time = new Date(msg.timestamp).toLocaleTimeString();
+      return \`
+<div class="message">
+  <span class="username">\${msg.username}:</span>
+  <span class="text">\${msg.text}</span>
+  <span class="time">\${time}</span>
+</div>
+\`;
+    })
+    .join('');
+};
+const app = () => {
+  const store = createStore()
+    .setValue('username', 'User')
+    .setTable('messages', {
+      1: {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 6e4},
+      2: {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 3e4},
+    });
+  const usernameInput = document.getElementById('username-input');
+  const messageInput = document.getElementById('message-input');
+  const sendButton = document.getElementById('send-button');
+  usernameInput.value = store.getValue('username');
+  usernameInput.addEventListener('input', () => {
+    store.setValue('username', usernameInput.value);
+  });
+  store.addValuesListener(() => {
+    usernameInput.value = store.getValue('username');
+  });
+  const sendMessage = () => {
+    const text = messageInput.value.trim();
+    if (text) {
+      store.addRow('messages', {
+        username: store.getValue('username'),
+        text,
+        timestamp: Date.now(),
+      });
+      messageInput.value = '';
+    }
+  };
+  sendButton.addEventListener('click', sendMessage);
+  messageInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      sendMessage();
+    }
+  });
+  store.addTablesListener(() => updateMessages(store));
+  updateMessages(store);
+};
+export {app};
+",
+  "src/chat.css": ".username-input {
+  margin-bottom: 1rem;
+}
+
+.username-input label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.username-input input {
+  flex: 1;
+  padding: 0.5rem;
+  background: #222;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  color: #fff;
+  font-family: inherit;
+}
+
+.chat-container {
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.message {
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.message .username {
+  font-weight: 800;
+  color: #d81b60;
+}
+
+.message .text {
+  flex: 1;
+}
+
+.message .time {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.message-input {
+  display: flex;
+  border-top: 1px solid #666;
+}
+
+.message-input input {
+  flex: 1;
+  padding: 0.75rem;
+  background: #222;
+  border: none;
+  color: #fff;
+  font-family: inherit;
+}
+
+.message-input button {
+  padding: 0.75rem 1.5rem;
+  background: #d81b60;
+  border: none;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.message-input button:hover {
+  background: #c2185b;
+}
+",
+  "src/index.css": "body {
+  color: #bbb;
+  background: #111;
+  font-family: 'Inter', sans-serif;
+  user-select: none;
+}
+
+#app {
+  max-width: 40rem;
+  margin: 2rem auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: 2rem;
+  align-items: start;
+  row-gap: 1rem;
+}
+
+a {
+  color: #bbb;
+}
+
+h1 {
+  font-weight: 600;
+  img {
+    margin-right: 1rem;
+    height: 2.5rem;
+    vertical-align: text-bottom;
+  }
+}
+
+h2 {
+  font-weight: 800;
+  font-size: 1.3rem;
+  margin: 1rem 0 0;
+}
+
+p {
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+details {
+  border: 1px solid #333;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 800;
+  margin: -0.5rem -0.5rem 0;
+  padding: 0.5rem;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #333;
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+",
+  "src/index.js": "import './index.css';
+import './chat.css';
+import {app} from './app';
+addEventListener('load', app);
+",
+}
+`;
+
+exports[`create-tinybase > js-vanilla-drawing > should match snapshot 1`] = `
+{
+  "README.md": "# test-js-vanilla-drawing
+
+A TinyBase app built with JavaScript and Vanilla JS.
+
+## Getting Started
+
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase / JavaScript</title>
+  </head>
+
+  <body>
+    <div id="app">
+      <header>
+        <h1>
+          <img src="/favicon.svg" />
+          TinyBase Drawing / JavaScript
+        </h1>
+      </header>
+      <div class="drawing-controls">
+        <div class="color-picker" id="color-picker"></div>
+        <div class="brush-size">
+          <label>Brush Size:</label>
+          <input type="range" id="brush-size" min="1" max="50" value="5" />
+          <span id="brush-size-value">5</span>
+        </div>
+        <button id="clear-button" class="clear-btn">Clear Canvas</button>
+      </div>
+      <canvas id="drawing-canvas" class="drawing-canvas"></canvas>
+    </div>
+
+    <script type="module" src="/src/index.js"></script>
+  </body>
+</html>
+",
+  "package.json": "{
+  "name": "test-js-vanilla-drawing",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.1.3"
+  },
+  "dependencies": {
+    "tinybase": "^7.3.1"
+  }
+}
+",
+  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "src/app.js": "import {createStore} from 'tinybase';
+const app = () => {
+  const store = createStore()
+    .setRow('settings', 'brush', {color: '#d81b60', size: 3})
+    .setTable('strokes', {});
+  const canvas = document.getElementById('drawing-canvas');
+  const ctx = canvas.getContext('2d');
+  let isDrawing = false;
+  const draw = () => {
+    ctx.fillStyle = '#111';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const strokes = store.getTable('strokes');
+    Object.values(strokes).forEach((stroke) => {
+      ctx.fillStyle = stroke.color;
+      ctx.beginPath();
+      ctx.arc(stroke.x, stroke.y, stroke.size, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  };
+  const addStroke = (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    const brush = store.getRow('settings', 'brush');
+    store.addRow('strokes', {
+      x: clientX - rect.left,
+      y: clientY - rect.top,
+      color: brush.color,
+      size: brush.size,
+    });
+  };
+  canvas.addEventListener('mousedown', () => {
+    isDrawing = true;
+  });
+  canvas.addEventListener('mouseup', () => {
+    isDrawing = false;
+  });
+  canvas.addEventListener('mouseleave', () => {
+    isDrawing = false;
+  });
+  canvas.addEventListener('mousemove', (e) => {
+    if (isDrawing) addStroke(e);
+  });
+  canvas.addEventListener('touchstart', (e) => {
+    isDrawing = true;
+    e.preventDefault();
+  });
+  canvas.addEventListener('touchmove', (e) => {
+    if (isDrawing) {
+      addStroke(e);
+      e.preventDefault();
+    }
+  });
+  canvas.addEventListener('touchend', () => {
+    isDrawing = false;
+  });
+  const colors = [
+    '#d81b60',
+    '#1976d2',
+    '#388e3c',
+    '#f57c00',
+    '#7b1fa2',
+    '#fff',
+  ];
+  colors.forEach((color) => {
+    const btn = document.createElement('button');
+    btn.className = 'color-btn';
+    btn.style.background = color;
+    btn.addEventListener('click', () => {
+      const brush = store.getRow('settings', 'brush');
+      store.setRow('settings', 'brush', {...brush, color});
+    });
+    document.getElementById('color-picker').appendChild(btn);
+  });
+  const sizeSlider = document.getElementById('brush-size');
+  const sizeLabel = document.getElementById('brush-size-value');
+  sizeSlider.addEventListener('input', () => {
+    const brush = store.getRow('settings', 'brush');
+    const size = parseInt(sizeSlider.value);
+    store.setRow('settings', 'brush', {...brush, size});
+    sizeLabel.textContent = \`\${size}\`;
+  });
+  document.getElementById('clear-button').addEventListener('click', () => {
+    store.delTable('strokes');
+  });
+  store.addTablesListener(draw);
+  draw();
+};
+export {app};
+",
+  "src/drawing.css": ".drawing-controls {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+}
+
+.color-picker {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.color-btn {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid #666;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.color-btn:hover,
+.color-btn.active {
+  border-color: #fff;
+}
+
+.brush-size {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.brush-size input {
+  width: 150px;
+}
+
+.clear-btn {
+  padding: 0.5rem 1rem;
+  background: #d81b60;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.clear-btn:hover {
+  background: #c2185b;
+}
+
+.drawing-canvas {
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  cursor: crosshair;
+  display: block;
+  touch-action: none;
+}
+",
+  "src/index.css": "body {
+  color: #bbb;
+  background: #111;
+  font-family: 'Inter', sans-serif;
+  user-select: none;
+}
+
+#app {
+  max-width: 40rem;
+  margin: 2rem auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: 2rem;
+  align-items: start;
+  row-gap: 1rem;
+}
+
+a {
+  color: #bbb;
+}
+
+h1 {
+  font-weight: 600;
+  img {
+    margin-right: 1rem;
+    height: 2.5rem;
+    vertical-align: text-bottom;
+  }
+}
+
+h2 {
+  font-weight: 800;
+  font-size: 1.3rem;
+  margin: 1rem 0 0;
+}
+
+p {
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+details {
+  border: 1px solid #333;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 800;
+  margin: -0.5rem -0.5rem 0;
+  padding: 0.5rem;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #333;
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+",
+  "src/index.js": "import './index.css';
+import './drawing.css';
+import {app} from './app';
+addEventListener('load', app);
+",
+}
+`;
+
+exports[`create-tinybase > ts-react-basic > should match snapshot 1`] = `
+{
+  "README.md": "# test-ts-react-basic
 
 A TinyBase app built with TypeScript and React.
 
@@ -620,7 +1971,7 @@ npm run dev
 </html>
 ",
   "package.json": "{
-  "name": "test-ts-react",
+  "name": "test-ts-react-basic",
   "version": "1.0.0",
   "scripts": {
     "dev": "vite",
@@ -737,72 +2088,7 @@ export const Buttons = () => {
   );
 };
 ",
-  "src/index.css": "body {
-  color: #bbb;
-  background: #111;
-  font-family: 'Inter', sans-serif;
-  user-select: none;
-}
-
-#app {
-  max-width: 40rem;
-  margin: 2rem auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 2rem;
-  align-items: start;
-  row-gap: 1rem;
-}
-
-a {
-  color: #bbb;
-}
-
-h1 {
-  font-weight: 600;
-  img {
-    margin-right: 1rem;
-    height: 2.5rem;
-    vertical-align: text-bottom;
-  }
-}
-
-h2 {
-  font-weight: 800;
-  font-size: 1.3rem;
-  margin: 1rem 0 0;
-}
-
-p {
-  margin: 0 0 1rem;
-  line-height: 1.5;
-}
-
-details {
-  border: 1px solid #333;
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-}
-
-details summary {
-  cursor: pointer;
-  font-weight: 800;
-  margin: -0.5rem -0.5rem 0;
-  padding: 0.5rem;
-}
-
-details[open] summary {
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid #333;
-}
-
-pre {
-  margin: 0;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-
-#buttons {
+  "src/basic.css": "#buttons {
   border: solid #666;
   border-width: 1px 0;
   text-align: center;
@@ -876,7 +2162,73 @@ table.sortedTable thead th {
   }
 }
 ",
+  "src/index.css": "body {
+  color: #bbb;
+  background: #111;
+  font-family: 'Inter', sans-serif;
+  user-select: none;
+}
+
+#app {
+  max-width: 40rem;
+  margin: 2rem auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: 2rem;
+  align-items: start;
+  row-gap: 1rem;
+}
+
+a {
+  color: #bbb;
+}
+
+h1 {
+  font-weight: 600;
+  img {
+    margin-right: 1rem;
+    height: 2.5rem;
+    vertical-align: text-bottom;
+  }
+}
+
+h2 {
+  font-weight: 800;
+  font-size: 1.3rem;
+  margin: 1rem 0 0;
+}
+
+p {
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+details {
+  border: 1px solid #333;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 800;
+  margin: -0.5rem -0.5rem 0;
+  padding: 0.5rem;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #333;
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+",
   "src/index.tsx": "import './index.css';
+import './basic.css';
 import ReactDOM from 'react-dom/client';
 import {App} from './App';
 
@@ -920,9 +2272,841 @@ export default defineConfig({
 }
 `;
 
-exports[`create-tinybase > ts-vanilla > should match snapshot 1`] = `
+exports[`create-tinybase > ts-react-chat > should match snapshot 1`] = `
 {
-  "README.md": "# test-ts-vanilla
+  "README.md": "# test-ts-react-chat
+
+A TinyBase app built with TypeScript and React.
+
+## Getting Started
+
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase / TypeScript + React</title>
+  </head>
+
+  <body>
+    <div id="app"></div>
+
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
+</html>
+",
+  "package.json": "{
+  "name": "test-ts-react-chat",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.1.3",
+    "typescript": "^5.9.3",
+    "@types/node": "^25.0.3",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^4.3.4"
+  },
+  "dependencies": {
+    "tinybase": "^7.3.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
+  }
+}
+",
+  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "src/App.tsx": "import {StrictMode, useState} from 'react';
+import {createStore} from 'tinybase';
+import {
+  Provider,
+  useCreateStore,
+  useAddRowCallback,
+  useRow,
+  useSetValueCallback,
+  useValue,
+} from 'tinybase/ui-react';
+import {SortedTableInHtmlTable, useCell} from 'tinybase/ui-react-dom';
+import {Inspector} from 'tinybase/ui-react-inspector';
+
+const MessageInput = () => {
+  const [message, setMessage] = useState('');
+  const username = useValue('username') || 'Anonymous';
+
+  const handleSend = useAddRowCallback(
+    'messages',
+    () => ({
+      username,
+      text: message,
+      timestamp: Date.now(),
+    }),
+    [message, username],
+  );
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (message.trim()) {
+      handleSend();
+      setMessage('');
+    }
+  };
+
+  return (
+    <form onSubmit={onSubmit} className="message-input">
+      <input
+        type="text"
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        placeholder="Type a message..."
+        autoFocus
+      />
+      <button type="submit">Send</button>
+    </form>
+  );
+};
+
+const Message = ({rowId}: {rowId: string}) => {
+  const row = useRow('messages', rowId);
+  const time = new Date((row as any).timestamp).toLocaleTimeString();
+
+  return (
+    <div className="message">
+      <span className="username">{(row as any).username}:</span>
+      <span className="text">{(row as any).text}</span>
+      <span className="time">{time}</span>
+    </div>
+  );
+};
+
+const UsernameInput = () => {
+  const username = useValue('username') || '';
+  const handleChange = useSetValueCallback(
+    'username',
+    (e: React.ChangeEvent<HTMLInputElement>) => e.target.value,
+    [],
+  );
+
+  return (
+    <div className="username-input">
+      <label>
+        Your name:
+        <input
+          type="text"
+          value={username}
+          onChange={handleChange}
+          placeholder="Enter your name"
+        />
+      </label>
+    </div>
+  );
+};
+
+export const App = () => {
+  const store = useCreateStore(() => {
+    return createStore()
+      .setValue('username', 'User')
+      .setTable('messages', {
+        '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
+        '2': {
+          username: 'Bob',
+          text: 'Hi there!',
+          timestamp: Date.now() - 30000,
+        },
+      });
+  });
+
+  return (
+    <StrictMode>
+      <Provider store={store}>
+        <header>
+          <h1>
+            <img src="/favicon.svg" />
+            TinyBase Chat / TypeScript + React
+          </h1>
+        </header>
+        <p>
+          A simple chat app built with TinyBase. Messages are stored in a Table,
+          and you can change your username to see how data flows through the
+          app.
+        </p>
+        <UsernameInput />
+        <div className="chat-container">
+          <div className="messages">
+            <SortedTableInHtmlTable
+              tableId="messages"
+              cellId="timestamp"
+              descending={false}
+              customCell={(tableId, rowId) => <Message rowId={rowId} />}
+            />
+          </div>
+          <MessageInput />
+        </div>
+        <Inspector />
+      </Provider>
+    </StrictMode>
+  );
+};
+",
+  "src/chat.css": ".username-input {
+  margin-bottom: 1rem;
+}
+
+.username-input label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.username-input input {
+  flex: 1;
+  padding: 0.5rem;
+  background: #222;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  color: #fff;
+  font-family: inherit;
+}
+
+.chat-container {
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.message {
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.message .username {
+  font-weight: 800;
+  color: #d81b60;
+}
+
+.message .text {
+  flex: 1;
+}
+
+.message .time {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.message-input {
+  display: flex;
+  border-top: 1px solid #666;
+}
+
+.message-input input {
+  flex: 1;
+  padding: 0.75rem;
+  background: #222;
+  border: none;
+  color: #fff;
+  font-family: inherit;
+}
+
+.message-input button {
+  padding: 0.75rem 1.5rem;
+  background: #d81b60;
+  border: none;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.message-input button:hover {
+  background: #c2185b;
+}
+",
+  "src/index.css": "body {
+  color: #bbb;
+  background: #111;
+  font-family: 'Inter', sans-serif;
+  user-select: none;
+}
+
+#app {
+  max-width: 40rem;
+  margin: 2rem auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: 2rem;
+  align-items: start;
+  row-gap: 1rem;
+}
+
+a {
+  color: #bbb;
+}
+
+h1 {
+  font-weight: 600;
+  img {
+    margin-right: 1rem;
+    height: 2.5rem;
+    vertical-align: text-bottom;
+  }
+}
+
+h2 {
+  font-weight: 800;
+  font-size: 1.3rem;
+  margin: 1rem 0 0;
+}
+
+p {
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+details {
+  border: 1px solid #333;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 800;
+  margin: -0.5rem -0.5rem 0;
+  padding: 0.5rem;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #333;
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+",
+  "src/index.tsx": "import './index.css';
+import './chat.css';
+import ReactDOM from 'react-dom/client';
+import {App} from './App';
+
+addEventListener('load', () =>
+  ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
+);
+",
+  "tsconfig.json": "{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src"]
+}
+",
+  "vite.config.js": "import {defineConfig} from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [
+    react({
+      jsxRuntime: 'automatic',
+    }),
+  ],
+});
+",
+}
+`;
+
+exports[`create-tinybase > ts-react-drawing > should match snapshot 1`] = `
+{
+  "README.md": "# test-ts-react-drawing
+
+A TinyBase app built with TypeScript and React.
+
+## Getting Started
+
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase / TypeScript + React</title>
+  </head>
+
+  <body>
+    <div id="app"></div>
+
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
+</html>
+",
+  "package.json": "{
+  "name": "test-ts-react-drawing",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.1.3",
+    "typescript": "^5.9.3",
+    "@types/node": "^25.0.3",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^4.3.4"
+  },
+  "dependencies": {
+    "tinybase": "^7.3.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
+  }
+}
+",
+  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "src/App.tsx": "import {StrictMode, useCallback, useEffect, useRef} from 'react';
+import {createStore} from 'tinybase';
+import {
+  Provider,
+  useAddRowCallback,
+  useCreateStore,
+  useDelTableCallback,
+  useRow,
+  useRowIds,
+  useStore,
+} from 'tinybase/ui-react';
+import {Inspector} from 'tinybase/ui-react-inspector';
+
+const Canvas = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const isDrawing = useRef(false);
+  const store = useStore();
+  const strokes = useRowIds('strokes');
+
+  const addStroke = useAddRowCallback(
+    'strokes',
+    (e: MouseEvent | TouchEvent) => {
+      const canvas = canvasRef.current;
+      if (!canvas) return null;
+
+      const rect = canvas.getBoundingClientRect();
+      const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+      const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+      const brush = store.getRow('settings', 'brush') as any;
+
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top,
+        color: brush.color,
+        size: brush.size,
+      };
+    },
+    [],
+  );
+
+  const draw = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    ctx.fillStyle = '#111';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    strokes.forEach((id) => {
+      const stroke = store.getRow('strokes', id) as any;
+      if (stroke) {
+        ctx.fillStyle = stroke.color;
+        ctx.beginPath();
+        ctx.arc(stroke.x, stroke.y, stroke.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    });
+  }, [strokes, store]);
+
+  useEffect(() => {
+    draw();
+  }, [draw]);
+
+  const handleStart = (e: React.MouseEvent | React.TouchEvent) => {
+    isDrawing.current = true;
+    addStroke(e.nativeEvent);
+  };
+
+  const handleMove = (e: React.MouseEvent | React.TouchEvent) => {
+    if (isDrawing.current) {
+      addStroke(e.nativeEvent);
+    }
+  };
+
+  const handleEnd = () => {
+    isDrawing.current = false;
+  };
+
+  return (
+    <canvas
+      ref={canvasRef}
+      width={600}
+      height={400}
+      className="drawing-canvas"
+      onMouseDown={handleStart}
+      onMouseMove={handleMove}
+      onMouseUp={handleEnd}
+      onMouseLeave={handleEnd}
+      onTouchStart={handleStart}
+      onTouchMove={handleMove}
+      onTouchEnd={handleEnd}
+    />
+  );
+};
+
+const ColorPicker = () => {
+  const colors = [
+    '#d81b60',
+    '#1976d2',
+    '#388e3c',
+    '#f57c00',
+    '#7b1fa2',
+    '#fff',
+  ];
+  const store = useStore();
+  const currentBrush = useRow('settings', 'brush') as any;
+  const currentColor = currentBrush.color;
+
+  const setColor = (color: string) => {
+    store.setRow('settings', 'brush', {...currentBrush, color});
+  };
+
+  return (
+    <div className="color-picker">
+      <label>Color:</label>
+      {colors.map((color) => (
+        <button
+          key={color}
+          className={\`color-btn \${currentColor === color ? 'active' : ''}\`}
+          style={{background: color}}
+          onClick={() => setColor(color)}
+        />
+      ))}
+    </div>
+  );
+};
+
+const BrushSize = () => {
+  const store = useStore();
+  const currentBrush = useRow('settings', 'brush') as any;
+  const size = currentBrush.size;
+
+  const setSize = (e: React.ChangeEvent<HTMLInputElement>) => {
+    store.setRow('settings', 'brush', {
+      ...currentBrush,
+      size: parseInt(e.target.value),
+    });
+  };
+
+  return (
+    <div className="brush-size">
+      <label>Size: {size}px</label>
+      <input type="range" min="1" max="20" value={size} onChange={setSize} />
+    </div>
+  );
+};
+
+const ClearButton = () => {
+  const clearCanvas = useDelTableCallback('strokes');
+  return (
+    <button onClick={clearCanvas} className="clear-btn">
+      Clear
+    </button>
+  );
+};
+
+export const App = () => {
+  const store = useCreateStore(() => {
+    return createStore()
+      .setRow('settings', 'brush', {color: '#d81b60', size: 3})
+      .setTable('strokes', {});
+  });
+
+  return (
+    <StrictMode>
+      <Provider store={store}>
+        <header>
+          <h1>
+            <img src="/favicon.svg" />
+            TinyBase Drawing / TypeScript + React
+          </h1>
+        </header>
+        <p>
+          A simple drawing app built with TinyBase. Each stroke is stored as a
+          row, demonstrating how TinyBase can handle lots of small updates
+          efficiently.
+        </p>
+        <div className="drawing-controls">
+          <ColorPicker />
+          <BrushSize />
+          <ClearButton />
+        </div>
+        <Canvas />
+        <Inspector />
+      </Provider>
+    </StrictMode>
+  );
+};
+",
+  "src/drawing.css": ".drawing-controls {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+}
+
+.color-picker {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.color-btn {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid #666;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.color-btn:hover,
+.color-btn.active {
+  border-color: #fff;
+}
+
+.brush-size {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.brush-size input {
+  width: 150px;
+}
+
+.clear-btn {
+  padding: 0.5rem 1rem;
+  background: #d81b60;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.clear-btn:hover {
+  background: #c2185b;
+}
+
+.drawing-canvas {
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  cursor: crosshair;
+  display: block;
+  touch-action: none;
+}
+",
+  "src/index.css": "body {
+  color: #bbb;
+  background: #111;
+  font-family: 'Inter', sans-serif;
+  user-select: none;
+}
+
+#app {
+  max-width: 40rem;
+  margin: 2rem auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: 2rem;
+  align-items: start;
+  row-gap: 1rem;
+}
+
+a {
+  color: #bbb;
+}
+
+h1 {
+  font-weight: 600;
+  img {
+    margin-right: 1rem;
+    height: 2.5rem;
+    vertical-align: text-bottom;
+  }
+}
+
+h2 {
+  font-weight: 800;
+  font-size: 1.3rem;
+  margin: 1rem 0 0;
+}
+
+p {
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+details {
+  border: 1px solid #333;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 800;
+  margin: -0.5rem -0.5rem 0;
+  padding: 0.5rem;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #333;
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+",
+  "src/index.tsx": "import './index.css';
+import './drawing.css';
+import ReactDOM from 'react-dom/client';
+import {App} from './App';
+
+addEventListener('load', () =>
+  ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
+);
+",
+  "tsconfig.json": "{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src"]
+}
+",
+  "vite.config.js": "import {defineConfig} from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [
+    react({
+      jsxRuntime: 'automatic',
+    }),
+  ],
+});
+",
+}
+`;
+
+exports[`create-tinybase > ts-vanilla-basic > should match snapshot 1`] = `
+{
+  "README.md": "# test-ts-vanilla-basic
 
 A TinyBase app built with TypeScript and Vanilla JS.
 
@@ -990,7 +3174,7 @@ npm run dev
 </html>
 ",
   "package.json": "{
-  "name": "test-ts-vanilla",
+  "name": "test-ts-vanilla-basic",
   "version": "1.0.0",
   "scripts": {
     "dev": "vite",
@@ -1052,72 +3236,7 @@ export const app = () => {
     });
 };
 ",
-  "src/index.css": "body {
-  color: #bbb;
-  background: #111;
-  font-family: 'Inter', sans-serif;
-  user-select: none;
-}
-
-#app {
-  max-width: 40rem;
-  margin: 2rem auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 2rem;
-  align-items: start;
-  row-gap: 1rem;
-}
-
-a {
-  color: #bbb;
-}
-
-h1 {
-  font-weight: 600;
-  img {
-    margin-right: 1rem;
-    height: 2.5rem;
-    vertical-align: text-bottom;
-  }
-}
-
-h2 {
-  font-weight: 800;
-  font-size: 1.3rem;
-  margin: 1rem 0 0;
-}
-
-p {
-  margin: 0 0 1rem;
-  line-height: 1.5;
-}
-
-details {
-  border: 1px solid #333;
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-}
-
-details summary {
-  cursor: pointer;
-  font-weight: 800;
-  margin: -0.5rem -0.5rem 0;
-  padding: 0.5rem;
-}
-
-details[open] summary {
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid #333;
-}
-
-pre {
-  margin: 0;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-
-#buttons {
+  "src/basic.css": "#buttons {
   border: solid #666;
   border-width: 1px 0;
   text-align: center;
@@ -1191,7 +3310,756 @@ table.sortedTable thead th {
   }
 }
 ",
+  "src/index.css": "body {
+  color: #bbb;
+  background: #111;
+  font-family: 'Inter', sans-serif;
+  user-select: none;
+}
+
+#app {
+  max-width: 40rem;
+  margin: 2rem auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: 2rem;
+  align-items: start;
+  row-gap: 1rem;
+}
+
+a {
+  color: #bbb;
+}
+
+h1 {
+  font-weight: 600;
+  img {
+    margin-right: 1rem;
+    height: 2.5rem;
+    vertical-align: text-bottom;
+  }
+}
+
+h2 {
+  font-weight: 800;
+  font-size: 1.3rem;
+  margin: 1rem 0 0;
+}
+
+p {
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+details {
+  border: 1px solid #333;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 800;
+  margin: -0.5rem -0.5rem 0;
+  padding: 0.5rem;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #333;
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+",
   "src/index.ts": "import './index.css';
+import './basic.css';
+import {app} from './app';
+
+addEventListener('load', app);
+",
+  "tsconfig.json": "{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src"]
+}
+",
+}
+`;
+
+exports[`create-tinybase > ts-vanilla-chat > should match snapshot 1`] = `
+{
+  "README.md": "# test-ts-vanilla-chat
+
+A TinyBase app built with TypeScript and Vanilla JS.
+
+## Getting Started
+
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase / TypeScript</title>
+  </head>
+
+  <body>
+    <div id="app">
+      <header>
+        <h1>
+          <img src="/favicon.svg" />
+          TinyBase Chat / TypeScript
+        </h1>
+      </header>
+      <div class="username-input">
+        <label>Username:</label>
+        <input type="text" id="username-input" placeholder="Enter your name" />
+      </div>
+      <div id="messages"></div>
+      <div class="message-input">
+        <input type="text" id="message-input" placeholder="Type a message..." />
+        <button id="send-button">Send</button>
+      </div>
+    </div>
+
+    <script type="module" src="/src/index.ts"></script>
+  </body>
+</html>
+",
+  "package.json": "{
+  "name": "test-ts-vanilla-chat",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.1.3",
+    "typescript": "^5.9.3",
+    "@types/node": "^25.0.3"
+  },
+  "dependencies": {
+    "tinybase": "^7.3.1"
+  }
+}
+",
+  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "src/app.ts": "import {createStore} from 'tinybase';
+
+const updateMessages = (store: any) => {
+  const messages = document.getElementById('messages')!;
+  const messageRows = store.getTable('messages');
+  const sortedIds = Object.keys(messageRows).sort(
+    (a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
+  );
+
+  messages.innerHTML = sortedIds
+    .map((id) => {
+      const msg = messageRows[id];
+      const time = new Date(msg.timestamp).toLocaleTimeString();
+      return \`
+<div class="message">
+  <span class="username">\${msg.username}:</span>
+  <span class="text">\${msg.text}</span>
+  <span class="time">\${time}</span>
+</div>
+\`;
+    })
+    .join('');
+};
+
+export const app = () => {
+  const store = createStore()
+    .setValue('username', 'User')
+    .setTable('messages', {
+      '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
+      '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
+    });
+
+  const usernameInput = document.getElementById(
+    'username-input',
+  ) as HTMLInputElement;
+  const messageInput = document.getElementById(
+    'message-input',
+  ) as HTMLInputElement;
+  const sendButton = document.getElementById('send-button')!;
+
+  usernameInput!.value = store.getValue('username') as string;
+  usernameInput!.addEventListener('input', () => {
+    store.setValue('username', usernameInput!.value);
+  });
+
+  store.addValuesListener(() => {
+    usernameInput!.value = store.getValue('username') as string;
+  });
+
+  const sendMessage = () => {
+    const text = messageInput!.value.trim();
+    if (text) {
+      store.addRow('messages', {
+        username: store.getValue('username'),
+        text,
+        timestamp: Date.now(),
+      });
+      messageInput!.value = '';
+    }
+  };
+
+  sendButton.addEventListener('click', sendMessage);
+  messageInput!.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      sendMessage();
+    }
+  });
+
+  store.addTablesListener(() => updateMessages(store));
+  updateMessages(store);
+};
+",
+  "src/chat.css": ".username-input {
+  margin-bottom: 1rem;
+}
+
+.username-input label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.username-input input {
+  flex: 1;
+  padding: 0.5rem;
+  background: #222;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  color: #fff;
+  font-family: inherit;
+}
+
+.chat-container {
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.message {
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.message .username {
+  font-weight: 800;
+  color: #d81b60;
+}
+
+.message .text {
+  flex: 1;
+}
+
+.message .time {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.message-input {
+  display: flex;
+  border-top: 1px solid #666;
+}
+
+.message-input input {
+  flex: 1;
+  padding: 0.75rem;
+  background: #222;
+  border: none;
+  color: #fff;
+  font-family: inherit;
+}
+
+.message-input button {
+  padding: 0.75rem 1.5rem;
+  background: #d81b60;
+  border: none;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.message-input button:hover {
+  background: #c2185b;
+}
+",
+  "src/index.css": "body {
+  color: #bbb;
+  background: #111;
+  font-family: 'Inter', sans-serif;
+  user-select: none;
+}
+
+#app {
+  max-width: 40rem;
+  margin: 2rem auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: 2rem;
+  align-items: start;
+  row-gap: 1rem;
+}
+
+a {
+  color: #bbb;
+}
+
+h1 {
+  font-weight: 600;
+  img {
+    margin-right: 1rem;
+    height: 2.5rem;
+    vertical-align: text-bottom;
+  }
+}
+
+h2 {
+  font-weight: 800;
+  font-size: 1.3rem;
+  margin: 1rem 0 0;
+}
+
+p {
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+details {
+  border: 1px solid #333;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 800;
+  margin: -0.5rem -0.5rem 0;
+  padding: 0.5rem;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #333;
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+",
+  "src/index.ts": "import './index.css';
+import './chat.css';
+import {app} from './app';
+
+addEventListener('load', app);
+",
+  "tsconfig.json": "{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src"]
+}
+",
+}
+`;
+
+exports[`create-tinybase > ts-vanilla-drawing > should match snapshot 1`] = `
+{
+  "README.md": "# test-ts-vanilla-drawing
+
+A TinyBase app built with TypeScript and Vanilla JS.
+
+## Getting Started
+
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase / TypeScript</title>
+  </head>
+
+  <body>
+    <div id="app">
+      <header>
+        <h1>
+          <img src="/favicon.svg" />
+          TinyBase Drawing / TypeScript
+        </h1>
+      </header>
+      <div class="drawing-controls">
+        <div class="color-picker" id="color-picker"></div>
+        <div class="brush-size">
+          <label>Brush Size:</label>
+          <input type="range" id="brush-size" min="1" max="50" value="5" />
+          <span id="brush-size-value">5</span>
+        </div>
+        <button id="clear-button" class="clear-btn">Clear Canvas</button>
+      </div>
+      <canvas id="drawing-canvas" class="drawing-canvas"></canvas>
+    </div>
+
+    <script type="module" src="/src/index.ts"></script>
+  </body>
+</html>
+",
+  "package.json": "{
+  "name": "test-ts-vanilla-drawing",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.1.3",
+    "typescript": "^5.9.3",
+    "@types/node": "^25.0.3"
+  },
+  "dependencies": {
+    "tinybase": "^7.3.1"
+  }
+}
+",
+  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "src/app.ts": "import {createStore} from 'tinybase';
+
+export const app = () => {
+  const store = createStore()
+    .setRow('settings', 'brush', {color: '#d81b60', size: 3})
+    .setTable('strokes', {});
+
+  const canvas = document.getElementById('drawing-canvas') as HTMLCanvasElement;
+  const ctx = canvas!.getContext('2d')!;
+  let isDrawing = false;
+
+  const draw = () => {
+    ctx.fillStyle = '#111';
+    ctx.fillRect(0, 0, canvas!.width, canvas!.height);
+
+    const strokes = store.getTable('strokes');
+    Object.values(strokes).forEach((stroke: any) => {
+      ctx.fillStyle = stroke.color;
+      ctx.beginPath();
+      ctx.arc(stroke.x, stroke.y, stroke.size, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  };
+
+  const addStroke = (e: MouseEvent | TouchEvent) => {
+    const rect = canvas!.getBoundingClientRect();
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    const brush = store.getRow('settings', 'brush') as any;
+
+    store.addRow('strokes', {
+      x: clientX - rect.left,
+      y: clientY - rect.top,
+      color: brush.color,
+      size: brush.size,
+    });
+  };
+
+  canvas!.addEventListener('mousedown', () => {
+    isDrawing = true;
+  });
+  canvas!.addEventListener('mouseup', () => {
+    isDrawing = false;
+  });
+  canvas!.addEventListener('mouseleave', () => {
+    isDrawing = false;
+  });
+
+  canvas!.addEventListener('mousemove', (e) => {
+    if (isDrawing) addStroke(e);
+  });
+
+  canvas!.addEventListener('touchstart', (e) => {
+    isDrawing = true;
+    e.preventDefault();
+  });
+
+  canvas!.addEventListener('touchmove', (e) => {
+    if (isDrawing) {
+      addStroke(e);
+      e.preventDefault();
+    }
+  });
+
+  canvas!.addEventListener('touchend', () => {
+    isDrawing = false;
+  });
+
+  // Color buttons
+  const colors = [
+    '#d81b60',
+    '#1976d2',
+    '#388e3c',
+    '#f57c00',
+    '#7b1fa2',
+    '#fff',
+  ];
+  colors.forEach((color) => {
+    const btn = document.createElement('button');
+    btn.className = 'color-btn';
+    btn.style.background = color;
+    btn.addEventListener('click', () => {
+      const brush = store.getRow('settings', 'brush') as any;
+      store.setRow('settings', 'brush', {...brush, color});
+    });
+    document.getElementById('color-picker')!.appendChild(btn);
+  });
+
+  // Size slider
+  const sizeSlider = document.getElementById('brush-size') as HTMLInputElement;
+  const sizeLabel = document.getElementById('brush-size-value')!;
+
+  sizeSlider!.addEventListener('input', () => {
+    const brush = store.getRow('settings', 'brush') as any;
+    const size = parseInt(sizeSlider!.value);
+    store.setRow('settings', 'brush', {...brush, size});
+    sizeLabel.textContent = \`\${size}\`;
+  });
+
+  // Clear button
+  document.getElementById('clear-button')!.addEventListener('click', () => {
+    store.delTable('strokes');
+  });
+
+  store.addTablesListener(draw);
+  draw();
+};
+",
+  "src/drawing.css": ".drawing-controls {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+}
+
+.color-picker {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.color-btn {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid #666;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.color-btn:hover,
+.color-btn.active {
+  border-color: #fff;
+}
+
+.brush-size {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.brush-size input {
+  width: 150px;
+}
+
+.clear-btn {
+  padding: 0.5rem 1rem;
+  background: #d81b60;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.clear-btn:hover {
+  background: #c2185b;
+}
+
+.drawing-canvas {
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  cursor: crosshair;
+  display: block;
+  touch-action: none;
+}
+",
+  "src/index.css": "body {
+  color: #bbb;
+  background: #111;
+  font-family: 'Inter', sans-serif;
+  user-select: none;
+}
+
+#app {
+  max-width: 40rem;
+  margin: 2rem auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: 2rem;
+  align-items: start;
+  row-gap: 1rem;
+}
+
+a {
+  color: #bbb;
+}
+
+h1 {
+  font-weight: 600;
+  img {
+    margin-right: 1rem;
+    height: 2.5rem;
+    vertical-align: text-bottom;
+  }
+}
+
+h2 {
+  font-weight: 800;
+  font-size: 1.3rem;
+  margin: 1rem 0 0;
+}
+
+p {
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+details {
+  border: 1px solid #333;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 800;
+  margin: -0.5rem -0.5rem 0;
+  padding: 0.5rem;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #333;
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+",
+  "src/index.ts": "import './index.css';
+import './drawing.css';
 import {app} from './app';
 
 addEventListener('load', app);
