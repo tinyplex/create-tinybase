@@ -11,6 +11,7 @@ CLI_PATH="$PROJECT_ROOT/dist/cli.js"
 FILTER=""
 SKIP_INSTALL=false
 PARALLEL_INSTALL=true
+CLEAN=false
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -26,6 +27,10 @@ while [[ $# -gt 0 ]]; do
       PARALLEL_INSTALL=false
       shift
       ;;
+    --clean)
+      CLEAN=true
+      shift
+      ;;
     --help)
       echo "Usage: $0 [OPTIONS]"
       echo ""
@@ -33,13 +38,15 @@ while [[ $# -gt 0 ]]; do
       echo "  --filter PATTERN    Only build projects matching pattern (e.g., 'chat', 'ts-react', 'drawing')"
       echo "  --skip-install      Skip npm install (assumes deps already installed)"
       echo "  --no-parallel       Install dependencies sequentially instead of in parallel"
+      echo "  --clean             Clean tmp directory (force fresh install)"
       echo "  --help              Show this help message"
       echo ""
       echo "Examples:"
-      echo "  $0                           # Build all 12 projects"
+      echo "  $0                           # Build all 12 projects (reuse node_modules)"
       echo "  $0 --filter chat             # Build only chat projects"
       echo "  $0 --filter ts-react-chat    # Build only ts-react-chat"
       echo "  $0 --filter drawing --skip-install  # Build drawing projects, skip install"
+      echo "  $0 --clean                   # Force fresh install for all projects"
       exit 0
       ;;
     *)
@@ -64,12 +71,7 @@ trap cleanup INT TERM EXIT
 echo "Cleaning up any previous servers..."
 pkill -f "vite.*--port.*51[7-8][0-9]" 2>/dev/null || true
 
-if [ -d "$TEST_DIR" ]; then
-  rm -rf "$TEST_DIR"
-fi
-
 mkdir -p "$TEST_DIR"
-cd "$TEST_DIR"
 
 declare -a all_projects=(
   "test-js-vanilla-basic:javascript:vanilla:basic:5173"
@@ -106,6 +108,35 @@ else
   echo "Building all ${#projects[@]} projects"
 fi
 
+# Smart cleanup - preserve node_modules unless --clean is specified
+if [ "$CLEAN" = true ]; then
+  echo "Clean mode: removing tmp directory..."
+  if [ -d "$TEST_DIR" ]; then
+    rm -rf "$TEST_DIR"
+    mkdir -p "$TEST_DIR"
+  fi
+else
+  echo "Smart mode: preserving node_modules where possible..."
+  # For each project we're about to build, backup node_modules if it exists
+  for project in "${projects[@]}"; do
+    IFS=':' read -r name _ _ _ _ <<< "$project"
+    project_path="$TEST_DIR/$name"
+    if [ -d "$project_path" ]; then
+      if [ -d "$project_path/node_modules" ]; then
+        echo "  Backing up node_modules for $name..."
+        mv "$project_path/node_modules" "$TEST_DIR/.${name}-node_modules" 2>/dev/null || true
+        if [ -f "$project_path/.package.json.cache" ]; then
+          mv "$project_path/.package.json.cache" "$TEST_DIR/.${name}-cache" 2>/dev/null || true
+        fi
+      fi
+      # Remove the project directory after backing up node_modules
+      rm -rf "$project_path"
+    fi
+  done
+fi
+
+cd "$TEST_DIR"
+
 echo "Creating projects..."
 for project in "${projects[@]}"; do
   IFS=':' read -r name lang framework appType port <<< "$project"
@@ -118,7 +149,38 @@ for project in "${projects[@]}"; do
     --appType "$appType" \
     --prettier false \
     --eslint false
+  
+  # Restore node_modules if we backed it up
+  backup_path="$TEST_DIR/.${name}-node_modules"
+  if [ -d "$backup_path" ]; then
+    echo "  Restoring node_modules for $name..."
+    mv "$backup_path" "$name/node_modules"
+    cache_path="$TEST_DIR/.${name}-cache"
+    if [ -f "$cache_path" ]; then
+      mv "$cache_path" "$name/.package.json.cache"
+    fi
+  fi
 done
+
+# Smart npm install function
+smart_install() {
+  local name=$1
+  local project_path="$TEST_DIR/$name"
+  
+  # Check if we can skip install by comparing package.json
+  if [ -f "$project_path/.package.json.cache" ] && [ -d "$project_path/node_modules" ]; then
+    if cmp -s "$project_path/package.json" "$project_path/.package.json.cache"; then
+      echo "  ⚡ Reusing node_modules for $name"
+      return 0
+    fi
+  fi
+  
+  echo "Installing deps for $name..."
+  (cd "$project_path" && npm install > "/tmp/${name}-install.log" 2>&1)
+  
+  # Cache the package.json
+  cp "$project_path/package.json" "$project_path/.package.json.cache"
+}
 
 if [ "$SKIP_INSTALL" = false ]; then
   echo ""
@@ -127,8 +189,7 @@ if [ "$SKIP_INSTALL" = false ]; then
     INSTALL_PIDS=()
     for project in "${projects[@]}"; do
       IFS=':' read -r name _ _ _ _ <<< "$project"
-      echo "Installing deps for $name..."
-      (cd "$name" && npm install > "/tmp/${name}-install.log" 2>&1) &
+      smart_install "$name" &
       INSTALL_PIDS+=($!)
     done
     
@@ -141,8 +202,7 @@ if [ "$SKIP_INSTALL" = false ]; then
     echo "Installing dependencies sequentially..."
     for project in "${projects[@]}"; do
       IFS=':' read -r name _ _ _ _ <<< "$project"
-      echo "Installing deps for $name..."
-      (cd "$name" && npm install > /dev/null 2>&1)
+      smart_install "$name"
     done
   fi
 else

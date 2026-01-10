@@ -1,5 +1,6 @@
 import {spawn} from 'child_process';
-import {mkdir, rm} from 'fs/promises';
+import {existsSync} from 'fs';
+import {cp, mkdir, readFile, rm} from 'fs/promises';
 import {dirname, join} from 'path';
 import puppeteer from 'puppeteer';
 import {setTimeout as sleep} from 'timers/promises';
@@ -88,7 +89,10 @@ const combinations = [
 ];
 
 beforeAll(async () => {
-  await rm(TEST_DIR, {recursive: true, force: true});
+  // Only clean tmp if CLEAN_E2E env var is set
+  if (process.env.CLEAN_E2E) {
+    await rm(TEST_DIR, {recursive: true, force: true});
+  }
   await mkdir(TEST_DIR, {recursive: true});
   browser = await puppeteer.launch({headless: true});
 });
@@ -152,7 +156,31 @@ async function runCLI(projectName, language, framework, appType = 'basic') {
   });
 }
 
-async function npmInstall(projectPath) {
+async function npmInstall(projectPath, force = false) {
+  // Check if we can skip npm install by reusing existing node_modules
+  if (!force) {
+    const nodeModulesPath = join(projectPath, 'node_modules');
+    const packageJsonPath = join(projectPath, 'package.json');
+    const cachedPackageJsonPath = join(projectPath, '.package.json.cache');
+
+    if (existsSync(nodeModulesPath) && existsSync(cachedPackageJsonPath)) {
+      try {
+        const currentPackageJson = await readFile(packageJsonPath, 'utf-8');
+        const cachedPackageJson = await readFile(
+          cachedPackageJsonPath,
+          'utf-8',
+        );
+
+        if (currentPackageJson === cachedPackageJson) {
+          console.log(`  ⚡ Reusing node_modules for ${projectPath}`);
+          return {output: 'Reused existing node_modules', errorOutput: ''};
+        }
+      } catch (err) {
+        // If comparison fails, proceed with install
+      }
+    }
+  }
+
   return new Promise((resolve, reject) => {
     const npm = spawn('npm', ['install'], {
       cwd: projectPath,
@@ -170,7 +198,7 @@ async function npmInstall(projectPath) {
       errorOutput += data.toString();
     });
 
-    npm.on('close', (code) => {
+    npm.on('close', async (code) => {
       if (code !== 0) {
         reject(
           new Error(
@@ -178,6 +206,17 @@ async function npmInstall(projectPath) {
           ),
         );
       } else {
+        // Cache the package.json for future comparisons
+        try {
+          const packageJsonPath = join(projectPath, 'package.json');
+          const cachedPackageJsonPath = join(
+            projectPath,
+            '.package.json.cache',
+          );
+          await cp(packageJsonPath, cachedPackageJsonPath);
+        } catch (err) {
+          // Ignore caching errors
+        }
         resolve({output, errorOutput});
       }
     });
@@ -322,6 +361,22 @@ describe('e2e tests', {concurrent: false}, () => {
         const projectPath = join(TEST_DIR, projectName);
         const port = BASE_PORT + index;
 
+        // Preserve node_modules if it exists
+        const nodeModulesBackup = join(TEST_DIR, `${projectName}-node_modules`);
+        const nodeModulesPath = join(projectPath, 'node_modules');
+        const cacheFile = join(projectPath, '.package.json.cache');
+
+        if (existsSync(projectPath) && !process.env.CLEAN_E2E) {
+          if (existsSync(nodeModulesPath)) {
+            await cp(nodeModulesPath, nodeModulesBackup, {recursive: true});
+          }
+          if (existsSync(cacheFile)) {
+            await cp(cacheFile, join(TEST_DIR, `${projectName}.cache`));
+          }
+          // Remove the project directory after backing up
+          await rm(projectPath, {recursive: true});
+        }
+
         await runCLI(
           projectName,
           combo.language,
@@ -329,7 +384,18 @@ describe('e2e tests', {concurrent: false}, () => {
           combo.appType,
         );
 
-        await npmInstall(projectPath);
+        // Restore node_modules if we backed it up
+        if (existsSync(nodeModulesBackup)) {
+          await cp(nodeModulesBackup, nodeModulesPath, {recursive: true});
+          await rm(nodeModulesBackup, {recursive: true});
+          const cachedFile = join(TEST_DIR, `${projectName}.cache`);
+          if (existsSync(cachedFile)) {
+            await cp(cachedFile, cacheFile);
+            await rm(cachedFile);
+          }
+        }
+
+        await npmInstall(projectPath, !!process.env.CLEAN_E2E);
 
         let devServer;
         try {

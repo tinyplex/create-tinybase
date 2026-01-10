@@ -31,7 +31,7 @@
     "test": "npm run build && vitest run --exclude test/e2e.test.js",
     "test:e2e": "npm run build && vitest run test/e2e.test.js",
     "test:manual": "npm run build && ./test/manual-test.sh",
-    "prePublishPackage": "npm run ts && npm run prettier && npm run lint && npm run test"
+    "prePublishPackage": "npm run ts && npm run prettier && npm run lint && npm run test && CLEAN_E2E=1 npm run test:e2e"
   },
   "dependencies": {
     "tinycreate": "^0.1.1"
