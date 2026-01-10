@@ -80,7 +80,6 @@ const canvasRef = useRef<HTMLCanvasElement>(null);
   const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];
   const store = useStore();
   const currentBrush = useRow('settings', 'brush') as any;
-  const currentColor = currentBrush.color;
 
   const setColor = (color: string) => {
   store.setRow('settings', 'brush', {...currentBrush, color});
@@ -89,7 +88,7 @@ const canvasRef = useRef<HTMLCanvasElement>(null);
   return (
   <div className="color-picker">
     {colors.map((color) => (
-    <button key={color} className={`color-btn ${currentColor===color ? 'active' : '' }`} style=\{{background: color}} onClick={()=> setColor(color)}
+    <button key={color} className="color-btn" style=\{{background: color}} onClick={()=> setColor(color)}
       />
       ))}
   </div>
@@ -109,7 +108,7 @@ const canvasRef = useRef<HTMLCanvasElement>(null);
     <div className="brush-size">
       <label>Brush Size:</label>
       <input type="range" min="1" max="50" value={size} onChange={setSize} />
-      <span className="brush-size-value">{size}</span>
+      <span id="brush-size-value">{size}</span>
     </div>
     );
     };
@@ -129,19 +128,15 @@ const canvasRef = useRef<HTMLCanvasElement>(null);
     return (
     <StrictMode>
       <Provider store={store}>
-        <header>
-          <h1>
-            <img src="/favicon.svg" />
-            TinyBase Drawing{{#if typescript}} / TypeScript{{else}} / JavaScript{{/if}} + React
-          </h1>
-        </header>
-        <div className="drawing-controls">
-          <ColorPicker />
-          <BrushSize />
-          <ClearButton />
-        </div>
-        <Canvas />
-        <Inspector />
+        <>
+          <div className="drawing-controls">
+            <ColorPicker />
+            <BrushSize />
+            <ClearButton />
+          </div>
+          <Canvas />
+          <Inspector />
+        </>
       </Provider>
     </StrictMode>
     );

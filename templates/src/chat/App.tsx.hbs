@@ -97,12 +97,6 @@ const handleChange = useSetValueCallback(
   return (
   <StrictMode>
     <Provider store={store}>
-      <header>
-        <h1>
-          <img src="/favicon.svg" />
-          TinyBase Chat{{#if typescript}} / TypeScript{{else}} / JavaScript{{/if}} + React
-        </h1>
-      </header>
       <UsernameInput />
       <Messages />
       <MessageInput />

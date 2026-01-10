@@ -16,78 +16,96 @@
 
 <body>
   {{#if react}}
-    <div id="app"></div>
-  {{else}}
-    {{#if (eq appType "basic")}}
-      <div id="app">
-        <header>
-          <h1>
-            <img src="/favicon.svg" />
-            TinyBase / {{#if typescript}}TypeScript{{else}}JavaScript{{/if}}
-          </h1>
-        </header>
-        <p>
-          This is more or less the simplest TinyBase app you could imagine. It
-          contains a handful of key-values and tables which are mutated with the
-          buttons below. There's no fancy rendering - just the raw JSON of the
-          underlying store. See the full set of
-          <a href="https://tinybase.org/demos/">TinyBase demos</a> for more
-          interesting examples!
-        </p>
-        <div id="buttons">
-          <button id="countButton">Increment number</button>
-          <button id="randomButton">Random number</button>
-          <button id="addPetButton">Add a pet</button>
-        </div>
-        <details open>
-          <summary>Values</summary>
-          <pre id="valuesJson"></pre>
-        </details>
-        <details open>
-          <summary>Tables</summary>
-          <pre id="tablesJson"></pre>
-        </details>
-      </div>
-    {{/if}}
-    {{#if (eq appType "chat")}}
-      <div id="app">
-        <header>
-          <h1>
-            <img src="/favicon.svg" />
-            TinyBase Chat / {{#if typescript}}TypeScript{{else}}JavaScript{{/if}}
-          </h1>
-        </header>
-        <div class="username-input">
-          <label>Username:</label>
-          <input type="text" id="username-input" placeholder="Enter your name" />
-        </div>
-        <div class="messages" id="messages"></div>
-        <div class="message-input">
-          <input type="text" id="message-input" placeholder="Type a message..." autofocus />
-          <button id="send-button">Send</button>
-        </div>
-      </div>
-    {{/if}}
-    {{#if (eq appType "drawing")}}
-      <div id="app">
-        <header>
-          <h1>
-            <img src="/favicon.svg" />
-            TinyBase Drawing / {{#if typescript}}TypeScript{{else}}JavaScript{{/if}}
-          </h1>
-        </header>
-        <div class="drawing-controls">
-          <div class="color-picker" id="color-picker"></div>
-          <div class="brush-size">
-            <label>Brush Size:</label>
-            <input type="range" id="brush-size" min="1" max="50" value="5" />
-            <span id="brush-size-value">5</span>
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase {{#if (eq appType "chat")}}Chat{{else if (eq appType "drawing")}}Drawing{{else}}Demo{{/if}}</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
+            i
+            <div id="infoTooltip">
+              {{#if (eq appType "basic")}}
+                A simple TinyBase app with key-values and tables mutated with buttons. See the full set of <a href="https://tinybase.org/demos/" target="_blank">TinyBase demos</a> for more examples.
+              {{else if (eq appType "chat")}}
+                A real-time chat application demonstrating TinyBase's reactive data management.
+              {{else if (eq appType "drawing")}}
+                A collaborative drawing canvas showcasing TinyBase's state synchronization.
+              {{/if}}
+              <br><br>
+              Built with {{#if typescript}}TypeScript{{else}}JavaScript{{/if}} + React.
+            </div>
           </div>
-          <button id="clear-button" class="clear-btn">Clear Canvas</button>
         </div>
-        <canvas id="drawing-canvas" class="drawing-canvas" width="600" height="400"></canvas>
       </div>
-    {{/if}}
+      <div id="app"></div>
+    </div>
+  {{else}}
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase {{#if (eq appType "chat")}}Chat{{else if (eq appType "drawing")}}Drawing{{else}}Demo{{/if}}</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
+            i
+            <div id="infoTooltip">
+              {{#if (eq appType "basic")}}
+                A simple TinyBase app with key-values and tables mutated with buttons. See the full set of <a href="https://tinybase.org/demos/" target="_blank">TinyBase demos</a> for more examples.
+              {{else if (eq appType "chat")}}
+                A real-time chat application demonstrating TinyBase's reactive data management.
+              {{else if (eq appType "drawing")}}
+                A collaborative drawing canvas showcasing TinyBase's state synchronization.
+              {{/if}}
+              <br><br>
+              Built with {{#if typescript}}TypeScript{{else}}JavaScript{{/if}}.
+            </div>
+          </div>
+        </div>
+      </div>
+      {{#if (eq appType "basic")}}
+        <div id="app">
+          <div id="buttons">
+            <button id="countButton">Increment number</button>
+            <button id="randomButton">Random number</button>
+            <button id="addPetButton">Add a pet</button>
+          </div>
+          <details open>
+            <summary>Values</summary>
+            <pre id="valuesJson"></pre>
+          </details>
+          <details open>
+            <summary>Tables</summary>
+            <pre id="tablesJson"></pre>
+          </details>
+        </div>
+      {{/if}}
+      {{#if (eq appType "chat")}}
+        <div id="app">
+          <div class="username-input">
+            <label>Username:</label>
+            <input type="text" id="username-input" placeholder="Enter your name" />
+          </div>
+          <div class="messages" id="messages"></div>
+          <div class="message-input">
+            <input type="text" id="message-input" placeholder="Type a message..." autofocus />
+            <button id="send-button">Send</button>
+          </div>
+        </div>
+      {{/if}}
+      {{#if (eq appType "drawing")}}
+        <div id="app">
+          <div class="drawing-controls">
+            <div class="color-picker" id="color-picker"></div>
+            <div class="brush-size">
+              <label>Brush Size:</label>
+              <input type="range" id="brush-size" min="1" max="50" value="5" />
+              <span id="brush-size-value">5</span>
+            </div>
+            <button id="clear-button" class="clear-btn">Clear Canvas</button>
+          </div>
+          <canvas id="drawing-canvas" class="drawing-canvas" width="600" height="400"></canvas>
+        </div>
+      {{/if}}
+    </div>
   {{/if}}
   {{includeFile template="src/index.tsx.hbs" output="src/index.{{ext}}"}}
   <script type="module" src="/src/index.{{ext}}"></script>

@@ -74,6 +74,17 @@ import {Provider, useCreateStore} from 'tinybase/ui-react';
 import {SortedTableInHtmlTable, ValuesInHtmlTable} from 'tinybase/ui-react-dom';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {Buttons} from './Buttons';
+const TopBar = ({title, tech}) => (
+  <div className="top-bar">
+    <img src="/favicon.svg" className="top-bar-logo" alt="TinyBase" />
+    <div className="top-bar-title">{title}</div>
+    <div className="top-bar-info">
+      <div className="info-icon">
+        i<div className="info-tooltip">{tech}</div>
+      </div>
+    </div>
+  </div>
+);
 const App = () => {
   const store = useCreateStore(() => {
     return createStore()
@@ -89,38 +100,38 @@ const App = () => {
   });
   return (
     <StrictMode>
-      <Provider store={store}>
-        <header>
-          <h1>
-            <img src="/favicon.svg" />
-            TinyBase / JavaScript + React
-          </h1>
-        </header>
-        <p>
-          This is more or less the simplest TinyBase app you could imagine. It
-          contains a handful of key-values and tables which are mutated with the
-          buttons below, and rendered with plain table components. See the full
-          set of <a href="https://tinybase.org/demos/">TinyBase demos</a> for
-          more interesting examples!
-        </p>
-        <Buttons />
-        <div>
-          <h2>Values</h2>
-          <ValuesInHtmlTable />
+      <div className="app-container">
+        <TopBar title="TinyBase Demo" tech="JavaScript + React" />
+        <div id="app">
+          <Provider store={store}>
+            <p>
+              This is more or less the simplest TinyBase app you could imagine.
+              It contains a handful of key-values and tables which are mutated
+              with the buttons below, and rendered with plain table components.
+              See the full set of{' '}
+              <a href="https://tinybase.org/demos/">TinyBase demos</a> for more
+              interesting examples!
+            </p>
+            <Buttons />
+            <div>
+              <h2>Values</h2>
+              <ValuesInHtmlTable />
+            </div>
+            <div>
+              <h2>Pets Table</h2>
+              <SortedTableInHtmlTable
+                tableId="pets"
+                cellId="name"
+                limit={5}
+                sortOnClick={true}
+                className="sortedTable"
+                paginator={true}
+              />
+            </div>
+            <Inspector />
+          </Provider>
         </div>
-        <div>
-          <h2>Pets Table</h2>
-          <SortedTableInHtmlTable
-            tableId="pets"
-            cellId="name"
-            limit={5}
-            sortOnClick={true}
-            className="sortedTable"
-            paginator={true}
-          />
-        </div>
-        <Inspector />
-      </Provider>
+      </div>
     </StrictMode>
   );
 };
@@ -211,32 +222,132 @@ table.sortedTable thead th {
   cursor: pointer;
 }
 
-@media (min-width: 40rem) {
+@media (min-width: 50rem) {
   #app {
+    display: grid;
     grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
   }
-  header,
   p,
   #buttons {
     grid-column: span 2;
   }
 }
 ",
-  "src/index.css": "body {
+  "src/index.css": "* {
+  box-sizing: border-box;
+}
+
+body {
   color: #bbb;
-  background: #111;
+  background: #0a0a0a;
   font-family: 'Inter', sans-serif;
+  user-select: none;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.top-bar {
+  background: linear-gradient(180deg, #1a1a1a 0%, #151515 100%);
+  border-bottom: 1px solid #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.top-bar-logo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+.top-bar-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+}
+
+.top-bar-info {
+  position: relative;
+}
+
+.info-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid #666;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #666;
+  cursor: help;
+  transition: all 0.2s;
   user-select: none;
 }
 
+.info-icon:hover {
+  border-color: #d81b60;
+  color: #d81b60;
+}
+
+.info-icon:hover .info-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.info-tooltip {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.25rem);
+  transition: all 0.2s;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.info-tooltip::before {
+  content: '';
+  position: absolute;
+  right: 0.75rem;
+  top: -0.375rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: #1a1a1a;
+  border-left: 1px solid #333;
+  border-top: 1px solid #333;
+  transform: rotate(45deg);
+}
+
 #app {
-  max-width: 40rem;
-  margin: 2rem auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 2rem;
-  align-items: start;
-  row-gap: 1rem;
+  max-width: 50rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  flex: 1;
 }
 
 a {
@@ -390,6 +501,17 @@ import {
   useStore,
 } from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
+const TopBar = ({title, tech}) => (
+  <div className="top-bar">
+    <img src="/favicon.svg" className="top-bar-logo" alt="TinyBase" />
+    <div className="top-bar-title">{title}</div>
+    <div className="top-bar-info">
+      <div className="info-icon">
+        i<div className="info-tooltip">{tech}</div>
+      </div>
+    </div>
+  </div>
+);
 const MessageInput = () => {
   const [message, setMessage] = useState('');
   const username = useValue('username') || 'Anonymous';
@@ -481,18 +603,17 @@ const App = () => {
   });
   return (
     <StrictMode>
-      <Provider store={store}>
-        <header>
-          <h1>
-            <img src="/favicon.svg" />
-            TinyBase Chat / JavaScript + React
-          </h1>
-        </header>
-        <UsernameInput />
-        <Messages />
-        <MessageInput />
-        <Inspector />
-      </Provider>
+      <div className="app-container">
+        <TopBar title="TinyBase Chat" tech="JavaScript + React" />
+        <div id="app">
+          <Provider store={store}>
+            <UsernameInput />
+            <Messages />
+            <MessageInput />
+            <Inspector />
+          </Provider>
+        </div>
+      </div>
     </StrictMode>
   );
 };
@@ -574,21 +695,119 @@ export {App};
   background: #c2185b;
 }
 ",
-  "src/index.css": "body {
+  "src/index.css": "* {
+  box-sizing: border-box;
+}
+
+body {
   color: #bbb;
-  background: #111;
+  background: #0a0a0a;
   font-family: 'Inter', sans-serif;
+  user-select: none;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.top-bar {
+  background: linear-gradient(180deg, #1a1a1a 0%, #151515 100%);
+  border-bottom: 1px solid #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.top-bar-logo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+.top-bar-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+}
+
+.top-bar-info {
+  position: relative;
+}
+
+.info-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid #666;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #666;
+  cursor: help;
+  transition: all 0.2s;
   user-select: none;
 }
 
+.info-icon:hover {
+  border-color: #d81b60;
+  color: #d81b60;
+}
+
+.info-icon:hover .info-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.info-tooltip {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.25rem);
+  transition: all 0.2s;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.info-tooltip::before {
+  content: '';
+  position: absolute;
+  right: 0.75rem;
+  top: -0.375rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: #1a1a1a;
+  border-left: 1px solid #333;
+  border-top: 1px solid #333;
+  transform: rotate(45deg);
+}
+
 #app {
-  max-width: 40rem;
-  margin: 2rem auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 2rem;
-  align-items: start;
-  row-gap: 1rem;
+  max-width: 50rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  flex: 1;
 }
 
 a {
@@ -741,6 +960,17 @@ import {
   useStore,
 } from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
+const TopBar = ({title, tech}) => (
+  <div className="top-bar">
+    <img src="/favicon.svg" className="top-bar-logo" alt="TinyBase" />
+    <div className="top-bar-title">{title}</div>
+    <div className="top-bar-info">
+      <div className="info-icon">
+        i<div className="info-tooltip">{tech}</div>
+      </div>
+    </div>
+  </div>
+);
 const Canvas = () => {
   const canvasRef = useRef(null);
   const isDrawing = useRef(false);
@@ -874,21 +1104,20 @@ const App = () => {
   });
   return (
     <StrictMode>
-      <Provider store={store}>
-        <header>
-          <h1>
-            <img src="/favicon.svg" />
-            TinyBase Drawing / JavaScript + React
-          </h1>
-        </header>
-        <div className="drawing-controls">
-          <ColorPicker />
-          <BrushSize />
-          <ClearButton />
+      <div className="app-container">
+        <TopBar title="TinyBase Drawing" tech="JavaScript + React" />
+        <div id="app">
+          <Provider store={store}>
+            <div className="drawing-controls">
+              <ColorPicker />
+              <BrushSize />
+              <ClearButton />
+            </div>
+            <Canvas />
+            <Inspector />
+          </Provider>
         </div>
-        <Canvas />
-        <Inspector />
-      </Provider>
+      </div>
     </StrictMode>
   );
 };
@@ -966,21 +1195,119 @@ export {App};
   touch-action: none;
 }
 ",
-  "src/index.css": "body {
+  "src/index.css": "* {
+  box-sizing: border-box;
+}
+
+body {
   color: #bbb;
-  background: #111;
+  background: #0a0a0a;
   font-family: 'Inter', sans-serif;
+  user-select: none;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.top-bar {
+  background: linear-gradient(180deg, #1a1a1a 0%, #151515 100%);
+  border-bottom: 1px solid #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.top-bar-logo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+.top-bar-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+}
+
+.top-bar-info {
+  position: relative;
+}
+
+.info-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid #666;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #666;
+  cursor: help;
+  transition: all 0.2s;
   user-select: none;
 }
 
+.info-icon:hover {
+  border-color: #d81b60;
+  color: #d81b60;
+}
+
+.info-icon:hover .info-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.info-tooltip {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.25rem);
+  transition: all 0.2s;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.info-tooltip::before {
+  content: '';
+  position: absolute;
+  right: 0.75rem;
+  top: -0.375rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: #1a1a1a;
+  border-left: 1px solid #333;
+  border-top: 1px solid #333;
+  transform: rotate(45deg);
+}
+
 #app {
-  max-width: 40rem;
-  margin: 2rem auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 2rem;
-  align-items: start;
-  row-gap: 1rem;
+  max-width: 50rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  flex: 1;
 }
 
 a {
@@ -1088,34 +1415,40 @@ npm run dev
   </head>
 
   <body>
-    <div id="app">
-      <header>
-        <h1>
-          <img src="/favicon.svg" />
-          TinyBase / JavaScript
-        </h1>
-      </header>
-      <p>
-        This is more or less the simplest TinyBase app you could imagine. It
-        contains a handful of key-values and tables which are mutated with the
-        buttons below. There's no fancy rendering - just the raw JSON of the
-        underlying store. See the full set of
-        <a href="https://tinybase.org/demos/">TinyBase demos</a> for more
-        interesting examples!
-      </p>
-      <div id="buttons">
-        <button id="countButton">Increment number</button>
-        <button id="randomButton">Random number</button>
-        <button id="addPetButton">Add a pet</button>
+    <div class="app-container">
+      <div class="top-bar">
+        <img src="/favicon.svg" class="top-bar-logo" alt="TinyBase" />
+        <div class="top-bar-title">TinyBase Demo</div>
+        <div class="top-bar-info">
+          <div class="info-icon">
+            i
+            <div class="info-tooltip">JavaScript</div>
+          </div>
+        </div>
       </div>
-      <details open>
-        <summary>Values</summary>
-        <pre id="valuesJson"></pre>
-      </details>
-      <details open>
-        <summary>Tables</summary>
-        <pre id="tablesJson"></pre>
-      </details>
+      <div id="app">
+        <p>
+          This is more or less the simplest TinyBase app you could imagine. It
+          contains a handful of key-values and tables which are mutated with the
+          buttons below. There's no fancy rendering - just the raw JSON of the
+          underlying store. See the full set of
+          <a href="https://tinybase.org/demos/">TinyBase demos</a> for more
+          interesting examples!
+        </p>
+        <div id="buttons">
+          <button id="countButton">Increment number</button>
+          <button id="randomButton">Random number</button>
+          <button id="addPetButton">Add a pet</button>
+        </div>
+        <details open>
+          <summary>Values</summary>
+          <pre id="valuesJson"></pre>
+        </details>
+        <details open>
+          <summary>Tables</summary>
+          <pre id="tablesJson"></pre>
+        </details>
+      </div>
     </div>
 
     <script type="module" src="/src/index.js"></script>
@@ -1240,32 +1573,132 @@ table.sortedTable thead th {
   cursor: pointer;
 }
 
-@media (min-width: 40rem) {
+@media (min-width: 50rem) {
   #app {
+    display: grid;
     grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
   }
-  header,
   p,
   #buttons {
     grid-column: span 2;
   }
 }
 ",
-  "src/index.css": "body {
+  "src/index.css": "* {
+  box-sizing: border-box;
+}
+
+body {
   color: #bbb;
-  background: #111;
+  background: #0a0a0a;
   font-family: 'Inter', sans-serif;
+  user-select: none;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.top-bar {
+  background: linear-gradient(180deg, #1a1a1a 0%, #151515 100%);
+  border-bottom: 1px solid #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.top-bar-logo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+.top-bar-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+}
+
+.top-bar-info {
+  position: relative;
+}
+
+.info-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid #666;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #666;
+  cursor: help;
+  transition: all 0.2s;
   user-select: none;
 }
 
+.info-icon:hover {
+  border-color: #d81b60;
+  color: #d81b60;
+}
+
+.info-icon:hover .info-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.info-tooltip {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.25rem);
+  transition: all 0.2s;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.info-tooltip::before {
+  content: '';
+  position: absolute;
+  right: 0.75rem;
+  top: -0.375rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: #1a1a1a;
+  border-left: 1px solid #333;
+  border-top: 1px solid #333;
+  transform: rotate(45deg);
+}
+
 #app {
-  max-width: 40rem;
-  margin: 2rem auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 2rem;
-  align-items: start;
-  row-gap: 1rem;
+  max-width: 50rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  flex: 1;
 }
 
 a {
@@ -1359,21 +1792,36 @@ npm run dev
   </head>
 
   <body>
-    <div id="app">
-      <header>
-        <h1>
-          <img src="/favicon.svg" />
-          TinyBase Chat / JavaScript
-        </h1>
-      </header>
-      <div class="username-input">
-        <label>Username:</label>
-        <input type="text" id="username-input" placeholder="Enter your name" />
+    <div class="app-container">
+      <div class="top-bar">
+        <img src="/favicon.svg" class="top-bar-logo" alt="TinyBase" />
+        <div class="top-bar-title">TinyBase Chat</div>
+        <div class="top-bar-info">
+          <div class="info-icon">
+            i
+            <div class="info-tooltip">JavaScript</div>
+          </div>
+        </div>
       </div>
-      <div class="messages" id="messages"></div>
-      <div class="message-input">
-        <input type="text" id="message-input" placeholder="Type a message..." />
-        <button id="send-button">Send</button>
+      <div id="app">
+        <div class="username-input">
+          <label>Username:</label>
+          <input
+            type="text"
+            id="username-input"
+            placeholder="Enter your name"
+          />
+        </div>
+        <div class="messages" id="messages"></div>
+        <div class="message-input">
+          <input
+            type="text"
+            id="message-input"
+            placeholder="Type a message..."
+            autofocus
+          />
+          <button id="send-button">Send</button>
+        </div>
       </div>
     </div>
 
@@ -1541,21 +1989,119 @@ export {app};
   background: #c2185b;
 }
 ",
-  "src/index.css": "body {
+  "src/index.css": "* {
+  box-sizing: border-box;
+}
+
+body {
   color: #bbb;
-  background: #111;
+  background: #0a0a0a;
   font-family: 'Inter', sans-serif;
+  user-select: none;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.top-bar {
+  background: linear-gradient(180deg, #1a1a1a 0%, #151515 100%);
+  border-bottom: 1px solid #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.top-bar-logo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+.top-bar-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+}
+
+.top-bar-info {
+  position: relative;
+}
+
+.info-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid #666;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #666;
+  cursor: help;
+  transition: all 0.2s;
   user-select: none;
 }
 
+.info-icon:hover {
+  border-color: #d81b60;
+  color: #d81b60;
+}
+
+.info-icon:hover .info-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.info-tooltip {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.25rem);
+  transition: all 0.2s;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.info-tooltip::before {
+  content: '';
+  position: absolute;
+  right: 0.75rem;
+  top: -0.375rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: #1a1a1a;
+  border-left: 1px solid #333;
+  border-top: 1px solid #333;
+  transform: rotate(45deg);
+}
+
 #app {
-  max-width: 40rem;
-  margin: 2rem auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 2rem;
-  align-items: start;
-  row-gap: 1rem;
+  max-width: 50rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  flex: 1;
 }
 
 a {
@@ -1649,23 +2195,34 @@ npm run dev
   </head>
 
   <body>
-    <div id="app">
-      <header>
-        <h1>
-          <img src="/favicon.svg" />
-          TinyBase Drawing / JavaScript
-        </h1>
-      </header>
-      <div class="drawing-controls">
-        <div class="color-picker" id="color-picker"></div>
-        <div class="brush-size">
-          <label>Brush Size:</label>
-          <input type="range" id="brush-size" min="1" max="50" value="5" />
-          <span id="brush-size-value">5</span>
+    <div class="app-container">
+      <div class="top-bar">
+        <img src="/favicon.svg" class="top-bar-logo" alt="TinyBase" />
+        <div class="top-bar-title">TinyBase Drawing</div>
+        <div class="top-bar-info">
+          <div class="info-icon">
+            i
+            <div class="info-tooltip">JavaScript</div>
+          </div>
         </div>
-        <button id="clear-button" class="clear-btn">Clear Canvas</button>
       </div>
-      <canvas id="drawing-canvas" class="drawing-canvas"></canvas>
+      <div id="app">
+        <div class="drawing-controls">
+          <div class="color-picker" id="color-picker"></div>
+          <div class="brush-size">
+            <label>Brush Size:</label>
+            <input type="range" id="brush-size" min="1" max="50" value="5" />
+            <span id="brush-size-value">5</span>
+          </div>
+          <button id="clear-button" class="clear-btn">Clear Canvas</button>
+        </div>
+        <canvas
+          id="drawing-canvas"
+          class="drawing-canvas"
+          width="600"
+          height="400"
+        ></canvas>
+      </div>
     </div>
 
     <script type="module" src="/src/index.js"></script>
@@ -1858,21 +2415,119 @@ export {app};
   touch-action: none;
 }
 ",
-  "src/index.css": "body {
+  "src/index.css": "* {
+  box-sizing: border-box;
+}
+
+body {
   color: #bbb;
-  background: #111;
+  background: #0a0a0a;
   font-family: 'Inter', sans-serif;
+  user-select: none;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.top-bar {
+  background: linear-gradient(180deg, #1a1a1a 0%, #151515 100%);
+  border-bottom: 1px solid #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.top-bar-logo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+.top-bar-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+}
+
+.top-bar-info {
+  position: relative;
+}
+
+.info-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid #666;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #666;
+  cursor: help;
+  transition: all 0.2s;
   user-select: none;
 }
 
+.info-icon:hover {
+  border-color: #d81b60;
+  color: #d81b60;
+}
+
+.info-icon:hover .info-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.info-tooltip {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.25rem);
+  transition: all 0.2s;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.info-tooltip::before {
+  content: '';
+  position: absolute;
+  right: 0.75rem;
+  top: -0.375rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: #1a1a1a;
+  border-left: 1px solid #333;
+  border-top: 1px solid #333;
+  transform: rotate(45deg);
+}
+
 #app {
-  max-width: 40rem;
-  margin: 2rem auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 2rem;
-  align-items: start;
-  row-gap: 1rem;
+  max-width: 50rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  flex: 1;
 }
 
 a {
@@ -2010,6 +2665,18 @@ import {SortedTableInHtmlTable, ValuesInHtmlTable} from 'tinybase/ui-react-dom';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {Buttons} from './Buttons';
 
+const TopBar = ({title, tech}: {title: string; tech: string}) => (
+  <div className="top-bar">
+    <img src="/favicon.svg" className="top-bar-logo" alt="TinyBase" />
+    <div className="top-bar-title">{title}</div>
+    <div className="top-bar-info">
+      <div className="info-icon">
+        i<div className="info-tooltip">{tech}</div>
+      </div>
+    </div>
+  </div>
+);
+
 export const App = () => {
   const store = useCreateStore(() => {
     // Create the TinyBase Store and initialize the Store's data
@@ -2027,38 +2694,38 @@ export const App = () => {
 
   return (
     <StrictMode>
-      <Provider store={store}>
-        <header>
-          <h1>
-            <img src="/favicon.svg" />
-            TinyBase / TypeScript + React
-          </h1>
-        </header>
-        <p>
-          This is more or less the simplest TinyBase app you could imagine. It
-          contains a handful of key-values and tables which are mutated with the
-          buttons below, and rendered with plain table components. See the full
-          set of <a href="https://tinybase.org/demos/">TinyBase demos</a> for
-          more interesting examples!
-        </p>
-        <Buttons />
-        <div>
-          <h2>Values</h2>
-          <ValuesInHtmlTable />
+      <div className="app-container">
+        <TopBar title="TinyBase Demo" tech="TypeScript + React" />
+        <div id="app">
+          <Provider store={store}>
+            <p>
+              This is more or less the simplest TinyBase app you could imagine.
+              It contains a handful of key-values and tables which are mutated
+              with the buttons below, and rendered with plain table components.
+              See the full set of{' '}
+              <a href="https://tinybase.org/demos/">TinyBase demos</a> for more
+              interesting examples!
+            </p>
+            <Buttons />
+            <div>
+              <h2>Values</h2>
+              <ValuesInHtmlTable />
+            </div>
+            <div>
+              <h2>Pets Table</h2>
+              <SortedTableInHtmlTable
+                tableId="pets"
+                cellId="name"
+                limit={5}
+                sortOnClick={true}
+                className="sortedTable"
+                paginator={true}
+              />
+            </div>
+            <Inspector />
+          </Provider>
         </div>
-        <div>
-          <h2>Pets Table</h2>
-          <SortedTableInHtmlTable
-            tableId="pets"
-            cellId="name"
-            limit={5}
-            sortOnClick={true}
-            className="sortedTable"
-            paginator={true}
-          />
-        </div>
-        <Inspector />
-      </Provider>
+      </div>
     </StrictMode>
   );
 };
@@ -2153,32 +2820,132 @@ table.sortedTable thead th {
   cursor: pointer;
 }
 
-@media (min-width: 40rem) {
+@media (min-width: 50rem) {
   #app {
+    display: grid;
     grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
   }
-  header,
   p,
   #buttons {
     grid-column: span 2;
   }
 }
 ",
-  "src/index.css": "body {
+  "src/index.css": "* {
+  box-sizing: border-box;
+}
+
+body {
   color: #bbb;
-  background: #111;
+  background: #0a0a0a;
   font-family: 'Inter', sans-serif;
+  user-select: none;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.top-bar {
+  background: linear-gradient(180deg, #1a1a1a 0%, #151515 100%);
+  border-bottom: 1px solid #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.top-bar-logo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+.top-bar-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+}
+
+.top-bar-info {
+  position: relative;
+}
+
+.info-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid #666;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #666;
+  cursor: help;
+  transition: all 0.2s;
   user-select: none;
 }
 
+.info-icon:hover {
+  border-color: #d81b60;
+  color: #d81b60;
+}
+
+.info-icon:hover .info-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.info-tooltip {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.25rem);
+  transition: all 0.2s;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.info-tooltip::before {
+  content: '';
+  position: absolute;
+  right: 0.75rem;
+  top: -0.375rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: #1a1a1a;
+  border-left: 1px solid #333;
+  border-top: 1px solid #333;
+  transform: rotate(45deg);
+}
+
 #app {
-  max-width: 40rem;
-  margin: 2rem auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 2rem;
-  align-items: start;
-  row-gap: 1rem;
+  max-width: 50rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  flex: 1;
 }
 
 a {
@@ -2360,6 +3127,18 @@ import {
 } from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 
+const TopBar = ({title, tech}: {title: string; tech: string}) => (
+  <div className="top-bar">
+    <img src="/favicon.svg" className="top-bar-logo" alt="TinyBase" />
+    <div className="top-bar-title">{title}</div>
+    <div className="top-bar-info">
+      <div className="info-icon">
+        i<div className="info-tooltip">{tech}</div>
+      </div>
+    </div>
+  </div>
+);
+
 const MessageInput = () => {
   const [message, setMessage] = useState('');
   const username = useValue('username') || 'Anonymous';
@@ -2467,18 +3246,17 @@ export const App = () => {
 
   return (
     <StrictMode>
-      <Provider store={store}>
-        <header>
-          <h1>
-            <img src="/favicon.svg" />
-            TinyBase Chat / TypeScript + React
-          </h1>
-        </header>
-        <UsernameInput />
-        <Messages />
-        <MessageInput />
-        <Inspector />
-      </Provider>
+      <div className="app-container">
+        <TopBar title="TinyBase Chat" tech="TypeScript + React" />
+        <div id="app">
+          <Provider store={store}>
+            <UsernameInput />
+            <Messages />
+            <MessageInput />
+            <Inspector />
+          </Provider>
+        </div>
+      </div>
     </StrictMode>
   );
 };
@@ -2559,21 +3337,119 @@ export const App = () => {
   background: #c2185b;
 }
 ",
-  "src/index.css": "body {
+  "src/index.css": "* {
+  box-sizing: border-box;
+}
+
+body {
   color: #bbb;
-  background: #111;
+  background: #0a0a0a;
   font-family: 'Inter', sans-serif;
+  user-select: none;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.top-bar {
+  background: linear-gradient(180deg, #1a1a1a 0%, #151515 100%);
+  border-bottom: 1px solid #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.top-bar-logo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+.top-bar-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+}
+
+.top-bar-info {
+  position: relative;
+}
+
+.info-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid #666;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #666;
+  cursor: help;
+  transition: all 0.2s;
   user-select: none;
 }
 
+.info-icon:hover {
+  border-color: #d81b60;
+  color: #d81b60;
+}
+
+.info-icon:hover .info-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.info-tooltip {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.25rem);
+  transition: all 0.2s;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.info-tooltip::before {
+  content: '';
+  position: absolute;
+  right: 0.75rem;
+  top: -0.375rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: #1a1a1a;
+  border-left: 1px solid #333;
+  border-top: 1px solid #333;
+  transform: rotate(45deg);
+}
+
 #app {
-  max-width: 40rem;
-  margin: 2rem auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 2rem;
-  align-items: start;
-  row-gap: 1rem;
+  max-width: 50rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  flex: 1;
 }
 
 a {
@@ -2754,6 +3630,18 @@ import {
 } from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 
+const TopBar = ({title, tech}: {title: string; tech: string}) => (
+  <div className="top-bar">
+    <img src="/favicon.svg" className="top-bar-logo" alt="TinyBase" />
+    <div className="top-bar-title">{title}</div>
+    <div className="top-bar-info">
+      <div className="info-icon">
+        i<div className="info-tooltip">{tech}</div>
+      </div>
+    </div>
+  </div>
+);
+
 const Canvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isDrawing = useRef(false);
@@ -2908,21 +3796,20 @@ export const App = () => {
 
   return (
     <StrictMode>
-      <Provider store={store}>
-        <header>
-          <h1>
-            <img src="/favicon.svg" />
-            TinyBase Drawing / TypeScript + React
-          </h1>
-        </header>
-        <div className="drawing-controls">
-          <ColorPicker />
-          <BrushSize />
-          <ClearButton />
+      <div className="app-container">
+        <TopBar title="TinyBase Drawing" tech="TypeScript + React" />
+        <div id="app">
+          <Provider store={store}>
+            <div className="drawing-controls">
+              <ColorPicker />
+              <BrushSize />
+              <ClearButton />
+            </div>
+            <Canvas />
+            <Inspector />
+          </Provider>
         </div>
-        <Canvas />
-        <Inspector />
-      </Provider>
+      </div>
     </StrictMode>
   );
 };
@@ -2999,21 +3886,119 @@ export const App = () => {
   touch-action: none;
 }
 ",
-  "src/index.css": "body {
+  "src/index.css": "* {
+  box-sizing: border-box;
+}
+
+body {
   color: #bbb;
-  background: #111;
+  background: #0a0a0a;
   font-family: 'Inter', sans-serif;
+  user-select: none;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.top-bar {
+  background: linear-gradient(180deg, #1a1a1a 0%, #151515 100%);
+  border-bottom: 1px solid #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.top-bar-logo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+.top-bar-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+}
+
+.top-bar-info {
+  position: relative;
+}
+
+.info-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid #666;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #666;
+  cursor: help;
+  transition: all 0.2s;
   user-select: none;
 }
 
+.info-icon:hover {
+  border-color: #d81b60;
+  color: #d81b60;
+}
+
+.info-icon:hover .info-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.info-tooltip {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.25rem);
+  transition: all 0.2s;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.info-tooltip::before {
+  content: '';
+  position: absolute;
+  right: 0.75rem;
+  top: -0.375rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: #1a1a1a;
+  border-left: 1px solid #333;
+  border-top: 1px solid #333;
+  transform: rotate(45deg);
+}
+
 #app {
-  max-width: 40rem;
-  margin: 2rem auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 2rem;
-  align-items: start;
-  row-gap: 1rem;
+  max-width: 50rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  flex: 1;
 }
 
 a {
@@ -3144,34 +4129,40 @@ npm run dev
   </head>
 
   <body>
-    <div id="app">
-      <header>
-        <h1>
-          <img src="/favicon.svg" />
-          TinyBase / TypeScript
-        </h1>
-      </header>
-      <p>
-        This is more or less the simplest TinyBase app you could imagine. It
-        contains a handful of key-values and tables which are mutated with the
-        buttons below. There's no fancy rendering - just the raw JSON of the
-        underlying store. See the full set of
-        <a href="https://tinybase.org/demos/">TinyBase demos</a> for more
-        interesting examples!
-      </p>
-      <div id="buttons">
-        <button id="countButton">Increment number</button>
-        <button id="randomButton">Random number</button>
-        <button id="addPetButton">Add a pet</button>
+    <div class="app-container">
+      <div class="top-bar">
+        <img src="/favicon.svg" class="top-bar-logo" alt="TinyBase" />
+        <div class="top-bar-title">TinyBase Demo</div>
+        <div class="top-bar-info">
+          <div class="info-icon">
+            i
+            <div class="info-tooltip">TypeScript</div>
+          </div>
+        </div>
       </div>
-      <details open>
-        <summary>Values</summary>
-        <pre id="valuesJson"></pre>
-      </details>
-      <details open>
-        <summary>Tables</summary>
-        <pre id="tablesJson"></pre>
-      </details>
+      <div id="app">
+        <p>
+          This is more or less the simplest TinyBase app you could imagine. It
+          contains a handful of key-values and tables which are mutated with the
+          buttons below. There's no fancy rendering - just the raw JSON of the
+          underlying store. See the full set of
+          <a href="https://tinybase.org/demos/">TinyBase demos</a> for more
+          interesting examples!
+        </p>
+        <div id="buttons">
+          <button id="countButton">Increment number</button>
+          <button id="randomButton">Random number</button>
+          <button id="addPetButton">Add a pet</button>
+        </div>
+        <details open>
+          <summary>Values</summary>
+          <pre id="valuesJson"></pre>
+        </details>
+        <details open>
+          <summary>Tables</summary>
+          <pre id="tablesJson"></pre>
+        </details>
+      </div>
     </div>
 
     <script type="module" src="/src/index.ts"></script>
@@ -3304,32 +4295,132 @@ table.sortedTable thead th {
   cursor: pointer;
 }
 
-@media (min-width: 40rem) {
+@media (min-width: 50rem) {
   #app {
+    display: grid;
     grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
   }
-  header,
   p,
   #buttons {
     grid-column: span 2;
   }
 }
 ",
-  "src/index.css": "body {
+  "src/index.css": "* {
+  box-sizing: border-box;
+}
+
+body {
   color: #bbb;
-  background: #111;
+  background: #0a0a0a;
   font-family: 'Inter', sans-serif;
+  user-select: none;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.top-bar {
+  background: linear-gradient(180deg, #1a1a1a 0%, #151515 100%);
+  border-bottom: 1px solid #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.top-bar-logo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+.top-bar-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+}
+
+.top-bar-info {
+  position: relative;
+}
+
+.info-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid #666;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #666;
+  cursor: help;
+  transition: all 0.2s;
   user-select: none;
 }
 
+.info-icon:hover {
+  border-color: #d81b60;
+  color: #d81b60;
+}
+
+.info-icon:hover .info-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.info-tooltip {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.25rem);
+  transition: all 0.2s;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.info-tooltip::before {
+  content: '';
+  position: absolute;
+  right: 0.75rem;
+  top: -0.375rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: #1a1a1a;
+  border-left: 1px solid #333;
+  border-top: 1px solid #333;
+  transform: rotate(45deg);
+}
+
 #app {
-  max-width: 40rem;
-  margin: 2rem auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 2rem;
-  align-items: start;
-  row-gap: 1rem;
+  max-width: 50rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  flex: 1;
 }
 
 a {
@@ -3445,21 +4536,36 @@ npm run dev
   </head>
 
   <body>
-    <div id="app">
-      <header>
-        <h1>
-          <img src="/favicon.svg" />
-          TinyBase Chat / TypeScript
-        </h1>
-      </header>
-      <div class="username-input">
-        <label>Username:</label>
-        <input type="text" id="username-input" placeholder="Enter your name" />
+    <div class="app-container">
+      <div class="top-bar">
+        <img src="/favicon.svg" class="top-bar-logo" alt="TinyBase" />
+        <div class="top-bar-title">TinyBase Chat</div>
+        <div class="top-bar-info">
+          <div class="info-icon">
+            i
+            <div class="info-tooltip">TypeScript</div>
+          </div>
+        </div>
       </div>
-      <div class="messages" id="messages"></div>
-      <div class="message-input">
-        <input type="text" id="message-input" placeholder="Type a message..." />
-        <button id="send-button">Send</button>
+      <div id="app">
+        <div class="username-input">
+          <label>Username:</label>
+          <input
+            type="text"
+            id="username-input"
+            placeholder="Enter your name"
+          />
+        </div>
+        <div class="messages" id="messages"></div>
+        <div class="message-input">
+          <input
+            type="text"
+            id="message-input"
+            placeholder="Type a message..."
+            autofocus
+          />
+          <button id="send-button">Send</button>
+        </div>
       </div>
     </div>
 
@@ -3641,21 +4747,119 @@ export const app = () => {
   background: #c2185b;
 }
 ",
-  "src/index.css": "body {
+  "src/index.css": "* {
+  box-sizing: border-box;
+}
+
+body {
   color: #bbb;
-  background: #111;
+  background: #0a0a0a;
   font-family: 'Inter', sans-serif;
+  user-select: none;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.top-bar {
+  background: linear-gradient(180deg, #1a1a1a 0%, #151515 100%);
+  border-bottom: 1px solid #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.top-bar-logo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+.top-bar-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+}
+
+.top-bar-info {
+  position: relative;
+}
+
+.info-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid #666;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #666;
+  cursor: help;
+  transition: all 0.2s;
   user-select: none;
 }
 
+.info-icon:hover {
+  border-color: #d81b60;
+  color: #d81b60;
+}
+
+.info-icon:hover .info-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.info-tooltip {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.25rem);
+  transition: all 0.2s;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.info-tooltip::before {
+  content: '';
+  position: absolute;
+  right: 0.75rem;
+  top: -0.375rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: #1a1a1a;
+  border-left: 1px solid #333;
+  border-top: 1px solid #333;
+  transform: rotate(45deg);
+}
+
 #app {
-  max-width: 40rem;
-  margin: 2rem auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 2rem;
-  align-items: start;
-  row-gap: 1rem;
+  max-width: 50rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  flex: 1;
 }
 
 a {
@@ -3771,23 +4975,34 @@ npm run dev
   </head>
 
   <body>
-    <div id="app">
-      <header>
-        <h1>
-          <img src="/favicon.svg" />
-          TinyBase Drawing / TypeScript
-        </h1>
-      </header>
-      <div class="drawing-controls">
-        <div class="color-picker" id="color-picker"></div>
-        <div class="brush-size">
-          <label>Brush Size:</label>
-          <input type="range" id="brush-size" min="1" max="50" value="5" />
-          <span id="brush-size-value">5</span>
+    <div class="app-container">
+      <div class="top-bar">
+        <img src="/favicon.svg" class="top-bar-logo" alt="TinyBase" />
+        <div class="top-bar-title">TinyBase Drawing</div>
+        <div class="top-bar-info">
+          <div class="info-icon">
+            i
+            <div class="info-tooltip">TypeScript</div>
+          </div>
         </div>
-        <button id="clear-button" class="clear-btn">Clear Canvas</button>
       </div>
-      <canvas id="drawing-canvas" class="drawing-canvas"></canvas>
+      <div id="app">
+        <div class="drawing-controls">
+          <div class="color-picker" id="color-picker"></div>
+          <div class="brush-size">
+            <label>Brush Size:</label>
+            <input type="range" id="brush-size" min="1" max="50" value="5" />
+            <span id="brush-size-value">5</span>
+          </div>
+          <button id="clear-button" class="clear-btn">Clear Canvas</button>
+        </div>
+        <canvas
+          id="drawing-canvas"
+          class="drawing-canvas"
+          width="600"
+          height="400"
+        ></canvas>
+      </div>
     </div>
 
     <script type="module" src="/src/index.ts"></script>
@@ -4000,21 +5215,119 @@ export const app = () => {
   touch-action: none;
 }
 ",
-  "src/index.css": "body {
+  "src/index.css": "* {
+  box-sizing: border-box;
+}
+
+body {
   color: #bbb;
-  background: #111;
+  background: #0a0a0a;
   font-family: 'Inter', sans-serif;
+  user-select: none;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.top-bar {
+  background: linear-gradient(180deg, #1a1a1a 0%, #151515 100%);
+  border-bottom: 1px solid #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.top-bar-logo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+.top-bar-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+}
+
+.top-bar-info {
+  position: relative;
+}
+
+.info-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid #666;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #666;
+  cursor: help;
+  transition: all 0.2s;
   user-select: none;
 }
 
+.info-icon:hover {
+  border-color: #d81b60;
+  color: #d81b60;
+}
+
+.info-icon:hover .info-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.info-tooltip {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.25rem);
+  transition: all 0.2s;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.info-tooltip::before {
+  content: '';
+  position: absolute;
+  right: 0.75rem;
+  top: -0.375rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: #1a1a1a;
+  border-left: 1px solid #333;
+  border-top: 1px solid #333;
+  transform: rotate(45deg);
+}
+
 #app {
-  max-width: 40rem;
-  margin: 2rem auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 2rem;
-  align-items: start;
-  row-gap: 1rem;
+  max-width: 50rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  flex: 1;
 }
 
 a {

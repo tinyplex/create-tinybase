@@ -61,11 +61,13 @@ table.sortedTable thead th {
 cursor: pointer;
 }
 
-@media (min-width: 40rem) {
+@media (min-width: 50rem) {
 #app {
+display: grid;
 grid-template-columns: 1fr 1fr;
+gap: 2rem;
+align-items: start;
 }
-header,
 p,
 #buttons {
 grid-column: span 2;
