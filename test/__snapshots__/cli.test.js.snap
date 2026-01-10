@@ -29,12 +29,14 @@ npm run dev
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
     />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>TinyBase / JavaScript + React</title>
   </head>
 
   <body>
     <div id="app"></div>
+
     <script type="module" src="/src/index.jsx"></script>
   </body>
 </html>
@@ -335,6 +337,7 @@ npm run dev
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
     />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>TinyBase / JavaScript</title>
   </head>
@@ -369,6 +372,7 @@ npm run dev
         <pre id="tablesJson"></pre>
       </details>
     </div>
+
     <script type="module" src="/src/index.js"></script>
   </body>
 </html>
@@ -603,12 +607,14 @@ npm run dev
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
     />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>TinyBase / TypeScript + React</title>
   </head>
 
   <body>
     <div id="app"></div>
+
     <script type="module" src="/src/index.tsx"></script>
   </body>
 </html>
@@ -871,7 +877,6 @@ table.sortedTable thead th {
 }
 ",
   "src/index.tsx": "import './index.css';
-
 import ReactDOM from 'react-dom/client';
 import {App} from './App';
 
@@ -944,6 +949,7 @@ npm run dev
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
     />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>TinyBase / TypeScript</title>
   </head>
@@ -978,6 +984,7 @@ npm run dev
         <pre id="tablesJson"></pre>
       </details>
     </div>
+
     <script type="module" src="/src/index.ts"></script>
   </body>
 </html>
@@ -1185,7 +1192,6 @@ table.sortedTable thead th {
 }
 ",
   "src/index.ts": "import './index.css';
-
 import {app} from './app';
 
 addEventListener('load', app);

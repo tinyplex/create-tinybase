@@ -89,75 +89,19 @@ const config = {
     await mkdir(join(targetDir, 'public'), {recursive: true});
   },
 
-  getFiles: (context: Record<string, unknown>) => {
-    const {typescript, react, ext, prettier, eslint} = context;
-
-    const files = [
+  getFiles: () => {
+    return [
       {
         template: 'base/package.json.hbs',
         output: 'package.json',
         prettier: true,
       },
       {
-        template: 'base/index.html.hbs',
-        output: 'index.html',
-        prettier: true,
-      },
-      {
-        template: 'public/favicon.svg',
-        output: 'public/favicon.svg',
-      },
-      {
         template: 'base/README.md.hbs',
         output: 'README.md',
         prettier: true,
       },
-      {
-        template: 'src/index.css.hbs',
-        output: 'src/index.css',
-        prettier: true,
-      },
-      {
-        template: 'src/index.tsx.hbs',
-        output: `src/index.${ext}`,
-        prettier: true,
-        transpile: !typescript,
-      },
     ];
-
-    if (prettier) {
-      files.push({
-        template: 'base/.prettierrc.hbs',
-        output: '.prettierrc',
-        prettier: true,
-      });
-    }
-
-    if (eslint) {
-      files.push({
-        template: 'base/eslint.config.js.hbs',
-        output: 'eslint.config.js',
-        prettier: true,
-      });
-    }
-
-    if (react) {
-      files.push({
-        template: 'base/vite.config.js.hbs',
-        output: 'vite.config.js',
-        prettier: true,
-      });
-    }
-
-    if (typescript) {
-      files.push({
-        template: 'base/tsconfig.json.hbs',
-        output: 'tsconfig.json',
-        prettier: true,
-      });
-    }
-
-    return files;
   },
 
   processIncludedFile: (file: FileConfig, context: TemplateContext) => {

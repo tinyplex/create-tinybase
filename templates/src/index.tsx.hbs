@@ -1,7 +1,6 @@
+{{includeFile template="src/index.css.hbs" output="src/index.css"}}
 import './index.css';
-
 {{#if react}}
-
   import ReactDOM from 'react-dom/client';
   import {App} from './App';
   {{includeFile template="src/App.tsx.hbs" output="src/App.{{ext}}"}}
@@ -11,12 +10,9 @@ import './index.css';
   ReactDOM.createRoot(document.getElementById('app')!).render(
   <App />),
   );
-
 {{else}}
-
   import {app} from './app';
   {{includeFile template="src/app.ts.hbs" output="src/app.{{ext}}"}}
 
   addEventListener('load', app);
-
 {{/if}}
