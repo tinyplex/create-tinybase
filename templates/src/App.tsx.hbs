@@ -1,5 +1,9 @@
-{{addImport "import {StrictMode} from 'react';"}}{{addImport "import {createStore} from 'tinybase';"}}{{addImport "import {Provider, useCreateStore} from 'tinybase/ui-react';"}}{{addImport "import {SortedTableInHtmlTable, ValuesInHtmlTable} from 'tinybase/ui-react-dom';"}}{{addImport "import {Buttons} from './Buttons';"}}{{#if typescript}}
-  {{addImport "import {Inspector} from 'tinybase/ui-react-inspector';"}}{{/if}}
+{{addImport "import {StrictMode} from 'react';"}}
+{{addImport "import {createStore} from 'tinybase';"}}
+{{addImport "import {Provider, useCreateStore} from 'tinybase/ui-react';"}}
+{{addImport "import {SortedTableInHtmlTable, ValuesInHtmlTable} from 'tinybase/ui-react-dom';"}}
+{{addImport "import {Inspector} from 'tinybase/ui-react-inspector';"}}
+{{addImport "import {Buttons} from './Buttons';"}}
 
 export const App = () => {
 const store = useCreateStore(() => {
@@ -40,9 +44,8 @@ return (
     <div>
       <h2>Pets Table</h2>
       <SortedTableInHtmlTable tableId="pets" cellId="name" limit={5} sortOnClick={true} className="sortedTable" paginator={true} />
-    </div>{{#if typescript}}
-      <Inspector />
-    {{/if}}
+    </div>
+    <Inspector />
   </Provider>
 </StrictMode>
 );

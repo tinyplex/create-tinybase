@@ -70,6 +70,7 @@ npm run dev
 import {createStore} from 'tinybase';
 import {Provider, useCreateStore} from 'tinybase/ui-react';
 import {SortedTableInHtmlTable, ValuesInHtmlTable} from 'tinybase/ui-react-dom';
+import {Inspector} from 'tinybase/ui-react-inspector';
 import {Buttons} from './Buttons';
 const App = () => {
   const store = useCreateStore(() => {
@@ -116,6 +117,7 @@ const App = () => {
             paginator={true}
           />
         </div>
+        <Inspector />
       </Provider>
     </StrictMode>
   );
@@ -646,8 +648,8 @@ npm run dev
 import {createStore} from 'tinybase';
 import {Provider, useCreateStore} from 'tinybase/ui-react';
 import {SortedTableInHtmlTable, ValuesInHtmlTable} from 'tinybase/ui-react-dom';
-import {Buttons} from './Buttons';
 import {Inspector} from 'tinybase/ui-react-inspector';
+import {Buttons} from './Buttons';
 
 export const App = () => {
   const store = useCreateStore(() => {
