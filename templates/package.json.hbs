@@ -3,7 +3,7 @@
 "version": "1.0.0",
 "scripts": {
 {{#list}}
-  {{includeFile template="base/index.html.hbs" output="index.html"}}
+  {{includeFile template="index.html.hbs" output="index.html"}}
   "dev": "vite"
   {{#if typescript}}
     "build": "tsc && vite build"
@@ -60,14 +60,14 @@
 }
 }
 {{#if prettier}}
-  {{includeFile template="base/.prettierrc.hbs" output=".prettierrc"}}
+  {{includeFile template=".prettierrc.hbs" output=".prettierrc"}}
 {{/if}}
 {{#if eslint}}
-  {{includeFile template="base/eslint.config.js.hbs" output="eslint.config.js"}}
+  {{includeFile template="eslint.config.js.hbs" output="eslint.config.js"}}
 {{/if}}
 {{#if react}}
-  {{includeFile template="base/vite.config.js.hbs" output="vite.config.js"}}
+  {{includeFile template="vite.config.js.hbs" output="vite.config.js"}}
 {{/if}}
 {{#if typescript}}
-  {{includeFile template="base/tsconfig.json.hbs" output="tsconfig.json"}}
+  {{includeFile template="tsconfig.json.hbs" output="tsconfig.json"}}
 {{/if}}

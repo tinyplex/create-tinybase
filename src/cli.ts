@@ -92,12 +92,12 @@ const config = {
   getFiles: () => {
     return [
       {
-        template: 'base/package.json.hbs',
+        template: 'package.json.hbs',
         output: 'package.json',
         prettier: true,
       },
       {
-        template: 'base/README.md.hbs',
+        template: 'README.md.hbs',
         output: 'README.md',
         prettier: true,
       },
