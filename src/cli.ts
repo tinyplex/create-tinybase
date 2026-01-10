@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import {existsSync} from 'fs';
 import {dirname, join} from 'path';
-import {createCLI} from 'tinycreate';
+import {createCLI, type FileConfig, type TemplateContext} from 'tinycreate';
 import {fileURLToPath} from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -160,7 +160,7 @@ const config = {
     return files;
   },
 
-  processIncludedFile: (file, context) => {
+  processIncludedFile: (file: FileConfig, context: TemplateContext) => {
     const {javascript} = context;
 
     // Apply smart defaults based on file extension

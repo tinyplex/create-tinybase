@@ -3,6 +3,7 @@
   {{addImport "import ReactDOM from 'react-dom/client';"}}
   {{addImport "import {App} from './App';"}}
   {{includeFile template="src/App.tsx.hbs" output="src/App.{{ext}}"}}
+  {{includeFile template="src/Buttons.tsx.hbs" output="src/Buttons.{{ext}}"}}
 
   addEventListener('load', () =>
   ReactDOM.createRoot(document.getElementById('app')!).render(
