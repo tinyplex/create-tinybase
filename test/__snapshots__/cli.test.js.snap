@@ -871,6 +871,7 @@ table.sortedTable thead th {
 }
 ",
   "src/index.tsx": "import './index.css';
+
 import ReactDOM from 'react-dom/client';
 import {App} from './App';
 
@@ -1184,6 +1185,7 @@ table.sortedTable thead th {
 }
 ",
   "src/index.ts": "import './index.css';
+
 import {app} from './app';
 
 addEventListener('load', app);

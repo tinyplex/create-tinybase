@@ -1,7 +1,9 @@
-{{addImport "import './index.css';"}}
+import './index.css';
+
 {{#if react}}
-  {{addImport "import ReactDOM from 'react-dom/client';"}}
-  {{addImport "import {App} from './App';"}}
+
+  import ReactDOM from 'react-dom/client';
+  import {App} from './App';
   {{includeFile template="src/App.tsx.hbs" output="src/App.{{ext}}"}}
   {{includeFile template="src/Buttons.tsx.hbs" output="src/Buttons.{{ext}}"}}
 
@@ -9,9 +11,12 @@
   ReactDOM.createRoot(document.getElementById('app')!).render(
   <App />),
   );
+
 {{else}}
-  {{addImport "import {app} from './app';"}}
+
+  import {app} from './app';
   {{includeFile template="src/app.ts.hbs" output="src/app.{{ext}}"}}
 
   addEventListener('load', app);
+
 {{/if}}
