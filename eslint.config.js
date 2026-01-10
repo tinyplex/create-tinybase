@@ -5,7 +5,7 @@ import globals from 'globals';
 import tsLint from 'typescript-eslint';
 
 export default tsLint.config(
-  globalIgnores(['eslint.config.js', 'dist/**/*', 'test/**/*']),
+  globalIgnores(['eslint.config.js', 'dist/**/*', 'test/**/*', 'tmp/**/*']),
 
   jsLint.configs.recommended,
   importLint.flatConfigs.recommended,

@@ -1,2 +1,4 @@
 package.json
+cspell.json
 *.hbs
+tmp
