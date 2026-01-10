@@ -377,7 +377,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/App.jsx": "import {StrictMode, useState} from 'react';
+  "src/App.jsx": "import {StrictMode, useState, useMemo} from 'react';
 import {createStore} from 'tinybase';
 import {
   Provider,
@@ -386,8 +386,9 @@ import {
   useRow,
   useSetValueCallback,
   useValue,
+  useRowIds,
+  useStore,
 } from 'tinybase/ui-react';
-import {SortedTableInHtmlTable} from 'tinybase/ui-react-dom';
 import {Inspector} from 'tinybase/ui-react-inspector';
 const MessageInput = () => {
   const [message, setMessage] = useState('');
@@ -432,6 +433,24 @@ const Message = ({rowId}) => {
     </div>
   );
 };
+const Messages = () => {
+  const store = useStore();
+  const messageIds = useRowIds('messages');
+  const sortedIds = useMemo(() => {
+    return [...messageIds].sort((a, b) => {
+      const rowA = store.getRow('messages', a);
+      const rowB = store.getRow('messages', b);
+      return rowA.timestamp - rowB.timestamp;
+    });
+  }, [messageIds, store]);
+  return (
+    <div className="messages">
+      {sortedIds.map((id) => (
+        <Message key={id} rowId={id} />
+      ))}
+    </div>
+  );
+};
 const UsernameInput = () => {
   const username = useValue('username') || '';
   const handleChange = useSetValueCallback(
@@ -441,15 +460,13 @@ const UsernameInput = () => {
   );
   return (
     <div className="username-input">
-      <label>
-        Your name:
-        <input
-          type="text"
-          value={username}
-          onChange={handleChange}
-          placeholder="Enter your name"
-        />
-      </label>
+      <label>Username:</label>
+      <input
+        type="text"
+        value={username}
+        onChange={handleChange}
+        placeholder="Enter your name"
+      />
     </div>
   );
 };
@@ -471,23 +488,9 @@ const App = () => {
             TinyBase Chat / JavaScript + React
           </h1>
         </header>
-        <p>
-          A simple chat app built with TinyBase. Messages are stored in a Table,
-          and you can change your username to see how data flows through the
-          app.
-        </p>
         <UsernameInput />
-        <div className="chat-container">
-          <div className="messages">
-            <SortedTableInHtmlTable
-              tableId="messages"
-              cellId="timestamp"
-              descending={false}
-              customCell={(tableId, rowId) => <Message rowId={rowId} />}
-            />
-          </div>
-          <MessageInput />
-        </div>
+        <Messages />
+        <MessageInput />
         <Inspector />
       </Provider>
     </StrictMode>
@@ -515,18 +518,11 @@ export {App};
   font-family: inherit;
 }
 
-.chat-container {
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  display: flex;
-  flex-direction: column;
-  height: 400px;
-}
-
 .messages {
-  flex: 1;
   overflow-y: auto;
-  padding: 1rem;
+  padding: 1rem 0;
+  height: 400px;
+  margin-bottom: 1rem;
 }
 
 .message {
@@ -833,7 +829,6 @@ const ColorPicker = () => {
   };
   return (
     <div className="color-picker">
-      <label>Color:</label>
       {colors.map((color) => (
         <button
           key={color}
@@ -857,8 +852,9 @@ const BrushSize = () => {
   };
   return (
     <div className="brush-size">
-      <label>Size: {size}px</label>
-      <input type="range" min="1" max="20" value={size} onChange={setSize} />
+      <label>Brush Size:</label>
+      <input type="range" min="1" max="50" value={size} onChange={setSize} />
+      <span className="brush-size-value">{size}</span>
     </div>
   );
 };
@@ -866,14 +862,14 @@ const ClearButton = () => {
   const clearCanvas = useDelTableCallback('strokes');
   return (
     <button onClick={clearCanvas} className="clear-btn">
-      Clear
+      Clear Canvas
     </button>
   );
 };
 const App = () => {
   const store = useCreateStore(() => {
     return createStore()
-      .setRow('settings', 'brush', {color: '#d81b60', size: 3})
+      .setRow('settings', 'brush', {color: '#d81b60', size: 5})
       .setTable('strokes', {});
   });
   return (
@@ -885,11 +881,6 @@ const App = () => {
             TinyBase Drawing / JavaScript + React
           </h1>
         </header>
-        <p>
-          A simple drawing app built with TinyBase. Each stroke is stored as a
-          row, demonstrating how TinyBase can handle lots of small updates
-          efficiently.
-        </p>
         <div className="drawing-controls">
           <ColorPicker />
           <BrushSize />
@@ -935,12 +926,21 @@ export {App};
 
 .brush-size {
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.brush-size label {
+  white-space: nowrap;
 }
 
 .brush-size input {
   width: 150px;
+}
+
+.brush-size-value {
+  min-width: 2rem;
+  text-align: center;
 }
 
 .clear-btn {
@@ -1370,7 +1370,7 @@ npm run dev
         <label>Username:</label>
         <input type="text" id="username-input" placeholder="Enter your name" />
       </div>
-      <div id="messages"></div>
+      <div class="messages" id="messages"></div>
       <div class="message-input">
         <input type="text" id="message-input" placeholder="Type a message..." />
         <button id="send-button">Send</button>
@@ -1485,18 +1485,11 @@ export {app};
   font-family: inherit;
 }
 
-.chat-container {
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  display: flex;
-  flex-direction: column;
-  height: 400px;
-}
-
 .messages {
-  flex: 1;
   overflow-y: auto;
-  padding: 1rem;
+  padding: 1rem 0;
+  height: 400px;
+  margin-bottom: 1rem;
 }
 
 .message {
@@ -1706,7 +1699,7 @@ npm run dev
   "src/app.js": "import {createStore} from 'tinybase';
 const app = () => {
   const store = createStore()
-    .setRow('settings', 'brush', {color: '#d81b60', size: 3})
+    .setRow('settings', 'brush', {color: '#d81b60', size: 5})
     .setTable('strokes', {});
   const canvas = document.getElementById('drawing-canvas');
   const ctx = canvas.getContext('2d');
@@ -1825,12 +1818,21 @@ export {app};
 
 .brush-size {
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.brush-size label {
+  white-space: nowrap;
 }
 
 .brush-size input {
   width: 150px;
+}
+
+.brush-size-value {
+  min-width: 2rem;
+  text-align: center;
 }
 
 .clear-btn {
@@ -2344,7 +2346,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/App.tsx": "import {StrictMode, useState} from 'react';
+  "src/App.tsx": "import {StrictMode, useState, useMemo} from 'react';
 import {createStore} from 'tinybase';
 import {
   Provider,
@@ -2353,8 +2355,9 @@ import {
   useRow,
   useSetValueCallback,
   useValue,
+  useRowIds,
+  useStore,
 } from 'tinybase/ui-react';
-import {SortedTableInHtmlTable, useCell} from 'tinybase/ui-react-dom';
 import {Inspector} from 'tinybase/ui-react-inspector';
 
 const MessageInput = () => {
@@ -2406,6 +2409,27 @@ const Message = ({rowId}: {rowId: string}) => {
   );
 };
 
+const Messages = () => {
+  const store = useStore();
+  const messageIds = useRowIds('messages');
+
+  const sortedIds = useMemo(() => {
+    return [...messageIds].sort((a, b) => {
+      const rowA = store.getRow('messages', a) as any;
+      const rowB = store.getRow('messages', b) as any;
+      return rowA.timestamp - rowB.timestamp;
+    });
+  }, [messageIds, store]);
+
+  return (
+    <div className="messages">
+      {sortedIds.map((id) => (
+        <Message key={id} rowId={id} />
+      ))}
+    </div>
+  );
+};
+
 const UsernameInput = () => {
   const username = useValue('username') || '';
   const handleChange = useSetValueCallback(
@@ -2416,15 +2440,13 @@ const UsernameInput = () => {
 
   return (
     <div className="username-input">
-      <label>
-        Your name:
-        <input
-          type="text"
-          value={username}
-          onChange={handleChange}
-          placeholder="Enter your name"
-        />
-      </label>
+      <label>Username:</label>
+      <input
+        type="text"
+        value={username}
+        onChange={handleChange}
+        placeholder="Enter your name"
+      />
     </div>
   );
 };
@@ -2452,23 +2474,9 @@ export const App = () => {
             TinyBase Chat / TypeScript + React
           </h1>
         </header>
-        <p>
-          A simple chat app built with TinyBase. Messages are stored in a Table,
-          and you can change your username to see how data flows through the
-          app.
-        </p>
         <UsernameInput />
-        <div className="chat-container">
-          <div className="messages">
-            <SortedTableInHtmlTable
-              tableId="messages"
-              cellId="timestamp"
-              descending={false}
-              customCell={(tableId, rowId) => <Message rowId={rowId} />}
-            />
-          </div>
-          <MessageInput />
-        </div>
+        <Messages />
+        <MessageInput />
         <Inspector />
       </Provider>
     </StrictMode>
@@ -2495,18 +2503,11 @@ export const App = () => {
   font-family: inherit;
 }
 
-.chat-container {
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  display: flex;
-  flex-direction: column;
-  height: 400px;
-}
-
 .messages {
-  flex: 1;
   overflow-y: auto;
-  padding: 1rem;
+  padding: 1rem 0;
+  height: 400px;
+  margin-bottom: 1rem;
 }
 
 .message {
@@ -2856,7 +2857,6 @@ const ColorPicker = () => {
 
   return (
     <div className="color-picker">
-      <label>Color:</label>
       {colors.map((color) => (
         <button
           key={color}
@@ -2883,8 +2883,9 @@ const BrushSize = () => {
 
   return (
     <div className="brush-size">
-      <label>Size: {size}px</label>
-      <input type="range" min="1" max="20" value={size} onChange={setSize} />
+      <label>Brush Size:</label>
+      <input type="range" min="1" max="50" value={size} onChange={setSize} />
+      <span className="brush-size-value">{size}</span>
     </div>
   );
 };
@@ -2893,7 +2894,7 @@ const ClearButton = () => {
   const clearCanvas = useDelTableCallback('strokes');
   return (
     <button onClick={clearCanvas} className="clear-btn">
-      Clear
+      Clear Canvas
     </button>
   );
 };
@@ -2901,7 +2902,7 @@ const ClearButton = () => {
 export const App = () => {
   const store = useCreateStore(() => {
     return createStore()
-      .setRow('settings', 'brush', {color: '#d81b60', size: 3})
+      .setRow('settings', 'brush', {color: '#d81b60', size: 5})
       .setTable('strokes', {});
   });
 
@@ -2914,11 +2915,6 @@ export const App = () => {
             TinyBase Drawing / TypeScript + React
           </h1>
         </header>
-        <p>
-          A simple drawing app built with TinyBase. Each stroke is stored as a
-          row, demonstrating how TinyBase can handle lots of small updates
-          efficiently.
-        </p>
         <div className="drawing-controls">
           <ColorPicker />
           <BrushSize />
@@ -2963,12 +2959,21 @@ export const App = () => {
 
 .brush-size {
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.brush-size label {
+  white-space: nowrap;
 }
 
 .brush-size input {
   width: 150px;
+}
+
+.brush-size-value {
+  min-width: 2rem;
+  text-align: center;
 }
 
 .clear-btn {
@@ -3451,7 +3456,7 @@ npm run dev
         <label>Username:</label>
         <input type="text" id="username-input" placeholder="Enter your name" />
       </div>
-      <div id="messages"></div>
+      <div class="messages" id="messages"></div>
       <div class="message-input">
         <input type="text" id="message-input" placeholder="Type a message..." />
         <button id="send-button">Send</button>
@@ -3580,18 +3585,11 @@ export const app = () => {
   font-family: inherit;
 }
 
-.chat-container {
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  display: flex;
-  flex-direction: column;
-  height: 400px;
-}
-
 .messages {
-  flex: 1;
   overflow-y: auto;
-  padding: 1rem;
+  padding: 1rem 0;
+  height: 400px;
+  margin-bottom: 1rem;
 }
 
 .message {
@@ -3826,7 +3824,7 @@ npm run dev
 
 export const app = () => {
   const store = createStore()
-    .setRow('settings', 'brush', {color: '#d81b60', size: 3})
+    .setRow('settings', 'brush', {color: '#d81b60', size: 5})
     .setTable('strokes', {});
 
   const canvas = document.getElementById('drawing-canvas') as HTMLCanvasElement;
@@ -3962,12 +3960,21 @@ export const app = () => {
 
 .brush-size {
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.brush-size label {
+  white-space: nowrap;
 }
 
 .brush-size input {
   width: 150px;
+}
+
+.brush-size-value {
+  min-width: 2rem;
+  text-align: center;
 }
 
 .clear-btn {

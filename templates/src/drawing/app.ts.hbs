@@ -6,7 +6,7 @@ import {createStore} from 'tinybase';
   const app = () => {
 {{/if}}
 const store = createStore()
-.setRow('settings', 'brush', {color: '#d81b60', size: 3})
+.setRow('settings', 'brush', {color: '#d81b60', size: 5})
 .setTable('strokes', {});
 
 const canvas = document.getElementById('drawing-canvas') as HTMLCanvasElement;

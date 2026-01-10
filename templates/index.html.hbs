@@ -61,9 +61,9 @@
           <label>Username:</label>
           <input type="text" id="username-input" placeholder="Enter your name" />
         </div>
-        <div id="messages"></div>
+        <div class="messages" id="messages"></div>
         <div class="message-input">
-          <input type="text" id="message-input" placeholder="Type a message..." />
+          <input type="text" id="message-input" placeholder="Type a message..." autofocus />
           <button id="send-button">Send</button>
         </div>
       </div>
@@ -85,7 +85,7 @@
           </div>
           <button id="clear-button" class="clear-btn">Clear Canvas</button>
         </div>
-        <canvas id="drawing-canvas" class="drawing-canvas"></canvas>
+        <canvas id="drawing-canvas" class="drawing-canvas" width="600" height="400"></canvas>
       </div>
     {{/if}}
   {{/if}}

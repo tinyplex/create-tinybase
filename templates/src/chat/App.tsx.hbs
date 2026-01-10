@@ -1,7 +1,6 @@
-import {StrictMode, useState} from 'react';
+import {StrictMode, useState, useMemo} from 'react';
 import {createStore} from 'tinybase';
-import {Provider, useCreateStore, useAddRowCallback, useRow, useSetValueCallback, useValue} from 'tinybase/ui-react';
-import {SortedTableInHtmlTable, useCell} from 'tinybase/ui-react-dom';
+import {Provider, useCreateStore, useAddRowCallback, useRow, useSetValueCallback, useValue, useRowIds, useStore} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 
 const MessageInput = () => {
@@ -50,6 +49,27 @@ return (
 );
 };
 
+const Messages = () => {
+const store = useStore();
+const messageIds = useRowIds('messages');
+
+const sortedIds = useMemo(() => {
+return [...messageIds].sort((a, b) => {
+const rowA = store.getRow('messages', a) as any;
+const rowB = store.getRow('messages', b) as any;
+return rowA.timestamp - rowB.timestamp;
+});
+}, [messageIds, store]);
+
+return (
+<div className="messages">
+  {sortedIds.map((id) => (
+  <Message key={id} rowId={id} />
+  ))}
+</div>
+);
+};
+
 const UsernameInput = () => {
 const username = useValue('username') || '';
 const handleChange = useSetValueCallback(
@@ -58,10 +78,8 @@ const handleChange = useSetValueCallback(
 
   return (
   <div className="username-input">
-    <label>
-      Your name:
-      <input type="text" value={username} onChange={handleChange} placeholder="Enter your name" />
-    </label>
+    <label>Username:</label>
+    <input type="text" value={username} onChange={handleChange} placeholder="Enter your name" />
   </div>
   );
   };
@@ -85,19 +103,9 @@ const handleChange = useSetValueCallback(
           TinyBase Chat{{#if typescript}} / TypeScript{{else}} / JavaScript{{/if}} + React
         </h1>
       </header>
-      <p>
-        A simple chat app built with TinyBase. Messages are stored in a Table,
-        and you can change your username to see how data flows through the app.
-      </p>
       <UsernameInput />
-      <div className="chat-container">
-        <div className="messages">
-          <SortedTableInHtmlTable tableId="messages" cellId="timestamp" descending={false} customCell={(tableId, rowId)=>
-            <Message rowId={rowId} />}
-            />
-        </div>
-        <MessageInput />
-      </div>
+      <Messages />
+      <MessageInput />
       <Inspector />
     </Provider>
   </StrictMode>
