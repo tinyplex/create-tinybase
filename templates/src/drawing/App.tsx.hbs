@@ -5,7 +5,9 @@ import {createStore} from 'tinybase';
 import {Provider, useAddRowCallback, useCreateStore, useDelTableCallback, useRow, useRowIds, useStore} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 {{includeFile template="src/components/Button.tsx.hbs" output="src/components/Button.{{ext}}"}}
+{{includeFile template="src/components/ColorPicker.tsx.hbs" output="src/components/ColorPicker.{{ext}}"}}
 import {Button} from '../components/Button';
+import {ColorPicker} from '../components/ColorPicker';
 
 const Canvas = () => {
 const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -77,25 +79,6 @@ const canvasRef = useRef<HTMLCanvasElement>(null);
   return (
   <canvas ref={canvasRef} width={600} height={400} id="drawingCanvas" onMouseDown={handleStart} onMouseMove={handleMove} onMouseUp={handleEnd} onMouseLeave={handleEnd} onTouchStart={handleStart} onTouchMove={handleMove}
     onTouchEnd={handleEnd} />
-  );
-  };
-
-  const ColorPicker = () => {
-  const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];
-  const store = useStore();
-  const currentBrush = useRow('settings', 'brush') as any;
-
-  const setColor = (color: string) => {
-  store.setRow('settings', 'brush', {...currentBrush, color});
-  };
-
-  return (
-  <div id="colorPicker">
-    {colors.map((color) => (
-    <button key={color} className="colorBtn" style=\{{background: color}} onClick={()=> setColor(color)}
-      />
-      ))}
-  </div>
   );
   };
 

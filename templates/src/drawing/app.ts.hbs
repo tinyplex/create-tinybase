@@ -3,6 +3,8 @@ import './index.css';
 import {createStore} from 'tinybase';
 {{includeFile template="src/components/button.ts.hbs" output="src/components/button.{{ext}}"}}
 import {createButton} from '../components/button';
+{{includeFile template="src/components/colorPicker.ts.hbs" output="src/components/colorPicker.{{ext}}"}}
+import {createColorPicker} from '../components/colorPicker';
 
 {{#if typescript}}
   export const app = () => {
@@ -68,18 +70,8 @@ canvas!.addEventListener('touchend', () => {
 isDrawing = false;
 });
 
-// Color buttons
-const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];
-colors.forEach((color) => {
-const btn = document.createElement('button');
-btn.className = 'colorBtn';
-btn.style.background = color;
-btn.addEventListener('click', () => {
-const brush = store.getRow('settings', 'brush') as any;
-store.setRow('settings', 'brush', {...brush, color});
-});
-document.getElementById('colorPicker')!.appendChild(btn);
-});
+// Color picker
+createColorPicker(store, 'colorPicker');
 
 // Size slider
 const sizeSlider = document.getElementById('brushSize') as HTMLInputElement;

@@ -1,0 +1,22 @@
+{{includeFile template="src/components/colorPicker.css.hbs" output="src/components/colorPicker.css"}}
+import './colorPicker.css';
+import {useRow, useStore} from 'tinybase/ui-react';
+
+export const ColorPicker = () => {
+const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];
+const store = useStore();
+const currentBrush = useRow('settings', 'brush') as any;
+
+const setColor = (color: string) => {
+store.setRow('settings', 'brush', {...currentBrush, color});
+};
+
+return (
+<div id="colorPicker">
+  {colors.map((color) => (
+  <button key={color} className="colorBtn" style=\{{background: color}} onClick={()=> setColor(color)}
+    />
+    ))}
+</div>
+);
+};

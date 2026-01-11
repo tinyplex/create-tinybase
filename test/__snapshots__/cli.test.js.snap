@@ -221,7 +221,8 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/App.jsx": "import {StrictMode} from 'react';
+  "src/basic/App.jsx": "import './index.css';
+import {StrictMode} from 'react';
 import {createStore} from 'tinybase';
 import {
   Provider,
@@ -231,7 +232,7 @@ import {
 } from 'tinybase/ui-react';
 import {SortedTableInHtmlTable, ValuesInHtmlTable} from 'tinybase/ui-react-dom';
 import {Inspector} from 'tinybase/ui-react-inspector';
-import {Button} from './components/Button';
+import {Button} from '../components/Button';
 const getRandom = (max = 100) => Math.floor(Math.random() * max);
 const Buttons = () => {
   const handleCount = useSetValueCallback(
@@ -290,7 +291,7 @@ const App = () => {
 };
 export {App};
 ",
-  "src/basic.css": "#buttons {
+  "src/basic/index.css": "#buttons {
   border: solid #666;
   border-width: 1px 0;
   text-align: center;
@@ -437,9 +438,8 @@ pre {
 }
 ",
   "src/index.jsx": "import './index.css';
-import './basic.css';
 import ReactDOM from 'react-dom/client';
-import {App} from './App';
+import {App} from './basic/App';
 addEventListener('load', () =>
   ReactDOM.createRoot(document.getElementById('app')).render(<App />),
 );
@@ -676,7 +676,8 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/App.jsx": "import {StrictMode, useState, useMemo} from 'react';
+  "src/chat/App.jsx": "import './index.css';
+import {StrictMode, useState, useMemo} from 'react';
 import {createStore} from 'tinybase';
 import {
   Provider,
@@ -688,9 +689,9 @@ import {
   useStore,
 } from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
-import {Button} from './components/Button';
-import {Input} from './components/Input';
-import {Message} from './components/Message';
+import {Button} from '../components/Button';
+import {Input} from '../components/Input';
+import {Message} from '../components/Message';
 const MessageInput = () => {
   const [message, setMessage] = useState('');
   const username = useValue('username') || 'Anonymous';
@@ -778,7 +779,7 @@ const App = () => {
 };
 export {App};
 ",
-  "src/chat.css": "#usernameInput {
+  "src/chat/index.css": "#usernameInput {
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
@@ -969,9 +970,8 @@ pre {
 }
 ",
   "src/index.jsx": "import './index.css';
-import './chat.css';
 import ReactDOM from 'react-dom/client';
-import {App} from './App';
+import {App} from './chat/App';
 addEventListener('load', () =>
   ReactDOM.createRoot(document.getElementById('app')).render(<App />),
 );
@@ -1208,7 +1208,99 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/App.jsx": "import {StrictMode, useCallback, useEffect, useRef} from 'react';
+  "src/components/Button.jsx": "import './button.css';
+const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
+  <button
+    onClick={onClick}
+    type={type}
+    className={variant === 'primary' ? 'primary' : void 0}
+  >
+    {children}
+  </button>
+);
+export {Button};
+",
+  "src/components/ColorPicker.jsx": "import './colorPicker.css';
+import {useRow, useStore} from 'tinybase/ui-react';
+const ColorPicker = () => {
+  const colors = [
+    '#d81b60',
+    '#1976d2',
+    '#388e3c',
+    '#f57c00',
+    '#7b1fa2',
+    '#fff',
+  ];
+  const store = useStore();
+  const currentBrush = useRow('settings', 'brush');
+  const setColor = (color) => {
+    store.setRow('settings', 'brush', {...currentBrush, color});
+  };
+  return (
+    <div id="colorPicker">
+      {colors.map((color) => (
+        <button
+          key={color}
+          className="colorBtn"
+          style={{background: color}}
+          onClick={() => setColor(color)}
+        />
+      ))}
+    </div>
+  );
+};
+export {ColorPicker};
+",
+  "src/components/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "src/components/colorPicker.css": "#colorPicker {
+  display: flex;
+  gap: 0;
+  align-items: center;
+}
+
+.colorBtn {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid var(--border);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  margin: 0 0 0 0.5rem;
+  padding: 0;
+}
+
+.colorBtn:hover,
+.colorBtn.active {
+  border-color: var(--accent);
+}
+",
+  "src/drawing/App.jsx": "import './index.css';
+import {StrictMode, useCallback, useEffect, useRef} from 'react';
 import {createStore} from 'tinybase';
 import {
   Provider,
@@ -1220,7 +1312,8 @@ import {
   useStore,
 } from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
-import {Button} from './components/Button';
+import {Button} from '../components/Button';
+import {ColorPicker} from '../components/ColorPicker';
 const Canvas = () => {
   const canvasRef = useRef(null);
   const isDrawing = useRef(false);
@@ -1292,33 +1385,6 @@ const Canvas = () => {
     />
   );
 };
-const ColorPicker = () => {
-  const colors = [
-    '#d81b60',
-    '#1976d2',
-    '#388e3c',
-    '#f57c00',
-    '#7b1fa2',
-    '#fff',
-  ];
-  const store = useStore();
-  const currentBrush = useRow('settings', 'brush');
-  const setColor = (color) => {
-    store.setRow('settings', 'brush', {...currentBrush, color});
-  };
-  return (
-    <div id="colorPicker">
-      {colors.map((color) => (
-        <button
-          key={color}
-          className="colorBtn"
-          style={{background: color}}
-          onClick={() => setColor(color)}
-        />
-      ))}
-    </div>
-  );
-};
 const BrushSize = () => {
   const store = useStore();
   const currentBrush = useRow('settings', 'brush');
@@ -1369,45 +1435,7 @@ const App = () => {
 };
 export {App};
 ",
-  "src/components/Button.jsx": "import './button.css';
-const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
-  <button
-    onClick={onClick}
-    type={type}
-    className={variant === 'primary' ? 'primary' : void 0}
-  >
-    {children}
-  </button>
-);
-export {Button};
-",
-  "src/components/button.css": "button {
-  padding: 0.5rem 1rem;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  background: #222;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  cursor: pointer;
-  margin: 0.5rem;
-}
-
-button:hover {
-  border-color: #d81b60;
-}
-
-button.primary {
-  background: #d81b60;
-  border: none;
-  padding: 0.75rem 1.5rem;
-}
-
-button.primary:hover {
-  background: #c2185b;
-}
-",
-  "src/drawing.css": "#drawingControls {
+  "src/drawing/index.css": "#drawingControls {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
@@ -1418,28 +1446,6 @@ button.primary:hover {
   border-radius: 0.375rem;
   justify-content: space-between;
   max-width: 600px;
-}
-
-#colorPicker {
-  display: flex;
-  gap: 0;
-  align-items: center;
-}
-
-.colorBtn {
-  width: 2rem;
-  height: 2rem;
-  border: 2px solid var(--border);
-  border-radius: 0.25rem;
-  cursor: pointer;
-  transition: border-color 0.2s;
-  margin: 0 0 0 0.5rem;
-  padding: 0;
-}
-
-.colorBtn:hover,
-.colorBtn.active {
-  border-color: var(--accent);
 }
 
 #brushSize {
@@ -1522,9 +1528,8 @@ pre {
 }
 ",
   "src/index.jsx": "import './index.css';
-import './drawing.css';
 import ReactDOM from 'react-dom/client';
-import {App} from './App';
+import {App} from './drawing/App';
 addEventListener('load', () =>
   ReactDOM.createRoot(document.getElementById('app')).render(<App />),
 );
@@ -1771,8 +1776,9 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/app.js": "import {createStore} from 'tinybase';
-import {createButton} from './components/button';
+  "src/basic/app.js": "import './index.css';
+import {createStore} from 'tinybase';
+import {createButton} from '../components/button';
 const updateJson = (id, content) =>
   (document.getElementById(id).innerText = JSON.stringify(content, null, 2));
 const getRandom = (max = 100) => Math.floor(Math.random() * max);
@@ -1810,7 +1816,7 @@ const app = () => {
 };
 export {app};
 ",
-  "src/basic.css": "#buttons {
+  "src/basic/index.css": "#buttons {
   border: solid #666;
   border-width: 1px 0;
   text-align: center;
@@ -1957,8 +1963,7 @@ pre {
 }
 ",
   "src/index.js": "import './index.css';
-import './basic.css';
-import {app} from './app';
+import {app} from './basic/app';
 addEventListener('load', app);
 ",
 }
@@ -2185,10 +2190,11 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/app.js": "import {createStore} from 'tinybase';
-import {createButton} from './components/button';
-import {createInput} from './components/input';
-import {createMessage} from './components/message';
+  "src/chat/app.js": "import './index.css';
+import {createStore} from 'tinybase';
+import {createButton} from '../components/button';
+import {createInput} from '../components/input';
+import {createMessage} from '../components/message';
 const updateMessages = (store) => {
   const messagesContainer = document.getElementById('messages');
   const messageRows = store.getTable('messages');
@@ -2247,7 +2253,7 @@ const app = () => {
 };
 export {app};
 ",
-  "src/chat.css": "#usernameInput {
+  "src/chat/index.css": "#usernameInput {
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
@@ -2375,7 +2381,8 @@ export {createInput};
   color: #666;
 }
 ",
-  "src/components/message.js": "const createMessage = (username, text, timestamp) => {
+  "src/components/message.js": "import './message.css';
+const createMessage = (username, text, timestamp) => {
   const time = new Date(timestamp).toLocaleTimeString();
   const messageDiv = document.createElement('div');
   messageDiv.className = 'message';
@@ -2444,8 +2451,7 @@ pre {
 }
 ",
   "src/index.js": "import './index.css';
-import './chat.css';
-import {app} from './app';
+import {app} from './chat/app';
 addEventListener('load', app);
 ",
 }
@@ -2676,8 +2682,94 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/app.js": "import {createStore} from 'tinybase';
-import {createButton} from './components/button';
+  "src/components/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "src/components/button.js": "import './button.css';
+const createButton = (text, onClick, variant = 'default') => {
+  const button = document.createElement('button');
+  button.textContent = text;
+  if (variant === 'primary') {
+    button.className = 'primary';
+  }
+  button.addEventListener('click', onClick);
+  return button;
+};
+export {createButton};
+",
+  "src/components/colorPicker.css": "#colorPicker {
+  display: flex;
+  gap: 0;
+  align-items: center;
+}
+
+.colorBtn {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid var(--border);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  margin: 0 0 0 0.5rem;
+  padding: 0;
+}
+
+.colorBtn:hover,
+.colorBtn.active {
+  border-color: var(--accent);
+}
+",
+  "src/components/colorPicker.js": "import './colorPicker.css';
+const createColorPicker = (store, containerId) => {
+  const colors = [
+    '#d81b60',
+    '#1976d2',
+    '#388e3c',
+    '#f57c00',
+    '#7b1fa2',
+    '#fff',
+  ];
+  const container = document.getElementById(containerId);
+  colors.forEach((color) => {
+    const btn = document.createElement('button');
+    btn.className = 'colorBtn';
+    btn.style.background = color;
+    btn.addEventListener('click', () => {
+      const brush = store.getRow('settings', 'brush');
+      store.setRow('settings', 'brush', {...brush, color});
+    });
+    container.appendChild(btn);
+  });
+};
+export {createColorPicker};
+",
+  "src/drawing/app.js": "import './index.css';
+import {createStore} from 'tinybase';
+import {createButton} from '../components/button';
+import {createColorPicker} from '../components/colorPicker';
 const app = () => {
   const store = createStore()
     .setRow('settings', 'brush', {color: '#d81b60', size: 5})
@@ -2733,24 +2825,7 @@ const app = () => {
   canvas.addEventListener('touchend', () => {
     isDrawing = false;
   });
-  const colors = [
-    '#d81b60',
-    '#1976d2',
-    '#388e3c',
-    '#f57c00',
-    '#7b1fa2',
-    '#fff',
-  ];
-  colors.forEach((color) => {
-    const btn = document.createElement('button');
-    btn.className = 'colorBtn';
-    btn.style.background = color;
-    btn.addEventListener('click', () => {
-      const brush = store.getRow('settings', 'brush');
-      store.setRow('settings', 'brush', {...brush, color});
-    });
-    document.getElementById('colorPicker').appendChild(btn);
-  });
+  createColorPicker(store, 'colorPicker');
   const sizeSlider = document.getElementById('brushSize');
   const sizeLabel = document.getElementById('brushSizeValue');
   sizeSlider.addEventListener('input', () => {
@@ -2770,45 +2845,7 @@ const app = () => {
 };
 export {app};
 ",
-  "src/components/button.css": "button {
-  padding: 0.5rem 1rem;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  background: #222;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  cursor: pointer;
-  margin: 0.5rem;
-}
-
-button:hover {
-  border-color: #d81b60;
-}
-
-button.primary {
-  background: #d81b60;
-  border: none;
-  padding: 0.75rem 1.5rem;
-}
-
-button.primary:hover {
-  background: #c2185b;
-}
-",
-  "src/components/button.js": "import './button.css';
-const createButton = (text, onClick, variant = 'default') => {
-  const button = document.createElement('button');
-  button.textContent = text;
-  if (variant === 'primary') {
-    button.className = 'primary';
-  }
-  button.addEventListener('click', onClick);
-  return button;
-};
-export {createButton};
-",
-  "src/drawing.css": "#drawingControls {
+  "src/drawing/index.css": "#drawingControls {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
@@ -2819,28 +2856,6 @@ export {createButton};
   border-radius: 0.375rem;
   justify-content: space-between;
   max-width: 600px;
-}
-
-#colorPicker {
-  display: flex;
-  gap: 0;
-  align-items: center;
-}
-
-.colorBtn {
-  width: 2rem;
-  height: 2rem;
-  border: 2px solid var(--border);
-  border-radius: 0.25rem;
-  cursor: pointer;
-  transition: border-color 0.2s;
-  margin: 0 0 0 0.5rem;
-  padding: 0;
-}
-
-.colorBtn:hover,
-.colorBtn.active {
-  border-color: var(--accent);
 }
 
 #brushSize {
@@ -2923,8 +2938,7 @@ pre {
 }
 ",
   "src/index.js": "import './index.css';
-import './drawing.css';
-import {app} from './app';
+import {app} from './drawing/app';
 addEventListener('load', app);
 ",
 }
@@ -3155,7 +3169,8 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/App.tsx": "import {StrictMode} from 'react';
+  "src/basic/App.tsx": "import './index.css';
+import {StrictMode} from 'react';
 import {createStore} from 'tinybase';
 import {
   Provider,
@@ -3166,7 +3181,8 @@ import {
 import type {ValueOrUndefined} from 'tinybase';
 import {SortedTableInHtmlTable, ValuesInHtmlTable} from 'tinybase/ui-react-dom';
 import {Inspector} from 'tinybase/ui-react-inspector';
-import {Button} from './components/Button';
+
+import {Button} from '../components/Button';
 
 // Convenience function for generating a random integer
 const getRandom = (max = 100) => Math.floor(Math.random() * max);
@@ -3232,7 +3248,7 @@ export const App = () => {
   );
 };
 ",
-  "src/basic.css": "#buttons {
+  "src/basic/index.css": "#buttons {
   border: solid #666;
   border-width: 1px 0;
   text-align: center;
@@ -3392,9 +3408,8 @@ pre {
 }
 ",
   "src/index.tsx": "import './index.css';
-import './basic.css';
 import ReactDOM from 'react-dom/client';
-import {App} from './App';
+import {App} from './basic/App';
 
 addEventListener('load', () =>
   ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
@@ -3658,7 +3673,8 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/App.tsx": "import {StrictMode, useState, useMemo} from 'react';
+  "src/chat/App.tsx": "import './index.css';
+import {StrictMode, useState, useMemo} from 'react';
 import {createStore} from 'tinybase';
 import {
   Provider,
@@ -3671,9 +3687,12 @@ import {
   useStore,
 } from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
-import {Button} from './components/Button';
-import {Input} from './components/Input';
-import {Message} from './components/Message';
+
+import {Button} from '../components/Button';
+
+import {Input} from '../components/Input';
+
+import {Message} from '../components/Message';
 
 const MessageInput = () => {
   const [message, setMessage] = useState('');
@@ -3775,7 +3794,7 @@ export const App = () => {
   );
 };
 ",
-  "src/chat.css": "#usernameInput {
+  "src/chat/index.css": "#usernameInput {
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
@@ -3858,6 +3877,7 @@ export const Input = ({
 );
 ",
   "src/components/Message.tsx": "import {useRow} from 'tinybase/ui-react';
+
 import './message.css';
 
 interface MessageProps {
@@ -3996,9 +4016,8 @@ pre {
 }
 ",
   "src/index.tsx": "import './index.css';
-import './chat.css';
 import ReactDOM from 'react-dom/client';
-import {App} from './App';
+import {App} from './chat/App';
 
 addEventListener('load', () =>
   ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
@@ -4262,7 +4281,114 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/App.tsx": "import {StrictMode, useCallback, useEffect, useRef} from 'react';
+  "src/components/Button.tsx": "import './button.css';
+import {ReactNode} from 'react';
+
+interface ButtonProps {
+  children: ReactNode;
+  onClick?: () => void;
+  variant?: 'default' | 'primary';
+  type?: 'button' | 'submit';
+}
+
+export const Button = ({
+  children,
+  onClick,
+  variant = 'default',
+  type = 'button',
+}: ButtonProps) => (
+  <button
+    onClick={onClick}
+    type={type}
+    className={variant === 'primary' ? 'primary' : undefined}
+  >
+    {children}
+  </button>
+);
+",
+  "src/components/ColorPicker.tsx": "import './colorPicker.css';
+import {useRow, useStore} from 'tinybase/ui-react';
+
+export const ColorPicker = () => {
+  const colors = [
+    '#d81b60',
+    '#1976d2',
+    '#388e3c',
+    '#f57c00',
+    '#7b1fa2',
+    '#fff',
+  ];
+  const store = useStore();
+  const currentBrush = useRow('settings', 'brush') as any;
+
+  const setColor = (color: string) => {
+    store.setRow('settings', 'brush', {...currentBrush, color});
+  };
+
+  return (
+    <div id="colorPicker">
+      {colors.map((color) => (
+        <button
+          key={color}
+          className="colorBtn"
+          style={{background: color}}
+          onClick={() => setColor(color)}
+        />
+      ))}
+    </div>
+  );
+};
+",
+  "src/components/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "src/components/colorPicker.css": "#colorPicker {
+  display: flex;
+  gap: 0;
+  align-items: center;
+}
+
+.colorBtn {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid var(--border);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  margin: 0 0 0 0.5rem;
+  padding: 0;
+}
+
+.colorBtn:hover,
+.colorBtn.active {
+  border-color: var(--accent);
+}
+",
+  "src/drawing/App.tsx": "import './index.css';
+import {StrictMode, useCallback, useEffect, useRef} from 'react';
 import {createStore} from 'tinybase';
 import {
   Provider,
@@ -4274,7 +4400,9 @@ import {
   useStore,
 } from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
-import {Button} from './components/Button';
+
+import {Button} from '../components/Button';
+import {ColorPicker} from '../components/ColorPicker';
 
 const Canvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -4360,36 +4488,6 @@ const Canvas = () => {
   );
 };
 
-const ColorPicker = () => {
-  const colors = [
-    '#d81b60',
-    '#1976d2',
-    '#388e3c',
-    '#f57c00',
-    '#7b1fa2',
-    '#fff',
-  ];
-  const store = useStore();
-  const currentBrush = useRow('settings', 'brush') as any;
-
-  const setColor = (color: string) => {
-    store.setRow('settings', 'brush', {...currentBrush, color});
-  };
-
-  return (
-    <div id="colorPicker">
-      {colors.map((color) => (
-        <button
-          key={color}
-          className="colorBtn"
-          style={{background: color}}
-          onClick={() => setColor(color)}
-        />
-      ))}
-    </div>
-  );
-};
-
 const BrushSize = () => {
   const store = useStore();
   const currentBrush = useRow('settings', 'brush') as any;
@@ -4444,58 +4542,7 @@ export const App = () => {
   );
 };
 ",
-  "src/components/Button.tsx": "import './button.css';
-import {ReactNode} from 'react';
-
-interface ButtonProps {
-  children: ReactNode;
-  onClick?: () => void;
-  variant?: 'default' | 'primary';
-  type?: 'button' | 'submit';
-}
-
-export const Button = ({
-  children,
-  onClick,
-  variant = 'default',
-  type = 'button',
-}: ButtonProps) => (
-  <button
-    onClick={onClick}
-    type={type}
-    className={variant === 'primary' ? 'primary' : undefined}
-  >
-    {children}
-  </button>
-);
-",
-  "src/components/button.css": "button {
-  padding: 0.5rem 1rem;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  background: #222;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  cursor: pointer;
-  margin: 0.5rem;
-}
-
-button:hover {
-  border-color: #d81b60;
-}
-
-button.primary {
-  background: #d81b60;
-  border: none;
-  padding: 0.75rem 1.5rem;
-}
-
-button.primary:hover {
-  background: #c2185b;
-}
-",
-  "src/drawing.css": "#drawingControls {
+  "src/drawing/index.css": "#drawingControls {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
@@ -4506,28 +4553,6 @@ button.primary:hover {
   border-radius: 0.375rem;
   justify-content: space-between;
   max-width: 600px;
-}
-
-#colorPicker {
-  display: flex;
-  gap: 0;
-  align-items: center;
-}
-
-.colorBtn {
-  width: 2rem;
-  height: 2rem;
-  border: 2px solid var(--border);
-  border-radius: 0.25rem;
-  cursor: pointer;
-  transition: border-color 0.2s;
-  margin: 0 0 0 0.5rem;
-  padding: 0;
-}
-
-.colorBtn:hover,
-.colorBtn.active {
-  border-color: var(--accent);
 }
 
 #brushSize {
@@ -4610,9 +4635,8 @@ pre {
 }
 ",
   "src/index.tsx": "import './index.css';
-import './drawing.css';
 import ReactDOM from 'react-dom/client';
-import {App} from './App';
+import {App} from './drawing/App';
 
 addEventListener('load', () =>
   ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
@@ -4884,8 +4908,10 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/app.ts": "import {createStore} from 'tinybase';
-import {createButton} from './components/button';
+  "src/basic/app.ts": "import './index.css';
+import {createStore} from 'tinybase';
+
+import {createButton} from '../components/button';
 
 const updateJson = (id: string, content: unknown) =>
   (document.getElementById(id)!.innerText = JSON.stringify(content, null, 2));
@@ -4929,7 +4955,7 @@ export const app = () => {
     });
 };
 ",
-  "src/basic.css": "#buttons {
+  "src/basic/index.css": "#buttons {
   border: solid #666;
   border-width: 1px 0;
   text-align: center;
@@ -5080,8 +5106,7 @@ pre {
 }
 ",
   "src/index.ts": "import './index.css';
-import './basic.css';
-import {app} from './app';
+import {app} from './basic/app';
 
 addEventListener('load', app);
 ",
@@ -5332,10 +5357,14 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/app.ts": "import {createStore} from 'tinybase';
-import {createButton} from './components/button';
-import {createInput} from './components/input';
-import {createMessage} from './components/message';
+  "src/chat/app.ts": "import './index.css';
+import {createStore} from 'tinybase';
+
+import {createButton} from '../components/button';
+
+import {createInput} from '../components/input';
+
+import {createMessage} from '../components/message';
 
 const updateMessages = (store: any) => {
   const messagesContainer = document.getElementById('messages')!;
@@ -5404,7 +5433,7 @@ export const app = () => {
   updateMessages(store);
 };
 ",
-  "src/chat.css": "#usernameInput {
+  "src/chat/index.css": "#usernameInput {
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
@@ -5540,7 +5569,9 @@ export const createInput = (
   color: #666;
 }
 ",
-  "src/components/message.ts": "export const createMessage = (
+  "src/components/message.ts": "import './message.css';
+
+export const createMessage = (
   username: string,
   text: string,
   timestamp: number,
@@ -5618,8 +5649,7 @@ pre {
 }
 ",
   "src/index.ts": "import './index.css';
-import './chat.css';
-import {app} from './app';
+import {app} from './chat/app';
 
 addEventListener('load', app);
 ",
@@ -5874,8 +5904,101 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/app.ts": "import {createStore} from 'tinybase';
-import {createButton} from './components/button';
+  "src/components/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "src/components/button.ts": "import './button.css';
+
+export const createButton = (
+  text: string,
+  onClick: () => void,
+  variant: 'default' | 'primary' = 'default',
+): HTMLButtonElement => {
+  const button = document.createElement('button');
+  button.textContent = text;
+  if (variant === 'primary') {
+    button.className = 'primary';
+  }
+  button.addEventListener('click', onClick);
+  return button;
+};
+",
+  "src/components/colorPicker.css": "#colorPicker {
+  display: flex;
+  gap: 0;
+  align-items: center;
+}
+
+.colorBtn {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid var(--border);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  margin: 0 0 0 0.5rem;
+  padding: 0;
+}
+
+.colorBtn:hover,
+.colorBtn.active {
+  border-color: var(--accent);
+}
+",
+  "src/components/colorPicker.ts": "import './colorPicker.css';
+
+export const createColorPicker = (store: any, containerId: string): void => {
+  const colors = [
+    '#d81b60',
+    '#1976d2',
+    '#388e3c',
+    '#f57c00',
+    '#7b1fa2',
+    '#fff',
+  ];
+  const container = document.getElementById(containerId)!;
+
+  colors.forEach((color) => {
+    const btn = document.createElement('button');
+    btn.className = 'colorBtn';
+    btn.style.background = color;
+    btn.addEventListener('click', () => {
+      const brush = store.getRow('settings', 'brush') as any;
+      store.setRow('settings', 'brush', {...brush, color});
+    });
+    container.appendChild(btn);
+  });
+};
+",
+  "src/drawing/app.ts": "import './index.css';
+import {createStore} from 'tinybase';
+
+import {createButton} from '../components/button';
+
+import {createColorPicker} from '../components/colorPicker';
 
 export const app = () => {
   const store = createStore()
@@ -5943,25 +6066,8 @@ export const app = () => {
     isDrawing = false;
   });
 
-  // Color buttons
-  const colors = [
-    '#d81b60',
-    '#1976d2',
-    '#388e3c',
-    '#f57c00',
-    '#7b1fa2',
-    '#fff',
-  ];
-  colors.forEach((color) => {
-    const btn = document.createElement('button');
-    btn.className = 'colorBtn';
-    btn.style.background = color;
-    btn.addEventListener('click', () => {
-      const brush = store.getRow('settings', 'brush') as any;
-      store.setRow('settings', 'brush', {...brush, color});
-    });
-    document.getElementById('colorPicker')!.appendChild(btn);
-  });
+  // Color picker
+  createColorPicker(store, 'colorPicker');
 
   // Size slider
   const sizeSlider = document.getElementById('brushSize') as HTMLInputElement;
@@ -5986,49 +6092,7 @@ export const app = () => {
   draw();
 };
 ",
-  "src/components/button.css": "button {
-  padding: 0.5rem 1rem;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  background: #222;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  cursor: pointer;
-  margin: 0.5rem;
-}
-
-button:hover {
-  border-color: #d81b60;
-}
-
-button.primary {
-  background: #d81b60;
-  border: none;
-  padding: 0.75rem 1.5rem;
-}
-
-button.primary:hover {
-  background: #c2185b;
-}
-",
-  "src/components/button.ts": "import './button.css';
-
-export const createButton = (
-  text: string,
-  onClick: () => void,
-  variant: 'default' | 'primary' = 'default',
-): HTMLButtonElement => {
-  const button = document.createElement('button');
-  button.textContent = text;
-  if (variant === 'primary') {
-    button.className = 'primary';
-  }
-  button.addEventListener('click', onClick);
-  return button;
-};
-",
-  "src/drawing.css": "#drawingControls {
+  "src/drawing/index.css": "#drawingControls {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
@@ -6039,28 +6103,6 @@ export const createButton = (
   border-radius: 0.375rem;
   justify-content: space-between;
   max-width: 600px;
-}
-
-#colorPicker {
-  display: flex;
-  gap: 0;
-  align-items: center;
-}
-
-.colorBtn {
-  width: 2rem;
-  height: 2rem;
-  border: 2px solid var(--border);
-  border-radius: 0.25rem;
-  cursor: pointer;
-  transition: border-color 0.2s;
-  margin: 0 0 0 0.5rem;
-  padding: 0;
-}
-
-.colorBtn:hover,
-.colorBtn.active {
-  border-color: var(--accent);
 }
 
 #brushSize {
@@ -6143,8 +6185,7 @@ pre {
 }
 ",
   "src/index.ts": "import './index.css';
-import './drawing.css';
-import {app} from './app';
+import {app} from './drawing/app';
 
 addEventListener('load', app);
 ",
