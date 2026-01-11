@@ -5,9 +5,11 @@ import {createButton} from './button';
 {{includeFile template="src/components/input.ts.hbs" output="src/components/input.{{ext}}"}}
 import {createInput} from './input';
 
-export const createMessageInput = (store: any): void => {
+export const createMessageInput = (store: any): HTMLDivElement => {
+const messageInputContainer = document.createElement('div');
+messageInputContainer.id = 'messageInput';
+
 const messageInput = createInput('Type a message...');
-const messageInputContainer = document.getElementById('messageInput')!;
 messageInputContainer.appendChild(messageInput);
 messageInput.focus();
 
@@ -32,4 +34,6 @@ sendMessage();
 
 const sendButton = createButton('Send', sendMessage, 'primary');
 messageInputContainer.appendChild(sendButton);
+
+return messageInputContainer;
 };

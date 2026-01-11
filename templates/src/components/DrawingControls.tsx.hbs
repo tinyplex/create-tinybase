@@ -1,0 +1,21 @@
+{{includeFile template="src/components/drawingControls.css.hbs" output="src/components/drawingControls.css"}}
+import './drawingControls.css';
+import {useDelTableCallback} from 'tinybase/ui-react';
+{{includeFile template="src/components/Button.tsx.hbs" output="src/components/Button.{{ext}}"}}
+import {Button} from './Button';
+{{includeFile template="src/components/ColorPicker.tsx.hbs" output="src/components/ColorPicker.{{ext}}"}}
+import {ColorPicker} from './ColorPicker';
+{{includeFile template="src/components/BrushSize.tsx.hbs" output="src/components/BrushSize.{{ext}}"}}
+import {BrushSize} from './BrushSize';
+
+export const DrawingControls = () => {
+const clearStrokes = useDelTableCallback('strokes', () => null, []);
+
+return (
+<div id="drawingControls">
+  <ColorPicker />
+  <BrushSize />
+  <Button onClick={clearStrokes} variant="primary">Clear</Button>
+</div>
+);
+};

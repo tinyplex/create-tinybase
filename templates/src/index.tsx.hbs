@@ -6,7 +6,7 @@ import './index.css';
   {{includeFile template="src/{{appType}}/App.tsx.hbs" output="src/{{appType}}/App.{{ext}}"}}
 
   addEventListener('load', () =>
-  ReactDOM.createRoot(document.getElementById('app'){{#if typescript}}!{{/if}}).render(
+  ReactDOM.createRoot(document.getElementById('app')!).render(
   <App />),
   );
 {{else}}

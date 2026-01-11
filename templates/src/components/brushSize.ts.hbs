@@ -1,0 +1,33 @@
+{{includeFile template="src/components/brushSize.css.hbs" output="src/components/brushSize.css"}}
+import './brushSize.css';
+
+export const createBrushSize = (store: any): HTMLDivElement => {
+const container = document.createElement('div');
+container.id = 'brushSize';
+
+const label = document.createElement('label');
+label.textContent = 'Size:';
+
+const sizeSlider = document.createElement('input');
+sizeSlider.type = 'range';
+sizeSlider.min = '1';
+sizeSlider.max = '50';
+sizeSlider.value = '5';
+
+const sizeLabel = document.createElement('span');
+sizeLabel.id = 'brushSizeValue';
+sizeLabel.textContent = '5';
+
+sizeSlider.addEventListener('input', () => {
+const brush = store.getRow('settings', 'brush') as any;
+const size = parseInt(sizeSlider.value);
+store.setRow('settings', 'brush', {...brush, size});
+sizeLabel.textContent = `${size}`;
+});
+
+container.appendChild(label);
+container.appendChild(sizeSlider);
+container.appendChild(sizeLabel);
+
+return container;
+};

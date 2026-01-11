@@ -1,9 +1,10 @@
 {{includeFile template="src/components/colorPicker.css.hbs" output="src/components/colorPicker.css"}}
 import './colorPicker.css';
 
-export const createColorPicker = (store: any, containerId: string): void => {
+export const createColorPicker = (store: any): HTMLDivElement => {
 const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];
-const container = document.getElementById(containerId)!;
+const container = document.createElement('div');
+container.id = 'colorPicker';
 
 colors.forEach((color) => {
 const btn = document.createElement('button');
@@ -15,4 +16,6 @@ store.setRow('settings', 'brush', {...brush, color});
 });
 container.appendChild(btn);
 });
+
+return container;
 };

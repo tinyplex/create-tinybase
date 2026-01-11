@@ -1,0 +1,21 @@
+{{includeFile template="src/components/brushSize.css.hbs" output="src/components/brushSize.css"}}
+import {useRow, useStore} from 'tinybase/ui-react';
+import './brushSize.css';
+
+export const BrushSize = () => {
+const store = useStore();
+const currentBrush = useRow('settings', 'brush') as any;
+const size = currentBrush.size;
+
+const setSize = (e: React.ChangeEvent<HTMLInputElement>) => {
+  store.setRow('settings', 'brush', {...currentBrush, size: parseInt(e.target.value)});
+  };
+
+  return (
+  <div id="brushSize">
+    <label>Size:</label>
+    <input type="range" min="1" max="50" value={size} onChange={setSize} />
+    <span id="brushSizeValue">{size}</span>
+  </div>
+  );
+  };

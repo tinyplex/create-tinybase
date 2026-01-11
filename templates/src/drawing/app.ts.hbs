@@ -1,10 +1,10 @@
 {{includeFile template="src/drawing/index.css.hbs" output="src/drawing/index.css"}}
 import './index.css';
 import {createStore} from 'tinybase';
-{{includeFile template="src/components/button.ts.hbs" output="src/components/button.{{ext}}"}}
-import {createButton} from '../components/button';
-{{includeFile template="src/components/colorPicker.ts.hbs" output="src/components/colorPicker.{{ext}}"}}
-import {createColorPicker} from '../components/colorPicker';
+{{includeFile template="src/components/drawingControls.ts.hbs" output="src/components/drawingControls.{{ext}}"}}
+import {createDrawingControls} from '../components/drawingControls';
+{{includeFile template="src/components/canvas.ts.hbs" output="src/components/canvas.{{ext}}"}}
+import {createCanvas} from '../components/canvas';
 
 {{#if typescript}}
   export const app = () => {
@@ -15,81 +15,10 @@ const store = createStore()
 .setRow('settings', 'brush', {color: '#d81b60', size: 5})
 .setTable('strokes', {});
 
-const canvas = document.getElementById('drawingCanvas') as HTMLCanvasElement;
-const ctx = canvas!.getContext('2d')!;
-let isDrawing = false;
+const appContainer = document.getElementById('app')!;
 
-const draw = () => {
-ctx.fillStyle = '#111';
-ctx.fillRect(0, 0, canvas!.width, canvas!.height);
-
-const strokes = store.getTable('strokes');
-Object.values(strokes).forEach((stroke: any) => {
-ctx.fillStyle = stroke.color;
-ctx.beginPath();
-ctx.arc(stroke.x, stroke.y, stroke.size, 0, Math.PI * 2);
-ctx.fill();
-});
-};
-
-const addStroke = (e: MouseEvent | TouchEvent) => {
-const rect = canvas!.getBoundingClientRect();
-const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
-const brush = store.getRow('settings', 'brush'){{#if typescript}} as any{{/if}};
-
-store.addRow('strokes', {
-x: clientX - rect.left,
-y: clientY - rect.top,
-color: brush.color,
-size: brush.size,
-});
-};
-
-canvas!.addEventListener('mousedown', () => { isDrawing = true; });
-canvas!.addEventListener('mouseup', () => { isDrawing = false; });
-canvas!.addEventListener('mouseleave', () => { isDrawing = false; });
-
-canvas!.addEventListener('mousemove', (e) => {
-if (isDrawing) addStroke(e);
-});
-
-canvas!.addEventListener('touchstart', (e) => {
-isDrawing = true;
-e.preventDefault();
-});
-
-canvas!.addEventListener('touchmove', (e) => {
-if (isDrawing) {
-addStroke(e);
-e.preventDefault();
-}
-});
-
-canvas!.addEventListener('touchend', () => {
-isDrawing = false;
-});
-
-// Color picker
-createColorPicker(store, 'colorPicker');
-
-// Size slider
-const sizeSlider = document.getElementById('brushSize') as HTMLInputElement;
-const sizeLabel = document.getElementById('brushSizeValue')!;
-
-sizeSlider!.addEventListener('input', () => {
-const brush = store.getRow('settings', 'brush') as any;
-const size = parseInt(sizeSlider!.value);
-store.setRow('settings', 'brush', {...brush, size});
-sizeLabel.textContent = `${size}`;
-});
-
-// Clear button
-const clearButton = createButton('Clear', () => store.delTable('strokes'), 'primary');
-document.getElementById('drawingControls')!.appendChild(clearButton);
-
-store.addTablesListener(draw);
-draw();
+appContainer.appendChild(createDrawingControls(store));
+appContainer.appendChild(createCanvas(store));
 };
 {{#unless typescript}}
   export {app};

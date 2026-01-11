@@ -3,9 +3,17 @@ import './usernameInput.css';
 {{includeFile template="src/components/input.ts.hbs" output="src/components/input.{{ext}}"}}
 import {createInput} from './input';
 
-export const createUsernameInput = (store: any): void => {
+export const createUsernameInput = (store: any): HTMLDivElement => {
+const container = document.createElement('div');
+container.id = 'usernameInput';
+
+const label = document.createElement('label');
+label.textContent = 'Your name:';
+
 const usernameInput = createInput('Enter your name', store.getValue('username') as string);
-document.getElementById('usernameInput')!.appendChild(usernameInput);
+
+container.appendChild(label);
+container.appendChild(usernameInput);
 
 usernameInput.addEventListener('input', () => {
 store.setValue('username', usernameInput.value);
@@ -14,4 +22,6 @@ store.setValue('username', usernameInput.value);
 store.addValuesListener(() => {
 usernameInput.value = store.getValue('username') as string;
 });
+
+return container;
 };

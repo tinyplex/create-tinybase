@@ -26,11 +26,28 @@ const store = createStore()
 '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
 });
 
-createUsernameInput(store);
-createMessageInput(store);
+const appContainer = document.getElementById('app')!;
 
-store.addTablesListener(() => createMessages(store));
-createMessages(store);
+appContainer.appendChild(createUsernameInput(store));
+
+const messagesContainer = createMessages(store);
+appContainer.appendChild(messagesContainer);
+
+appContainer.appendChild(createMessageInput(store));
+
+store.addTablesListener(() => {
+const messageRows = store.getTable('messages');
+const sortedIds = Object.keys(messageRows).sort(
+(a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
+);
+
+messagesContainer.innerHTML = '';
+sortedIds.forEach((id) => {
+const msg = messageRows[id];
+const messageElement = createMessage(msg.username, msg.text, msg.timestamp);
+messagesContainer.appendChild(messageElement);
+});
+});
 };
 {{#unless typescript}}
   export {app};
