@@ -6,26 +6,21 @@ import {useValue} from 'tinybase/ui-react';
 import {Square} from './Square';
 
 export const Board = () => {
-  const gameStatus = useValue('gameStatus') as string;
-  const winningLine = useValue('winningLine') as string | undefined;
-  
-  const winningPositions = useMemo(() => {
-    if (!winningLine) return new Set();
-    return new Set(winningLine.split(',').map(Number));
-  }, [winningLine]);
+const gameStatus = useValue('gameStatus') as string;
+const winningLine = useValue('winningLine') as string | undefined;
 
-  const disabled = gameStatus !== 'playing';
+const winningPositions = useMemo(() => {
+if (!winningLine) return new Set();
+return new Set(winningLine.split(',').map(Number));
+}, [winningLine]);
 
-  return (
-    <div id="board">
-      {Array.from({length: 9}, (_, i) => (
-        <Square
-          key={i}
-          position={i}
-          disabled={disabled}
-          winning={winningPositions.has(i)}
-        />
-      ))}
-    </div>
-  );
+const disabled = gameStatus !== 'playing';
+
+return (
+<div id="board">
+  {Array.from({length: 9}, (_, i) => (
+  <Square key={i} position={i} disabled={disabled} winning={winningPositions.has(i)} />
+  ))}
+</div>
+);
 };

@@ -1,8 +1,8 @@
 {{includeFile template="src/game/index.css.hbs" output="src/game/index.css"}}
 import './index.css';
-import {StrictMode, useEffect} from 'react';
+import {StrictMode} from 'react';
 import {createStore} from 'tinybase';
-import {Provider, useCreateStore, useSetValueCallback, useStore} from 'tinybase/ui-react';
+import {Provider, useCreateStore, useSetValuesCallback, useStore, useTableListener} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 {{includeFile template="src/components/Button.tsx.hbs" output="src/components/Button.{{ext}}"}}
 import {Button} from '../components/Button';
@@ -12,91 +12,89 @@ import {Board} from '../components/Board';
 import {GameStatus} from '../components/GameStatus';
 
 const WINNING_LINES = [
-  [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
-  [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
-  [0, 4, 8], [2, 4, 6],             // diagonals
+[0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+[0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+[0, 4, 8], [2, 4, 6], // diagonals
 ];
 
 const Game = () => {
-  const store = useStore();
+const store = useStore();
 
-  useEffect(() => {
-    const checkGameState = () => {
-      const gameStatus = store.getValue('gameStatus');
-      if (gameStatus !== 'playing') return;
+useTableListener(
+'board',
+() => {
+const gameStatus = store.getValue('gameStatus');
+if (gameStatus !== 'playing') return;
 
-      const board = store.getTable('board');
-      
-      // Check for winner
-      for (const line of WINNING_LINES) {
-        const [a, b, c] = line;
-        const cellA = board[a]?.value;
-        const cellB = board[b]?.value;
-        const cellC = board[c]?.value;
-        
-        if (cellA && cellA === cellB && cellA === cellC) {
-          store.setValue('gameStatus', 'won');
-          store.setValue('winner', cellA);
-          store.setValue('winningLine', line.join(','));
-          return;
-        }
-      }
+const board = store.getTable('board');
 
-      // Check for draw
-      const filledCells = Object.values(board).filter((cell: any) => cell.value).length;
-      if (filledCells === 9) {
-        store.setValue('gameStatus', 'draw');
-        return;
-      }
+// Check for winner
+for (const line of WINNING_LINES) {
+const [a, b, c] = line;
+const cellA = board[a]?.value;
+const cellB = board[b]?.value;
+const cellC = board[c]?.value;
 
-      // Switch player after each move
-      const currentPlayer = store.getValue('currentPlayer');
-      store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
-    };
+if (cellA && cellA === cellB && cellA === cellC) {
+store.setValue('gameStatus', 'won');
+store.setValue('winner', cellA);
+store.setValue('winningLine', line.join(','));
+return;
+}
+}
 
-    const listenerId = store.addTableListener('board', checkGameState, true);
-    return () => store.delListener(listenerId);
-  }, [store]);
+// Check for draw
+const filledCells = Object.values(board).filter((cell: any) => cell.value).length;
+if (filledCells === 9) {
+store.setValue('gameStatus', 'draw');
+return;
+}
 
-  const resetGame = useSetValueCallback(
-    'gameStatus',
-    () => {
-      store.delTable('board');
-      store.setValue('currentPlayer', 'X');
-      store.setValue('gameStatus', 'playing');
-      store.delValue('winner');
-      store.delValue('winningLine');
-      return 'playing';
-    },
-    [],
-  );
+// Switch player after each move
+const currentPlayer = store.getValue('currentPlayer');
+store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
+},
+[],
+true,
+);
 
-  return (
-    <>
-      <GameStatus />
-      <Board />
-      <div style=\{{textAlign: 'center', marginTop: '2rem'}}>
-        <Button onClick={resetGame} variant="primary">New Game</Button>
-      </div>
-      <Inspector />
-    </>
-  );
+const resetGame = useSetValuesCallback(
+() => {
+store.delTable('board');
+return {
+currentPlayer: 'X',
+gameStatus: 'playing',
+};
+},
+[],
+);
+
+return (
+<>
+  <GameStatus />
+  <Board />
+  <div style=\{{textAlign: 'center', marginTop: '2rem'}}>
+    <Button onClick={resetGame} variant="primary">New Game</Button>
+  </div>
+  <Inspector />
+</>
+);
 };
 
 const App = () => {
-  const store = useCreateStore(() => {
-    return createStore()
-      .setValue('currentPlayer', 'X')
-      .setValue('gameStatus', 'playing');
-  });
+const store = useCreateStore(() => {
+return createStore()
+.setValue('currentPlayer', 'X')
+.setValue('gameStatus', 'playing');
+});
 
-  return (
-    <StrictMode>
-      <Provider store={store}>
-        <Game />
-      </Provider>
-    </StrictMode>
-  );
+return (
+<StrictMode>
+  <Provider store={store}>
+    <Game />
+  </Provider>
+</StrictMode>
+);
 };
 
 export {App};

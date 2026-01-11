@@ -1415,11 +1415,14 @@ export {Square};
   display: grid;
   grid-template-columns: repeat(3, 100px);
   grid-template-rows: repeat(3, 100px);
-  gap: 0;
+  gap: 1px;
+  background: var(--border);
   border: 2px solid var(--border);
   border-radius: 0.5rem;
   overflow: hidden;
-  margin: 2rem auto;
+  margin: 0 auto 2rem;
+  width: fit-content;
+  padding: 1px;
 }
 ",
   "src/components/button.css": "button {
@@ -1452,11 +1455,7 @@ button.primary:hover {
   text-align: center;
   font-size: 1.5rem;
   font-weight: 800;
-  margin-bottom: 1rem;
-  min-height: 2rem;
-}
-
-#gameStatus .player {
+  margin: 2rem 0 1rem;
   color: var(--accent);
 }
 
@@ -1479,7 +1478,7 @@ button.primary:hover {
   width: 100px;
   height: 100px;
   background: var(--bg2);
-  border: 2px solid var(--border);
+  border: none;
   font-size: 2.5rem;
   font-weight: 800;
   color: var(--fg);
@@ -1488,11 +1487,20 @@ button.primary:hover {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0;
+  margin: 0;
 }
 
 .square:hover:not(.square.disabled) {
   background: var(--bg);
-  border-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  z-index: 1;
+  position: relative;
+}
+
+.square:disabled {
+  cursor: not-allowed;
 }
 
 .square.disabled {
@@ -1506,13 +1514,14 @@ button.primary:hover {
 }
 ",
   "src/game/App.jsx": "import './index.css';
-import {StrictMode, useEffect} from 'react';
+import {StrictMode} from 'react';
 import {createStore} from 'tinybase';
 import {
   Provider,
   useCreateStore,
-  useSetValueCallback,
+  useSetValuesCallback,
   useStore,
+  useTableListener,
 } from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {Button} from '../components/Button';
@@ -1533,8 +1542,9 @@ const WINNING_LINES = [
 ];
 const Game = () => {
   const store = useStore();
-  useEffect(() => {
-    const checkGameState = () => {
+  useTableListener(
+    'board',
+    () => {
       const gameStatus = store.getValue('gameStatus');
       if (gameStatus !== 'playing') return;
       const board = store.getTable('board');
@@ -1559,22 +1569,17 @@ const Game = () => {
       }
       const currentPlayer = store.getValue('currentPlayer');
       store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
-    };
-    const listenerId = store.addTableListener('board', checkGameState, true);
-    return () => store.delListener(listenerId);
-  }, [store]);
-  const resetGame = useSetValueCallback(
-    'gameStatus',
-    () => {
-      store.delTable('board');
-      store.setValue('currentPlayer', 'X');
-      store.setValue('gameStatus', 'playing');
-      store.delValue('winner');
-      store.delValue('winningLine');
-      return 'playing';
     },
     [],
+    true,
   );
+  const resetGame = useSetValuesCallback(() => {
+    store.delTable('board');
+    return {
+      currentPlayer: 'X',
+      gameStatus: 'playing',
+    };
+  }, []);
   return (
     <>
       <GameStatus />
@@ -3470,11 +3475,14 @@ npm run dev
   display: grid;
   grid-template-columns: repeat(3, 100px);
   grid-template-rows: repeat(3, 100px);
-  gap: 0;
+  gap: 1px;
+  background: var(--border);
   border: 2px solid var(--border);
   border-radius: 0.5rem;
   overflow: hidden;
-  margin: 2rem auto;
+  margin: 0 auto 2rem;
+  width: fit-content;
+  padding: 1px;
 }
 ",
   "src/components/board.js": "import './board.css';
@@ -3556,11 +3564,7 @@ export {createButton};
   text-align: center;
   font-size: 1.5rem;
   font-weight: 800;
-  margin-bottom: 1rem;
-  min-height: 2rem;
-}
-
-#gameStatus .player {
+  margin: 2rem 0 1rem;
   color: var(--accent);
 }
 
@@ -3605,7 +3609,7 @@ export {createGameStatus};
   width: 100px;
   height: 100px;
   background: var(--bg2);
-  border: 2px solid var(--border);
+  border: none;
   font-size: 2.5rem;
   font-weight: 800;
   color: var(--fg);
@@ -3614,11 +3618,20 @@ export {createGameStatus};
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0;
+  margin: 0;
 }
 
 .square:hover:not(.square.disabled) {
   background: var(--bg);
-  border-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  z-index: 1;
+  position: relative;
+}
+
+.square:disabled {
+  cursor: not-allowed;
 }
 
 .square.disabled {
@@ -3693,10 +3706,10 @@ const app = () => {
   store.addTableListener('board', checkGameState, true);
   const resetGame = () => {
     store.delTable('board');
-    store.setValue('currentPlayer', 'X');
-    store.setValue('gameStatus', 'playing');
-    store.delValue('winner');
-    store.delValue('winningLine');
+    store.setValues({
+      currentPlayer: 'X',
+      gameStatus: 'playing',
+    });
   };
   const appContainer = document.getElementById('app');
   appContainer.appendChild(createGameStatus(store));
@@ -5883,11 +5896,14 @@ export const Square = ({
   display: grid;
   grid-template-columns: repeat(3, 100px);
   grid-template-rows: repeat(3, 100px);
-  gap: 0;
+  gap: 1px;
+  background: var(--border);
   border: 2px solid var(--border);
   border-radius: 0.5rem;
   overflow: hidden;
-  margin: 2rem auto;
+  margin: 0 auto 2rem;
+  width: fit-content;
+  padding: 1px;
 }
 ",
   "src/components/button.css": "button {
@@ -5920,11 +5936,7 @@ button.primary:hover {
   text-align: center;
   font-size: 1.5rem;
   font-weight: 800;
-  margin-bottom: 1rem;
-  min-height: 2rem;
-}
-
-#gameStatus .player {
+  margin: 2rem 0 1rem;
   color: var(--accent);
 }
 
@@ -5947,7 +5959,7 @@ button.primary:hover {
   width: 100px;
   height: 100px;
   background: var(--bg2);
-  border: 2px solid var(--border);
+  border: none;
   font-size: 2.5rem;
   font-weight: 800;
   color: var(--fg);
@@ -5956,11 +5968,20 @@ button.primary:hover {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0;
+  margin: 0;
 }
 
 .square:hover:not(.square.disabled) {
   background: var(--bg);
-  border-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  z-index: 1;
+  position: relative;
+}
+
+.square:disabled {
+  cursor: not-allowed;
 }
 
 .square.disabled {
@@ -5974,13 +5995,14 @@ button.primary:hover {
 }
 ",
   "src/game/App.tsx": "import './index.css';
-import {StrictMode, useEffect} from 'react';
+import {StrictMode} from 'react';
 import {createStore} from 'tinybase';
 import {
   Provider,
   useCreateStore,
-  useSetValueCallback,
+  useSetValuesCallback,
   useStore,
+  useTableListener,
 } from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 
@@ -6004,8 +6026,9 @@ const WINNING_LINES = [
 const Game = () => {
   const store = useStore();
 
-  useEffect(() => {
-    const checkGameState = () => {
+  useTableListener(
+    'board',
+    () => {
       const gameStatus = store.getValue('gameStatus');
       if (gameStatus !== 'playing') return;
 
@@ -6038,24 +6061,18 @@ const Game = () => {
       // Switch player after each move
       const currentPlayer = store.getValue('currentPlayer');
       store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
-    };
-
-    const listenerId = store.addTableListener('board', checkGameState, true);
-    return () => store.delListener(listenerId);
-  }, [store]);
-
-  const resetGame = useSetValueCallback(
-    'gameStatus',
-    () => {
-      store.delTable('board');
-      store.setValue('currentPlayer', 'X');
-      store.setValue('gameStatus', 'playing');
-      store.delValue('winner');
-      store.delValue('winningLine');
-      return 'playing';
     },
     [],
+    true,
   );
+
+  const resetGame = useSetValuesCallback(() => {
+    store.delTable('board');
+    return {
+      currentPlayer: 'X',
+      gameStatus: 'playing',
+    };
+  }, []);
 
   return (
     <>
@@ -8190,11 +8207,14 @@ npm run dev
   display: grid;
   grid-template-columns: repeat(3, 100px);
   grid-template-rows: repeat(3, 100px);
-  gap: 0;
+  gap: 1px;
+  background: var(--border);
   border: 2px solid var(--border);
   border-radius: 0.5rem;
   overflow: hidden;
-  margin: 2rem auto;
+  margin: 0 auto 2rem;
+  width: fit-content;
+  padding: 1px;
 }
 ",
   "src/components/board.ts": "import './board.css';
@@ -8285,11 +8305,7 @@ export const createButton = (
   text-align: center;
   font-size: 1.5rem;
   font-weight: 800;
-  margin-bottom: 1rem;
-  min-height: 2rem;
-}
-
-#gameStatus .player {
+  margin: 2rem 0 1rem;
   color: var(--accent);
 }
 
@@ -8338,7 +8354,7 @@ export const createGameStatus = (store: any): HTMLDivElement => {
   width: 100px;
   height: 100px;
   background: var(--bg2);
-  border: 2px solid var(--border);
+  border: none;
   font-size: 2.5rem;
   font-weight: 800;
   color: var(--fg);
@@ -8347,11 +8363,20 @@ export const createGameStatus = (store: any): HTMLDivElement => {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0;
+  margin: 0;
 }
 
 .square:hover:not(.square.disabled) {
   background: var(--bg);
-  border-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  z-index: 1;
+  position: relative;
+}
+
+.square:disabled {
+  cursor: not-allowed;
 }
 
 .square.disabled {
@@ -8445,10 +8470,10 @@ const app = () => {
 
   const resetGame = () => {
     store.delTable('board');
-    store.setValue('currentPlayer', 'X');
-    store.setValue('gameStatus', 'playing');
-    store.delValue('winner');
-    store.delValue('winningLine');
+    store.setValues({
+      currentPlayer: 'X',
+      gameStatus: 'playing',
+    });
   };
 
   const appContainer = document.getElementById('app')!;
