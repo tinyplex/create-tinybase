@@ -1,11 +1,15 @@
-{{includeFile template="src/components/Button.tsx.hbs" output="src/components/Button.{{ext}}"}}
-{{includeFile template="src/components/Input.tsx.hbs" output="src/components/Input.{{ext}}"}}
+{{includeFile template="src/chat/index.css.hbs" output="src/chat/index.css"}}
+import './index.css';
 import {StrictMode, useState, useMemo} from 'react';
 import {createStore} from 'tinybase';
 import {Provider, useCreateStore, useAddRowCallback, useRow, useSetValueCallback, useValue, useRowIds, useStore} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
-import {Button} from './components/Button';
-import {Input} from './components/Input';
+{{includeFile template="src/components/Button.tsx.hbs" output="src/components/Button.{{ext}}"}}
+import {Button} from '../components/Button';
+{{includeFile template="src/components/Input.tsx.hbs" output="src/components/Input.{{ext}}"}}
+import {Input} from '../components/Input';
+{{includeFile template="src/components/Message.tsx.hbs" output="src/components/Message.{{ext}}"}}
+import {Message} from '../components/Message';
 
 const MessageInput = () => {
 const [message, setMessage] = useState('');
@@ -34,19 +38,6 @@ return (
   <Input value={message} onChange={setMessage} placeholder="Type a message..." autoFocus />
   <Button type="submit" variant="primary">Send</Button>
 </form>
-);
-};
-
-const Message = ({rowId}: {rowId: string}) => {
-const row = useRow('messages', rowId);
-const time = new Date((row as any).timestamp).toLocaleTimeString();
-
-return (
-<div className="message">
-  <span className="username">{(row as any).username}:</span>
-  <span className="text">{(row as any).text}</span>
-  <span className="time">{time}</span>
-</div>
 );
 };
 

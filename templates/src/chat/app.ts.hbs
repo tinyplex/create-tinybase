@@ -1,29 +1,26 @@
-{{includeFile template="src/components/button.ts.hbs" output="src/components/button.{{ext}}"}}
-{{includeFile template="src/components/input.ts.hbs" output="src/components/input.{{ext}}"}}
+{{includeFile template="src/chat/index.css.hbs" output="src/chat/index.css"}}
+import './index.css';
 import {createStore} from 'tinybase';
-import {createButton} from './components/button';
-import {createInput} from './components/input';
+{{includeFile template="src/components/button.ts.hbs" output="src/components/button.{{ext}}"}}
+import {createButton} from '../components/button';
+{{includeFile template="src/components/input.ts.hbs" output="src/components/input.{{ext}}"}}
+import {createInput} from '../components/input';
+{{includeFile template="src/components/message.ts.hbs" output="src/components/message.{{ext}}"}}
+import {createMessage} from '../components/message';
 
 const updateMessages = (store: any) => {
-const messages = document.getElementById('messages')!;
+const messagesContainer = document.getElementById('messages')!;
 const messageRows = store.getTable('messages');
 const sortedIds = Object.keys(messageRows).sort(
 (a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
 );
 
-messages.innerHTML = sortedIds
-.map((id) => {
+messagesContainer.innerHTML = '';
+sortedIds.forEach((id) => {
 const msg = messageRows[id];
-const time = new Date(msg.timestamp).toLocaleTimeString();
-return `
-<div class="message">
-  <span class="username">${msg.username}:</span>
-  <span class="text">${msg.text}</span>
-  <span class="time">${time}</span>
-</div>
-`;
-})
-.join('');
+const messageElement = createMessage(msg.username, msg.text, msg.timestamp);
+messagesContainer.appendChild(messageElement);
+});
 };
 
 {{#if typescript}}
@@ -52,6 +49,7 @@ usernameInput.value = store.getValue('username') as string;
 const messageInput = createInput('Type a message...');
 const messageInputContainer = document.getElementById('messageInput')!;
 messageInputContainer.appendChild(messageInput);
+messageInput.focus();
 
 const sendMessage = () => {
 const text = messageInput.value.trim();

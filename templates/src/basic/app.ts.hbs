@@ -1,6 +1,8 @@
-{{includeFile template="src/components/button.ts.hbs" output="src/components/button.{{ext}}"}}
+{{includeFile template="src/basic/index.css.hbs" output="src/basic/index.css"}}
+import './index.css';
 import {createStore} from 'tinybase';
-import {createButton} from './components/button';
+{{includeFile template="src/components/button.ts.hbs" output="src/components/button.{{ext}}"}}
+import {createButton} from '../components/button';
 
 const updateJson = (id: string, content: unknown) =>
 (document.getElementById(id)!.innerText = JSON.stringify(content, null, 2));

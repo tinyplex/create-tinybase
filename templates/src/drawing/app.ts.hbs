@@ -1,6 +1,8 @@
-{{includeFile template="src/components/button.ts.hbs" output="src/components/button.{{ext}}"}}
+{{includeFile template="src/drawing/index.css.hbs" output="src/drawing/index.css"}}
+import './index.css';
 import {createStore} from 'tinybase';
-import {createButton} from './components/button';
+{{includeFile template="src/components/button.ts.hbs" output="src/components/button.{{ext}}"}}
+import {createButton} from '../components/button';
 
 {{#if typescript}}
   export const app = () => {

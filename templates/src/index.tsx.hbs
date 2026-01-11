@@ -1,19 +1,17 @@
 {{includeFile template="src/index.css.hbs" output="src/index.css"}}
-{{includeFile template="src/{{appType}}/index.css.hbs" output="src/{{appType}}.css"}}
 import './index.css';
-import './{{appType}}.css';
 {{#if react}}
   import ReactDOM from 'react-dom/client';
-  import {App} from './App';
-  {{includeFile template="src/{{appType}}/App.tsx.hbs" output="src/App.{{ext}}"}}
+  import {App} from './{{appType}}/App';
+  {{includeFile template="src/{{appType}}/App.tsx.hbs" output="src/{{appType}}/App.{{ext}}"}}
 
   addEventListener('load', () =>
   ReactDOM.createRoot(document.getElementById('app'){{#if typescript}}!{{/if}}).render(
   <App />),
   );
 {{else}}
-  import {app} from './app';
-  {{includeFile template="src/{{appType}}/app.ts.hbs" output="src/app.{{ext}}"}}
+  import {app} from './{{appType}}/app';
+  {{includeFile template="src/{{appType}}/app.ts.hbs" output="src/{{appType}}/app.{{ext}}"}}
 
   addEventListener('load', app);
 {{/if}}

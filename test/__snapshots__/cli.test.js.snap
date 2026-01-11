@@ -682,7 +682,6 @@ import {
   Provider,
   useCreateStore,
   useAddRowCallback,
-  useRow,
   useSetValueCallback,
   useValue,
   useRowIds,
@@ -691,6 +690,7 @@ import {
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {Button} from './components/Button';
 import {Input} from './components/Input';
+import {Message} from './components/Message';
 const MessageInput = () => {
   const [message, setMessage] = useState('');
   const username = useValue('username') || 'Anonymous';
@@ -722,17 +722,6 @@ const MessageInput = () => {
         Send
       </Button>
     </form>
-  );
-};
-const Message = ({rowId}) => {
-  const row = useRow('messages', rowId);
-  const time = new Date(row.timestamp).toLocaleTimeString();
-  return (
-    <div className="message">
-      <span className="username">{row.username}:</span>
-      <span className="text">{row.text}</span>
-      <span className="time">{time}</span>
-    </div>
   );
 };
 const Messages = () => {
@@ -811,27 +800,6 @@ export {App};
   margin-bottom: 1rem;
 }
 
-.message {
-  margin-bottom: 0.75rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.message .username {
-  font-weight: 800;
-  color: #d81b60;
-}
-
-.message .text {
-  flex: 1;
-}
-
-.message .time {
-  font-size: 0.8rem;
-  color: #666;
-}
-
 #messageInput {
   display: flex;
   gap: 0.5rem;
@@ -866,6 +834,21 @@ const Input = ({value, onChange, placeholder = '', autoFocus = false}) => (
   />
 );
 export {Input};
+",
+  "src/components/Message.jsx": "import {useRow} from 'tinybase/ui-react';
+import './message.css';
+const Message = ({rowId}) => {
+  const row = useRow('messages', rowId);
+  const time = new Date(row.timestamp).toLocaleTimeString();
+  return (
+    <div className="message">
+      <span className="username">{row.username}:</span>
+      <span className="text">{row.text}</span>
+      <span className="time">{time}</span>
+    </div>
+  );
+};
+export {Message};
 ",
   "src/components/button.css": "button {
   padding: 0.5rem 1rem;
@@ -914,6 +897,27 @@ input[type='text']:focus {
 
 input[type='text']::placeholder {
   color: var(--fg2);
+}
+",
+  "src/components/message.css": ".message {
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.message .username {
+  font-weight: 800;
+  color: #d81b60;
+}
+
+.message .text {
+  flex: 1;
+}
+
+.message .time {
+  font-size: 0.8rem;
+  color: #666;
 }
 ",
   "src/index.css": "a {
@@ -2184,25 +2188,19 @@ npm run dev
   "src/app.js": "import {createStore} from 'tinybase';
 import {createButton} from './components/button';
 import {createInput} from './components/input';
+import {createMessage} from './components/message';
 const updateMessages = (store) => {
-  const messages = document.getElementById('messages');
+  const messagesContainer = document.getElementById('messages');
   const messageRows = store.getTable('messages');
   const sortedIds = Object.keys(messageRows).sort(
     (a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
   );
-  messages.innerHTML = sortedIds
-    .map((id) => {
-      const msg = messageRows[id];
-      const time = new Date(msg.timestamp).toLocaleTimeString();
-      return \`
-<div class="message">
-  <span class="username">\${msg.username}:</span>
-  <span class="text">\${msg.text}</span>
-  <span class="time">\${time}</span>
-</div>
-\`;
-    })
-    .join('');
+  messagesContainer.innerHTML = '';
+  sortedIds.forEach((id) => {
+    const msg = messageRows[id];
+    const messageElement = createMessage(msg.username, msg.text, msg.timestamp);
+    messagesContainer.appendChild(messageElement);
+  });
 };
 const app = () => {
   const store = createStore()
@@ -2225,6 +2223,7 @@ const app = () => {
   const messageInput = createInput('Type a message...');
   const messageInputContainer = document.getElementById('messageInput');
   messageInputContainer.appendChild(messageInput);
+  messageInput.focus();
   const sendMessage = () => {
     const text = messageInput.value.trim();
     if (text) {
@@ -2268,27 +2267,6 @@ export {app};
   padding: 1rem 0;
   height: 400px;
   margin-bottom: 1rem;
-}
-
-.message {
-  margin-bottom: 0.75rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.message .username {
-  font-weight: 800;
-  color: #d81b60;
-}
-
-.message .text {
-  flex: 1;
-}
-
-.message .time {
-  font-size: 0.8rem;
-  color: #666;
 }
 
 #messageInput {
@@ -2375,6 +2353,47 @@ const createInput = (placeholder = '', value = '', onInput) => {
   return input;
 };
 export {createInput};
+",
+  "src/components/message.css": ".message {
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.message .username {
+  font-weight: 800;
+  color: #d81b60;
+}
+
+.message .text {
+  flex: 1;
+}
+
+.message .time {
+  font-size: 0.8rem;
+  color: #666;
+}
+",
+  "src/components/message.js": "const createMessage = (username, text, timestamp) => {
+  const time = new Date(timestamp).toLocaleTimeString();
+  const messageDiv = document.createElement('div');
+  messageDiv.className = 'message';
+  const usernameSpan = document.createElement('span');
+  usernameSpan.className = 'username';
+  usernameSpan.textContent = \`\${username}:\`;
+  const textSpan = document.createElement('span');
+  textSpan.className = 'text';
+  textSpan.textContent = text;
+  const timeSpan = document.createElement('span');
+  timeSpan.className = 'time';
+  timeSpan.textContent = time;
+  messageDiv.appendChild(usernameSpan);
+  messageDiv.appendChild(textSpan);
+  messageDiv.appendChild(timeSpan);
+  return messageDiv;
+};
+export {createMessage};
 ",
   "src/index.css": "a {
   color: var(--fg);
@@ -3654,6 +3673,7 @@ import {
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {Button} from './components/Button';
 import {Input} from './components/Input';
+import {Message} from './components/Message';
 
 const MessageInput = () => {
   const [message, setMessage] = useState('');
@@ -3689,19 +3709,6 @@ const MessageInput = () => {
         Send
       </Button>
     </form>
-  );
-};
-
-const Message = ({rowId}: {rowId: string}) => {
-  const row = useRow('messages', rowId);
-  const time = new Date((row as any).timestamp).toLocaleTimeString();
-
-  return (
-    <div className="message">
-      <span className="username">{(row as any).username}:</span>
-      <span className="text">{(row as any).text}</span>
-      <span className="time">{time}</span>
-    </div>
   );
 };
 
@@ -3790,27 +3797,6 @@ export const App = () => {
   margin-bottom: 1rem;
 }
 
-.message {
-  margin-bottom: 0.75rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.message .username {
-  font-weight: 800;
-  color: #d81b60;
-}
-
-.message .text {
-  flex: 1;
-}
-
-.message .time {
-  font-size: 0.8rem;
-  color: #666;
-}
-
 #messageInput {
   display: flex;
   gap: 0.5rem;
@@ -3871,6 +3857,26 @@ export const Input = ({
   />
 );
 ",
+  "src/components/Message.tsx": "import {useRow} from 'tinybase/ui-react';
+import './message.css';
+
+interface MessageProps {
+  rowId: string;
+}
+
+export const Message = ({rowId}: MessageProps) => {
+  const row = useRow('messages', rowId);
+  const time = new Date((row as any).timestamp).toLocaleTimeString();
+
+  return (
+    <div className="message">
+      <span className="username">{(row as any).username}:</span>
+      <span className="text">{(row as any).text}</span>
+      <span className="time">{time}</span>
+    </div>
+  );
+};
+",
   "src/components/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
@@ -3918,6 +3924,27 @@ input[type='text']:focus {
 
 input[type='text']::placeholder {
   color: var(--fg2);
+}
+",
+  "src/components/message.css": ".message {
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.message .username {
+  font-weight: 800;
+  color: #d81b60;
+}
+
+.message .text {
+  flex: 1;
+}
+
+.message .time {
+  font-size: 0.8rem;
+  color: #666;
 }
 ",
   "src/index.css": "a {
@@ -5308,27 +5335,21 @@ npm run dev
   "src/app.ts": "import {createStore} from 'tinybase';
 import {createButton} from './components/button';
 import {createInput} from './components/input';
+import {createMessage} from './components/message';
 
 const updateMessages = (store: any) => {
-  const messages = document.getElementById('messages')!;
+  const messagesContainer = document.getElementById('messages')!;
   const messageRows = store.getTable('messages');
   const sortedIds = Object.keys(messageRows).sort(
     (a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
   );
 
-  messages.innerHTML = sortedIds
-    .map((id) => {
-      const msg = messageRows[id];
-      const time = new Date(msg.timestamp).toLocaleTimeString();
-      return \`
-<div class="message">
-  <span class="username">\${msg.username}:</span>
-  <span class="text">\${msg.text}</span>
-  <span class="time">\${time}</span>
-</div>
-\`;
-    })
-    .join('');
+  messagesContainer.innerHTML = '';
+  sortedIds.forEach((id) => {
+    const msg = messageRows[id];
+    const messageElement = createMessage(msg.username, msg.text, msg.timestamp);
+    messagesContainer.appendChild(messageElement);
+  });
 };
 
 export const app = () => {
@@ -5356,6 +5377,7 @@ export const app = () => {
   const messageInput = createInput('Type a message...');
   const messageInputContainer = document.getElementById('messageInput')!;
   messageInputContainer.appendChild(messageInput);
+  messageInput.focus();
 
   const sendMessage = () => {
     const text = messageInput.value.trim();
@@ -5402,27 +5424,6 @@ export const app = () => {
   padding: 1rem 0;
   height: 400px;
   margin-bottom: 1rem;
-}
-
-.message {
-  margin-bottom: 0.75rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.message .username {
-  font-weight: 800;
-  color: #d81b60;
-}
-
-.message .text {
-  flex: 1;
-}
-
-.message .time {
-  font-size: 0.8rem;
-  color: #666;
 }
 
 #messageInput {
@@ -5516,6 +5517,56 @@ export const createInput = (
     input.addEventListener('input', () => onInput(input.value));
   }
   return input;
+};
+",
+  "src/components/message.css": ".message {
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.message .username {
+  font-weight: 800;
+  color: #d81b60;
+}
+
+.message .text {
+  flex: 1;
+}
+
+.message .time {
+  font-size: 0.8rem;
+  color: #666;
+}
+",
+  "src/components/message.ts": "export const createMessage = (
+  username: string,
+  text: string,
+  timestamp: number,
+): HTMLDivElement => {
+  const time = new Date(timestamp).toLocaleTimeString();
+
+  const messageDiv = document.createElement('div');
+  messageDiv.className = 'message';
+
+  const usernameSpan = document.createElement('span');
+  usernameSpan.className = 'username';
+  usernameSpan.textContent = \`\${username}:\`;
+
+  const textSpan = document.createElement('span');
+  textSpan.className = 'text';
+  textSpan.textContent = text;
+
+  const timeSpan = document.createElement('span');
+  timeSpan.className = 'time';
+  timeSpan.textContent = time;
+
+  messageDiv.appendChild(usernameSpan);
+  messageDiv.appendChild(textSpan);
+  messageDiv.appendChild(timeSpan);
+
+  return messageDiv;
 };
 ",
   "src/index.css": "a {

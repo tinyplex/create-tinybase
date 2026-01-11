@@ -1,11 +1,13 @@
-{{includeFile template="src/components/Button.tsx.hbs" output="src/components/Button.{{ext}}"}}
+{{includeFile template="src/basic/index.css.hbs" output="src/basic/index.css"}}
+import './index.css';
 import {StrictMode} from 'react';
 import {createStore} from 'tinybase';
 import {Provider, useCreateStore, useAddRowCallback, useSetValueCallback} from 'tinybase/ui-react';
 import type {ValueOrUndefined} from 'tinybase';
 import {SortedTableInHtmlTable, ValuesInHtmlTable} from 'tinybase/ui-react-dom';
 import {Inspector} from 'tinybase/ui-react-inspector';
-import {Button} from './components/Button';
+{{includeFile template="src/components/Button.tsx.hbs" output="src/components/Button.{{ext}}"}}
+import {Button} from '../components/Button';
 
 // Convenience function for generating a random integer
 const getRandom = (max = 100) => Math.floor(Math.random() * max);

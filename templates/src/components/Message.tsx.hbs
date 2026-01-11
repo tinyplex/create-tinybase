@@ -1,0 +1,20 @@
+import {useRow} from 'tinybase/ui-react';
+{{includeFile template="src/components/message.css.hbs" output="src/components/message.css"}}
+import './message.css';
+
+interface MessageProps {
+rowId: string;
+}
+
+export const Message = ({rowId}: MessageProps) => {
+const row = useRow('messages', rowId);
+const time = new Date((row as any).timestamp).toLocaleTimeString();
+
+return (
+<div className="message">
+  <span className="username">{(row as any).username}:</span>
+  <span className="text">{(row as any).text}</span>
+  <span className="time">{time}</span>
+</div>
+);
+};
