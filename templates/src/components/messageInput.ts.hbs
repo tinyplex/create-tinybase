@@ -1,0 +1,35 @@
+{{includeFile template="src/components/messageInput.css.hbs" output="src/components/messageInput.css"}}
+import './messageInput.css';
+{{includeFile template="src/components/button.ts.hbs" output="src/components/button.{{ext}}"}}
+import {createButton} from './button';
+{{includeFile template="src/components/input.ts.hbs" output="src/components/input.{{ext}}"}}
+import {createInput} from './input';
+
+export const createMessageInput = (store: any): void => {
+const messageInput = createInput('Type a message...');
+const messageInputContainer = document.getElementById('messageInput')!;
+messageInputContainer.appendChild(messageInput);
+messageInput.focus();
+
+const sendMessage = () => {
+const text = messageInput.value.trim();
+if (text) {
+store.addRow('messages', {
+username: store.getValue('username'),
+text,
+timestamp: Date.now(),
+});
+messageInput.value = '';
+messageInput.focus();
+}
+};
+
+messageInput.addEventListener('keypress', (e) => {
+if (e.key === 'Enter') {
+sendMessage();
+}
+});
+
+const sendButton = createButton('Send', sendMessage, 'primary');
+messageInputContainer.appendChild(sendButton);
+};

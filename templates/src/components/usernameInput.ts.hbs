@@ -1,0 +1,17 @@
+{{includeFile template="src/components/usernameInput.css.hbs" output="src/components/usernameInput.css"}}
+import './usernameInput.css';
+{{includeFile template="src/components/input.ts.hbs" output="src/components/input.{{ext}}"}}
+import {createInput} from './input';
+
+export const createUsernameInput = (store: any): void => {
+const usernameInput = createInput('Enter your name', store.getValue('username') as string);
+document.getElementById('usernameInput')!.appendChild(usernameInput);
+
+usernameInput.addEventListener('input', () => {
+store.setValue('username', usernameInput.value);
+});
+
+store.addValuesListener(() => {
+usernameInput.value = store.getValue('username') as string;
+});
+};

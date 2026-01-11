@@ -9,6 +9,10 @@ import {createInput} from '../components/input';
 import {createMessage} from '../components/message';
 {{includeFile template="src/components/messages.ts.hbs" output="src/components/messages.{{ext}}"}}
 import {createMessages} from '../components/messages';
+{{includeFile template="src/components/usernameInput.ts.hbs" output="src/components/usernameInput.{{ext}}"}}
+import {createUsernameInput} from '../components/usernameInput';
+{{includeFile template="src/components/messageInput.ts.hbs" output="src/components/messageInput.{{ext}}"}}
+import {createMessageInput} from '../components/messageInput';
 
 {{#if typescript}}
   export const app = () => {
@@ -22,42 +26,8 @@ const store = createStore()
 '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
 });
 
-const usernameInput = createInput('Enter your name', store.getValue('username') as string);
-document.getElementById('usernameInput')!.appendChild(usernameInput);
-
-usernameInput.addEventListener('input', () => {
-store.setValue('username', usernameInput.value);
-});
-
-store.addValuesListener(() => {
-usernameInput.value = store.getValue('username') as string;
-});
-
-const messageInput = createInput('Type a message...');
-const messageInputContainer = document.getElementById('messageInput')!;
-messageInputContainer.appendChild(messageInput);
-messageInput.focus();
-
-const sendMessage = () => {
-const text = messageInput.value.trim();
-if (text) {
-store.addRow('messages', {
-username: store.getValue('username'),
-text,
-timestamp: Date.now(),
-});
-messageInput.value = '';
-}
-};
-
-messageInput.addEventListener('keypress', (e) => {
-if (e.key === 'Enter') {
-sendMessage();
-}
-});
-
-const sendButton = createButton('Send', sendMessage, 'primary');
-messageInputContainer.appendChild(sendButton);
+createUsernameInput(store);
+createMessageInput(store);
 
 store.addTablesListener(() => createMessages(store));
 createMessages(store);

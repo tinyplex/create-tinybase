@@ -12,50 +12,10 @@ import {Input} from '../components/Input';
 import {Message} from '../components/Message';
 {{includeFile template="src/components/Messages.tsx.hbs" output="src/components/Messages.{{ext}}"}}
 import {Messages} from '../components/Messages';
-
-const MessageInput = () => {
-const [message, setMessage] = useState('');
-const username = useValue('username') || 'Anonymous';
-
-const handleSend = useAddRowCallback(
-'messages',
-() => ({
-username,
-text: message,
-timestamp: Date.now(),
-}),
-[message, username],
-);
-
-const onSubmit = (e: React.FormEvent) => {
-e.preventDefault();
-if (message.trim()) {
-handleSend();
-setMessage('');
-}
-};
-
-return (
-<form onSubmit={onSubmit} id="messageInput">
-  <Input value={message} onChange={setMessage} placeholder="Type a message..." autoFocus />
-  <Button type="submit" variant="primary">Send</Button>
-</form>
-);
-};
-
-const UsernameInput = () => {
-const username = useValue('username') || '';
-const setUsername = useSetValueCallback(
-'username',
-(_e) => _e,[]);
-
-return (
-<div id="usernameInput">
-  <label>Your name:</label>
-  <Input value={username} onChange={setUsername} placeholder="Enter your name" />
-</div>
-);
-};
+{{includeFile template="src/components/MessageInput.tsx.hbs" output="src/components/MessageInput.{{ext}}"}}
+import {MessageInput} from '../components/MessageInput';
+{{includeFile template="src/components/UsernameInput.tsx.hbs" output="src/components/UsernameInput.{{ext}}"}}
+import {UsernameInput} from '../components/UsernameInput';
 
 export const App = () => {
 const store = useCreateStore(() => {
