@@ -19,9 +19,8 @@ sizeLabel.id = 'brushSizeValue';
 sizeLabel.textContent = '5';
 
 sizeSlider.addEventListener('input', () => {
-const brush = store.getRow('settings', 'brush') as any;
 const size = parseInt(sizeSlider.value);
-store.setRow('settings', 'brush', {...brush, size});
+store.setValue('brushSize', size);
 sizeLabel.textContent = `${size}`;
 });
 

@@ -758,18 +758,16 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/components/BrushSize.jsx": "import {useRow, useStore} from 'tinybase/ui-react';
+  "src/components/BrushSize.jsx": "import {useValue, useSetValueCallback} from 'tinybase/ui-react';
 import './brushSize.css';
 const BrushSize = () => {
-  const store = useStore();
-  const currentBrush = useRow('settings', 'brush');
-  const size = currentBrush.size;
-  const setSize = (e) => {
-    store.setRow('settings', 'brush', {
-      ...currentBrush,
-      size: parseInt(e.target.value),
-    });
-  };
+  const size = useValue('brushSize', 'settings') ?? 5;
+  const setSize = useSetValueCallback(
+    'brushSize',
+    (e) => parseInt(e.target.value),
+    [],
+    'settings',
+  );
   return (
     <div id="brushSize">
       <label>Size:</label>
@@ -793,13 +791,19 @@ const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
 export {Button};
 ",
   "src/components/Canvas.jsx": "import {useCallback, useEffect, useRef} from 'react';
-import {useAddRowCallback, useRowIds, useStore} from 'tinybase/ui-react';
+import {
+  useAddRowCallback,
+  useRowIds,
+  useTable,
+  useValues,
+} from 'tinybase/ui-react';
 import './canvas.css';
 const Canvas = () => {
   const canvasRef = useRef(null);
   const isDrawing = useRef(false);
-  const store = useStore();
-  const strokes = useRowIds('strokes');
+  const brush = useValues('settings');
+  const strokes = useRowIds('strokes', 'canvas');
+  const strokesTable = useTable('strokes', 'canvas');
   const addStroke = useAddRowCallback(
     'strokes',
     (e) => {
@@ -808,15 +812,15 @@ const Canvas = () => {
       const rect = canvas.getBoundingClientRect();
       const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
       const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
-      const brush = store.getRow('settings', 'brush');
       return {
         x: clientX - rect.left,
         y: clientY - rect.top,
-        color: brush.color,
-        size: brush.size,
+        color: brush.brushColor,
+        size: brush.brushSize,
       };
     },
-    [],
+    [brush],
+    'canvas',
   );
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
@@ -826,7 +830,7 @@ const Canvas = () => {
     ctx.fillStyle = '#111';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     strokes.forEach((id) => {
-      const stroke = store.getRow('strokes', id);
+      const stroke = strokesTable[id];
       if (stroke) {
         ctx.fillStyle = stroke.color;
         ctx.beginPath();
@@ -834,7 +838,7 @@ const Canvas = () => {
         ctx.fill();
       }
     });
-  }, [strokes, store]);
+  }, [strokes, strokesTable]);
   useEffect(() => {
     draw();
   }, [draw]);
@@ -869,7 +873,7 @@ const Canvas = () => {
 export {Canvas};
 ",
   "src/components/ColorPicker.jsx": "import './colorPicker.css';
-import {useRow, useStore} from 'tinybase/ui-react';
+import {useValue, useSetValueCallback} from 'tinybase/ui-react';
 const ColorPicker = () => {
   const colors = [
     '#d81b60',
@@ -879,17 +883,19 @@ const ColorPicker = () => {
     '#7b1fa2',
     '#fff',
   ];
-  const store = useStore();
-  const currentBrush = useRow('settings', 'brush');
-  const setColor = (color) => {
-    store.setRow('settings', 'brush', {...currentBrush, color});
-  };
+  const currentColor = useValue('brushColor', 'settings');
+  const setColor = useSetValueCallback(
+    'brushColor',
+    (color) => color,
+    [],
+    'settings',
+  );
   return (
     <div id="colorPicker">
       {colors.map((color) => (
         <button
           key={color}
-          className="colorBtn"
+          className={\`colorBtn\${currentColor === color ? ' active' : ''}\`}
           style={{background: color}}
           onClick={() => setColor(color)}
         />
@@ -905,7 +911,7 @@ import {Button} from './Button';
 import {ColorPicker} from './ColorPicker';
 import {BrushSize} from './BrushSize';
 const DrawingControls = () => {
-  const clearStrokes = useDelTableCallback('strokes', () => null, []);
+  const clearStrokes = useDelTableCallback('strokes', () => null, [], 'canvas');
   return (
     <div id="drawingControls">
       <ColorPicker />
@@ -1012,20 +1018,23 @@ button.primary:hover {
 ",
   "src/drawing/App.jsx": "import './index.css';
 import {StrictMode} from 'react';
-import {createStore} from 'tinybase';
+import {createMergeableStore, createStore} from 'tinybase';
 import {Provider, useCreateStore} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {DrawingControls} from '../components/DrawingControls';
 import {Canvas} from '../components/Canvas';
 const App = () => {
-  const store = useCreateStore(() => {
+  const settingsStore = useCreateStore(() => {
     return createStore()
-      .setRow('settings', 'brush', {color: '#d81b60', size: 5})
-      .setTable('strokes', {});
+      .setValue('brushColor', '#d81b60')
+      .setValue('brushSize', 5);
+  });
+  const canvasStore = useCreateStore(() => {
+    return createMergeableStore('canvas').setTable('strokes', {});
   });
   return (
     <StrictMode>
-      <Provider store={store}>
+      <Provider storesById={{settings: settingsStore, canvas: canvasStore}}>
         <DrawingControls />
         <Canvas />
         <Inspector />
@@ -2984,9 +2993,8 @@ const createBrushSize = (store) => {
   sizeLabel.id = 'brushSizeValue';
   sizeLabel.textContent = '5';
   sizeSlider.addEventListener('input', () => {
-    const brush = store.getRow('settings', 'brush');
     const size = parseInt(sizeSlider.value);
-    store.setRow('settings', 'brush', {...brush, size});
+    store.setValue('brushSize', size);
     sizeLabel.textContent = \`\${size}\`;
   });
   container.appendChild(label);
@@ -3044,7 +3052,7 @@ export {createButton};
 }
 ",
   "src/components/canvas.js": "import './canvas.css';
-const createCanvas = (store) => {
+const createCanvas = (settingsStore, canvasStore) => {
   const canvas = document.createElement('canvas');
   canvas.id = 'drawingCanvas';
   canvas.width = 600;
@@ -3054,7 +3062,7 @@ const createCanvas = (store) => {
   const draw = () => {
     ctx.fillStyle = '#111';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    const strokes = store.getTable('strokes');
+    const strokes = canvasStore.getTable('strokes');
     Object.values(strokes).forEach((stroke) => {
       ctx.fillStyle = stroke.color;
       ctx.beginPath();
@@ -3066,12 +3074,12 @@ const createCanvas = (store) => {
     const rect = canvas.getBoundingClientRect();
     const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
     const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
-    const brush = store.getRow('settings', 'brush');
-    store.addRow('strokes', {
+    const brush = settingsStore.getValues();
+    canvasStore.addRow('strokes', {
       x: clientX - rect.left,
       y: clientY - rect.top,
-      color: brush.color,
-      size: brush.size,
+      color: brush.brushColor,
+      size: brush.brushSize,
     });
   };
   canvas.addEventListener('mousedown', () => {
@@ -3099,7 +3107,7 @@ const createCanvas = (store) => {
   canvas.addEventListener('touchend', () => {
     isDrawing = false;
   });
-  store.addTablesListener(draw);
+  canvasStore.addTablesListener(draw);
   draw();
   return canvas;
 };
@@ -3139,16 +3147,25 @@ const createColorPicker = (store) => {
   ];
   const container = document.createElement('div');
   container.id = 'colorPicker';
+  const buttons = [];
   colors.forEach((color) => {
     const btn = document.createElement('button');
     btn.className = 'colorBtn';
     btn.style.background = color;
     btn.addEventListener('click', () => {
-      const brush = store.getRow('settings', 'brush');
-      store.setRow('settings', 'brush', {...brush, color});
+      store.setValue('brushColor', color);
     });
     container.appendChild(btn);
+    buttons.push(btn);
   });
+  const updateActive = () => {
+    const currentColor = store.getValue('brushColor');
+    buttons.forEach((btn, i) => {
+      btn.classList.toggle('active', colors[i] === currentColor);
+    });
+  };
+  store.addValueListener('brushColor', updateActive);
+  updateActive();
   return container;
 };
 export {createColorPicker};
@@ -3170,14 +3187,14 @@ export {createColorPicker};
 import {createButton} from './button';
 import {createColorPicker} from './colorPicker';
 import {createBrushSize} from './brushSize';
-const createDrawingControls = (store) => {
+const createDrawingControls = (settingsStore, canvasStore) => {
   const controls = document.createElement('div');
   controls.id = 'drawingControls';
-  controls.appendChild(createColorPicker(store));
-  controls.appendChild(createBrushSize(store));
+  controls.appendChild(createColorPicker(settingsStore));
+  controls.appendChild(createBrushSize(settingsStore));
   const clearButton = createButton(
     'Clear',
-    () => store.delTable('strokes'),
+    () => canvasStore.delTable('strokes'),
     'primary',
   );
   controls.appendChild(clearButton);
@@ -3186,16 +3203,17 @@ const createDrawingControls = (store) => {
 export {createDrawingControls};
 ",
   "src/drawing/app.js": "import './index.css';
-import {createStore} from 'tinybase';
+import {createMergeableStore, createStore} from 'tinybase';
 import {createDrawingControls} from '../components/drawingControls';
 import {createCanvas} from '../components/canvas';
 const app = () => {
-  const store = createStore()
-    .setRow('settings', 'brush', {color: '#d81b60', size: 5})
-    .setTable('strokes', {});
+  const settingsStore = createStore()
+    .setValue('brushColor', '#d81b60')
+    .setValue('brushSize', 5);
+  const canvasStore = createMergeableStore('canvas').setTable('strokes', {});
   const appContainer = document.getElementById('app');
-  appContainer.appendChild(createDrawingControls(store));
-  appContainer.appendChild(createCanvas(store));
+  appContainer.appendChild(createDrawingControls(settingsStore, canvasStore));
+  appContainer.appendChild(createCanvas(settingsStore, canvasStore));
 };
 export {app};
 ",
@@ -5135,20 +5153,18 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/components/BrushSize.tsx": "import {useRow, useStore} from 'tinybase/ui-react';
+  "src/components/BrushSize.tsx": "import {useValue, useSetValueCallback} from 'tinybase/ui-react';
 import './brushSize.css';
 
 export const BrushSize = () => {
-  const store = useStore();
-  const currentBrush = useRow('settings', 'brush') as any;
-  const size = currentBrush.size;
+  const size = (useValue('brushSize', 'settings') as number) ?? 5;
 
-  const setSize = (e: React.ChangeEvent<HTMLInputElement>) => {
-    store.setRow('settings', 'brush', {
-      ...currentBrush,
-      size: parseInt(e.target.value),
-    });
-  };
+  const setSize = useSetValueCallback(
+    'brushSize',
+    (e: React.ChangeEvent<HTMLInputElement>) => parseInt(e.target.value),
+    [],
+    'settings',
+  );
 
   return (
     <div id="brushSize">
@@ -5185,14 +5201,23 @@ export const Button = ({
 );
 ",
   "src/components/Canvas.tsx": "import {useCallback, useEffect, useRef} from 'react';
-import {useAddRowCallback, useRowIds, useStore} from 'tinybase/ui-react';
+import {
+  useAddRowCallback,
+  useRowIds,
+  useTable,
+  useValues,
+} from 'tinybase/ui-react';
 import './canvas.css';
 
 export const Canvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isDrawing = useRef(false);
-  const store = useStore();
-  const strokes = useRowIds('strokes');
+  const brush = useValues('settings') as {
+    brushColor: string;
+    brushSize: number;
+  };
+  const strokes = useRowIds('strokes', 'canvas');
+  const strokesTable = useTable('strokes', 'canvas');
 
   const addStroke = useAddRowCallback(
     'strokes',
@@ -5203,16 +5228,16 @@ export const Canvas = () => {
       const rect = canvas.getBoundingClientRect();
       const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
       const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
-      const brush = store.getRow('settings', 'brush') as any;
 
       return {
         x: clientX - rect.left,
         y: clientY - rect.top,
-        color: brush.color,
-        size: brush.size,
+        color: brush.brushColor,
+        size: brush.brushSize,
       };
     },
-    [],
+    [brush],
+    'canvas',
   );
 
   const draw = useCallback(() => {
@@ -5226,7 +5251,7 @@ export const Canvas = () => {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     strokes.forEach((id) => {
-      const stroke = store.getRow('strokes', id) as any;
+      const stroke = strokesTable[id] as any;
       if (stroke) {
         ctx.fillStyle = stroke.color;
         ctx.beginPath();
@@ -5234,7 +5259,7 @@ export const Canvas = () => {
         ctx.fill();
       }
     });
-  }, [strokes, store]);
+  }, [strokes, strokesTable]);
 
   useEffect(() => {
     draw();
@@ -5273,7 +5298,7 @@ export const Canvas = () => {
 };
 ",
   "src/components/ColorPicker.tsx": "import './colorPicker.css';
-import {useRow, useStore} from 'tinybase/ui-react';
+import {useValue, useSetValueCallback} from 'tinybase/ui-react';
 
 export const ColorPicker = () => {
   const colors = [
@@ -5284,19 +5309,21 @@ export const ColorPicker = () => {
     '#7b1fa2',
     '#fff',
   ];
-  const store = useStore();
-  const currentBrush = useRow('settings', 'brush') as any;
+  const currentColor = useValue('brushColor', 'settings') as string;
 
-  const setColor = (color: string) => {
-    store.setRow('settings', 'brush', {...currentBrush, color});
-  };
+  const setColor = useSetValueCallback(
+    'brushColor',
+    (color: string) => color,
+    [],
+    'settings',
+  );
 
   return (
     <div id="colorPicker">
       {colors.map((color) => (
         <button
           key={color}
-          className="colorBtn"
+          className={\`colorBtn\${currentColor === color ? ' active' : ''}\`}
           style={{background: color}}
           onClick={() => setColor(color)}
         />
@@ -5315,7 +5342,7 @@ import {ColorPicker} from './ColorPicker';
 import {BrushSize} from './BrushSize';
 
 export const DrawingControls = () => {
-  const clearStrokes = useDelTableCallback('strokes', () => null, []);
+  const clearStrokes = useDelTableCallback('strokes', () => null, [], 'canvas');
 
   return (
     <div id="drawingControls">
@@ -5422,7 +5449,7 @@ button.primary:hover {
 ",
   "src/drawing/App.tsx": "import './index.css';
 import {StrictMode, useCallback, useEffect, useRef} from 'react';
-import {createStore} from 'tinybase';
+import {createMergeableStore, createStore} from 'tinybase';
 import {
   Provider,
   useAddRowCallback,
@@ -5439,15 +5466,19 @@ import {DrawingControls} from '../components/DrawingControls';
 import {Canvas} from '../components/Canvas';
 
 const App = () => {
-  const store = useCreateStore(() => {
+  const settingsStore = useCreateStore(() => {
     return createStore()
-      .setRow('settings', 'brush', {color: '#d81b60', size: 5})
-      .setTable('strokes', {});
+      .setValue('brushColor', '#d81b60')
+      .setValue('brushSize', 5);
+  });
+
+  const canvasStore = useCreateStore(() => {
+    return createMergeableStore('canvas').setTable('strokes', {});
   });
 
   return (
     <StrictMode>
-      <Provider store={store}>
+      <Provider storesById={{settings: settingsStore, canvas: canvasStore}}>
         <DrawingControls />
         <Canvas />
         <Inspector />
@@ -7660,9 +7691,8 @@ export const createBrushSize = (store: any): HTMLDivElement => {
   sizeLabel.textContent = '5';
 
   sizeSlider.addEventListener('input', () => {
-    const brush = store.getRow('settings', 'brush') as any;
     const size = parseInt(sizeSlider.value);
-    store.setRow('settings', 'brush', {...brush, size});
+    store.setValue('brushSize', size);
     sizeLabel.textContent = \`\${size}\`;
   });
 
@@ -7725,8 +7755,12 @@ export const createButton = (
 }
 ",
   "src/components/canvas.ts": "import './canvas.css';
+import {Store, MergeableStore} from 'tinybase';
 
-export const createCanvas = (store: any): HTMLCanvasElement => {
+export const createCanvas = (
+  settingsStore: Store,
+  canvasStore: MergeableStore,
+): HTMLCanvasElement => {
   const canvas = document.createElement('canvas');
   canvas.id = 'drawingCanvas';
   canvas.width = 600;
@@ -7739,7 +7773,7 @@ export const createCanvas = (store: any): HTMLCanvasElement => {
     ctx.fillStyle = '#111';
     ctx.fillRect(0, 0, canvas!.width, canvas!.height);
 
-    const strokes = store.getTable('strokes');
+    const strokes = canvasStore.getTable('strokes');
     Object.values(strokes).forEach((stroke: any) => {
       ctx.fillStyle = stroke.color;
       ctx.beginPath();
@@ -7752,47 +7786,47 @@ export const createCanvas = (store: any): HTMLCanvasElement => {
     const rect = canvas!.getBoundingClientRect();
     const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
     const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
-    const brush = store.getRow('settings', 'brush') as any;
+    const brush = settingsStore.getValues() as any;
 
-    store.addRow('strokes', {
+    canvasStore.addRow('strokes', {
       x: clientX - rect.left,
       y: clientY - rect.top,
-      color: brush.color,
-      size: brush.size,
+      color: brush.brushColor,
+      size: brush.brushSize,
     });
   };
 
-  canvas!.addEventListener('mousedown', () => {
+  canvas.addEventListener('mousedown', () => {
     isDrawing = true;
   });
-  canvas!.addEventListener('mouseup', () => {
+  canvas.addEventListener('mouseup', () => {
     isDrawing = false;
   });
-  canvas!.addEventListener('mouseleave', () => {
+  canvas.addEventListener('mouseleave', () => {
     isDrawing = false;
   });
 
-  canvas!.addEventListener('mousemove', (e) => {
+  canvas.addEventListener('mousemove', (e) => {
     if (isDrawing) addStroke(e);
   });
 
-  canvas!.addEventListener('touchstart', (e) => {
+  canvas.addEventListener('touchstart', (e) => {
     isDrawing = true;
     e.preventDefault();
   });
 
-  canvas!.addEventListener('touchmove', (e) => {
+  canvas.addEventListener('touchmove', (e) => {
     if (isDrawing) {
       addStroke(e);
       e.preventDefault();
     }
   });
 
-  canvas!.addEventListener('touchend', () => {
+  canvas.addEventListener('touchend', () => {
     isDrawing = false;
   });
 
-  store.addTablesListener(draw);
+  canvasStore.addTablesListener(draw);
   draw();
 
   return canvas;
@@ -7834,16 +7868,28 @@ export const createColorPicker = (store: any): HTMLDivElement => {
   const container = document.createElement('div');
   container.id = 'colorPicker';
 
+  const buttons: HTMLButtonElement[] = [];
+
   colors.forEach((color) => {
     const btn = document.createElement('button');
     btn.className = 'colorBtn';
     btn.style.background = color;
     btn.addEventListener('click', () => {
-      const brush = store.getRow('settings', 'brush') as any;
-      store.setRow('settings', 'brush', {...brush, color});
+      store.setValue('brushColor', color);
     });
     container.appendChild(btn);
+    buttons.push(btn);
   });
+
+  const updateActive = () => {
+    const currentColor = store.getValue('brushColor');
+    buttons.forEach((btn, i) => {
+      btn.classList.toggle('active', colors[i] === currentColor);
+    });
+  };
+
+  store.addValueListener('brushColor', updateActive);
+  updateActive();
 
   return container;
 };
@@ -7862,7 +7908,7 @@ export const createColorPicker = (store: any): HTMLDivElement => {
 }
 ",
   "src/components/drawingControls.ts": "import './drawingControls.css';
-import {Store} from 'tinybase';
+import {Store, MergeableStore} from 'tinybase';
 
 import {createButton} from './button';
 
@@ -7870,16 +7916,19 @@ import {createColorPicker} from './colorPicker';
 
 import {createBrushSize} from './brushSize';
 
-export const createDrawingControls = (store: Store): HTMLDivElement => {
+export const createDrawingControls = (
+  settingsStore: Store,
+  canvasStore: MergeableStore,
+): HTMLDivElement => {
   const controls = document.createElement('div');
   controls.id = 'drawingControls';
 
-  controls.appendChild(createColorPicker(store));
-  controls.appendChild(createBrushSize(store));
+  controls.appendChild(createColorPicker(settingsStore));
+  controls.appendChild(createBrushSize(settingsStore));
 
   const clearButton = createButton(
     'Clear',
-    () => store.delTable('strokes'),
+    () => canvasStore.delTable('strokes'),
     'primary',
   );
   controls.appendChild(clearButton);
@@ -7888,21 +7937,23 @@ export const createDrawingControls = (store: Store): HTMLDivElement => {
 };
 ",
   "src/drawing/app.ts": "import './index.css';
-import {createStore} from 'tinybase';
+import {createMergeableStore, createStore} from 'tinybase';
 
 import {createDrawingControls} from '../components/drawingControls';
 
 import {createCanvas} from '../components/canvas';
 
 const app = () => {
-  const store = createStore()
-    .setRow('settings', 'brush', {color: '#d81b60', size: 5})
-    .setTable('strokes', {});
+  const settingsStore = createStore()
+    .setValue('brushColor', '#d81b60')
+    .setValue('brushSize', 5);
+
+  const canvasStore = createMergeableStore('canvas').setTable('strokes', {});
 
   const appContainer = document.getElementById('app')!;
 
-  appContainer.appendChild(createDrawingControls(store));
-  appContainer.appendChild(createCanvas(store));
+  appContainer.appendChild(createDrawingControls(settingsStore, canvasStore));
+  appContainer.appendChild(createCanvas(settingsStore, canvasStore));
 };
 
 export {app};

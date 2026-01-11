@@ -1,13 +1,14 @@
 {{includeFile template="src/components/canvas.css.hbs" output="src/components/canvas.css"}}
 import {useCallback, useEffect, useRef} from 'react';
-import {useAddRowCallback, useRowIds, useStore} from 'tinybase/ui-react';
+import {useAddRowCallback, useRowIds, useTable, useValues} from 'tinybase/ui-react';
 import './canvas.css';
 
 export const Canvas = () => {
 const canvasRef = useRef<HTMLCanvasElement>(null);
   const isDrawing = useRef(false);
-  const store = useStore();
-  const strokes = useRowIds('strokes');
+  const brush = useValues('settings') as {brushColor: string; brushSize: number};
+  const strokes = useRowIds('strokes', 'canvas');
+  const strokesTable = useTable('strokes', 'canvas');
 
   const addStroke = useAddRowCallback(
   'strokes',
@@ -18,16 +19,16 @@ const canvasRef = useRef<HTMLCanvasElement>(null);
   const rect = canvas.getBoundingClientRect();
   const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
   const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
-  const brush = store.getRow('settings', 'brush') as any;
 
   return {
   x: clientX - rect.left,
   y: clientY - rect.top,
-  color: brush.color,
-  size: brush.size,
+  color: brush.brushColor,
+  size: brush.brushSize,
   };
   },
-  [],
+  [brush],
+  'canvas',
   );
 
   const draw = useCallback(() => {
@@ -41,7 +42,7 @@ const canvasRef = useRef<HTMLCanvasElement>(null);
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   strokes.forEach((id) => {
-  const stroke = store.getRow('strokes', id) as any;
+  const stroke = strokesTable[id] as any;
   if (stroke) {
   ctx.fillStyle = stroke.color;
   ctx.beginPath();
@@ -49,7 +50,7 @@ const canvasRef = useRef<HTMLCanvasElement>(null);
   ctx.fill();
   }
   });
-  }, [strokes, store]);
+  }, [strokes, strokesTable]);
 
   useEffect(() => {
   draw();

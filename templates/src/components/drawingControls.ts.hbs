@@ -1,6 +1,6 @@
 {{includeFile template="src/components/drawingControls.css.hbs" output="src/components/drawingControls.css"}}
 import './drawingControls.css';
-import {Store} from 'tinybase';
+import {Store, MergeableStore} from 'tinybase';
 {{includeFile template="src/components/button.ts.hbs" output="src/components/button.{{ext}}"}}
 import {createButton} from './button';
 {{includeFile template="src/components/colorPicker.ts.hbs" output="src/components/colorPicker.{{ext}}"}}
@@ -8,14 +8,14 @@ import {createColorPicker} from './colorPicker';
 {{includeFile template="src/components/brushSize.ts.hbs" output="src/components/brushSize.{{ext}}"}}
 import {createBrushSize} from './brushSize';
 
-export const createDrawingControls = (store: Store): HTMLDivElement => {
+export const createDrawingControls = (settingsStore: Store, canvasStore: MergeableStore): HTMLDivElement => {
 const controls = document.createElement('div');
 controls.id = 'drawingControls';
 
-controls.appendChild(createColorPicker(store));
-controls.appendChild(createBrushSize(store));
+controls.appendChild(createColorPicker(settingsStore));
+controls.appendChild(createBrushSize(settingsStore));
 
-const clearButton = createButton('Clear', () => store.delTable('strokes'), 'primary');
+const clearButton = createButton('Clear', () => canvasStore.delTable('strokes'), 'primary');
 controls.appendChild(clearButton);
 
 return controls;

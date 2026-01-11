@@ -225,8 +225,8 @@ for project in "${projects[@]}"; do
 done
 
 echo ""
-echo "Waiting for servers to start (3 seconds)..."
-sleep 3
+echo "Waiting for servers to start (1 second)..."
+sleep 1
 
 echo ""
 echo "Opening browsers..."

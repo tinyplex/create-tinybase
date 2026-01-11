@@ -1,7 +1,7 @@
 {{includeFile template="src/drawing/index.css.hbs" output="src/drawing/index.css"}}
 import './index.css';
 import {StrictMode, useCallback, useEffect, useRef} from 'react';
-import {createStore} from 'tinybase';
+import {createMergeableStore, createStore} from 'tinybase';
 import {Provider, useAddRowCallback, useCreateStore, useDelTableCallback, useRow, useRowIds, useStore} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 {{includeFile template="src/components/DrawingControls.tsx.hbs" output="src/components/DrawingControls.{{ext}}"}}
@@ -10,15 +10,17 @@ import {DrawingControls} from '../components/DrawingControls';
 import {Canvas} from '../components/Canvas';
 
 const App = () => {
-const store = useCreateStore(() => {
-return createStore()
-.setRow('settings', 'brush', {color: '#d81b60', size: 5})
-.setTable('strokes', {});
+const settingsStore = useCreateStore(() => {
+return createStore().setValue('brushColor', '#d81b60').setValue('brushSize', 5);
+});
+
+const canvasStore = useCreateStore(() => {
+return createMergeableStore('canvas').setTable('strokes', {});
 });
 
 return (
 <StrictMode>
-  <Provider store={store}>
+  <Provider storesById=\{{settings: settingsStore, canvas: canvasStore}}>
     <DrawingControls />
     <Canvas />
     <Inspector />

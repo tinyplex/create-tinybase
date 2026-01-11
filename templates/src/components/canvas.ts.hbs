@@ -1,7 +1,8 @@
 {{includeFile template="src/components/canvas.css.hbs" output="src/components/canvas.css"}}
 import './canvas.css';
+import {Store, MergeableStore} from 'tinybase';
 
-export const createCanvas = (store: any): HTMLCanvasElement => {
+export const createCanvas = (settingsStore: Store, canvasStore: MergeableStore): HTMLCanvasElement => {
 const canvas = document.createElement('canvas');
 canvas.id = 'drawingCanvas';
 canvas.width = 600;
@@ -14,7 +15,7 @@ const draw = () => {
 ctx.fillStyle = '#111';
 ctx.fillRect(0, 0, canvas!.width, canvas!.height);
 
-const strokes = store.getTable('strokes');
+const strokes = canvasStore.getTable('strokes');
 Object.values(strokes).forEach((stroke: any) => {
 ctx.fillStyle = stroke.color;
 ctx.beginPath();
@@ -27,41 +28,41 @@ const addStroke = (e: MouseEvent | TouchEvent) => {
 const rect = canvas!.getBoundingClientRect();
 const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
 const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
-const brush = store.getRow('settings', 'brush') as any;
+const brush = settingsStore.getValues() as any;
 
-store.addRow('strokes', {
+canvasStore.addRow('strokes', {
 x: clientX - rect.left,
 y: clientY - rect.top,
-color: brush.color,
-size: brush.size,
+color: brush.brushColor,
+size: brush.brushSize,
 });
 };
 
-canvas!.addEventListener('mousedown', () => { isDrawing = true; });
-canvas!.addEventListener('mouseup', () => { isDrawing = false; });
-canvas!.addEventListener('mouseleave', () => { isDrawing = false; });
+canvas.addEventListener('mousedown', () => { isDrawing = true; });
+canvas.addEventListener('mouseup', () => { isDrawing = false; });
+canvas.addEventListener('mouseleave', () => { isDrawing = false; });
 
-canvas!.addEventListener('mousemove', (e) => {
+canvas.addEventListener('mousemove', (e) => {
 if (isDrawing) addStroke(e);
 });
 
-canvas!.addEventListener('touchstart', (e) => {
+canvas.addEventListener('touchstart', (e) => {
 isDrawing = true;
 e.preventDefault();
 });
 
-canvas!.addEventListener('touchmove', (e) => {
+canvas.addEventListener('touchmove', (e) => {
 if (isDrawing) {
 addStroke(e);
 e.preventDefault();
 }
 });
 
-canvas!.addEventListener('touchend', () => {
+canvas.addEventListener('touchend', () => {
 isDrawing = false;
 });
 
-store.addTablesListener(draw);
+canvasStore.addTablesListener(draw);
 draw();
 
 return canvas;

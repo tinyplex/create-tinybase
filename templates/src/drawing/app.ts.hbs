@@ -1,20 +1,20 @@
 {{includeFile template="src/drawing/index.css.hbs" output="src/drawing/index.css"}}
 import './index.css';
-import {createStore} from 'tinybase';
+import {createMergeableStore, createStore} from 'tinybase';
 {{includeFile template="src/components/drawingControls.ts.hbs" output="src/components/drawingControls.{{ext}}"}}
 import {createDrawingControls} from '../components/drawingControls';
 {{includeFile template="src/components/canvas.ts.hbs" output="src/components/canvas.{{ext}}"}}
 import {createCanvas} from '../components/canvas';
 
 const app = () => {
-const store = createStore()
-.setRow('settings', 'brush', {color: '#d81b60', size: 5})
-.setTable('strokes', {});
+const settingsStore = createStore().setValue('brushColor', '#d81b60').setValue('brushSize', 5);
+
+const canvasStore = createMergeableStore('canvas').setTable('strokes', {});
 
 const appContainer = document.getElementById('app')!;
 
-appContainer.appendChild(createDrawingControls(store));
-appContainer.appendChild(createCanvas(store));
+appContainer.appendChild(createDrawingControls(settingsStore, canvasStore));
+appContainer.appendChild(createCanvas(settingsStore, canvasStore));
 };
 
 export {app};
