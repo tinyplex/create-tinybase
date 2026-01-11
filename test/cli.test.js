@@ -11,26 +11,26 @@ const combinations = [
   {
     language: 'javascript',
     framework: 'vanilla',
-    appType: 'basic',
-    name: 'js-vanilla-basic',
+    appType: 'todos',
+    name: 'js-vanilla-todos',
   },
   {
     language: 'javascript',
     framework: 'react',
-    appType: 'basic',
-    name: 'js-react-basic',
+    appType: 'todos',
+    name: 'js-react-todos',
   },
   {
     language: 'typescript',
     framework: 'vanilla',
-    appType: 'basic',
-    name: 'ts-vanilla-basic',
+    appType: 'todos',
+    name: 'ts-vanilla-todos',
   },
   {
     language: 'typescript',
     framework: 'react',
-    appType: 'basic',
-    name: 'ts-react-basic',
+    appType: 'todos',
+    name: 'ts-react-todos',
   },
   {
     language: 'javascript',
@@ -82,7 +82,7 @@ const combinations = [
   },
 ];
 
-async function runCLI(projectName, language, framework, appType = 'basic') {
+async function runCLI(projectName, language, framework, appType = 'todos') {
   return runCLIWithOptions(
     projectName,
     language,
@@ -267,7 +267,7 @@ describe('create-tinybase', () => {
         projectName,
         'typescript',
         'react',
-        'basic',
+        'todos',
         true,
         true,
       );

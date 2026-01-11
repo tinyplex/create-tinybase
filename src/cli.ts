@@ -53,7 +53,7 @@ const config = {
       name: 'appType',
       message: 'App type:',
       choices: [
-        {title: 'Basic demo', value: 'basic'},
+        {title: 'Todo app', value: 'todos'},
         {title: 'Chat app', value: 'chat'},
         {title: 'Drawing app', value: 'drawing'},
       ],

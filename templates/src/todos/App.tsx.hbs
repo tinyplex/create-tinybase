@@ -1,0 +1,31 @@
+{{includeFile template="src/todos/index.css.hbs" output="src/todos/index.css"}}
+import './index.css';
+import {StrictMode} from 'react';
+import {createStore} from 'tinybase';
+import {Provider, useCreateStore} from 'tinybase/ui-react';
+import {Inspector} from 'tinybase/ui-react-inspector';
+{{includeFile template="src/components/TodoInput.tsx.hbs" output="src/components/TodoInput.{{ext}}"}}
+import {TodoInput} from '../components/TodoInput';
+{{includeFile template="src/components/TodoList.tsx.hbs" output="src/components/TodoList.{{ext}}"}}
+import {TodoList} from '../components/TodoList';
+
+const App = () => {
+const store = useCreateStore(() => {
+return createStore().setTable('todos', {
+'1': {text: 'Learn TinyBase', completed: false},
+'2': {text: 'Build an app', completed: false},
+});
+});
+
+return (
+<StrictMode>
+  <Provider store={store}>
+    <TodoInput />
+    <TodoList />
+    <Inspector />
+  </Provider>
+</StrictMode>
+);
+};
+
+export {App};

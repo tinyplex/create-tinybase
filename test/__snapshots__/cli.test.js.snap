@@ -1,463 +1,5 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`create-tinybase > js-react-basic > should match snapshot 1`] = `
-{
-  "README.md": "# test-js-react-basic
-
-A TinyBase app built with JavaScript and React.
-
-## Getting Started
-
-\`\`\`bash
-npm install
-npm run dev
-\`\`\`
-
-## Learn More
-
-- [TinyBase Documentation](https://tinybase.org)
-- [TinyBase Examples](https://tinybase.org/demos/)
-",
-  "index.html": "<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
-    />
-
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>TinyBase Demo</title>
-    <style>
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        --hue: 270;
-        --fg: oklch(85% 0.01 var(--hue));
-        --fg2: oklch(60% 0.01 var(--hue));
-        --bg: oklch(20% 0.01 var(--hue));
-        --bg2: oklch(25% 0.01 var(--hue));
-        --border: oklch(30% 0.01 var(--hue));
-        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
-        --accent: #d81b60;
-        color: var(--fg);
-        background: var(--bg);
-        font-family: 'Inter', sans-serif;
-        user-select: none;
-        margin: 0;
-        padding: 0;
-      }
-
-      #appContainer {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-      }
-
-      #topBar {
-        background: var(--bg-header);
-        border-bottom: 1px solid var(--border);
-        box-shadow: 0 1px 2px 0 #0007;
-        padding: 0.75rem 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        backdrop-filter: blur(4px);
-      }
-
-      #topBarLogo {
-        height: 2rem;
-        width: 2rem;
-        flex-shrink: 0;
-      }
-
-      #topBarTitle {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #fff;
-        flex: 1;
-      }
-
-      #topBarInfo {
-        position: relative;
-      }
-
-      #infoIcon {
-        width: 1.25rem;
-        height: 1.25rem;
-        border: 2px solid var(--fg2);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.75rem;
-        font-weight: 800;
-        color: var(--fg2);
-        cursor: help;
-        transition: all 0.2s;
-        user-select: none;
-      }
-
-      #infoIcon:hover {
-        border-color: var(--accent);
-        color: var(--accent);
-      }
-
-      #infoIcon:hover #infoTooltip {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
-      }
-
-      #infoTooltip {
-        position: absolute;
-        right: 0;
-        top: calc(100% + 0.5rem);
-        background: var(--bg2);
-        border: 1px solid var(--border);
-        border-radius: 0.375rem;
-        padding: 0.75rem 1rem;
-        font-size: 0.85rem;
-        font-weight: 400;
-        width: 20rem;
-        white-space: normal;
-        color: var(--fg);
-        line-height: 1.5;
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(-0.25rem);
-        transition: all 0.2s;
-        pointer-events: none;
-        box-shadow: 0 1px 2px 0 #0007;
-      }
-
-      #infoTooltip a {
-        color: var(--fg);
-        text-decoration: underline;
-      }
-
-      #infoTooltip::before {
-        content: '';
-        position: absolute;
-        right: 0.75rem;
-        top: -0.375rem;
-        width: 0.75rem;
-        height: 0.75rem;
-        background: var(--bg2);
-        border-left: 1px solid var(--border);
-        border-top: 1px solid var(--border);
-        transform: rotate(45deg);
-      }
-
-      #app {
-        max-width: 60rem;
-        width: 100%;
-        margin: 0 auto;
-        padding: 2rem 1.5rem;
-      }
-    </style>
-  </head>
-
-  <body>
-    <div id="appContainer">
-      <div id="topBar">
-        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-        <div id="topBarTitle">TinyBase Demo</div>
-        <div id="topBarInfo">
-          <div id="infoIcon">
-            i
-            <div id="infoTooltip">
-              A simple TinyBase app with key-values and tables mutated with
-              buttons. See the full set of
-              <a href="https://tinybase.org/demos/" target="_blank"
-                >TinyBase demos</a
-              >
-              for more examples. <br /><br />
-              Built with JavaScript + React.
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id="app"></div>
-    </div>
-
-    <script type="module" src="/src/index.jsx"></script>
-  </body>
-</html>
-",
-  "package.json": "{
-  "name": "test-js-react-basic",
-  "version": "1.0.0",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "devDependencies": {
-    "vite": "^7.1.3",
-    "@vitejs/plugin-react": "^4.3.4"
-  },
-  "dependencies": {
-    "tinybase": "^7.3.1",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3"
-  }
-}
-",
-  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
-  <path stroke="#fff" stroke-width="80" fill="none"
-    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
-  <path fill="#d81b60"
-    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
-  <path
-    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
-</svg>",
-  "src/basic/App.jsx": "import './index.css';
-import {StrictMode} from 'react';
-import {createStore} from 'tinybase';
-import {
-  Provider,
-  useCreateStore,
-  useAddRowCallback,
-  useSetValueCallback,
-} from 'tinybase/ui-react';
-import {SortedTableInHtmlTable, ValuesInHtmlTable} from 'tinybase/ui-react-dom';
-import {Inspector} from 'tinybase/ui-react-inspector';
-import {Button} from '../components/Button';
-const getRandom = (max = 100) => Math.floor(Math.random() * max);
-const Buttons = () => {
-  const handleCount = useSetValueCallback(
-    'counter',
-    () => (value) => (value ?? 0) + 1,
-  );
-  const handleRandom = useSetValueCallback('random', () => getRandom());
-  const handleAddPet = useAddRowCallback('pets', (_, store) => ({
-    name: ['fido', 'felix', 'bubbles', 'lowly', 'polly'][getRandom(5)],
-    species: store.getRowIds('species')[getRandom(5)],
-  }));
-  return (
-    <div id="buttons">
-      <Button onClick={handleCount}>Increment number</Button>
-      <Button onClick={handleRandom}>Random number</Button>
-      <Button onClick={handleAddPet}>Add a pet</Button>
-    </div>
-  );
-};
-const App = () => {
-  const store = useCreateStore(() => {
-    return createStore()
-      .setValue('counter', 0)
-      .setRow('pets', '0', {name: 'fido', species: 'dog'})
-      .setTable('species', {
-        dog: {price: 5},
-        cat: {price: 4},
-        fish: {price: 2},
-        worm: {price: 1},
-        parrot: {price: 3},
-      });
-  });
-  return (
-    <StrictMode>
-      <Provider store={store}>
-        <Buttons />
-        <div>
-          <h2>Values</h2>
-          <ValuesInHtmlTable />
-        </div>
-        <div>
-          <h2>Pets Table</h2>
-          <SortedTableInHtmlTable
-            tableId="pets"
-            cellId="name"
-            limit={5}
-            sortOnClick={true}
-            className="sortedTable"
-            paginator={true}
-          />
-        </div>
-        <Inspector />
-      </Provider>
-    </StrictMode>
-  );
-};
-export {App};
-",
-  "src/basic/index.css": "#buttons {
-  border: solid #666;
-  border-width: 1px 0;
-  text-align: center;
-  padding: 1rem 0;
-}
-
-table {
-  border-collapse: collapse;
-  font-size: inherit;
-  line-height: inherit;
-  margin-top: 0.5rem;
-  table-layout: fixed;
-  width: 100%;
-  margin-bottom: 2rem;
-  caption-side: bottom;
-}
-table caption {
-  text-align: left;
-  button {
-    border: 0;
-    margin-right: 0.25rem;
-  }
-}
-table caption button {
-  line-height: 0.7rem;
-  margin: 0 0.25rem 0 0;
-  vertical-align: middle;
-}
-th,
-td {
-  padding: 0.25rem 0.5rem 0.25rem 0;
-  text-align: left;
-}
-thead th,
-thead td {
-  border: solid #999;
-  border-width: 1px 0;
-}
-tbody th,
-tbody td {
-  border-bottom: 1px solid #333;
-}
-
-table.sortedTable thead th {
-  cursor: pointer;
-}
-
-@media (min-width: 50rem) {
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    align-items: start;
-  }
-  #buttons {
-    grid-column: span 2;
-  }
-}
-",
-  "src/components/Button.jsx": "import './button.css';
-const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
-  <button
-    onClick={onClick}
-    type={type}
-    className={variant === 'primary' ? 'primary' : void 0}
-  >
-    {children}
-  </button>
-);
-export {Button};
-",
-  "src/components/button.css": "button {
-  padding: 0.5rem 1rem;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  background: #222;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  cursor: pointer;
-  margin: 0.5rem;
-}
-
-button:hover {
-  border-color: #d81b60;
-}
-
-button.primary {
-  background: #d81b60;
-  border: none;
-  padding: 0.75rem 1.5rem;
-}
-
-button.primary:hover {
-  background: #c2185b;
-}
-",
-  "src/index.css": "a {
-  color: var(--fg);
-}
-
-h1 {
-  font-weight: 600;
-  img {
-    margin-right: 1rem;
-    height: 2.5rem;
-    vertical-align: text-bottom;
-  }
-}
-
-h2 {
-  font-weight: 800;
-  font-size: 1.3rem;
-  margin: 1rem 0 0;
-}
-
-p {
-  margin: 0 0 1rem;
-  line-height: 1.5;
-}
-
-details {
-  border: 1px solid var(--border);
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-}
-
-details summary {
-  cursor: pointer;
-  font-weight: 800;
-  margin: -0.5rem -0.5rem 0;
-  padding: 0.5rem;
-}
-
-details[open] summary {
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-pre {
-  margin: 0;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-",
-  "src/index.jsx": "import './index.css';
-import ReactDOM from 'react-dom/client';
-import {App} from './basic/App';
-addEventListener('load', () =>
-  ReactDOM.createRoot(document.getElementById('app')).render(<App />),
-);
-",
-  "vite.config.js": "import {defineConfig} from 'vite';
-import react from '@vitejs/plugin-react';
-
-export default defineConfig({
-  plugins: [
-    react({
-      jsxRuntime: 'automatic',
-    }),
-  ],
-});
-",
-}
-`;
-
 exports[`create-tinybase > js-react-chat > should match snapshot 1`] = `
 {
   "README.md": "# test-js-react-chat
@@ -706,7 +248,7 @@ const App = () => {
 };
 export {App};
 ",
-  "src/chat/index.css": "/* Chat-specific styles are now in component CSS files */
+  "src/chat/index.css": "/* Add additional app styling here if needed */
 ",
   "src/components/Button.jsx": "import './button.css';
 const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
@@ -1493,7 +1035,7 @@ const App = () => {
 };
 export {App};
 ",
-  "src/drawing/index.css": "/* Drawing-specific styles are now in component CSS files */
+  "src/drawing/index.css": "/* Add additional app styling here if needed */
 ",
   "src/index.css": "a {
   color: var(--fg);
@@ -1564,11 +1106,11 @@ export default defineConfig({
 }
 `;
 
-exports[`create-tinybase > js-vanilla-basic > should match snapshot 1`] = `
+exports[`create-tinybase > js-react-todos > should match snapshot 1`] = `
 {
-  "README.md": "# test-js-vanilla-basic
+  "README.md": "# test-js-react-todos
 
-A TinyBase app built with JavaScript and Vanilla JS.
+A TinyBase app built with JavaScript and React.
 
 ## Getting Started
 
@@ -1595,7 +1137,7 @@ npm run dev
     />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>TinyBase Demo</title>
+    <title>TinyBase Todos</title>
     <style>
       * {
         box-sizing: border-box;
@@ -1740,36 +1282,23 @@ npm run dev
           <div id="infoIcon">
             i
             <div id="infoTooltip">
-              A simple TinyBase app with key-values and tables mutated with
-              buttons. See the full set of
-              <a href="https://tinybase.org/demos/" target="_blank"
-                >TinyBase demos</a
-              >
-              for more examples. <br /><br />
-              Built with JavaScript.
+              A simple todo list application demonstrating TinyBase's reactive
+              data management with CRUD operations.
+              <br /><br />
+              Built with JavaScript + React.
             </div>
           </div>
         </div>
       </div>
-      <div id="app">
-        <div id="buttons"></div>
-        <details open>
-          <summary>Values</summary>
-          <pre id="valuesJson"></pre>
-        </details>
-        <details open>
-          <summary>Tables</summary>
-          <pre id="tablesJson"></pre>
-        </details>
-      </div>
+      <div id="app"></div>
     </div>
 
-    <script type="module" src="/src/index.js"></script>
+    <script type="module" src="/src/index.jsx"></script>
   </body>
 </html>
 ",
   "package.json": "{
-  "name": "test-js-vanilla-basic",
+  "name": "test-js-react-todos",
   "version": "1.0.0",
   "scripts": {
     "dev": "vite",
@@ -1777,10 +1306,13 @@ npm run dev
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^7.1.3"
+    "vite": "^7.1.3",
+    "@vitejs/plugin-react": "^4.3.4"
   },
   "dependencies": {
-    "tinybase": "^7.3.1"
+    "tinybase": "^7.3.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
   }
 }
 ",
@@ -1792,105 +1324,104 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/basic/app.js": "import './index.css';
-import {createStore} from 'tinybase';
-import {createButton} from '../components/button';
-const updateJson = (id, content) =>
-  (document.getElementById(id).innerText = JSON.stringify(content, null, 2));
-const getRandom = (max = 100) => Math.floor(Math.random() * max);
-const app = () => {
-  const store = createStore();
-  const buttonsContainer = document.getElementById('buttons');
-  buttonsContainer.appendChild(
-    createButton('Increment number', () =>
-      store.setValue('counter', (value) => value + 1),
-    ),
-  );
-  buttonsContainer.appendChild(
-    createButton('Random number', () => store.setValue('random', getRandom())),
-  );
-  buttonsContainer.appendChild(
-    createButton('Add a pet', () =>
-      store.addRow('pets', {
-        name: ['fido', 'felix', 'bubbles', 'lowly', 'polly'][getRandom(5)],
-        species: store.getRowIds('species')[getRandom(5)],
-      }),
-    ),
-  );
-  store.addValuesListener(() => updateJson('valuesJson', store.getValues()));
-  store.addTablesListener(() => updateJson('tablesJson', store.getTables()));
-  store
-    .setValue('counter', 0)
-    .setRow('pets', '0', {name: 'fido', species: 'dog'})
-    .setTable('species', {
-      dog: {price: 5},
-      cat: {price: 4},
-      fish: {price: 2},
-      worm: {price: 1},
-      parrot: {price: 3},
-    });
-};
-export {app};
+  "src/components/Button.jsx": "import './button.css';
+const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
+  <button
+    onClick={onClick}
+    type={type}
+    className={variant === 'primary' ? 'primary' : void 0}
+  >
+    {children}
+  </button>
+);
+export {Button};
 ",
-  "src/basic/index.css": "#buttons {
-  border: solid #666;
-  border-width: 1px 0;
-  text-align: center;
-  padding: 1rem 0;
-}
-
-table {
-  border-collapse: collapse;
-  font-size: inherit;
-  line-height: inherit;
-  margin-top: 0.5rem;
-  table-layout: fixed;
-  width: 100%;
-  margin-bottom: 2rem;
-  caption-side: bottom;
-}
-table caption {
-  text-align: left;
-  button {
-    border: 0;
-    margin-right: 0.25rem;
-  }
-}
-table caption button {
-  line-height: 0.7rem;
-  margin: 0 0.25rem 0 0;
-  vertical-align: middle;
-}
-th,
-td {
-  padding: 0.25rem 0.5rem 0.25rem 0;
-  text-align: left;
-}
-thead th,
-thead td {
-  border: solid #999;
-  border-width: 1px 0;
-}
-tbody th,
-tbody td {
-  border-bottom: 1px solid #333;
-}
-
-table.sortedTable thead th {
-  cursor: pointer;
-}
-
-@media (min-width: 50rem) {
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    align-items: start;
-  }
-  #buttons {
-    grid-column: span 2;
-  }
-}
+  "src/components/Input.jsx": "import './input.css';
+const Input = ({value, onChange, placeholder = '', autoFocus = false}) => (
+  <input
+    type="text"
+    value={value}
+    onChange={(e) => onChange(e.target.value)}
+    placeholder={placeholder}
+    autoFocus={autoFocus}
+  />
+);
+export {Input};
+",
+  "src/components/TodoInput.jsx": "import './todoInput.css';
+import {useState} from 'react';
+import {useAddRowCallback} from 'tinybase/ui-react';
+import {Button} from './Button';
+import {Input} from './Input';
+const TodoInput = () => {
+  const [text, setText] = useState('');
+  const addRow = useAddRowCallback('todos', () => ({text, completed: false}), [
+    text,
+  ]);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (text.trim()) {
+      addRow();
+      setText('');
+    }
+  };
+  return (
+    <form id="todoInput" onSubmit={handleSubmit}>
+      <Input
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder="What needs to be done?"
+        autoFocus
+      />
+      <Button type="submit" variant="primary">
+        Add
+      </Button>
+    </form>
+  );
+};
+export {TodoInput};
+",
+  "src/components/TodoItem.jsx": "import './todoItem.css';
+import {useRow, useSetPartialRowCallback} from 'tinybase/ui-react';
+import {Button} from './Button';
+const TodoItem = ({rowId, onDelete}) => {
+  const todo = useRow('todos', rowId);
+  const setPartialRow = useSetPartialRowCallback(
+    'todos',
+    rowId,
+    (e) => ({completed: e.target.checked}),
+    [],
+  );
+  return (
+    <div className={\`todoItem\${todo.completed ? ' completed' : ''}\`}>
+      <input
+        type="checkbox"
+        checked={todo.completed}
+        onChange={setPartialRow}
+        id={\`todo-\${rowId}\`}
+      />
+      <label htmlFor={\`todo-\${rowId}\`}>{todo.text}</label>
+      <Button onClick={() => onDelete(rowId)}>Delete</Button>
+    </div>
+  );
+};
+export {TodoItem};
+",
+  "src/components/TodoList.jsx": "import './todoList.css';
+import {useDelRowCallback, useRowIds} from 'tinybase/ui-react';
+import {TodoItem} from './TodoItem';
+const TodoList = () => {
+  const todoIds = useRowIds('todos');
+  const delRow = useDelRowCallback('todos', (id) => id, []);
+  return (
+    <div id="todoList">
+      {todoIds.map((id) => (
+        <TodoItem key={id} rowId={id} onDelete={delRow} />
+      ))}
+    </div>
+  );
+};
+export {TodoList};
 ",
   "src/components/button.css": "button {
   padding: 0.5rem 1rem;
@@ -1918,17 +1449,87 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/components/button.js": "import './button.css';
-const createButton = (text, onClick, variant = 'default') => {
-  const button = document.createElement('button');
-  button.textContent = text;
-  if (variant === 'primary') {
-    button.className = 'primary';
-  }
-  button.addEventListener('click', onClick);
-  return button;
-};
-export {createButton};
+  "src/components/input.css": "input[type='text'] {
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+input[type='text']:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input[type='text']::placeholder {
+  color: var(--fg2);
+}
+",
+  "src/components/todoInput.css": "#todoInput {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+#todoInput input {
+  flex: 1;
+}
+",
+  "src/components/todoItem.css": ".todoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.todoItem:last-child {
+  border-bottom: none;
+}
+
+.todoItem input[type='checkbox'] {
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.todoItem label {
+  flex: 1;
+  cursor: pointer;
+  user-select: none;
+}
+
+.todoItem.completed label {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.todoItem button {
+  flex-shrink: 0;
+}
+",
+  "src/components/todoList.css": "#todoList {
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  overflow: hidden;
+  background: var(--bg2);
+}
+
+#todoList:empty::before {
+  content: 'No todos yet. Add one above!';
+  display: block;
+  padding: 2rem;
+  text-align: center;
+  color: var(--fg2);
+}
 ",
   "src/index.css": "a {
   color: var(--fg);
@@ -1978,9 +1579,51 @@ pre {
   word-wrap: break-word;
 }
 ",
-  "src/index.js": "import './index.css';
-import {app} from './basic/app';
-addEventListener('load', app);
+  "src/index.jsx": "import './index.css';
+import ReactDOM from 'react-dom/client';
+import {App} from './todos/App';
+addEventListener('load', () =>
+  ReactDOM.createRoot(document.getElementById('app')).render(<App />),
+);
+",
+  "src/todos/App.jsx": "import './index.css';
+import {StrictMode} from 'react';
+import {createStore} from 'tinybase';
+import {Provider, useCreateStore} from 'tinybase/ui-react';
+import {Inspector} from 'tinybase/ui-react-inspector';
+import {TodoInput} from '../components/TodoInput';
+import {TodoList} from '../components/TodoList';
+const App = () => {
+  const store = useCreateStore(() => {
+    return createStore().setTable('todos', {
+      1: {text: 'Learn TinyBase', completed: false},
+      2: {text: 'Build an app', completed: false},
+    });
+  });
+  return (
+    <StrictMode>
+      <Provider store={store}>
+        <TodoInput />
+        <TodoList />
+        <Inspector />
+      </Provider>
+    </StrictMode>
+  );
+};
+export {App};
+",
+  "src/todos/index.css": "/* Add additional app styling here if needed */
+",
+  "vite.config.js": "import {defineConfig} from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [
+    react({
+      jsxRuntime: 'automatic',
+    }),
+  ],
+});
 ",
 }
 `;
@@ -2240,7 +1883,7 @@ const app = () => {
 };
 export {app};
 ",
-  "src/chat/index.css": "/* Chat-specific styles are now in component CSS files */
+  "src/chat/index.css": "/* Add additional app styling here if needed */
 ",
   "src/components/button.css": "button {
   padding: 0.5rem 1rem;
@@ -2982,7 +2625,7 @@ const app = () => {
 };
 export {app};
 ",
-  "src/drawing/index.css": "/* Drawing-specific styles are now in component CSS files */
+  "src/drawing/index.css": "/* Add additional app styling here if needed */
 ",
   "src/index.css": "a {
   color: var(--fg);
@@ -3039,11 +2682,11 @@ addEventListener('load', app);
 }
 `;
 
-exports[`create-tinybase > ts-react-basic > should match snapshot 1`] = `
+exports[`create-tinybase > js-vanilla-todos > should match snapshot 1`] = `
 {
-  "README.md": "# test-ts-react-basic
+  "README.md": "# test-js-vanilla-todos
 
-A TinyBase app built with TypeScript and React.
+A TinyBase app built with JavaScript and Vanilla JS.
 
 ## Getting Started
 
@@ -3070,7 +2713,7 @@ npm run dev
     />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>TinyBase Demo</title>
+    <title>TinyBase Todos</title>
     <style>
       * {
         box-sizing: border-box;
@@ -3215,13 +2858,10 @@ npm run dev
           <div id="infoIcon">
             i
             <div id="infoTooltip">
-              A simple TinyBase app with key-values and tables mutated with
-              buttons. See the full set of
-              <a href="https://tinybase.org/demos/" target="_blank"
-                >TinyBase demos</a
-              >
-              for more examples. <br /><br />
-              Built with TypeScript + React.
+              A simple todo list application demonstrating TinyBase's reactive
+              data management with CRUD operations.
+              <br /><br />
+              Built with JavaScript.
             </div>
           </div>
         </div>
@@ -3229,30 +2869,23 @@ npm run dev
       <div id="app"></div>
     </div>
 
-    <script type="module" src="/src/index.tsx"></script>
+    <script type="module" src="/src/index.js"></script>
   </body>
 </html>
 ",
   "package.json": "{
-  "name": "test-ts-react-basic",
+  "name": "test-js-vanilla-todos",
   "version": "1.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^7.1.3",
-    "typescript": "^5.9.3",
-    "@types/node": "^25.0.3",
-    "@types/react": "^19.2.7",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^4.3.4"
+    "vite": "^7.1.3"
   },
   "dependencies": {
-    "tinybase": "^7.3.1",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "tinybase": "^7.3.1"
   }
 }
 ",
@@ -3264,170 +2897,6 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/basic/App.tsx": "import './index.css';
-import {StrictMode} from 'react';
-import {createStore} from 'tinybase';
-import {
-  Provider,
-  useCreateStore,
-  useAddRowCallback,
-  useSetValueCallback,
-} from 'tinybase/ui-react';
-import type {ValueOrUndefined} from 'tinybase';
-import {SortedTableInHtmlTable, ValuesInHtmlTable} from 'tinybase/ui-react-dom';
-import {Inspector} from 'tinybase/ui-react-inspector';
-
-import {Button} from '../components/Button';
-
-// Convenience function for generating a random integer
-const getRandom = (max = 100) => Math.floor(Math.random() * max);
-
-const Buttons = () => {
-  // Attach events to the buttons to mutate the data in the TinyBase Store
-  const handleCount = useSetValueCallback(
-    'counter',
-    () => (value: ValueOrUndefined) => ((value ?? 0) as number) + 1,
-  );
-  const handleRandom = useSetValueCallback('random', () => getRandom());
-  const handleAddPet = useAddRowCallback('pets', (_, store) => ({
-    name: ['fido', 'felix', 'bubbles', 'lowly', 'polly'][getRandom(5)],
-    species: store.getRowIds('species')[getRandom(5)],
-  }));
-
-  return (
-    <div id="buttons">
-      <Button onClick={handleCount}>Increment number</Button>
-      <Button onClick={handleRandom}>Random number</Button>
-      <Button onClick={handleAddPet}>Add a pet</Button>
-    </div>
-  );
-};
-
-export const App = () => {
-  const store = useCreateStore(() => {
-    // Create the TinyBase Store and initialize the Store's data
-    return createStore()
-      .setValue('counter', 0)
-      .setRow('pets', '0', {name: 'fido', species: 'dog'})
-      .setTable('species', {
-        dog: {price: 5},
-        cat: {price: 4},
-        fish: {price: 2},
-        worm: {price: 1},
-        parrot: {price: 3},
-      });
-  });
-
-  return (
-    <StrictMode>
-      <Provider store={store}>
-        <Buttons />
-        <div>
-          <h2>Values</h2>
-          <ValuesInHtmlTable />
-        </div>
-        <div>
-          <h2>Pets Table</h2>
-          <SortedTableInHtmlTable
-            tableId="pets"
-            cellId="name"
-            limit={5}
-            sortOnClick={true}
-            className="sortedTable"
-            paginator={true}
-          />
-        </div>
-        <Inspector />
-      </Provider>
-    </StrictMode>
-  );
-};
-",
-  "src/basic/index.css": "#buttons {
-  border: solid #666;
-  border-width: 1px 0;
-  text-align: center;
-  padding: 1rem 0;
-}
-
-table {
-  border-collapse: collapse;
-  font-size: inherit;
-  line-height: inherit;
-  margin-top: 0.5rem;
-  table-layout: fixed;
-  width: 100%;
-  margin-bottom: 2rem;
-  caption-side: bottom;
-}
-table caption {
-  text-align: left;
-  button {
-    border: 0;
-    margin-right: 0.25rem;
-  }
-}
-table caption button {
-  line-height: 0.7rem;
-  margin: 0 0.25rem 0 0;
-  vertical-align: middle;
-}
-th,
-td {
-  padding: 0.25rem 0.5rem 0.25rem 0;
-  text-align: left;
-}
-thead th,
-thead td {
-  border: solid #999;
-  border-width: 1px 0;
-}
-tbody th,
-tbody td {
-  border-bottom: 1px solid #333;
-}
-
-table.sortedTable thead th {
-  cursor: pointer;
-}
-
-@media (min-width: 50rem) {
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    align-items: start;
-  }
-  #buttons {
-    grid-column: span 2;
-  }
-}
-",
-  "src/components/Button.tsx": "import './button.css';
-import {ReactNode} from 'react';
-
-interface ButtonProps {
-  children: ReactNode;
-  onClick?: () => void;
-  variant?: 'default' | 'primary';
-  type?: 'button' | 'submit';
-}
-
-export const Button = ({
-  children,
-  onClick,
-  variant = 'default',
-  type = 'button',
-}: ButtonProps) => (
-  <button
-    onClick={onClick}
-    type={type}
-    className={variant === 'primary' ? 'primary' : undefined}
-  >
-    {children}
-  </button>
-);
-",
   "src/components/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
@@ -3453,6 +2922,192 @@ button.primary {
 button.primary:hover {
   background: #c2185b;
 }
+",
+  "src/components/button.js": "import './button.css';
+const createButton = (text, onClick, variant = 'default') => {
+  const button = document.createElement('button');
+  button.textContent = text;
+  if (variant === 'primary') {
+    button.className = 'primary';
+  }
+  button.addEventListener('click', onClick);
+  return button;
+};
+export {createButton};
+",
+  "src/components/input.css": "input[type='text'] {
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+input[type='text']:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input[type='text']::placeholder {
+  color: var(--fg2);
+}
+",
+  "src/components/input.js": "import './input.css';
+const createInput = (placeholder = '', value = '', onInput) => {
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.placeholder = placeholder;
+  input.value = value;
+  if (onInput) {
+    input.addEventListener('input', () => onInput(input.value));
+  }
+  return input;
+};
+export {createInput};
+",
+  "src/components/todoInput.css": "#todoInput {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+#todoInput input {
+  flex: 1;
+}
+",
+  "src/components/todoInput.js": "import './todoInput.css';
+import {createButton} from './button';
+import {createInput} from './input';
+const createTodoInput = (store) => {
+  const container = document.createElement('div');
+  container.id = 'todoInput';
+  const input = createInput('What needs to be done?');
+  const addTodo = () => {
+    const text = input.value.trim();
+    if (text) {
+      store.addRow('todos', {text, completed: false});
+      input.value = '';
+      input.focus();
+    }
+  };
+  input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      addTodo();
+    }
+  });
+  const addButton = createButton('Add', addTodo, 'primary');
+  container.appendChild(input);
+  container.appendChild(addButton);
+  return container;
+};
+export {createTodoInput};
+",
+  "src/components/todoItem.css": ".todoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.todoItem:last-child {
+  border-bottom: none;
+}
+
+.todoItem input[type='checkbox'] {
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.todoItem label {
+  flex: 1;
+  cursor: pointer;
+  user-select: none;
+}
+
+.todoItem.completed label {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.todoItem button {
+  flex-shrink: 0;
+}
+",
+  "src/components/todoItem.js": "import './todoItem.css';
+import {createButton} from './button';
+const createTodoItem = (id, text, completed, onToggle, onDelete) => {
+  const item = document.createElement('div');
+  item.className = \`todoItem\${completed ? ' completed' : ''}\`;
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.checked = completed;
+  checkbox.id = \`todo-\${id}\`;
+  checkbox.addEventListener('change', onToggle);
+  const label = document.createElement('label');
+  label.textContent = text;
+  label.htmlFor = \`todo-\${id}\`;
+  const deleteBtn = createButton('Delete', onDelete);
+  item.appendChild(checkbox);
+  item.appendChild(label);
+  item.appendChild(deleteBtn);
+  return item;
+};
+export {createTodoItem};
+",
+  "src/components/todoList.css": "#todoList {
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  overflow: hidden;
+  background: var(--bg2);
+}
+
+#todoList:empty::before {
+  content: 'No todos yet. Add one above!';
+  display: block;
+  padding: 2rem;
+  text-align: center;
+  color: var(--fg2);
+}
+",
+  "src/components/todoList.js": "import './todoList.css';
+import {createTodoItem} from './todoItem';
+const createTodoList = (store) => {
+  const list = document.createElement('div');
+  list.id = 'todoList';
+  const render = () => {
+    const todos = store.getTable('todos');
+    const todoIds = Object.keys(todos);
+    list.innerHTML = '';
+    todoIds.forEach((id) => {
+      const todo = todos[id];
+      const item = createTodoItem(
+        id,
+        todo.text,
+        todo.completed,
+        () => {
+          store.setPartialRow('todos', id, {completed: !todo.completed});
+        },
+        () => {
+          store.delRow('todos', id);
+        },
+      );
+      list.appendChild(item);
+    });
+  };
+  store.addTablesListener(render);
+  render();
+  return list;
+};
+export {createTodoList};
 ",
   "src/index.css": "a {
   color: var(--fg);
@@ -3502,46 +3157,29 @@ pre {
   word-wrap: break-word;
 }
 ",
-  "src/index.tsx": "import './index.css';
-import ReactDOM from 'react-dom/client';
-import {App} from './basic/App';
-
-addEventListener('load', () =>
-  ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
-);
+  "src/index.js": "import './index.css';
+import {app} from './todos/app';
+addEventListener('load', app);
 ",
-  "tsconfig.json": "{
-  "compilerOptions": {
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "module": "ESNext",
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "skipLibCheck": true,
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "isolatedModules": true,
-    "moduleDetection": "force",
-    "noEmit": true,
-    "jsx": "react-jsx",
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
-  },
-  "include": ["src"]
-}
+  "src/todos/app.js": "import './index.css';
+import {createStore} from 'tinybase';
+import {createTodoInput} from '../components/todoInput';
+import {createTodoList} from '../components/todoList';
+const app = () => {
+  const store = createStore().setTable('todos', {
+    1: {text: 'Learn TinyBase', completed: false},
+    2: {text: 'Build an app', completed: false},
+  });
+  const appContainer = document.getElementById('app');
+  const todoInputContainer = createTodoInput(store);
+  appContainer.appendChild(todoInputContainer);
+  const input = todoInputContainer.querySelector('input');
+  input.focus();
+  appContainer.appendChild(createTodoList(store));
+};
+export {app};
 ",
-  "vite.config.js": "import {defineConfig} from 'vite';
-import react from '@vitejs/plugin-react';
-
-export default defineConfig({
-  plugins: [
-    react({
-      jsxRuntime: 'automatic',
-    }),
-  ],
-});
+  "src/todos/index.css": "/* Add additional app styling here if needed */
 ",
 }
 `;
@@ -3821,7 +3459,7 @@ export const App = () => {
   );
 };
 ",
-  "src/chat/index.css": "/* Chat-specific styles are now in component CSS files */
+  "src/chat/index.css": "/* Add additional app styling here if needed */
 ",
   "src/components/Button.tsx": "import './button.css';
 import {ReactNode} from 'react';
@@ -4723,7 +4361,7 @@ const App = () => {
 
 export {App};
 ",
-  "src/drawing/index.css": "/* Drawing-specific styles are now in component CSS files */
+  "src/drawing/index.css": "/* Add additional app styling here if needed */
 ",
   "src/index.css": "a {
   color: var(--fg);
@@ -4817,11 +4455,11 @@ export default defineConfig({
 }
 `;
 
-exports[`create-tinybase > ts-vanilla-basic > should match snapshot 1`] = `
+exports[`create-tinybase > ts-react-todos > should match snapshot 1`] = `
 {
-  "README.md": "# test-ts-vanilla-basic
+  "README.md": "# test-ts-react-todos
 
-A TinyBase app built with TypeScript and Vanilla JS.
+A TinyBase app built with TypeScript and React.
 
 ## Getting Started
 
@@ -4848,7 +4486,7 @@ npm run dev
     />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>TinyBase Demo</title>
+    <title>TinyBase Todos</title>
     <style>
       * {
         box-sizing: border-box;
@@ -4993,36 +4631,23 @@ npm run dev
           <div id="infoIcon">
             i
             <div id="infoTooltip">
-              A simple TinyBase app with key-values and tables mutated with
-              buttons. See the full set of
-              <a href="https://tinybase.org/demos/" target="_blank"
-                >TinyBase demos</a
-              >
-              for more examples. <br /><br />
-              Built with TypeScript.
+              A simple todo list application demonstrating TinyBase's reactive
+              data management with CRUD operations.
+              <br /><br />
+              Built with TypeScript + React.
             </div>
           </div>
         </div>
       </div>
-      <div id="app">
-        <div id="buttons"></div>
-        <details open>
-          <summary>Values</summary>
-          <pre id="valuesJson"></pre>
-        </details>
-        <details open>
-          <summary>Tables</summary>
-          <pre id="tablesJson"></pre>
-        </details>
-      </div>
+      <div id="app"></div>
     </div>
 
-    <script type="module" src="/src/index.ts"></script>
+    <script type="module" src="/src/index.tsx"></script>
   </body>
 </html>
 ",
   "package.json": "{
-  "name": "test-ts-vanilla-basic",
+  "name": "test-ts-react-todos",
   "version": "1.0.0",
   "scripts": {
     "dev": "vite",
@@ -5032,10 +4657,15 @@ npm run dev
   "devDependencies": {
     "vite": "^7.1.3",
     "typescript": "^5.9.3",
-    "@types/node": "^25.0.3"
+    "@types/node": "^25.0.3",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^4.3.4"
   },
   "dependencies": {
-    "tinybase": "^7.3.1"
+    "tinybase": "^7.3.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
   }
 }
 ",
@@ -5047,112 +4677,143 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/basic/app.ts": "import './index.css';
-import {createStore} from 'tinybase';
+  "src/components/Button.tsx": "import './button.css';
+import {ReactNode} from 'react';
 
-import {createButton} from '../components/button';
+interface ButtonProps {
+  children: ReactNode;
+  onClick?: () => void;
+  variant?: 'default' | 'primary';
+  type?: 'button' | 'submit';
+}
 
-const updateJson = (id: string, content: unknown) =>
-  (document.getElementById(id)!.innerText = JSON.stringify(content, null, 2));
+export const Button = ({
+  children,
+  onClick,
+  variant = 'default',
+  type = 'button',
+}: ButtonProps) => (
+  <button
+    onClick={onClick}
+    type={type}
+    className={variant === 'primary' ? 'primary' : undefined}
+  >
+    {children}
+  </button>
+);
+",
+  "src/components/Input.tsx": "import './input.css';
 
-const getRandom = (max = 100) => Math.floor(Math.random() * max);
+interface InputProps {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  autoFocus?: boolean;
+}
 
-export const app = () => {
-  const store = createStore();
+export const Input = ({
+  value,
+  onChange,
+  placeholder = '',
+  autoFocus = false,
+}: InputProps) => (
+  <input
+    type="text"
+    value={value}
+    onChange={(e) => onChange(e.target.value)}
+    placeholder={placeholder}
+    autoFocus={autoFocus}
+  />
+);
+",
+  "src/components/TodoInput.tsx": "import './todoInput.css';
+import {useState} from 'react';
+import {useAddRowCallback} from 'tinybase/ui-react';
 
-  const buttonsContainer = document.getElementById('buttons')!;
+import {Button} from './Button';
 
-  buttonsContainer.appendChild(
-    createButton('Increment number', () =>
-      store.setValue('counter', (value) => value + 1),
-    ),
+import {Input} from './Input';
+
+export const TodoInput = () => {
+  const [text, setText] = useState('');
+  const addRow = useAddRowCallback('todos', () => ({text, completed: false}), [
+    text,
+  ]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (text.trim()) {
+      addRow();
+      setText('');
+    }
+  };
+
+  return (
+    <form id="todoInput" onSubmit={handleSubmit}>
+      <Input
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder="What needs to be done?"
+        autoFocus
+      />
+      <Button type="submit" variant="primary">
+        Add
+      </Button>
+    </form>
   );
-  buttonsContainer.appendChild(
-    createButton('Random number', () => store.setValue('random', getRandom())),
-  );
-  buttonsContainer.appendChild(
-    createButton('Add a pet', () =>
-      store.addRow('pets', {
-        name: ['fido', 'felix', 'bubbles', 'lowly', 'polly'][getRandom(5)],
-        species: store.getRowIds('species')[getRandom(5)],
-      }),
-    ),
-  );
-
-  store.addValuesListener(() => updateJson('valuesJson', store.getValues()));
-  store.addTablesListener(() => updateJson('tablesJson', store.getTables()));
-
-  store
-    .setValue('counter', 0)
-    .setRow('pets', '0', {name: 'fido', species: 'dog'})
-    .setTable('species', {
-      dog: {price: 5},
-      cat: {price: 4},
-      fish: {price: 2},
-      worm: {price: 1},
-      parrot: {price: 3},
-    });
 };
 ",
-  "src/basic/index.css": "#buttons {
-  border: solid #666;
-  border-width: 1px 0;
-  text-align: center;
-  padding: 1rem 0;
-}
+  "src/components/TodoItem.tsx": "import './todoItem.css';
+import {useRow, useSetPartialRowCallback} from 'tinybase/ui-react';
 
-table {
-  border-collapse: collapse;
-  font-size: inherit;
-  line-height: inherit;
-  margin-top: 0.5rem;
-  table-layout: fixed;
-  width: 100%;
-  margin-bottom: 2rem;
-  caption-side: bottom;
-}
-table caption {
-  text-align: left;
-  button {
-    border: 0;
-    margin-right: 0.25rem;
-  }
-}
-table caption button {
-  line-height: 0.7rem;
-  margin: 0 0.25rem 0 0;
-  vertical-align: middle;
-}
-th,
-td {
-  padding: 0.25rem 0.5rem 0.25rem 0;
-  text-align: left;
-}
-thead th,
-thead td {
-  border: solid #999;
-  border-width: 1px 0;
-}
-tbody th,
-tbody td {
-  border-bottom: 1px solid #333;
-}
+import {Button} from './Button';
 
-table.sortedTable thead th {
-  cursor: pointer;
-}
+export const TodoItem = ({
+  rowId,
+  onDelete,
+}: {
+  rowId: string;
+  onDelete: (id: string) => void;
+}) => {
+  const todo = useRow('todos', rowId) as {text: string; completed: boolean};
+  const setPartialRow = useSetPartialRowCallback(
+    'todos',
+    rowId,
+    (e: React.ChangeEvent<HTMLInputElement>) => ({completed: e.target.checked}),
+    [],
+  );
 
-@media (min-width: 50rem) {
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    align-items: start;
-  }
-  #buttons {
-    grid-column: span 2;
-  }
-}
+  return (
+    <div className={\`todoItem\${todo.completed ? ' completed' : ''}\`}>
+      <input
+        type="checkbox"
+        checked={todo.completed}
+        onChange={setPartialRow}
+        id={\`todo-\${rowId}\`}
+      />
+      <label htmlFor={\`todo-\${rowId}\`}>{todo.text}</label>
+      <Button onClick={() => onDelete(rowId)}>Delete</Button>
+    </div>
+  );
+};
+",
+  "src/components/TodoList.tsx": "import './todoList.css';
+import {useDelRowCallback, useRowIds} from 'tinybase/ui-react';
+
+import {TodoItem} from './TodoItem';
+
+export const TodoList = () => {
+  const todoIds = useRowIds('todos');
+  const delRow = useDelRowCallback('todos', (id: string) => id, []);
+
+  return (
+    <div id="todoList">
+      {todoIds.map((id) => (
+        <TodoItem key={id} rowId={id} onDelete={delRow} />
+      ))}
+    </div>
+  );
+};
 ",
   "src/components/button.css": "button {
   padding: 0.5rem 1rem;
@@ -5180,21 +4841,87 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/components/button.ts": "import './button.css';
+  "src/components/input.css": "input[type='text'] {
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
+  align-self: center;
+}
 
-export const createButton = (
-  text: string,
-  onClick: () => void,
-  variant: 'default' | 'primary' = 'default',
-): HTMLButtonElement => {
-  const button = document.createElement('button');
-  button.textContent = text;
-  if (variant === 'primary') {
-    button.className = 'primary';
-  }
-  button.addEventListener('click', onClick);
-  return button;
-};
+input[type='text']:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input[type='text']::placeholder {
+  color: var(--fg2);
+}
+",
+  "src/components/todoInput.css": "#todoInput {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+#todoInput input {
+  flex: 1;
+}
+",
+  "src/components/todoItem.css": ".todoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.todoItem:last-child {
+  border-bottom: none;
+}
+
+.todoItem input[type='checkbox'] {
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.todoItem label {
+  flex: 1;
+  cursor: pointer;
+  user-select: none;
+}
+
+.todoItem.completed label {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.todoItem button {
+  flex-shrink: 0;
+}
+",
+  "src/components/todoList.css": "#todoList {
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  overflow: hidden;
+  background: var(--bg2);
+}
+
+#todoList:empty::before {
+  content: 'No todos yet. Add one above!';
+  display: block;
+  padding: 2rem;
+  text-align: center;
+  color: var(--fg2);
+}
 ",
   "src/index.css": "a {
   color: var(--fg);
@@ -5244,10 +4971,46 @@ pre {
   word-wrap: break-word;
 }
 ",
-  "src/index.ts": "import './index.css';
-import {app} from './basic/app';
+  "src/index.tsx": "import './index.css';
+import ReactDOM from 'react-dom/client';
+import {App} from './todos/App';
 
-addEventListener('load', app);
+addEventListener('load', () =>
+  ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
+);
+",
+  "src/todos/App.tsx": "import './index.css';
+import {StrictMode} from 'react';
+import {createStore} from 'tinybase';
+import {Provider, useCreateStore} from 'tinybase/ui-react';
+import {Inspector} from 'tinybase/ui-react-inspector';
+
+import {TodoInput} from '../components/TodoInput';
+
+import {TodoList} from '../components/TodoList';
+
+const App = () => {
+  const store = useCreateStore(() => {
+    return createStore().setTable('todos', {
+      '1': {text: 'Learn TinyBase', completed: false},
+      '2': {text: 'Build an app', completed: false},
+    });
+  });
+
+  return (
+    <StrictMode>
+      <Provider store={store}>
+        <TodoInput />
+        <TodoList />
+        <Inspector />
+      </Provider>
+    </StrictMode>
+  );
+};
+
+export {App};
+",
+  "src/todos/index.css": "/* Add additional app styling here if needed */
 ",
   "tsconfig.json": "{
   "compilerOptions": {
@@ -5261,6 +5024,7 @@ addEventListener('load', app);
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
+    "jsx": "react-jsx",
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -5269,6 +5033,17 @@ addEventListener('load', app);
   },
   "include": ["src"]
 }
+",
+  "vite.config.js": "import {defineConfig} from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [
+    react({
+      jsxRuntime: 'automatic',
+    }),
+  ],
+});
 ",
 }
 `;
@@ -5548,7 +5323,7 @@ const app = () => {
 
 export {app};
 ",
-  "src/chat/index.css": "/* Chat-specific styles are now in component CSS files */
+  "src/chat/index.css": "/* Add additional app styling here if needed */
 ",
   "src/components/button.css": "button {
   padding: 0.5rem 1rem;
@@ -6387,7 +6162,7 @@ const app = () => {
 
 export {app};
 ",
-  "src/drawing/index.css": "/* Drawing-specific styles are now in component CSS files */
+  "src/drawing/index.css": "/* Add additional app styling here if needed */
 ",
   "src/index.css": "a {
   color: var(--fg);
@@ -6441,6 +6216,574 @@ pre {
 import {app} from './drawing/app';
 
 addEventListener('load', app);
+",
+  "tsconfig.json": "{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src"]
+}
+",
+}
+`;
+
+exports[`create-tinybase > ts-vanilla-todos > should match snapshot 1`] = `
+{
+  "README.md": "# test-ts-vanilla-todos
+
+A TinyBase app built with TypeScript and Vanilla JS.
+
+## Getting Started
+
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase Todos</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Demo</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
+            i
+            <div id="infoTooltip">
+              A simple todo list application demonstrating TinyBase's reactive
+              data management with CRUD operations.
+              <br /><br />
+              Built with TypeScript.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="app"></div>
+    </div>
+
+    <script type="module" src="/src/index.ts"></script>
+  </body>
+</html>
+",
+  "package.json": "{
+  "name": "test-ts-vanilla-todos",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.1.3",
+    "typescript": "^5.9.3",
+    "@types/node": "^25.0.3"
+  },
+  "dependencies": {
+    "tinybase": "^7.3.1"
+  }
+}
+",
+  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "src/components/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "src/components/button.ts": "import './button.css';
+
+export const createButton = (
+  text: string,
+  onClick: () => void,
+  variant: 'default' | 'primary' = 'default',
+): HTMLButtonElement => {
+  const button = document.createElement('button');
+  button.textContent = text;
+  if (variant === 'primary') {
+    button.className = 'primary';
+  }
+  button.addEventListener('click', onClick);
+  return button;
+};
+",
+  "src/components/input.css": "input[type='text'] {
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+input[type='text']:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input[type='text']::placeholder {
+  color: var(--fg2);
+}
+",
+  "src/components/input.ts": "import './input.css';
+
+export const createInput = (
+  placeholder: string = '',
+  value: string = '',
+  onInput?: (value: string) => void,
+): HTMLInputElement => {
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.placeholder = placeholder;
+  input.value = value;
+  if (onInput) {
+    input.addEventListener('input', () => onInput(input.value));
+  }
+  return input;
+};
+",
+  "src/components/todoInput.css": "#todoInput {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+#todoInput input {
+  flex: 1;
+}
+",
+  "src/components/todoInput.ts": "import './todoInput.css';
+
+import {createButton} from './button';
+
+import {createInput} from './input';
+
+export const createTodoInput = (store: any): HTMLDivElement => {
+  const container = document.createElement('div');
+  container.id = 'todoInput';
+
+  const input = createInput('What needs to be done?');
+
+  const addTodo = () => {
+    const text = input.value.trim();
+    if (text) {
+      store.addRow('todos', {text, completed: false});
+      input.value = '';
+      input.focus();
+    }
+  };
+
+  input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      addTodo();
+    }
+  });
+
+  const addButton = createButton('Add', addTodo, 'primary');
+
+  container.appendChild(input);
+  container.appendChild(addButton);
+
+  return container;
+};
+",
+  "src/components/todoItem.css": ".todoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.todoItem:last-child {
+  border-bottom: none;
+}
+
+.todoItem input[type='checkbox'] {
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.todoItem label {
+  flex: 1;
+  cursor: pointer;
+  user-select: none;
+}
+
+.todoItem.completed label {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.todoItem button {
+  flex-shrink: 0;
+}
+",
+  "src/components/todoItem.ts": "import './todoItem.css';
+
+import {createButton} from './button';
+
+export const createTodoItem = (
+  id: string,
+  text: string,
+  completed: boolean,
+  onToggle: () => void,
+  onDelete: () => void,
+): HTMLDivElement => {
+  const item = document.createElement('div');
+  item.className = \`todoItem\${completed ? ' completed' : ''}\`;
+
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.checked = completed;
+  checkbox.id = \`todo-\${id}\`;
+  checkbox.addEventListener('change', onToggle);
+
+  const label = document.createElement('label');
+  label.textContent = text;
+  label.htmlFor = \`todo-\${id}\`;
+
+  const deleteBtn = createButton('Delete', onDelete);
+
+  item.appendChild(checkbox);
+  item.appendChild(label);
+  item.appendChild(deleteBtn);
+
+  return item;
+};
+",
+  "src/components/todoList.css": "#todoList {
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  overflow: hidden;
+  background: var(--bg2);
+}
+
+#todoList:empty::before {
+  content: 'No todos yet. Add one above!';
+  display: block;
+  padding: 2rem;
+  text-align: center;
+  color: var(--fg2);
+}
+",
+  "src/components/todoList.ts": "import './todoList.css';
+
+import {createTodoItem} from './todoItem';
+
+export const createTodoList = (store: any): HTMLDivElement => {
+  const list = document.createElement('div');
+  list.id = 'todoList';
+
+  const render = () => {
+    const todos = store.getTable('todos');
+    const todoIds = Object.keys(todos);
+
+    list.innerHTML = '';
+    todoIds.forEach((id) => {
+      const todo = todos[id];
+      const item = createTodoItem(
+        id,
+        todo.text,
+        todo.completed,
+        () => {
+          store.setPartialRow('todos', id, {completed: !todo.completed});
+        },
+        () => {
+          store.delRow('todos', id);
+        },
+      );
+      list.appendChild(item);
+    });
+  };
+
+  store.addTablesListener(render);
+  render();
+
+  return list;
+};
+",
+  "src/index.css": "a {
+  color: var(--fg);
+}
+
+h1 {
+  font-weight: 600;
+  img {
+    margin-right: 1rem;
+    height: 2.5rem;
+    vertical-align: text-bottom;
+  }
+}
+
+h2 {
+  font-weight: 800;
+  font-size: 1.3rem;
+  margin: 1rem 0 0;
+}
+
+p {
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+details {
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 800;
+  margin: -0.5rem -0.5rem 0;
+  padding: 0.5rem;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+",
+  "src/index.ts": "import './index.css';
+import {app} from './todos/app';
+
+addEventListener('load', app);
+",
+  "src/todos/app.ts": "import './index.css';
+import {createStore} from 'tinybase';
+
+import {createTodoInput} from '../components/todoInput';
+
+import {createTodoList} from '../components/todoList';
+
+const app = () => {
+  const store = createStore().setTable('todos', {
+    '1': {text: 'Learn TinyBase', completed: false},
+    '2': {text: 'Build an app', completed: false},
+  });
+
+  const appContainer = document.getElementById('app')!;
+
+  const todoInputContainer = createTodoInput(store);
+  appContainer.appendChild(todoInputContainer);
+
+  // Focus the input after it's in the DOM
+  const input = todoInputContainer.querySelector('input')!;
+  input.focus();
+
+  appContainer.appendChild(createTodoList(store));
+};
+
+export {app};
+",
+  "src/todos/index.css": "/* Add additional app styling here if needed */
 ",
   "tsconfig.json": "{
   "compilerOptions": {

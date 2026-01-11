@@ -1,0 +1,27 @@
+{{includeFile template="src/todos/index.css.hbs" output="src/todos/index.css"}}
+import './index.css';
+import {createStore} from 'tinybase';
+{{includeFile template="src/components/todoInput.ts.hbs" output="src/components/todoInput.{{ext}}"}}
+import {createTodoInput} from '../components/todoInput';
+{{includeFile template="src/components/todoList.ts.hbs" output="src/components/todoList.{{ext}}"}}
+import {createTodoList} from '../components/todoList';
+
+const app = () => {
+const store = createStore().setTable('todos', {
+'1': {text: 'Learn TinyBase', completed: false},
+'2': {text: 'Build an app', completed: false},
+});
+
+const appContainer = document.getElementById('app')!;
+
+const todoInputContainer = createTodoInput(store);
+appContainer.appendChild(todoInputContainer);
+
+// Focus the input after it's in the DOM
+const input = todoInputContainer.querySelector('input')!;
+input.focus();
+
+appContainer.appendChild(createTodoList(store));
+};
+
+export {app};

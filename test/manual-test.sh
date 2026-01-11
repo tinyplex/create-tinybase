@@ -74,10 +74,10 @@ pkill -f "vite.*--port.*51[7-8][0-9]" 2>/dev/null || true
 mkdir -p "$TEST_DIR"
 
 declare -a all_projects=(
-  "test-js-vanilla-basic:javascript:vanilla:basic:5173"
-  "test-js-react-basic:javascript:react:basic:5174"
-  "test-ts-vanilla-basic:typescript:vanilla:basic:5175"
-  "test-ts-react-basic:typescript:react:basic:5176"
+  "test-js-vanilla-todos:javascript:vanilla:todos:5173"
+  "test-js-react-todos:javascript:react:todos:5174"
+  "test-ts-vanilla-todos:typescript:vanilla:todos:5175"
+  "test-ts-react-todos:typescript:react:todos:5176"
   "test-js-vanilla-chat:javascript:vanilla:chat:5177"
   "test-js-react-chat:javascript:react:chat:5178"
   "test-ts-vanilla-chat:typescript:vanilla:chat:5179"

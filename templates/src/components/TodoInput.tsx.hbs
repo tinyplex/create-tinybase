@@ -1,0 +1,28 @@
+{{includeFile template="src/components/todoInput.css.hbs" output="src/components/todoInput.css"}}
+import './todoInput.css';
+import {useState} from 'react';
+import {useAddRowCallback} from 'tinybase/ui-react';
+{{includeFile template="src/components/Button.tsx.hbs" output="src/components/Button.{{ext}}"}}
+import {Button} from './Button';
+{{includeFile template="src/components/Input.tsx.hbs" output="src/components/Input.{{ext}}"}}
+import {Input} from './Input';
+
+export const TodoInput = () => {
+const [text, setText] = useState('');
+const addRow = useAddRowCallback('todos', () => ({text, completed: false}), [text]);
+
+const handleSubmit = (e: React.FormEvent) => {
+e.preventDefault();
+if (text.trim()) {
+addRow();
+setText('');
+}
+};
+
+return (
+<form id="todoInput" onSubmit={handleSubmit}>
+  <Input value={text} onChange={(e)=> setText(e.target.value)} placeholder="What needs to be done?" autoFocus />
+  <Button type="submit" variant="primary">Add</Button>
+</form>
+);
+};
