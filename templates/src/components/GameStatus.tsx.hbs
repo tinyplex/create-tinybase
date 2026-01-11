@@ -1,0 +1,21 @@
+{{includeFile template="src/components/gameStatus.css.hbs" output="src/components/gameStatus.css"}}
+import './gameStatus.css';
+import {useValue} from 'tinybase/ui-react';
+
+export const GameStatus = () => {
+  const gameStatus = useValue('gameStatus') as string;
+  const currentPlayer = useValue('currentPlayer') as string;
+  const winner = useValue('winner') as string | undefined;
+
+  return (
+    <div id="gameStatus">
+      {gameStatus === 'playing' && (
+        <>Player <span className="player">{currentPlayer}</span>'s turn</>
+      )}
+      {gameStatus === 'won' && (
+        <>Player <span className="winner">{winner}</span> wins!</>
+      )}
+      {gameStatus === 'draw' && <>It's a draw!</>}
+    </div>
+  );
+};

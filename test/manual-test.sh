@@ -86,6 +86,10 @@ declare -a all_projects=(
   "test-js-react-drawing:javascript:react:drawing:5182"
   "test-ts-vanilla-drawing:typescript:vanilla:drawing:5183"
   "test-ts-react-drawing:typescript:react:drawing:5184"
+  "test-js-vanilla-game:javascript:vanilla:game:5185"
+  "test-js-react-game:javascript:react:game:5186"
+  "test-ts-vanilla-game:typescript:vanilla:game:5187"
+  "test-ts-react-game:typescript:react:game:5188"
 )
 
 # Filter projects if requested

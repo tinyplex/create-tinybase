@@ -10,7 +10,7 @@
   {{includeFile template="public/favicon.svg" output="public/favicon.svg"}}
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <title>
-    TinyBase {{#if (eq appType "chat")}}Chat{{else if (eq appType "drawing")}}Drawing{{else}}Todos{{/if}}
+    TinyBase {{#if (eq appType "chat")}}Chat{{else if (eq appType "drawing")}}Drawing{{else if (eq appType "game")}}Game{{else}}Todos{{/if}}
   </title>
   <style>
     * {
@@ -162,6 +162,8 @@
               A real-time chat application demonstrating TinyBase's reactive data management.
             {{else if (eq appType "drawing")}}
               A collaborative drawing canvas showcasing TinyBase's state synchronization.
+            {{else if (eq appType "game")}}
+              A tic-tac-toe game demonstrating turn-based logic and computed game state.
             {{/if}}
             <br><br>
             Built with {{#if typescript}}TypeScript{{else}}JavaScript{{/if}}{{#if react}} + React{{/if}}.

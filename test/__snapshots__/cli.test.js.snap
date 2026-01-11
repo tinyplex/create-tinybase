@@ -1106,6 +1106,575 @@ export default defineConfig({
 }
 `;
 
+exports[`create-tinybase > js-react-game > should match snapshot 1`] = `
+{
+  "README.md": "# test-js-react-game
+
+A TinyBase app built with JavaScript and React.
+
+## Getting Started
+
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase Game</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Demo</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
+            i
+            <div id="infoTooltip">
+              A tic-tac-toe game demonstrating turn-based logic and computed
+              game state.
+              <br /><br />
+              Built with JavaScript + React.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="app"></div>
+    </div>
+
+    <script type="module" src="/src/index.jsx"></script>
+  </body>
+</html>
+",
+  "package.json": "{
+  "name": "test-js-react-game",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.1.3",
+    "@vitejs/plugin-react": "^4.3.4"
+  },
+  "dependencies": {
+    "tinybase": "^7.3.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
+  }
+}
+",
+  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "src/components/Board.jsx": "import './board.css';
+import {useMemo} from 'react';
+import {useValue} from 'tinybase/ui-react';
+import {Square} from './Square';
+const Board = () => {
+  const gameStatus = useValue('gameStatus');
+  const winningLine = useValue('winningLine');
+  const winningPositions = useMemo(() => {
+    if (!winningLine) return /* @__PURE__ */ new Set();
+    return new Set(winningLine.split(',').map(Number));
+  }, [winningLine]);
+  const disabled = gameStatus !== 'playing';
+  return (
+    <div id="board">
+      {Array.from({length: 9}, (_, i) => (
+        <Square
+          key={i}
+          position={i}
+          disabled={disabled}
+          winning={winningPositions.has(i)}
+        />
+      ))}
+    </div>
+  );
+};
+export {Board};
+",
+  "src/components/Button.jsx": "import './button.css';
+const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
+  <button
+    onClick={onClick}
+    type={type}
+    className={variant === 'primary' ? 'primary' : void 0}
+  >
+    {children}
+  </button>
+);
+export {Button};
+",
+  "src/components/GameStatus.jsx": "import './gameStatus.css';
+import {useValue} from 'tinybase/ui-react';
+const GameStatus = () => {
+  const gameStatus = useValue('gameStatus');
+  const currentPlayer = useValue('currentPlayer');
+  const winner = useValue('winner');
+  return (
+    <div id="gameStatus">
+      {gameStatus === 'playing' && (
+        <>
+          Player <span className="player">{currentPlayer}</span>'s turn
+        </>
+      )}
+      {gameStatus === 'won' && (
+        <>
+          Player <span className="winner">{winner}</span> wins!
+        </>
+      )}
+      {gameStatus === 'draw' && <>It's a draw!</>}
+    </div>
+  );
+};
+export {GameStatus};
+",
+  "src/components/Square.jsx": "import './square.css';
+import {useCell, useStore, useValue} from 'tinybase/ui-react';
+const Square = ({position, disabled, winning}) => {
+  const store = useStore();
+  const value = useCell('board', position.toString(), 'value');
+  const currentPlayer = useValue('currentPlayer');
+  const isDisabled = disabled || !!value;
+  const handleClick = () => {
+    if (!isDisabled) {
+      store.setCell('board', position.toString(), 'value', currentPlayer);
+    }
+  };
+  return (
+    <button
+      className={\`square\${isDisabled ? ' disabled' : ''}\${winning ? ' winning' : ''}\`}
+      onClick={handleClick}
+      disabled={isDisabled}
+    >
+      {value || ''}
+    </button>
+  );
+};
+export {Square};
+",
+  "src/components/board.css": "#board {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+  gap: 0;
+  border: 2px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  margin: 2rem auto;
+}
+",
+  "src/components/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "src/components/gameStatus.css": "#gameStatus {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  min-height: 2rem;
+}
+
+#gameStatus .player {
+  color: var(--accent);
+}
+
+#gameStatus .winner {
+  color: var(--accent);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+",
+  "src/components/square.css": ".square {
+  width: 100px;
+  height: 100px;
+  background: var(--bg2);
+  border: 2px solid var(--border);
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--fg);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.square:hover:not(.square.disabled) {
+  background: var(--bg);
+  border-color: var(--accent);
+}
+
+.square.disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.square.winning {
+  background: var(--accent);
+  color: var(--bg);
+}
+",
+  "src/game/App.jsx": "import './index.css';
+import {StrictMode, useEffect} from 'react';
+import {createStore} from 'tinybase';
+import {
+  Provider,
+  useCreateStore,
+  useSetValueCallback,
+  useStore,
+} from 'tinybase/ui-react';
+import {Inspector} from 'tinybase/ui-react-inspector';
+import {Button} from '../components/Button';
+import {Board} from '../components/Board';
+import {GameStatus} from '../components/GameStatus';
+const WINNING_LINES = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  // rows
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  // columns
+  [0, 4, 8],
+  [2, 4, 6],
+  // diagonals
+];
+const Game = () => {
+  const store = useStore();
+  useEffect(() => {
+    const checkGameState = () => {
+      const gameStatus = store.getValue('gameStatus');
+      if (gameStatus !== 'playing') return;
+      const board = store.getTable('board');
+      for (const line of WINNING_LINES) {
+        const [a, b, c] = line;
+        const cellA = board[a]?.value;
+        const cellB = board[b]?.value;
+        const cellC = board[c]?.value;
+        if (cellA && cellA === cellB && cellA === cellC) {
+          store.setValue('gameStatus', 'won');
+          store.setValue('winner', cellA);
+          store.setValue('winningLine', line.join(','));
+          return;
+        }
+      }
+      const filledCells = Object.values(board).filter(
+        (cell) => cell.value,
+      ).length;
+      if (filledCells === 9) {
+        store.setValue('gameStatus', 'draw');
+        return;
+      }
+      const currentPlayer = store.getValue('currentPlayer');
+      store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
+    };
+    const listenerId = store.addTableListener('board', checkGameState, true);
+    return () => store.delListener(listenerId);
+  }, [store]);
+  const resetGame = useSetValueCallback(
+    'gameStatus',
+    () => {
+      store.delTable('board');
+      store.setValue('currentPlayer', 'X');
+      store.setValue('gameStatus', 'playing');
+      store.delValue('winner');
+      store.delValue('winningLine');
+      return 'playing';
+    },
+    [],
+  );
+  return (
+    <>
+      <GameStatus />
+      <Board />
+      <div style={{textAlign: 'center', marginTop: '2rem'}}>
+        <Button onClick={resetGame} variant="primary">
+          New Game
+        </Button>
+      </div>
+      <Inspector />
+    </>
+  );
+};
+const App = () => {
+  const store = useCreateStore(() => {
+    return createStore()
+      .setValue('currentPlayer', 'X')
+      .setValue('gameStatus', 'playing');
+  });
+  return (
+    <StrictMode>
+      <Provider store={store}>
+        <Game />
+      </Provider>
+    </StrictMode>
+  );
+};
+export {App};
+",
+  "src/game/index.css": "/* Game app styles are in component CSS files */
+",
+  "src/index.css": "a {
+  color: var(--fg);
+}
+
+h1 {
+  font-weight: 600;
+  img {
+    margin-right: 1rem;
+    height: 2.5rem;
+    vertical-align: text-bottom;
+  }
+}
+
+h2 {
+  font-weight: 800;
+  font-size: 1.3rem;
+  margin: 1rem 0 0;
+}
+
+p {
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+details {
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 800;
+  margin: -0.5rem -0.5rem 0;
+  padding: 0.5rem;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+",
+  "src/index.jsx": "import './index.css';
+import ReactDOM from 'react-dom/client';
+import {App} from './game/App';
+addEventListener('load', () =>
+  ReactDOM.createRoot(document.getElementById('app')).render(<App />),
+);
+",
+  "vite.config.js": "import {defineConfig} from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [
+    react({
+      jsxRuntime: 'automatic',
+    }),
+  ],
+});
+",
+}
+`;
+
 exports[`create-tinybase > js-react-todos > should match snapshot 1`] = `
 {
   "README.md": "# test-js-react-todos
@@ -2677,6 +3246,521 @@ pre {
 ",
   "src/index.js": "import './index.css';
 import {app} from './drawing/app';
+addEventListener('load', app);
+",
+}
+`;
+
+exports[`create-tinybase > js-vanilla-game > should match snapshot 1`] = `
+{
+  "README.md": "# test-js-vanilla-game
+
+A TinyBase app built with JavaScript and Vanilla JS.
+
+## Getting Started
+
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase Game</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Demo</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
+            i
+            <div id="infoTooltip">
+              A tic-tac-toe game demonstrating turn-based logic and computed
+              game state.
+              <br /><br />
+              Built with JavaScript.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="app"></div>
+    </div>
+
+    <script type="module" src="/src/index.js"></script>
+  </body>
+</html>
+",
+  "package.json": "{
+  "name": "test-js-vanilla-game",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.1.3"
+  },
+  "dependencies": {
+    "tinybase": "^7.3.1"
+  }
+}
+",
+  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "src/components/board.css": "#board {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+  gap: 0;
+  border: 2px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  margin: 2rem auto;
+}
+",
+  "src/components/board.js": "import './board.css';
+import {createSquare} from './square';
+const createBoard = (store) => {
+  const board = document.createElement('div');
+  board.id = 'board';
+  const render = () => {
+    const gameStatus = store.getValue('gameStatus');
+    const winningLine = store.getValue('winningLine');
+    const currentPlayer = store.getValue('currentPlayer');
+    const winningPositions = new Set(
+      winningLine ? winningLine.split(',').map(Number) : [],
+    );
+    const disabled = gameStatus !== 'playing';
+    board.innerHTML = '';
+    for (let i = 0; i < 9; i++) {
+      const cell = store.getCell('board', i.toString(), 'value');
+      const square = createSquare(
+        i,
+        cell,
+        () => {
+          if (gameStatus === 'playing' && !cell) {
+            store.setCell('board', i.toString(), 'value', currentPlayer);
+          }
+        },
+        disabled || !!cell,
+        winningPositions.has(i),
+      );
+      board.appendChild(square);
+    }
+  };
+  store.addValuesListener(render);
+  store.addTableListener('board', render);
+  render();
+  return board;
+};
+export {createBoard};
+",
+  "src/components/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "src/components/button.js": "import './button.css';
+const createButton = (text, onClick, variant = 'default') => {
+  const button = document.createElement('button');
+  button.textContent = text;
+  if (variant === 'primary') {
+    button.className = 'primary';
+  }
+  button.addEventListener('click', onClick);
+  return button;
+};
+export {createButton};
+",
+  "src/components/gameStatus.css": "#gameStatus {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  min-height: 2rem;
+}
+
+#gameStatus .player {
+  color: var(--accent);
+}
+
+#gameStatus .winner {
+  color: var(--accent);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+",
+  "src/components/gameStatus.js": "import './gameStatus.css';
+const createGameStatus = (store) => {
+  const status = document.createElement('div');
+  status.id = 'gameStatus';
+  const render = () => {
+    const gameStatus = store.getValue('gameStatus');
+    const currentPlayer = store.getValue('currentPlayer');
+    const winner = store.getValue('winner');
+    if (gameStatus === 'playing') {
+      status.innerHTML = \`Player <span class="player">\${currentPlayer}</span>'s turn\`;
+    } else if (gameStatus === 'won') {
+      status.innerHTML = \`Player <span class="winner">\${winner}</span> wins!\`;
+    } else if (gameStatus === 'draw') {
+      status.textContent = "It's a draw!";
+    }
+  };
+  store.addValuesListener(render);
+  render();
+  return status;
+};
+export {createGameStatus};
+",
+  "src/components/square.css": ".square {
+  width: 100px;
+  height: 100px;
+  background: var(--bg2);
+  border: 2px solid var(--border);
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--fg);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.square:hover:not(.square.disabled) {
+  background: var(--bg);
+  border-color: var(--accent);
+}
+
+.square.disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.square.winning {
+  background: var(--accent);
+  color: var(--bg);
+}
+",
+  "src/components/square.js": "import './square.css';
+const createSquare = (position, value, onClick, disabled, winning) => {
+  const square = document.createElement('button');
+  square.className = \`square\${disabled ? ' disabled' : ''}\${winning ? ' winning' : ''}\`;
+  square.textContent = value || '';
+  square.disabled = disabled;
+  square.addEventListener('click', onClick);
+  return square;
+};
+export {createSquare};
+",
+  "src/game/app.js": "import './index.css';
+import {createStore} from 'tinybase';
+import {createButton} from '../components/button';
+import {createBoard} from '../components/board';
+import {createGameStatus} from '../components/gameStatus';
+const WINNING_LINES = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  // rows
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  // columns
+  [0, 4, 8],
+  [2, 4, 6],
+  // diagonals
+];
+const app = () => {
+  const store = createStore()
+    .setValue('currentPlayer', 'X')
+    .setValue('gameStatus', 'playing');
+  const checkGameState = () => {
+    const gameStatus = store.getValue('gameStatus');
+    if (gameStatus !== 'playing') return;
+    const board = store.getTable('board');
+    for (const line of WINNING_LINES) {
+      const [a, b, c] = line;
+      const cellA = board[a]?.value;
+      const cellB = board[b]?.value;
+      const cellC = board[c]?.value;
+      if (cellA && cellA === cellB && cellA === cellC) {
+        store.setValue('gameStatus', 'won');
+        store.setValue('winner', cellA);
+        store.setValue('winningLine', line.join(','));
+        return;
+      }
+    }
+    const filledCells = Object.values(board).filter(
+      (cell) => cell.value,
+    ).length;
+    if (filledCells === 9) {
+      store.setValue('gameStatus', 'draw');
+      return;
+    }
+    const currentPlayer = store.getValue('currentPlayer');
+    store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
+  };
+  store.addTableListener('board', checkGameState, true);
+  const resetGame = () => {
+    store.delTable('board');
+    store.setValue('currentPlayer', 'X');
+    store.setValue('gameStatus', 'playing');
+    store.delValue('winner');
+    store.delValue('winningLine');
+  };
+  const appContainer = document.getElementById('app');
+  appContainer.appendChild(createGameStatus(store));
+  appContainer.appendChild(createBoard(store));
+  const buttonContainer = document.createElement('div');
+  buttonContainer.style.textAlign = 'center';
+  buttonContainer.style.marginTop = '2rem';
+  buttonContainer.appendChild(createButton('New Game', resetGame, 'primary'));
+  appContainer.appendChild(buttonContainer);
+};
+export {app};
+",
+  "src/game/index.css": "/* Game app styles are in component CSS files */
+",
+  "src/index.css": "a {
+  color: var(--fg);
+}
+
+h1 {
+  font-weight: 600;
+  img {
+    margin-right: 1rem;
+    height: 2.5rem;
+    vertical-align: text-bottom;
+  }
+}
+
+h2 {
+  font-weight: 800;
+  font-size: 1.3rem;
+  margin: 1rem 0 0;
+}
+
+p {
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+details {
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 800;
+  margin: -0.5rem -0.5rem 0;
+  padding: 0.5rem;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+",
+  "src/index.js": "import './index.css';
+import {app} from './game/app';
 addEventListener('load', app);
 ",
 }
@@ -4414,6 +5498,650 @@ pre {
   "src/index.tsx": "import './index.css';
 import ReactDOM from 'react-dom/client';
 import {App} from './drawing/App';
+
+addEventListener('load', () =>
+  ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
+);
+",
+  "tsconfig.json": "{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src"]
+}
+",
+  "vite.config.js": "import {defineConfig} from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [
+    react({
+      jsxRuntime: 'automatic',
+    }),
+  ],
+});
+",
+}
+`;
+
+exports[`create-tinybase > ts-react-game > should match snapshot 1`] = `
+{
+  "README.md": "# test-ts-react-game
+
+A TinyBase app built with TypeScript and React.
+
+## Getting Started
+
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase Game</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Demo</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
+            i
+            <div id="infoTooltip">
+              A tic-tac-toe game demonstrating turn-based logic and computed
+              game state.
+              <br /><br />
+              Built with TypeScript + React.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="app"></div>
+    </div>
+
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
+</html>
+",
+  "package.json": "{
+  "name": "test-ts-react-game",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.1.3",
+    "typescript": "^5.9.3",
+    "@types/node": "^25.0.3",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^4.3.4"
+  },
+  "dependencies": {
+    "tinybase": "^7.3.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
+  }
+}
+",
+  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "src/components/Board.tsx": "import './board.css';
+import {useMemo} from 'react';
+import {useValue} from 'tinybase/ui-react';
+
+import {Square} from './Square';
+
+export const Board = () => {
+  const gameStatus = useValue('gameStatus') as string;
+  const winningLine = useValue('winningLine') as string | undefined;
+
+  const winningPositions = useMemo(() => {
+    if (!winningLine) return new Set();
+    return new Set(winningLine.split(',').map(Number));
+  }, [winningLine]);
+
+  const disabled = gameStatus !== 'playing';
+
+  return (
+    <div id="board">
+      {Array.from({length: 9}, (_, i) => (
+        <Square
+          key={i}
+          position={i}
+          disabled={disabled}
+          winning={winningPositions.has(i)}
+        />
+      ))}
+    </div>
+  );
+};
+",
+  "src/components/Button.tsx": "import './button.css';
+import {ReactNode} from 'react';
+
+interface ButtonProps {
+  children: ReactNode;
+  onClick?: () => void;
+  variant?: 'default' | 'primary';
+  type?: 'button' | 'submit';
+}
+
+export const Button = ({
+  children,
+  onClick,
+  variant = 'default',
+  type = 'button',
+}: ButtonProps) => (
+  <button
+    onClick={onClick}
+    type={type}
+    className={variant === 'primary' ? 'primary' : undefined}
+  >
+    {children}
+  </button>
+);
+",
+  "src/components/GameStatus.tsx": "import './gameStatus.css';
+import {useValue} from 'tinybase/ui-react';
+
+export const GameStatus = () => {
+  const gameStatus = useValue('gameStatus') as string;
+  const currentPlayer = useValue('currentPlayer') as string;
+  const winner = useValue('winner') as string | undefined;
+
+  return (
+    <div id="gameStatus">
+      {gameStatus === 'playing' && (
+        <>
+          Player <span className="player">{currentPlayer}</span>'s turn
+        </>
+      )}
+      {gameStatus === 'won' && (
+        <>
+          Player <span className="winner">{winner}</span> wins!
+        </>
+      )}
+      {gameStatus === 'draw' && <>It's a draw!</>}
+    </div>
+  );
+};
+",
+  "src/components/Square.tsx": "import './square.css';
+import {useCell, useStore, useValue} from 'tinybase/ui-react';
+
+export const Square = ({
+  position,
+  disabled,
+  winning,
+}: {
+  position: number;
+  disabled: boolean;
+  winning: boolean;
+}) => {
+  const store = useStore();
+  const value = useCell('board', position.toString(), 'value') as
+    | string
+    | undefined;
+  const currentPlayer = useValue('currentPlayer') as string;
+
+  const isDisabled = disabled || !!value;
+
+  const handleClick = () => {
+    if (!isDisabled) {
+      store.setCell('board', position.toString(), 'value', currentPlayer);
+    }
+  };
+
+  return (
+    <button
+      className={\`square\${isDisabled ? ' disabled' : ''}\${winning ? ' winning' : ''}\`}
+      onClick={handleClick}
+      disabled={isDisabled}
+    >
+      {value || ''}
+    </button>
+  );
+};
+",
+  "src/components/board.css": "#board {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+  gap: 0;
+  border: 2px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  margin: 2rem auto;
+}
+",
+  "src/components/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "src/components/gameStatus.css": "#gameStatus {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  min-height: 2rem;
+}
+
+#gameStatus .player {
+  color: var(--accent);
+}
+
+#gameStatus .winner {
+  color: var(--accent);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+",
+  "src/components/square.css": ".square {
+  width: 100px;
+  height: 100px;
+  background: var(--bg2);
+  border: 2px solid var(--border);
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--fg);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.square:hover:not(.square.disabled) {
+  background: var(--bg);
+  border-color: var(--accent);
+}
+
+.square.disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.square.winning {
+  background: var(--accent);
+  color: var(--bg);
+}
+",
+  "src/game/App.tsx": "import './index.css';
+import {StrictMode, useEffect} from 'react';
+import {createStore} from 'tinybase';
+import {
+  Provider,
+  useCreateStore,
+  useSetValueCallback,
+  useStore,
+} from 'tinybase/ui-react';
+import {Inspector} from 'tinybase/ui-react-inspector';
+
+import {Button} from '../components/Button';
+
+import {Board} from '../components/Board';
+
+import {GameStatus} from '../components/GameStatus';
+
+const WINNING_LINES = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8], // rows
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8], // columns
+  [0, 4, 8],
+  [2, 4, 6], // diagonals
+];
+
+const Game = () => {
+  const store = useStore();
+
+  useEffect(() => {
+    const checkGameState = () => {
+      const gameStatus = store.getValue('gameStatus');
+      if (gameStatus !== 'playing') return;
+
+      const board = store.getTable('board');
+
+      // Check for winner
+      for (const line of WINNING_LINES) {
+        const [a, b, c] = line;
+        const cellA = board[a]?.value;
+        const cellB = board[b]?.value;
+        const cellC = board[c]?.value;
+
+        if (cellA && cellA === cellB && cellA === cellC) {
+          store.setValue('gameStatus', 'won');
+          store.setValue('winner', cellA);
+          store.setValue('winningLine', line.join(','));
+          return;
+        }
+      }
+
+      // Check for draw
+      const filledCells = Object.values(board).filter(
+        (cell: any) => cell.value,
+      ).length;
+      if (filledCells === 9) {
+        store.setValue('gameStatus', 'draw');
+        return;
+      }
+
+      // Switch player after each move
+      const currentPlayer = store.getValue('currentPlayer');
+      store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
+    };
+
+    const listenerId = store.addTableListener('board', checkGameState, true);
+    return () => store.delListener(listenerId);
+  }, [store]);
+
+  const resetGame = useSetValueCallback(
+    'gameStatus',
+    () => {
+      store.delTable('board');
+      store.setValue('currentPlayer', 'X');
+      store.setValue('gameStatus', 'playing');
+      store.delValue('winner');
+      store.delValue('winningLine');
+      return 'playing';
+    },
+    [],
+  );
+
+  return (
+    <>
+      <GameStatus />
+      <Board />
+      <div style={{textAlign: 'center', marginTop: '2rem'}}>
+        <Button onClick={resetGame} variant="primary">
+          New Game
+        </Button>
+      </div>
+      <Inspector />
+    </>
+  );
+};
+
+const App = () => {
+  const store = useCreateStore(() => {
+    return createStore()
+      .setValue('currentPlayer', 'X')
+      .setValue('gameStatus', 'playing');
+  });
+
+  return (
+    <StrictMode>
+      <Provider store={store}>
+        <Game />
+      </Provider>
+    </StrictMode>
+  );
+};
+
+export {App};
+",
+  "src/game/index.css": "/* Game app styles are in component CSS files */
+",
+  "src/index.css": "a {
+  color: var(--fg);
+}
+
+h1 {
+  font-weight: 600;
+  img {
+    margin-right: 1rem;
+    height: 2.5rem;
+    vertical-align: text-bottom;
+  }
+}
+
+h2 {
+  font-weight: 800;
+  font-size: 1.3rem;
+  margin: 1rem 0 0;
+}
+
+p {
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+details {
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 800;
+  margin: -0.5rem -0.5rem 0;
+  padding: 0.5rem;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+",
+  "src/index.tsx": "import './index.css';
+import ReactDOM from 'react-dom/client';
+import {App} from './game/App';
 
 addEventListener('load', () =>
   ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
@@ -6214,6 +7942,581 @@ pre {
 ",
   "src/index.ts": "import './index.css';
 import {app} from './drawing/app';
+
+addEventListener('load', app);
+",
+  "tsconfig.json": "{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src"]
+}
+",
+}
+`;
+
+exports[`create-tinybase > ts-vanilla-game > should match snapshot 1`] = `
+{
+  "README.md": "# test-ts-vanilla-game
+
+A TinyBase app built with TypeScript and Vanilla JS.
+
+## Getting Started
+
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase Game</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Demo</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
+            i
+            <div id="infoTooltip">
+              A tic-tac-toe game demonstrating turn-based logic and computed
+              game state.
+              <br /><br />
+              Built with TypeScript.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="app"></div>
+    </div>
+
+    <script type="module" src="/src/index.ts"></script>
+  </body>
+</html>
+",
+  "package.json": "{
+  "name": "test-ts-vanilla-game",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.1.3",
+    "typescript": "^5.9.3",
+    "@types/node": "^25.0.3"
+  },
+  "dependencies": {
+    "tinybase": "^7.3.1"
+  }
+}
+",
+  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "src/components/board.css": "#board {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+  gap: 0;
+  border: 2px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  margin: 2rem auto;
+}
+",
+  "src/components/board.ts": "import './board.css';
+
+import {createSquare} from './square';
+
+export const createBoard = (store: any): HTMLDivElement => {
+  const board = document.createElement('div');
+  board.id = 'board';
+
+  const render = () => {
+    const gameStatus = store.getValue('gameStatus');
+    const winningLine = store.getValue('winningLine');
+    const currentPlayer = store.getValue('currentPlayer');
+    const winningPositions = new Set(
+      winningLine ? winningLine.split(',').map(Number) : [],
+    );
+    const disabled = gameStatus !== 'playing';
+
+    board.innerHTML = '';
+    for (let i = 0; i < 9; i++) {
+      const cell = store.getCell('board', i.toString(), 'value');
+      const square = createSquare(
+        i,
+        cell,
+        () => {
+          if (gameStatus === 'playing' && !cell) {
+            store.setCell('board', i.toString(), 'value', currentPlayer);
+          }
+        },
+        disabled || !!cell,
+        winningPositions.has(i),
+      );
+      board.appendChild(square);
+    }
+  };
+
+  store.addValuesListener(render);
+  store.addTableListener('board', render);
+  render();
+
+  return board;
+};
+",
+  "src/components/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "src/components/button.ts": "import './button.css';
+
+export const createButton = (
+  text: string,
+  onClick: () => void,
+  variant: 'default' | 'primary' = 'default',
+): HTMLButtonElement => {
+  const button = document.createElement('button');
+  button.textContent = text;
+  if (variant === 'primary') {
+    button.className = 'primary';
+  }
+  button.addEventListener('click', onClick);
+  return button;
+};
+",
+  "src/components/gameStatus.css": "#gameStatus {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  min-height: 2rem;
+}
+
+#gameStatus .player {
+  color: var(--accent);
+}
+
+#gameStatus .winner {
+  color: var(--accent);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+",
+  "src/components/gameStatus.ts": "import './gameStatus.css';
+
+export const createGameStatus = (store: any): HTMLDivElement => {
+  const status = document.createElement('div');
+  status.id = 'gameStatus';
+
+  const render = () => {
+    const gameStatus = store.getValue('gameStatus');
+    const currentPlayer = store.getValue('currentPlayer');
+    const winner = store.getValue('winner');
+
+    if (gameStatus === 'playing') {
+      status.innerHTML = \`Player <span class="player">\${currentPlayer}</span>'s turn\`;
+    } else if (gameStatus === 'won') {
+      status.innerHTML = \`Player <span class="winner">\${winner}</span> wins!\`;
+    } else if (gameStatus === 'draw') {
+      status.textContent = "It's a draw!";
+    }
+  };
+
+  store.addValuesListener(render);
+  render();
+
+  return status;
+};
+",
+  "src/components/square.css": ".square {
+  width: 100px;
+  height: 100px;
+  background: var(--bg2);
+  border: 2px solid var(--border);
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--fg);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.square:hover:not(.square.disabled) {
+  background: var(--bg);
+  border-color: var(--accent);
+}
+
+.square.disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.square.winning {
+  background: var(--accent);
+  color: var(--bg);
+}
+",
+  "src/components/square.ts": "import './square.css';
+
+export const createSquare = (
+  position: number,
+  value: string | undefined,
+  onClick: () => void,
+  disabled: boolean,
+  winning: boolean,
+): HTMLButtonElement => {
+  const square = document.createElement('button');
+  square.className = \`square\${disabled ? ' disabled' : ''}\${winning ? ' winning' : ''}\`;
+  square.textContent = value || '';
+  square.disabled = disabled;
+  square.addEventListener('click', onClick);
+  return square;
+};
+",
+  "src/game/app.ts": "import './index.css';
+import {createStore} from 'tinybase';
+
+import {createButton} from '../components/button';
+
+import {createBoard} from '../components/board';
+
+import {createGameStatus} from '../components/gameStatus';
+
+const WINNING_LINES = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8], // rows
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8], // columns
+  [0, 4, 8],
+  [2, 4, 6], // diagonals
+];
+
+const app = () => {
+  const store = createStore()
+    .setValue('currentPlayer', 'X')
+    .setValue('gameStatus', 'playing');
+
+  const checkGameState = () => {
+    const gameStatus = store.getValue('gameStatus');
+    if (gameStatus !== 'playing') return;
+
+    const board = store.getTable('board');
+
+    // Check for winner
+    for (const line of WINNING_LINES) {
+      const [a, b, c] = line;
+      const cellA = board[a]?.value;
+      const cellB = board[b]?.value;
+      const cellC = board[c]?.value;
+
+      if (cellA && cellA === cellB && cellA === cellC) {
+        store.setValue('gameStatus', 'won');
+        store.setValue('winner', cellA);
+        store.setValue('winningLine', line.join(','));
+        return;
+      }
+    }
+
+    // Check for draw
+    const filledCells = Object.values(board).filter(
+      (cell: any) => cell.value,
+    ).length;
+    if (filledCells === 9) {
+      store.setValue('gameStatus', 'draw');
+      return;
+    }
+
+    // Switch player after each move
+    const currentPlayer = store.getValue('currentPlayer');
+    store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
+  };
+
+  store.addTableListener('board', checkGameState, true);
+
+  const resetGame = () => {
+    store.delTable('board');
+    store.setValue('currentPlayer', 'X');
+    store.setValue('gameStatus', 'playing');
+    store.delValue('winner');
+    store.delValue('winningLine');
+  };
+
+  const appContainer = document.getElementById('app')!;
+
+  appContainer.appendChild(createGameStatus(store));
+  appContainer.appendChild(createBoard(store));
+
+  const buttonContainer = document.createElement('div');
+  buttonContainer.style.textAlign = 'center';
+  buttonContainer.style.marginTop = '2rem';
+  buttonContainer.appendChild(createButton('New Game', resetGame, 'primary'));
+  appContainer.appendChild(buttonContainer);
+};
+
+export {app};
+",
+  "src/game/index.css": "/* Game app styles are in component CSS files */
+",
+  "src/index.css": "a {
+  color: var(--fg);
+}
+
+h1 {
+  font-weight: 600;
+  img {
+    margin-right: 1rem;
+    height: 2.5rem;
+    vertical-align: text-bottom;
+  }
+}
+
+h2 {
+  font-weight: 800;
+  font-size: 1.3rem;
+  margin: 1rem 0 0;
+}
+
+p {
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+details {
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 800;
+  margin: -0.5rem -0.5rem 0;
+  padding: 0.5rem;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+",
+  "src/index.ts": "import './index.css';
+import {app} from './game/app';
 
 addEventListener('load', app);
 ",

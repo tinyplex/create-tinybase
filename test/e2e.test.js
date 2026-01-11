@@ -86,6 +86,30 @@ const combinations = [
     appType: 'drawing',
     name: 'ts-react-drawing',
   },
+  {
+    language: 'javascript',
+    framework: 'vanilla',
+    appType: 'game',
+    name: 'js-vanilla-game',
+  },
+  {
+    language: 'javascript',
+    framework: 'react',
+    appType: 'game',
+    name: 'js-react-game',
+  },
+  {
+    language: 'typescript',
+    framework: 'vanilla',
+    appType: 'game',
+    name: 'ts-vanilla-game',
+  },
+  {
+    language: 'typescript',
+    framework: 'react',
+    appType: 'game',
+    name: 'ts-react-game',
+  },
 ];
 
 beforeAll(async () => {

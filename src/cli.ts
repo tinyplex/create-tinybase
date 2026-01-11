@@ -56,6 +56,7 @@ const config = {
         {title: 'Todo app', value: 'todos'},
         {title: 'Chat app', value: 'chat'},
         {title: 'Drawing app', value: 'drawing'},
+        {title: 'Tic-tac-toe game', value: 'game'},
       ],
       initial: 0,
     },

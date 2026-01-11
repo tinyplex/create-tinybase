@@ -1,0 +1,27 @@
+{{includeFile template="src/components/square.css.hbs" output="src/components/square.css"}}
+import './square.css';
+import {useCell, useStore, useValue} from 'tinybase/ui-react';
+
+export const Square = ({position, disabled, winning}: {position: number; disabled: boolean; winning: boolean}) => {
+  const store = useStore();
+  const value = useCell('board', position.toString(), 'value') as string | undefined;
+  const currentPlayer = useValue('currentPlayer') as string;
+
+  const isDisabled = disabled || !!value;
+
+  const handleClick = () => {
+    if (!isDisabled) {
+      store.setCell('board', position.toString(), 'value', currentPlayer);
+    }
+  };
+
+  return (
+    <button
+      className={`square${isDisabled ? ' disabled' : ''}${winning ? ' winning' : ''}`}
+      onClick={handleClick}
+      disabled={isDisabled}
+    >
+      {value || ''}
+    </button>
+  );
+};
