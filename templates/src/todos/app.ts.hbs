@@ -1,13 +1,13 @@
 {{includeFile template="src/todos/index.css.hbs" output="src/todos/index.css"}}
 import './index.css';
-import {createStore} from 'tinybase';
+import {createMergeableStore} from 'tinybase';
 {{includeFile template="src/components/todoInput.ts.hbs" output="src/components/todoInput.{{ext}}"}}
 import {createTodoInput} from '../components/todoInput';
 {{includeFile template="src/components/todoList.ts.hbs" output="src/components/todoList.{{ext}}"}}
 import {createTodoList} from '../components/todoList';
 
 const app = () => {
-const store = createStore().setTable('todos', {
+const store = createMergeableStore('todos').setTable('todos', {
 '1': {text: 'Learn TinyBase', completed: false},
 '2': {text: 'Build an app', completed: false},
 });

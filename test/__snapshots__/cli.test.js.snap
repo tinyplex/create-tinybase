@@ -1531,7 +1531,7 @@ button.primary:hover {
 ",
   "src/game/App.jsx": "import './index.css';
 import {StrictMode} from 'react';
-import {createStore} from 'tinybase';
+import {createMergeableStore} from 'tinybase';
 import {
   Provider,
   useCreateStore,
@@ -1611,7 +1611,7 @@ const Game = () => {
 };
 const App = () => {
   const store = useCreateStore(() => {
-    return createStore()
+    return createMergeableStore('game')
       .setValue('currentPlayer', 'X')
       .setValue('gameStatus', 'playing');
   });
@@ -2178,14 +2178,14 @@ addEventListener('load', () =>
 ",
   "src/todos/App.jsx": "import './index.css';
 import {StrictMode} from 'react';
-import {createStore} from 'tinybase';
+import {createMergeableStore} from 'tinybase';
 import {Provider, useCreateStore} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {TodoInput} from '../components/TodoInput';
 import {TodoList} from '../components/TodoList';
 const App = () => {
   const store = useCreateStore(() => {
-    return createStore().setTable('todos', {
+    return createMergeableStore('todos').setTable('todos', {
       1: {text: 'Learn TinyBase', completed: false},
       2: {text: 'Build an app', completed: false},
     });
@@ -3680,7 +3680,7 @@ const createSquare = (position, value, onClick, disabled, winning) => {
 export {createSquare};
 ",
   "src/game/app.js": "import './index.css';
-import {createStore} from 'tinybase';
+import {createMergeableStore} from 'tinybase';
 import {createButton} from '../components/button';
 import {createBoard} from '../components/board';
 import {createGameStatus} from '../components/gameStatus';
@@ -3698,7 +3698,7 @@ const WINNING_LINES = [
   // diagonals
 ];
 const app = () => {
-  const store = createStore()
+  const store = createMergeableStore('game')
     .setValue('currentPlayer', 'X')
     .setValue('gameStatus', 'playing');
   const checkGameState = () => {
@@ -4283,11 +4283,11 @@ import {app} from './todos/app';
 addEventListener('load', app);
 ",
   "src/todos/app.js": "import './index.css';
-import {createStore} from 'tinybase';
+import {createMergeableStore} from 'tinybase';
 import {createTodoInput} from '../components/todoInput';
 import {createTodoList} from '../components/todoList';
 const app = () => {
-  const store = createStore().setTable('todos', {
+  const store = createMergeableStore('todos').setTable('todos', {
     1: {text: 'Learn TinyBase', completed: false},
     2: {text: 'Build an app', completed: false},
   });
@@ -6037,7 +6037,7 @@ button.primary:hover {
 ",
   "src/game/App.tsx": "import './index.css';
 import {StrictMode} from 'react';
-import {createStore} from 'tinybase';
+import {createMergeableStore} from 'tinybase';
 import {
   Provider,
   useCreateStore,
@@ -6131,7 +6131,7 @@ const Game = () => {
 
 const App = () => {
   const store = useCreateStore(() => {
-    return createStore()
+    return createMergeableStore('game')
       .setValue('currentPlayer', 'X')
       .setValue('gameStatus', 'playing');
   });
@@ -6767,7 +6767,7 @@ addEventListener('load', () =>
 ",
   "src/todos/App.tsx": "import './index.css';
 import {StrictMode} from 'react';
-import {createStore} from 'tinybase';
+import {createMergeableStore} from 'tinybase';
 import {Provider, useCreateStore} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 
@@ -6777,7 +6777,7 @@ import {TodoList} from '../components/TodoList';
 
 const App = () => {
   const store = useCreateStore(() => {
-    return createStore().setTable('todos', {
+    return createMergeableStore('todos').setTable('todos', {
       '1': {text: 'Learn TinyBase', completed: false},
       '2': {text: 'Build an app', completed: false},
     });
@@ -8474,7 +8474,7 @@ export const createSquare = (
 };
 ",
   "src/game/app.ts": "import './index.css';
-import {createStore} from 'tinybase';
+import {createMergeableStore} from 'tinybase';
 
 import {createButton} from '../components/button';
 
@@ -8494,7 +8494,7 @@ const WINNING_LINES = [
 ];
 
 const app = () => {
-  const store = createStore()
+  const store = createMergeableStore('game')
     .setValue('currentPlayer', 'X')
     .setValue('gameStatus', 'playing');
 
@@ -9152,14 +9152,14 @@ import {app} from './todos/app';
 addEventListener('load', app);
 ",
   "src/todos/app.ts": "import './index.css';
-import {createStore} from 'tinybase';
+import {createMergeableStore} from 'tinybase';
 
 import {createTodoInput} from '../components/todoInput';
 
 import {createTodoList} from '../components/todoList';
 
 const app = () => {
-  const store = createStore().setTable('todos', {
+  const store = createMergeableStore('todos').setTable('todos', {
     '1': {text: 'Learn TinyBase', completed: false},
     '2': {text: 'Build an app', completed: false},
   });
