@@ -30,59 +30,59 @@ setMessage('');
 };
 
 return (
-<form onSubmit={onSubmit} className="message-input">
+<form onSubmit={onSubmit} id="messageInput">
   <Input value={message} onChange={setMessage} placeholder="Type a message..." autoFocus />
-      <Button type="submit" variant="primary">Send</Button>
-    </form>
-  );
+  <Button type="submit" variant="primary">Send</Button>
+</form>
+);
 };
 
 const Message = ({rowId}: {rowId: string}) => {
-  const row = useRow('messages', rowId);
-  const time = new Date((row as any).timestamp).toLocaleTimeString();
+const row = useRow('messages', rowId);
+const time = new Date((row as any).timestamp).toLocaleTimeString();
 
-  return (
-    <div className="message">
-      <span className="username">{(row as any).username}:</span>
-      <span className="text">{(row as any).text}</span>
-      <span className="time">{time}</span>
-    </div>
-  );
+return (
+<div className="message">
+  <span className="username">{(row as any).username}:</span>
+  <span className="text">{(row as any).text}</span>
+  <span className="time">{time}</span>
+</div>
+);
 };
 
 const Messages = () => {
-  const store = useStore();
-  const messageIds = useRowIds('messages');
+const store = useStore();
+const messageIds = useRowIds('messages');
 
-  const sortedIds = useMemo(() => {
-    return [...messageIds].sort((a, b) => {
-      const rowA = store.getRow('messages', a) as any;
-      const rowB = store.getRow('messages', b) as any;
-      return rowA.timestamp - rowB.timestamp;
-    });
-  }, [messageIds, store]);
+const sortedIds = useMemo(() => {
+return [...messageIds].sort((a, b) => {
+const rowA = store.getRow('messages', a) as any;
+const rowB = store.getRow('messages', b) as any;
+return rowA.timestamp - rowB.timestamp;
+});
+}, [messageIds, store]);
 
-  return (
-    <div className="messages">
-      {sortedIds.map((id) => (
-        <Message key={id} rowId={id} />
-      ))}
-    </div>
-  );
+return (
+<div id="messages">
+  {sortedIds.map((id) => (
+  <Message key={id} rowId={id} />
+  ))}
+</div>
+);
 };
 
 const UsernameInput = () => {
 const username = useValue('username') || '';
 const setUsername = useSetValueCallback(
 'username',
-    (_e) => _e,[]);
+(_e) => _e,[]);
 
-  return (
-    <div className="username-input">
-      <label>Your name:</label>
-      <Input value={username} onChange={setUsername} placeholder="Enter your name" />
-    </div>
-  );
+return (
+<div id="usernameInput">
+  <label>Your name:</label>
+  <Input value={username} onChange={setUsername} placeholder="Enter your name" />
+</div>
+);
 };
 
 export const App = () => {

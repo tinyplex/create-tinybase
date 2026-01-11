@@ -209,24 +209,24 @@
       {{/if}}
       {{#if (eq appType "chat")}}
         <div id="app">
-          <div class="username-input">
+          <div id="usernameInput">
             <label>Your name:</label>
           </div>
-          <div class="messages" id="messages"></div>
-          <div class="message-input"></div>
+          <div id="messages"></div>
+          <div id="messageInput"></div>
         </div>
       {{/if}}
       {{#if (eq appType "drawing")}}
         <div id="app">
-          <div class="drawing-controls">
-            <div class="color-picker" id="color-picker"></div>
-            <div class="brush-size">
+          <div id="drawingControls">
+            <div id="colorPicker"></div>
+            <div id="brushSize">
               <label>Size:</label>
-              <input type="range" id="brush-size" min="1" max="50" value="5" />
-              <span id="brush-size-value">5</span>
+              <input type="range" id="brushSize" min="1" max="50" value="5" />
+              <span id="brushSizeValue">5</span>
             </div>
           </div>
-          <canvas id="drawing-canvas" class="drawing-canvas" width="600" height="400"></canvas>
+          <canvas id="drawingCanvas" width="600" height="400"></canvas>
         </div>
       {{/if}}
     </div>

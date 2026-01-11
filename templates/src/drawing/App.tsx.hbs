@@ -73,7 +73,7 @@ const canvasRef = useRef<HTMLCanvasElement>(null);
   };
 
   return (
-  <canvas ref={canvasRef} width={600} height={400} className="drawing-canvas" onMouseDown={handleStart} onMouseMove={handleMove} onMouseUp={handleEnd} onMouseLeave={handleEnd} onTouchStart={handleStart} onTouchMove={handleMove}
+  <canvas ref={canvasRef} width={600} height={400} id="drawingCanvas" onMouseDown={handleStart} onMouseMove={handleMove} onMouseUp={handleEnd} onMouseLeave={handleEnd} onTouchStart={handleStart} onTouchMove={handleMove}
     onTouchEnd={handleEnd} />
   );
   };
@@ -88,9 +88,9 @@ const canvasRef = useRef<HTMLCanvasElement>(null);
   };
 
   return (
-  <div className="color-picker">
+  <div id="colorPicker">
     {colors.map((color) => (
-    <button key={color} className="color-btn" style=\{{background: color}} onClick={()=> setColor(color)}
+    <button key={color} className="colorBtn" style=\{{background: color}} onClick={()=> setColor(color)}
       />
       ))}
   </div>
@@ -107,10 +107,10 @@ const canvasRef = useRef<HTMLCanvasElement>(null);
     };
 
     return (
-    <div className="brush-size">
+    <div id="brushSize">
       <label>Size:</label>
       <input type="range" min="1" max="50" value={size} onChange={setSize} />
-      <span id="brush-size-value">{size}</span>
+      <span id="brushSizeValue">{size}</span>
     </div>
     );
     };
@@ -131,7 +131,7 @@ const canvasRef = useRef<HTMLCanvasElement>(null);
     <StrictMode>
       <Provider store={store}>
         <>
-          <div className="drawing-controls">
+          <div id="drawingControls">
             <ColorPicker />
             <BrushSize />
             <ClearButton />

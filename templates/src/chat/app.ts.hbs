@@ -39,7 +39,7 @@ const store = createStore()
 });
 
 const usernameInput = createInput('Enter your name', store.getValue('username') as string);
-document.querySelector('.username-input')!.appendChild(usernameInput);
+document.getElementById('usernameInput')!.appendChild(usernameInput);
 
 usernameInput.addEventListener('input', () => {
 store.setValue('username', usernameInput.value);
@@ -50,7 +50,7 @@ usernameInput.value = store.getValue('username') as string;
 });
 
 const messageInput = createInput('Type a message...');
-const messageInputContainer = document.querySelector('.message-input')!;
+const messageInputContainer = document.getElementById('messageInput')!;
 messageInputContainer.appendChild(messageInput);
 
 const sendMessage = () => {

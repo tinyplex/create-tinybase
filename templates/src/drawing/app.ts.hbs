@@ -11,7 +11,7 @@ const store = createStore()
 .setRow('settings', 'brush', {color: '#d81b60', size: 5})
 .setTable('strokes', {});
 
-const canvas = document.getElementById('drawing-canvas') as HTMLCanvasElement;
+const canvas = document.getElementById('drawingCanvas') as HTMLCanvasElement;
 const ctx = canvas!.getContext('2d')!;
 let isDrawing = false;
 
@@ -70,18 +70,18 @@ isDrawing = false;
 const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];
 colors.forEach((color) => {
 const btn = document.createElement('button');
-btn.className = 'color-btn';
+btn.className = 'colorBtn';
 btn.style.background = color;
 btn.addEventListener('click', () => {
 const brush = store.getRow('settings', 'brush') as any;
 store.setRow('settings', 'brush', {...brush, color});
 });
-document.getElementById('color-picker')!.appendChild(btn);
+document.getElementById('colorPicker')!.appendChild(btn);
 });
 
 // Size slider
-const sizeSlider = document.getElementById('brush-size') as HTMLInputElement;
-const sizeLabel = document.getElementById('brush-size-value')!;
+const sizeSlider = document.getElementById('brushSize') as HTMLInputElement;
+const sizeLabel = document.getElementById('brushSizeValue')!;
 
 sizeSlider!.addEventListener('input', () => {
 const brush = store.getRow('settings', 'brush') as any;
@@ -92,7 +92,7 @@ sizeLabel.textContent = `${size}`;
 
 // Clear button
 const clearButton = createButton('Clear', () => store.delTable('strokes'), 'primary');
-document.querySelector('.drawing-controls')!.appendChild(clearButton);
+document.getElementById('drawingControls')!.appendChild(clearButton);
 
 store.addTablesListener(draw);
 draw();
