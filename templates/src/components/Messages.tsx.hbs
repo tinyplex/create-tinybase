@@ -6,8 +6,8 @@ import './messages.css';
 import {Message} from './Message';
 
 export const Messages = () => {
-const store = useStore();
-const messageIds = useRowIds('messages');
+const store = useStore('chat');
+const messageIds = useRowIds('messages', 'chat');
 
 const sortedIds = useMemo(() => {
 return [...messageIds].sort((a, b) => {

@@ -5,7 +5,7 @@ import {createButton} from './button';
 {{includeFile template="src/components/input.ts.hbs" output="src/components/input.{{ext}}"}}
 import {createInput} from './input';
 
-export const createMessageInput = (store: any): HTMLDivElement => {
+export const createMessageInput = (settingsStore: any, chatStore: any): HTMLDivElement => {
 const messageInputContainer = document.createElement('div');
 messageInputContainer.id = 'messageInput';
 
@@ -15,8 +15,8 @@ messageInputContainer.appendChild(messageInput);
 const sendMessage = () => {
 const text = messageInput.value.trim();
 if (text) {
-store.addRow('messages', {
-username: store.getValue('username'),
+chatStore.addRow('messages', {
+username: settingsStore.getValue('username'),
 text,
 timestamp: Date.now(),
 });

@@ -9,7 +9,7 @@ import {Input} from './Input';
 
 export const MessageInput = () => {
 const [message, setMessage] = useState('');
-const username = useValue('username') || 'Anonymous';
+const username = useValue('username', 'settings') || 'Anonymous';
 
 const handleSend = useAddRowCallback(
 'messages',
@@ -19,6 +19,7 @@ text: message,
 timestamp: Date.now(),
 }),
 [message, username],
+'chat',
 );
 
 const onSubmit = (e: React.FormEvent) => {

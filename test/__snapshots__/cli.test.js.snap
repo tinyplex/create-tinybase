@@ -220,24 +220,25 @@ npm run dev
 </svg>",
   "src/chat/App.jsx": "import './index.css';
 import {StrictMode} from 'react';
-import {createStore} from 'tinybase';
+import {createStore, createMergeableStore} from 'tinybase';
 import {Provider, useCreateStore} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {Messages} from '../components/Messages';
 import {MessageInput} from '../components/MessageInput';
 import {UsernameInput} from '../components/UsernameInput';
 const App = () => {
-  const store = useCreateStore(() => {
-    return createStore()
-      .setValue('username', 'Carol')
-      .setTable('messages', {
-        1: {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 6e4},
-        2: {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 3e4},
-      });
+  const settingsStore = useCreateStore(() => {
+    return createStore().setValue('username', 'Carol');
+  });
+  const chatStore = useCreateStore(() => {
+    return createMergeableStore('chat').setTable('messages', {
+      1: {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 6e4},
+      2: {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 3e4},
+    });
   });
   return (
     <StrictMode>
-      <Provider store={store}>
+      <Provider storesById={{settings: settingsStore, chat: chatStore}}>
         <UsernameInput />
         <Messages />
         <MessageInput />
@@ -277,7 +278,7 @@ export {Input};
   "src/components/Message.jsx": "import {useRow} from 'tinybase/ui-react';
 import './message.css';
 const Message = ({rowId}) => {
-  const row = useRow('messages', rowId);
+  const row = useRow('messages', rowId, 'chat');
   const time = new Date(row.timestamp).toLocaleTimeString();
   return (
     <div className="message">
@@ -296,7 +297,7 @@ import {Button} from './Button';
 import {Input} from './Input';
 const MessageInput = () => {
   const [message, setMessage] = useState('');
-  const username = useValue('username') || 'Anonymous';
+  const username = useValue('username', 'settings') || 'Anonymous';
   const handleSend = useAddRowCallback(
     'messages',
     () => ({
@@ -305,6 +306,7 @@ const MessageInput = () => {
       timestamp: Date.now(),
     }),
     [message, username],
+    'chat',
   );
   const onSubmit = (e) => {
     e.preventDefault();
@@ -334,8 +336,8 @@ import {useRowIds, useStore} from 'tinybase/ui-react';
 import './messages.css';
 import {Message} from './Message';
 const Messages = () => {
-  const store = useStore();
-  const messageIds = useRowIds('messages');
+  const store = useStore('chat');
+  const messageIds = useRowIds('messages', 'chat');
   const sortedIds = useMemo(() => {
     return [...messageIds].sort((a, b) => {
       const rowA = store.getRow('messages', a);
@@ -357,8 +359,13 @@ export {Messages};
 import './usernameInput.css';
 import {Input} from './Input';
 const UsernameInput = () => {
-  const username = useValue('username') || '';
-  const setUsername = useSetValueCallback('username', (_e) => _e, []);
+  const username = useValue('username', 'settings') || '';
+  const setUsername = useSetValueCallback(
+    'username',
+    (_e) => _e,
+    [],
+    'settings',
+  );
   return (
     <div id="usernameInput">
       <label>Your name:</label>
@@ -2427,28 +2434,27 @@ npm run dev
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "src/chat/app.js": "import './index.css';
-import {createStore} from 'tinybase';
+import {createStore, createMergeableStore} from 'tinybase';
 import {createMessage} from '../components/message';
 import {createMessages} from '../components/messages';
 import {createUsernameInput} from '../components/usernameInput';
 import {createMessageInput} from '../components/messageInput';
 const app = () => {
-  const store = createStore()
-    .setValue('username', 'Carol')
-    .setTable('messages', {
-      1: {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 6e4},
-      2: {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 3e4},
-    });
+  const settingsStore = createStore().setValue('username', 'Carol');
+  const chatStore = createMergeableStore('chat').setTable('messages', {
+    1: {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 6e4},
+    2: {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 3e4},
+  });
   const appContainer = document.getElementById('app');
-  appContainer.appendChild(createUsernameInput(store));
-  const messagesContainer = createMessages(store);
+  appContainer.appendChild(createUsernameInput(settingsStore, chatStore));
+  const messagesContainer = createMessages(chatStore);
   appContainer.appendChild(messagesContainer);
-  const messageInputContainer = createMessageInput(store);
+  const messageInputContainer = createMessageInput(settingsStore, chatStore);
   appContainer.appendChild(messageInputContainer);
   const messageInput = messageInputContainer.querySelector('input');
   messageInput.focus();
-  store.addTablesListener(() => {
-    const messageRows = store.getTable('messages');
+  chatStore.addTablesListener(() => {
+    const messageRows = chatStore.getTable('messages');
     const sortedIds = Object.keys(messageRows).sort(
       (a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
     );
@@ -2594,7 +2600,7 @@ export {createMessage};
   "src/components/messageInput.js": "import './messageInput.css';
 import {createButton} from './button';
 import {createInput} from './input';
-const createMessageInput = (store) => {
+const createMessageInput = (settingsStore, chatStore) => {
   const messageInputContainer = document.createElement('div');
   messageInputContainer.id = 'messageInput';
   const messageInput = createInput('Type a message...');
@@ -2602,8 +2608,8 @@ const createMessageInput = (store) => {
   const sendMessage = () => {
     const text = messageInput.value.trim();
     if (text) {
-      store.addRow('messages', {
-        username: store.getValue('username'),
+      chatStore.addRow('messages', {
+        username: settingsStore.getValue('username'),
         text,
         timestamp: Date.now(),
       });
@@ -2665,22 +2671,22 @@ export {createMessages};
 ",
   "src/components/usernameInput.js": "import './usernameInput.css';
 import {createInput} from './input';
-const createUsernameInput = (store) => {
+const createUsernameInput = (settingsStore, chatStore) => {
   const container = document.createElement('div');
   container.id = 'usernameInput';
   const label = document.createElement('label');
   label.textContent = 'Your name:';
   const usernameInput = createInput(
     'Enter your name',
-    store.getValue('username'),
+    settingsStore.getValue('username'),
   );
   container.appendChild(label);
   container.appendChild(usernameInput);
   usernameInput.addEventListener('input', () => {
-    store.setValue('username', usernameInput.value);
+    settingsStore.setValue('username', usernameInput.value);
   });
-  store.addValuesListener(() => {
-    usernameInput.value = store.getValue('username');
+  settingsStore.addValuesListener(() => {
+    usernameInput.value = settingsStore.getValue('username');
   });
   return container;
 };
@@ -4523,7 +4529,7 @@ npm run dev
 </svg>",
   "src/chat/App.tsx": "import './index.css';
 import {StrictMode, useState, useMemo} from 'react';
-import {createStore} from 'tinybase';
+import {createStore, createMergeableStore} from 'tinybase';
 import {
   Provider,
   useCreateStore,
@@ -4549,22 +4555,20 @@ import {MessageInput} from '../components/MessageInput';
 import {UsernameInput} from '../components/UsernameInput';
 
 export const App = () => {
-  const store = useCreateStore(() => {
-    return createStore()
-      .setValue('username', 'Carol')
-      .setTable('messages', {
-        '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
-        '2': {
-          username: 'Bob',
-          text: 'Hi there!',
-          timestamp: Date.now() - 30000,
-        },
-      });
+  const settingsStore = useCreateStore(() => {
+    return createStore().setValue('username', 'Carol');
+  });
+
+  const chatStore = useCreateStore(() => {
+    return createMergeableStore('chat').setTable('messages', {
+      '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
+      '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
+    });
   });
 
   return (
     <StrictMode>
-      <Provider store={store}>
+      <Provider storesById={{settings: settingsStore, chat: chatStore}}>
         <UsernameInput />
         <Messages />
         <MessageInput />
@@ -4634,7 +4638,7 @@ interface MessageProps {
 }
 
 export const Message = ({rowId}: MessageProps) => {
-  const row = useRow('messages', rowId);
+  const row = useRow('messages', rowId, 'chat');
   const time = new Date((row as any).timestamp).toLocaleTimeString();
 
   return (
@@ -4656,7 +4660,7 @@ import {Input} from './Input';
 
 export const MessageInput = () => {
   const [message, setMessage] = useState('');
-  const username = useValue('username') || 'Anonymous';
+  const username = useValue('username', 'settings') || 'Anonymous';
 
   const handleSend = useAddRowCallback(
     'messages',
@@ -4666,6 +4670,7 @@ export const MessageInput = () => {
       timestamp: Date.now(),
     }),
     [message, username],
+    'chat',
   );
 
   const onSubmit = (e: React.FormEvent) => {
@@ -4699,8 +4704,8 @@ import './messages.css';
 import {Message} from './Message';
 
 export const Messages = () => {
-  const store = useStore();
-  const messageIds = useRowIds('messages');
+  const store = useStore('chat');
+  const messageIds = useRowIds('messages', 'chat');
 
   const sortedIds = useMemo(() => {
     return [...messageIds].sort((a, b) => {
@@ -4725,8 +4730,13 @@ import './usernameInput.css';
 import {Input} from './Input';
 
 export const UsernameInput = () => {
-  const username = useValue('username') || '';
-  const setUsername = useSetValueCallback('username', (_e) => _e, []);
+  const username = useValue('username', 'settings') || '';
+  const setUsername = useSetValueCallback(
+    'username',
+    (_e) => _e,
+    [],
+    'settings',
+  );
 
   return (
     <div id="usernameInput">
@@ -7042,7 +7052,7 @@ npm run dev
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "src/chat/app.ts": "import './index.css';
-import {createStore} from 'tinybase';
+import {createStore, createMergeableStore} from 'tinybase';
 
 import {createButton} from '../components/button';
 
@@ -7057,29 +7067,29 @@ import {createUsernameInput} from '../components/usernameInput';
 import {createMessageInput} from '../components/messageInput';
 
 const app = () => {
-  const store = createStore()
-    .setValue('username', 'Carol')
-    .setTable('messages', {
-      '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
-      '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
-    });
+  const settingsStore = createStore().setValue('username', 'Carol');
+
+  const chatStore = createMergeableStore('chat').setTable('messages', {
+    '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
+    '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
+  });
 
   const appContainer = document.getElementById('app')!;
 
-  appContainer.appendChild(createUsernameInput(store));
+  appContainer.appendChild(createUsernameInput(settingsStore, chatStore));
 
-  const messagesContainer = createMessages(store);
+  const messagesContainer = createMessages(chatStore);
   appContainer.appendChild(messagesContainer);
 
-  const messageInputContainer = createMessageInput(store);
+  const messageInputContainer = createMessageInput(settingsStore, chatStore);
   appContainer.appendChild(messageInputContainer);
 
   // Focus the input after it's in the DOM
   const messageInput = messageInputContainer.querySelector('input')!;
   messageInput.focus();
 
-  store.addTablesListener(() => {
-    const messageRows = store.getTable('messages');
+  chatStore.addTablesListener(() => {
+    const messageRows = chatStore.getTable('messages');
     const sortedIds = Object.keys(messageRows).sort(
       (a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
     );
@@ -7248,7 +7258,10 @@ import {createButton} from './button';
 
 import {createInput} from './input';
 
-export const createMessageInput = (store: any): HTMLDivElement => {
+export const createMessageInput = (
+  settingsStore: any,
+  chatStore: any,
+): HTMLDivElement => {
   const messageInputContainer = document.createElement('div');
   messageInputContainer.id = 'messageInput';
 
@@ -7258,8 +7271,8 @@ export const createMessageInput = (store: any): HTMLDivElement => {
   const sendMessage = () => {
     const text = messageInput.value.trim();
     if (text) {
-      store.addRow('messages', {
-        username: store.getValue('username'),
+      chatStore.addRow('messages', {
+        username: settingsStore.getValue('username'),
         text,
         timestamp: Date.now(),
       });
@@ -7329,7 +7342,10 @@ export const createMessages = (store: any): HTMLDivElement => {
 
 import {createInput} from './input';
 
-export const createUsernameInput = (store: any): HTMLDivElement => {
+export const createUsernameInput = (
+  settingsStore: any,
+  chatStore: any,
+): HTMLDivElement => {
   const container = document.createElement('div');
   container.id = 'usernameInput';
 
@@ -7338,18 +7354,18 @@ export const createUsernameInput = (store: any): HTMLDivElement => {
 
   const usernameInput = createInput(
     'Enter your name',
-    store.getValue('username') as string,
+    settingsStore.getValue('username') as string,
   );
 
   container.appendChild(label);
   container.appendChild(usernameInput);
 
   usernameInput.addEventListener('input', () => {
-    store.setValue('username', usernameInput.value);
+    settingsStore.setValue('username', usernameInput.value);
   });
 
-  store.addValuesListener(() => {
-    usernameInput.value = store.getValue('username') as string;
+  settingsStore.addValuesListener(() => {
+    usernameInput.value = settingsStore.getValue('username') as string;
   });
 
   return container;

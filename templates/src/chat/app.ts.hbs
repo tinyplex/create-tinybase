@@ -1,6 +1,6 @@
 {{includeFile template="src/chat/index.css.hbs" output="src/chat/index.css"}}
 import './index.css';
-import {createStore} from 'tinybase';
+import {createStore, createMergeableStore} from 'tinybase';
 {{includeFile template="src/components/button.ts.hbs" output="src/components/button.{{ext}}"}}
 import {createButton} from '../components/button';
 {{includeFile template="src/components/input.ts.hbs" output="src/components/input.{{ext}}"}}
@@ -15,29 +15,29 @@ import {createUsernameInput} from '../components/usernameInput';
 import {createMessageInput} from '../components/messageInput';
 
 const app = () => {
-const store = createStore()
-.setValue('username', 'Carol')
-.setTable('messages', {
+const settingsStore = createStore().setValue('username', 'Carol');
+
+const chatStore = createMergeableStore('chat').setTable('messages', {
 '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
 '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
 });
 
 const appContainer = document.getElementById('app')!;
 
-appContainer.appendChild(createUsernameInput(store));
+appContainer.appendChild(createUsernameInput(settingsStore, chatStore));
 
-const messagesContainer = createMessages(store);
+const messagesContainer = createMessages(chatStore);
 appContainer.appendChild(messagesContainer);
 
-const messageInputContainer = createMessageInput(store);
+const messageInputContainer = createMessageInput(settingsStore, chatStore);
 appContainer.appendChild(messageInputContainer);
 
 // Focus the input after it's in the DOM
 const messageInput = messageInputContainer.querySelector('input')!;
 messageInput.focus();
 
-store.addTablesListener(() => {
-const messageRows = store.getTable('messages');
+chatStore.addTablesListener(() => {
+const messageRows = chatStore.getTable('messages');
 const sortedIds = Object.keys(messageRows).sort(
 (a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
 );
