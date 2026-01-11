@@ -1,9 +1,11 @@
 {{includeFile template="src/components/Button.tsx.hbs" output="src/components/Button.{{ext}}"}}
+{{includeFile template="src/components/Input.tsx.hbs" output="src/components/Input.{{ext}}"}}
 import {StrictMode, useState, useMemo} from 'react';
 import {createStore} from 'tinybase';
 import {Provider, useCreateStore, useAddRowCallback, useRow, useSetValueCallback, useValue, useRowIds, useStore} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {Button} from './components/Button';
+import {Input} from './components/Input';
 
 const MessageInput = () => {
 const [message, setMessage] = useState('');
@@ -29,81 +31,78 @@ setMessage('');
 
 return (
 <form onSubmit={onSubmit} className="message-input">
-  <input type="text" value={message} onChange={(e)=> setMessage(e.target.value)}
-  placeholder="Type a message..."
-  autoFocus
-  />
-  <Button onClick={()=> handleSend()} variant="primary">Send</Button>
-</form>
-);
+  <Input value={message} onChange={setMessage} placeholder="Type a message..." autoFocus />
+      <Button type="submit" variant="primary">Send</Button>
+    </form>
+  );
 };
 
 const Message = ({rowId}: {rowId: string}) => {
-const row = useRow('messages', rowId);
-const time = new Date((row as any).timestamp).toLocaleTimeString();
+  const row = useRow('messages', rowId);
+  const time = new Date((row as any).timestamp).toLocaleTimeString();
 
-return (
-<div className="message">
-  <span className="username">{(row as any).username}:</span>
-  <span className="text">{(row as any).text}</span>
-  <span className="time">{time}</span>
-</div>
-);
+  return (
+    <div className="message">
+      <span className="username">{(row as any).username}:</span>
+      <span className="text">{(row as any).text}</span>
+      <span className="time">{time}</span>
+    </div>
+  );
 };
 
 const Messages = () => {
-const store = useStore();
-const messageIds = useRowIds('messages');
+  const store = useStore();
+  const messageIds = useRowIds('messages');
 
-const sortedIds = useMemo(() => {
-return [...messageIds].sort((a, b) => {
-const rowA = store.getRow('messages', a) as any;
-const rowB = store.getRow('messages', b) as any;
-return rowA.timestamp - rowB.timestamp;
-});
-}, [messageIds, store]);
+  const sortedIds = useMemo(() => {
+    return [...messageIds].sort((a, b) => {
+      const rowA = store.getRow('messages', a) as any;
+      const rowB = store.getRow('messages', b) as any;
+      return rowA.timestamp - rowB.timestamp;
+    });
+  }, [messageIds, store]);
 
-return (
-<div className="messages">
-  {sortedIds.map((id) => (
-  <Message key={id} rowId={id} />
-  ))}
-</div>
-);
+  return (
+    <div className="messages">
+      {sortedIds.map((id) => (
+        <Message key={id} rowId={id} />
+      ))}
+    </div>
+  );
 };
 
 const UsernameInput = () => {
 const username = useValue('username') || '';
-const handleChange = useSetValueCallback(
+const setUsername = useSetValueCallback(
 'username',
-(e: React.ChangeEvent<HTMLInputElement>) => e.target.value,[]);
+    (_e) => _e,[]);
 
   return (
-  <div className="username-input">
-    <label>Username:</label>
-    <input type="text" value={username} onChange={handleChange} placeholder="Enter your name" />
-  </div>
+    <div className="username-input">
+      <label>Your name:</label>
+      <Input value={username} onChange={setUsername} placeholder="Enter your name" />
+    </div>
   );
-  };
+};
 
-  export const App = () => {
-  const store = useCreateStore(() => {
-  return createStore()
-  .setValue('username', 'User')
-  .setTable('messages', {
-  '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
-  '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
-  });
-  });
+export const App = () => {
+const store = useCreateStore(() => {
+return createStore()
+.setValue('username', 'Carol')
+.setTable('messages', {
+'1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
+'2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
+});
+});
 
-  return (
-  <StrictMode>
-    <Provider store={store}>
-      <UsernameInput />
-      <Messages />
-      <MessageInput />
-      <Inspector />
-    </Provider>
-  </StrictMode>
-  );
-  };
+return (
+<StrictMode>
+  <Provider store={store}>
+    <UsernameInput />
+    <Messages />
+    <MessageInput />
+    <Inspector />
+  </Provider>
+</StrictMode>
+);
+};

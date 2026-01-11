@@ -223,10 +223,34 @@ npm run dev
 </svg>",
   "src/App.jsx": "import {StrictMode} from 'react';
 import {createStore} from 'tinybase';
-import {Provider, useCreateStore} from 'tinybase/ui-react';
+import {
+  Provider,
+  useCreateStore,
+  useAddRowCallback,
+  useSetValueCallback,
+} from 'tinybase/ui-react';
 import {SortedTableInHtmlTable, ValuesInHtmlTable} from 'tinybase/ui-react-dom';
 import {Inspector} from 'tinybase/ui-react-inspector';
-import {Buttons} from './Buttons';
+import {Button} from './components/Button';
+const getRandom = (max = 100) => Math.floor(Math.random() * max);
+const Buttons = () => {
+  const handleCount = useSetValueCallback(
+    'counter',
+    () => (value) => (value ?? 0) + 1,
+  );
+  const handleRandom = useSetValueCallback('random', () => getRandom());
+  const handleAddPet = useAddRowCallback('pets', (_, store) => ({
+    name: ['fido', 'felix', 'bubbles', 'lowly', 'polly'][getRandom(5)],
+    species: store.getRowIds('species')[getRandom(5)],
+  }));
+  return (
+    <div id="buttons">
+      <Button onClick={handleCount}>Increment number</Button>
+      <Button onClick={handleRandom}>Random number</Button>
+      <Button onClick={handleAddPet}>Add a pet</Button>
+    </div>
+  );
+};
 const App = () => {
   const store = useCreateStore(() => {
     return createStore()
@@ -265,29 +289,6 @@ const App = () => {
   );
 };
 export {App};
-",
-  "src/Buttons.jsx": "import {useAddRowCallback, useSetValueCallback} from 'tinybase/ui-react';
-import {Button} from './components/Button';
-const getRandom = (max = 100) => Math.floor(Math.random() * max);
-const Buttons = () => {
-  const handleCount = useSetValueCallback(
-    'counter',
-    () => (value) => (value ?? 0) + 1,
-  );
-  const handleRandom = useSetValueCallback('random', () => getRandom());
-  const handleAddPet = useAddRowCallback('pets', (_, store) => ({
-    name: ['fido', 'felix', 'bubbles', 'lowly', 'polly'][getRandom(5)],
-    species: store.getRowIds('species')[getRandom(5)],
-  }));
-  return (
-    <div id="buttons">
-      <Button onClick={handleCount}>Increment number</Button>
-      <Button onClick={handleRandom}>Random number</Button>
-      <Button onClick={handleAddPet}>Add a pet</Button>
-    </div>
-  );
-};
-export {Buttons};
 ",
   "src/basic.css": "#buttons {
   border: solid #666;
@@ -350,9 +351,10 @@ table.sortedTable thead th {
 }
 ",
   "src/components/Button.jsx": "import './button.css';
-const Button = ({children, onClick, variant = 'default'}) => (
+const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
   <button
     onClick={onClick}
+    type={type}
     className={variant === 'primary' ? 'primary' : void 0}
   >
     {children}
@@ -688,6 +690,7 @@ import {
 } from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {Button} from './components/Button';
+import {Input} from './components/Input';
 const MessageInput = () => {
   const [message, setMessage] = useState('');
   const username = useValue('username') || 'Anonymous';
@@ -709,14 +712,13 @@ const MessageInput = () => {
   };
   return (
     <form onSubmit={onSubmit} className="message-input">
-      <input
-        type="text"
+      <Input
         value={message}
-        onChange={(e) => setMessage(e.target.value)}
+        onChange={setMessage}
         placeholder="Type a message..."
         autoFocus
       />
-      <Button onClick={() => handleSend()} variant="primary">
+      <Button type="submit" variant="primary">
         Send
       </Button>
     </form>
@@ -753,18 +755,13 @@ const Messages = () => {
 };
 const UsernameInput = () => {
   const username = useValue('username') || '';
-  const handleChange = useSetValueCallback(
-    'username',
-    (e) => e.target.value,
-    [],
-  );
+  const setUsername = useSetValueCallback('username', (_e) => _e, []);
   return (
     <div className="username-input">
-      <label>Username:</label>
-      <input
-        type="text"
+      <label>Your name:</label>
+      <Input
         value={username}
-        onChange={handleChange}
+        onChange={setUsername}
         placeholder="Enter your name"
       />
     </div>
@@ -773,7 +770,7 @@ const UsernameInput = () => {
 const App = () => {
   const store = useCreateStore(() => {
     return createStore()
-      .setValue('username', 'User')
+      .setValue('username', 'Carol')
       .setTable('messages', {
         1: {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 6e4},
         2: {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 3e4},
@@ -794,22 +791,17 @@ export {App};
 ",
   "src/chat.css": ".username-input {
   margin-bottom: 1rem;
-}
-
-.username-input label {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
+.username-input label {
+  white-space: nowrap;
+}
+
 .username-input input {
   flex: 1;
-  padding: 0.5rem;
-  background: #222;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  color: #fff;
-  font-family: inherit;
 }
 
 .messages {
@@ -844,28 +836,36 @@ export {App};
   display: flex;
   gap: 0.5rem;
   padding: 1rem;
-  border-top: 1px solid #666;
+  border-top: 1px solid var(--border);
 }
 
 .message-input input {
   flex: 1;
-  padding: 0.75rem;
-  background: #222;
-  border: none;
-  color: #fff;
-  font-family: inherit;
 }
 ",
   "src/components/Button.jsx": "import './button.css';
-const Button = ({children, onClick, variant = 'default'}) => (
+const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
   <button
     onClick={onClick}
+    type={type}
     className={variant === 'primary' ? 'primary' : void 0}
   >
     {children}
   </button>
 );
 export {Button};
+",
+  "src/components/Input.jsx": "import './input.css';
+const Input = ({value, onChange, placeholder = '', autoFocus = false}) => (
+  <input
+    type="text"
+    value={value}
+    onChange={(e) => onChange(e.target.value)}
+    placeholder={placeholder}
+    autoFocus={autoFocus}
+  />
+);
+export {Input};
 ",
   "src/components/button.css": "button {
   padding: 0.5rem 1rem;
@@ -891,6 +891,29 @@ button.primary {
 
 button.primary:hover {
   background: #c2185b;
+}
+",
+  "src/components/input.css": "input[type='text'] {
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+input[type='text']:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input[type='text']::placeholder {
+  color: var(--fg2);
 }
 ",
   "src/index.css": "a {
@@ -1343,9 +1366,10 @@ const App = () => {
 export {App};
 ",
   "src/components/Button.jsx": "import './button.css';
-const Button = ({children, onClick, variant = 'default'}) => (
+const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
   <button
     onClick={onClick}
+    type={type}
     className={variant === 'primary' ? 'primary' : void 0}
   >
     {children}
@@ -2122,22 +2146,10 @@ npm run dev
       </div>
       <div id="app">
         <div class="username-input">
-          <label>Username:</label>
-          <input
-            type="text"
-            id="username-input"
-            placeholder="Enter your name"
-          />
+          <label>Your name:</label>
         </div>
         <div class="messages" id="messages"></div>
-        <div class="message-input">
-          <input
-            type="text"
-            id="message-input"
-            placeholder="Type a message..."
-            autofocus
-          />
-        </div>
+        <div class="message-input"></div>
       </div>
     </div>
 
@@ -2171,6 +2183,7 @@ npm run dev
 </svg>",
   "src/app.js": "import {createStore} from 'tinybase';
 import {createButton} from './components/button';
+import {createInput} from './components/input';
 const updateMessages = (store) => {
   const messages = document.getElementById('messages');
   const messageRows = store.getTable('messages');
@@ -2193,20 +2206,25 @@ const updateMessages = (store) => {
 };
 const app = () => {
   const store = createStore()
-    .setValue('username', 'User')
+    .setValue('username', 'Carol')
     .setTable('messages', {
       1: {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 6e4},
       2: {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 3e4},
     });
-  const usernameInput = document.getElementById('username-input');
-  const messageInput = document.getElementById('message-input');
-  usernameInput.value = store.getValue('username');
+  const usernameInput = createInput(
+    'Enter your name',
+    store.getValue('username'),
+  );
+  document.querySelector('.username-input').appendChild(usernameInput);
   usernameInput.addEventListener('input', () => {
     store.setValue('username', usernameInput.value);
   });
   store.addValuesListener(() => {
     usernameInput.value = store.getValue('username');
   });
+  const messageInput = createInput('Type a message...');
+  const messageInputContainer = document.querySelector('.message-input');
+  messageInputContainer.appendChild(messageInput);
   const sendMessage = () => {
     const text = messageInput.value.trim();
     if (text) {
@@ -2218,14 +2236,13 @@ const app = () => {
       messageInput.value = '';
     }
   };
-  const messageInputContainer = document.querySelector('.message-input');
-  const sendButton = createButton('Send', sendMessage, 'primary');
-  messageInputContainer.appendChild(sendButton);
   messageInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
       sendMessage();
     }
   });
+  const sendButton = createButton('Send', sendMessage, 'primary');
+  messageInputContainer.appendChild(sendButton);
   store.addTablesListener(() => updateMessages(store));
   updateMessages(store);
 };
@@ -2233,22 +2250,17 @@ export {app};
 ",
   "src/chat.css": ".username-input {
   margin-bottom: 1rem;
-}
-
-.username-input label {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
+.username-input label {
+  white-space: nowrap;
+}
+
 .username-input input {
   flex: 1;
-  padding: 0.5rem;
-  background: #222;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  color: #fff;
-  font-family: inherit;
 }
 
 .messages {
@@ -2283,16 +2295,11 @@ export {app};
   display: flex;
   gap: 0.5rem;
   padding: 1rem;
-  border-top: 1px solid #666;
+  border-top: 1px solid var(--border);
 }
 
 .message-input input {
   flex: 1;
-  padding: 0.75rem;
-  background: #222;
-  border: none;
-  color: #fff;
-  font-family: inherit;
 }
 ",
   "src/components/button.css": "button {
@@ -2332,6 +2339,42 @@ const createButton = (text, onClick, variant = 'default') => {
   return button;
 };
 export {createButton};
+",
+  "src/components/input.css": "input[type='text'] {
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+input[type='text']:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input[type='text']::placeholder {
+  color: var(--fg2);
+}
+",
+  "src/components/input.js": "import './input.css';
+const createInput = (placeholder = '', value = '', onInput) => {
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.placeholder = placeholder;
+  input.value = value;
+  if (onInput) {
+    input.addEventListener('input', () => onInput(input.value));
+  }
+  return input;
+};
+export {createInput};
 ",
   "src/index.css": "a {
   color: var(--fg);
@@ -3100,10 +3143,40 @@ npm run dev
 </svg>",
   "src/App.tsx": "import {StrictMode} from 'react';
 import {createStore} from 'tinybase';
-import {Provider, useCreateStore} from 'tinybase/ui-react';
+import {
+  Provider,
+  useCreateStore,
+  useAddRowCallback,
+  useSetValueCallback,
+} from 'tinybase/ui-react';
+import type {ValueOrUndefined} from 'tinybase';
 import {SortedTableInHtmlTable, ValuesInHtmlTable} from 'tinybase/ui-react-dom';
 import {Inspector} from 'tinybase/ui-react-inspector';
-import {Buttons} from './Buttons';
+import {Button} from './components/Button';
+
+// Convenience function for generating a random integer
+const getRandom = (max = 100) => Math.floor(Math.random() * max);
+
+const Buttons = () => {
+  // Attach events to the buttons to mutate the data in the TinyBase Store
+  const handleCount = useSetValueCallback(
+    'counter',
+    () => (value: ValueOrUndefined) => ((value ?? 0) as number) + 1,
+  );
+  const handleRandom = useSetValueCallback('random', () => getRandom());
+  const handleAddPet = useAddRowCallback('pets', (_, store) => ({
+    name: ['fido', 'felix', 'bubbles', 'lowly', 'polly'][getRandom(5)],
+    species: store.getRowIds('species')[getRandom(5)],
+  }));
+
+  return (
+    <div id="buttons">
+      <Button onClick={handleCount}>Increment number</Button>
+      <Button onClick={handleRandom}>Random number</Button>
+      <Button onClick={handleAddPet}>Add a pet</Button>
+    </div>
+  );
+};
 
 export const App = () => {
   const store = useCreateStore(() => {
@@ -3142,35 +3215,6 @@ export const App = () => {
         <Inspector />
       </Provider>
     </StrictMode>
-  );
-};
-",
-  "src/Buttons.tsx": "import {useAddRowCallback, useSetValueCallback} from 'tinybase/ui-react';
-import type {ValueOrUndefined} from 'tinybase';
-
-import {Button} from './components/Button';
-
-// Convenience function for generating a random integer
-const getRandom = (max = 100) => Math.floor(Math.random() * max);
-
-export const Buttons = () => {
-  // Attach events to the buttons to mutate the data in the TinyBase Store
-  const handleCount = useSetValueCallback(
-    'counter',
-    () => (value: ValueOrUndefined) => ((value ?? 0) as number) + 1,
-  );
-  const handleRandom = useSetValueCallback('random', () => getRandom());
-  const handleAddPet = useAddRowCallback('pets', (_, store) => ({
-    name: ['fido', 'felix', 'bubbles', 'lowly', 'polly'][getRandom(5)],
-    species: store.getRowIds('species')[getRandom(5)],
-  }));
-
-  return (
-    <div id="buttons">
-      <Button onClick={handleCount}>Increment number</Button>
-      <Button onClick={handleRandom}>Random number</Button>
-      <Button onClick={handleAddPet}>Add a pet</Button>
-    </div>
   );
 };
 ",
@@ -3239,17 +3283,20 @@ import {ReactNode} from 'react';
 
 interface ButtonProps {
   children: ReactNode;
-  onClick: () => void;
+  onClick?: () => void;
   variant?: 'default' | 'primary';
+  type?: 'button' | 'submit';
 }
 
 export const Button = ({
   children,
   onClick,
   variant = 'default',
+  type = 'button',
 }: ButtonProps) => (
   <button
     onClick={onClick}
+    type={type}
     className={variant === 'primary' ? 'primary' : undefined}
   >
     {children}
@@ -3611,6 +3658,7 @@ import {
 } from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {Button} from './components/Button';
+import {Input} from './components/Input';
 
 const MessageInput = () => {
   const [message, setMessage] = useState('');
@@ -3636,14 +3684,13 @@ const MessageInput = () => {
 
   return (
     <form onSubmit={onSubmit} className="message-input">
-      <input
-        type="text"
+      <Input
         value={message}
-        onChange={(e) => setMessage(e.target.value)}
+        onChange={setMessage}
         placeholder="Type a message..."
         autoFocus
       />
-      <Button onClick={() => handleSend()} variant="primary">
+      <Button type="submit" variant="primary">
         Send
       </Button>
     </form>
@@ -3686,19 +3733,14 @@ const Messages = () => {
 
 const UsernameInput = () => {
   const username = useValue('username') || '';
-  const handleChange = useSetValueCallback(
-    'username',
-    (e: React.ChangeEvent<HTMLInputElement>) => e.target.value,
-    [],
-  );
+  const setUsername = useSetValueCallback('username', (_e) => _e, []);
 
   return (
     <div className="username-input">
-      <label>Username:</label>
-      <input
-        type="text"
+      <label>Your name:</label>
+      <Input
         value={username}
-        onChange={handleChange}
+        onChange={setUsername}
         placeholder="Enter your name"
       />
     </div>
@@ -3708,7 +3750,7 @@ const UsernameInput = () => {
 export const App = () => {
   const store = useCreateStore(() => {
     return createStore()
-      .setValue('username', 'User')
+      .setValue('username', 'Carol')
       .setTable('messages', {
         '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
         '2': {
@@ -3733,22 +3775,17 @@ export const App = () => {
 ",
   "src/chat.css": ".username-input {
   margin-bottom: 1rem;
-}
-
-.username-input label {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
+.username-input label {
+  white-space: nowrap;
+}
+
 .username-input input {
   flex: 1;
-  padding: 0.5rem;
-  background: #222;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  color: #fff;
-  font-family: inherit;
 }
 
 .messages {
@@ -3783,16 +3820,11 @@ export const App = () => {
   display: flex;
   gap: 0.5rem;
   padding: 1rem;
-  border-top: 1px solid #666;
+  border-top: 1px solid var(--border);
 }
 
 .message-input input {
   flex: 1;
-  padding: 0.75rem;
-  background: #222;
-  border: none;
-  color: #fff;
-  font-family: inherit;
 }
 ",
   "src/components/Button.tsx": "import './button.css';
@@ -3800,21 +3832,48 @@ import {ReactNode} from 'react';
 
 interface ButtonProps {
   children: ReactNode;
-  onClick: () => void;
+  onClick?: () => void;
   variant?: 'default' | 'primary';
+  type?: 'button' | 'submit';
 }
 
 export const Button = ({
   children,
   onClick,
   variant = 'default',
+  type = 'button',
 }: ButtonProps) => (
   <button
     onClick={onClick}
+    type={type}
     className={variant === 'primary' ? 'primary' : undefined}
   >
     {children}
   </button>
+);
+",
+  "src/components/Input.tsx": "import './input.css';
+
+interface InputProps {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  autoFocus?: boolean;
+}
+
+export const Input = ({
+  value,
+  onChange,
+  placeholder = '',
+  autoFocus = false,
+}: InputProps) => (
+  <input
+    type="text"
+    value={value}
+    onChange={(e) => onChange(e.target.value)}
+    placeholder={placeholder}
+    autoFocus={autoFocus}
+  />
 );
 ",
   "src/components/button.css": "button {
@@ -3841,6 +3900,29 @@ button.primary {
 
 button.primary:hover {
   background: #c2185b;
+}
+",
+  "src/components/input.css": "input[type='text'] {
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+input[type='text']:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input[type='text']::placeholder {
+  color: var(--fg2);
 }
 ",
   "src/index.css": "a {
@@ -4345,17 +4427,20 @@ import {ReactNode} from 'react';
 
 interface ButtonProps {
   children: ReactNode;
-  onClick: () => void;
+  onClick?: () => void;
   variant?: 'default' | 'primary';
+  type?: 'button' | 'submit';
 }
 
 export const Button = ({
   children,
   onClick,
   variant = 'default',
+  type = 'button',
 }: ButtonProps) => (
   <button
     onClick={onClick}
+    type={type}
     className={variant === 'primary' ? 'primary' : undefined}
   >
     {children}
@@ -5188,22 +5273,10 @@ npm run dev
       </div>
       <div id="app">
         <div class="username-input">
-          <label>Username:</label>
-          <input
-            type="text"
-            id="username-input"
-            placeholder="Enter your name"
-          />
+          <label>Your name:</label>
         </div>
         <div class="messages" id="messages"></div>
-        <div class="message-input">
-          <input
-            type="text"
-            id="message-input"
-            placeholder="Type a message..."
-            autofocus
-          />
-        </div>
+        <div class="message-input"></div>
       </div>
     </div>
 
@@ -5239,6 +5312,7 @@ npm run dev
 </svg>",
   "src/app.ts": "import {createStore} from 'tinybase';
 import {createButton} from './components/button';
+import {createInput} from './components/input';
 
 const updateMessages = (store: any) => {
   const messages = document.getElementById('messages')!;
@@ -5264,49 +5338,50 @@ const updateMessages = (store: any) => {
 
 export const app = () => {
   const store = createStore()
-    .setValue('username', 'User')
+    .setValue('username', 'Carol')
     .setTable('messages', {
       '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
       '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
     });
 
-  const usernameInput = document.getElementById(
-    'username-input',
-  ) as HTMLInputElement;
-  const messageInput = document.getElementById(
-    'message-input',
-  ) as HTMLInputElement;
+  const usernameInput = createInput(
+    'Enter your name',
+    store.getValue('username') as string,
+  );
+  document.querySelector('.username-input')!.appendChild(usernameInput);
 
-  usernameInput!.value = store.getValue('username') as string;
-  usernameInput!.addEventListener('input', () => {
-    store.setValue('username', usernameInput!.value);
+  usernameInput.addEventListener('input', () => {
+    store.setValue('username', usernameInput.value);
   });
 
   store.addValuesListener(() => {
-    usernameInput!.value = store.getValue('username') as string;
+    usernameInput.value = store.getValue('username') as string;
   });
 
+  const messageInput = createInput('Type a message...');
+  const messageInputContainer = document.querySelector('.message-input')!;
+  messageInputContainer.appendChild(messageInput);
+
   const sendMessage = () => {
-    const text = messageInput!.value.trim();
+    const text = messageInput.value.trim();
     if (text) {
       store.addRow('messages', {
         username: store.getValue('username'),
         text,
         timestamp: Date.now(),
       });
-      messageInput!.value = '';
+      messageInput.value = '';
     }
   };
 
-  const messageInputContainer = document.querySelector('.message-input')!;
-  const sendButton = createButton('Send', sendMessage, 'primary');
-  messageInputContainer.appendChild(sendButton);
-
-  messageInput!.addEventListener('keypress', (e) => {
+  messageInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
       sendMessage();
     }
   });
+
+  const sendButton = createButton('Send', sendMessage, 'primary');
+  messageInputContainer.appendChild(sendButton);
 
   store.addTablesListener(() => updateMessages(store));
   updateMessages(store);
@@ -5314,22 +5389,17 @@ export const app = () => {
 ",
   "src/chat.css": ".username-input {
   margin-bottom: 1rem;
-}
-
-.username-input label {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
+.username-input label {
+  white-space: nowrap;
+}
+
 .username-input input {
   flex: 1;
-  padding: 0.5rem;
-  background: #222;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  color: #fff;
-  font-family: inherit;
 }
 
 .messages {
@@ -5364,16 +5434,11 @@ export const app = () => {
   display: flex;
   gap: 0.5rem;
   padding: 1rem;
-  border-top: 1px solid #666;
+  border-top: 1px solid var(--border);
 }
 
 .message-input input {
   flex: 1;
-  padding: 0.75rem;
-  background: #222;
-  border: none;
-  color: #fff;
-  font-family: inherit;
 }
 ",
   "src/components/button.css": "button {
@@ -5416,6 +5481,46 @@ export const createButton = (
   }
   button.addEventListener('click', onClick);
   return button;
+};
+",
+  "src/components/input.css": "input[type='text'] {
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+input[type='text']:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input[type='text']::placeholder {
+  color: var(--fg2);
+}
+",
+  "src/components/input.ts": "import './input.css';
+
+export const createInput = (
+  placeholder: string = '',
+  value: string = '',
+  onInput?: (value: string) => void,
+): HTMLInputElement => {
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.placeholder = placeholder;
+  input.value = value;
+  if (onInput) {
+    input.addEventListener('input', () => onInput(input.value));
+  }
+  return input;
 };
 ",
   "src/index.css": "a {

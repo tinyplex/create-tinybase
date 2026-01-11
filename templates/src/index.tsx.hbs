@@ -6,9 +6,6 @@ import './{{appType}}.css';
   import ReactDOM from 'react-dom/client';
   import {App} from './App';
   {{includeFile template="src/{{appType}}/App.tsx.hbs" output="src/App.{{ext}}"}}
-  {{#if (eq appType "basic")}}
-    {{includeFile template="src/basic/Buttons.tsx.hbs" output="src/Buttons.{{ext}}"}}
-  {{/if}}
 
   addEventListener('load', () =>
   ReactDOM.createRoot(document.getElementById('app'){{#if typescript}}!{{/if}}).render(

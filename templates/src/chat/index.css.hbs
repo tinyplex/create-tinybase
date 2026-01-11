@@ -1,21 +1,16 @@
 .username-input {
 margin-bottom: 1rem;
-}
-
-.username-input label {
 display: flex;
 align-items: center;
 gap: 0.5rem;
 }
 
+.username-input label {
+white-space: nowrap;
+}
+
 .username-input input {
 flex: 1;
-padding: 0.5rem;
-background: #222;
-border: 1px solid #666;
-border-radius: 0.25rem;
-color: #fff;
-font-family: inherit;
 }
 
 .messages {
@@ -50,14 +45,9 @@ color: #666;
 display: flex;
 gap: 0.5rem;
 padding: 1rem;
-border-top: 1px solid #666;
+border-top: 1px solid var(--border);
 }
 
 .message-input input {
 flex: 1;
-padding: 0.75rem;
-background: #222;
-border: none;
-color: #fff;
-font-family: inherit;
 }

@@ -1,6 +1,8 @@
 {{includeFile template="src/components/button.ts.hbs" output="src/components/button.{{ext}}"}}
+{{includeFile template="src/components/input.ts.hbs" output="src/components/input.{{ext}}"}}
 import {createStore} from 'tinybase';
 import {createButton} from './components/button';
+import {createInput} from './components/input';
 
 const updateMessages = (store: any) => {
 const messages = document.getElementById('messages')!;
@@ -30,45 +32,47 @@ return `
   const app = () => {
 {{/if}}
 const store = createStore()
-.setValue('username', 'User')
+.setValue('username', 'Carol')
 .setTable('messages', {
 '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
 '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
 });
 
-const usernameInput = document.getElementById('username-input') as HTMLInputElement;
-const messageInput = document.getElementById('message-input') as HTMLInputElement;
+const usernameInput = createInput('Enter your name', store.getValue('username') as string);
+document.querySelector('.username-input')!.appendChild(usernameInput);
 
-usernameInput!.value = store.getValue('username') as string;
-usernameInput!.addEventListener('input', () => {
-store.setValue('username', usernameInput!.value);
+usernameInput.addEventListener('input', () => {
+store.setValue('username', usernameInput.value);
 });
 
 store.addValuesListener(() => {
-usernameInput!.value = store.getValue('username') as string;
+usernameInput.value = store.getValue('username') as string;
 });
 
+const messageInput = createInput('Type a message...');
+const messageInputContainer = document.querySelector('.message-input')!;
+messageInputContainer.appendChild(messageInput);
+
 const sendMessage = () => {
-const text = messageInput!.value.trim();
+const text = messageInput.value.trim();
 if (text) {
 store.addRow('messages', {
 username: store.getValue('username'),
 text,
 timestamp: Date.now(),
 });
-messageInput!.value = '';
+messageInput.value = '';
 }
 };
 
-const messageInputContainer = document.querySelector('.message-input')!;
-const sendButton = createButton('Send', sendMessage, 'primary');
-messageInputContainer.appendChild(sendButton);
-
-messageInput!.addEventListener('keypress', (e) => {
+messageInput.addEventListener('keypress', (e) => {
 if (e.key === 'Enter') {
 sendMessage();
 }
 });
+
+const sendButton = createButton('Send', sendMessage, 'primary');
+messageInputContainer.appendChild(sendButton);
 
 store.addTablesListener(() => updateMessages(store));
 updateMessages(store);
