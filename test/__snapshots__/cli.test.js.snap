@@ -31,7 +31,7 @@ npm run dev
     />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>TinyBase / JavaScript + React</title>
+    <title>TinyBase Demo</title>
     <style>
       * {
         box-sizing: border-box;
@@ -489,7 +489,7 @@ npm run dev
     />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>TinyBase / JavaScript + React</title>
+    <title>TinyBase Chat</title>
     <style>
       * {
         box-sizing: border-box;
@@ -1029,7 +1029,7 @@ npm run dev
     />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>TinyBase / JavaScript + React</title>
+    <title>TinyBase Drawing</title>
     <style>
       * {
         box-sizing: border-box;
@@ -1484,11 +1484,9 @@ const App = () => {
   return (
     <StrictMode>
       <Provider store={store}>
-        <>
-          <Canvas />
-          <DrawingControls />
-          <Inspector />
-        </>
+        <DrawingControls />
+        <Canvas />
+        <Inspector />
       </Provider>
     </StrictMode>
   );
@@ -1597,7 +1595,7 @@ npm run dev
     />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>TinyBase / JavaScript</title>
+    <title>TinyBase Demo</title>
     <style>
       * {
         box-sizing: border-box;
@@ -2018,7 +2016,7 @@ npm run dev
     />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>TinyBase / JavaScript</title>
+    <title>TinyBase Chat</title>
     <style>
       * {
         box-sizing: border-box;
@@ -2219,7 +2217,10 @@ const app = () => {
   appContainer.appendChild(createUsernameInput(store));
   const messagesContainer = createMessages(store);
   appContainer.appendChild(messagesContainer);
-  appContainer.appendChild(createMessageInput(store));
+  const messageInputContainer = createMessageInput(store);
+  appContainer.appendChild(messageInputContainer);
+  const messageInput = messageInputContainer.querySelector('input');
+  messageInput.focus();
   store.addTablesListener(() => {
     const messageRows = store.getTable('messages');
     const sortedIds = Object.keys(messageRows).sort(
@@ -2372,7 +2373,6 @@ const createMessageInput = (store) => {
   messageInputContainer.id = 'messageInput';
   const messageInput = createInput('Type a message...');
   messageInputContainer.appendChild(messageInput);
-  messageInput.focus();
   const sendMessage = () => {
     const text = messageInput.value.trim();
     if (text) {
@@ -2546,7 +2546,7 @@ npm run dev
     />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>TinyBase / JavaScript</title>
+    <title>TinyBase Drawing</title>
     <style>
       * {
         box-sizing: border-box;
@@ -3070,7 +3070,7 @@ npm run dev
     />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>TinyBase / TypeScript + React</title>
+    <title>TinyBase Demo</title>
     <style>
       * {
         box-sizing: border-box;
@@ -3577,7 +3577,7 @@ npm run dev
     />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>TinyBase / TypeScript + React</title>
+    <title>TinyBase Chat</title>
     <style>
       * {
         box-sizing: border-box;
@@ -4209,7 +4209,7 @@ npm run dev
     />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>TinyBase / TypeScript + React</title>
+    <title>TinyBase Drawing</title>
     <style>
       * {
         box-sizing: border-box;
@@ -4703,7 +4703,7 @@ import {DrawingControls} from '../components/DrawingControls';
 
 import {Canvas} from '../components/Canvas';
 
-export const App = () => {
+const App = () => {
   const store = useCreateStore(() => {
     return createStore()
       .setRow('settings', 'brush', {color: '#d81b60', size: 5})
@@ -4713,15 +4713,15 @@ export const App = () => {
   return (
     <StrictMode>
       <Provider store={store}>
-        <>
-          <Canvas />
-          <DrawingControls />
-          <Inspector />
-        </>
+        <DrawingControls />
+        <Canvas />
+        <Inspector />
       </Provider>
     </StrictMode>
   );
 };
+
+export {App};
 ",
   "src/drawing/index.css": "/* Drawing-specific styles are now in component CSS files */
 ",
@@ -4848,7 +4848,7 @@ npm run dev
     />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>TinyBase / TypeScript</title>
+    <title>TinyBase Demo</title>
     <style>
       * {
         box-sizing: border-box;
@@ -5304,7 +5304,7 @@ npm run dev
     />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>TinyBase / TypeScript</title>
+    <title>TinyBase Chat</title>
     <style>
       * {
         box-sizing: border-box;
@@ -5505,7 +5505,7 @@ import {createUsernameInput} from '../components/usernameInput';
 
 import {createMessageInput} from '../components/messageInput';
 
-export const app = () => {
+const app = () => {
   const store = createStore()
     .setValue('username', 'Carol')
     .setTable('messages', {
@@ -5520,7 +5520,12 @@ export const app = () => {
   const messagesContainer = createMessages(store);
   appContainer.appendChild(messagesContainer);
 
-  appContainer.appendChild(createMessageInput(store));
+  const messageInputContainer = createMessageInput(store);
+  appContainer.appendChild(messageInputContainer);
+
+  // Focus the input after it's in the DOM
+  const messageInput = messageInputContainer.querySelector('input')!;
+  messageInput.focus();
 
   store.addTablesListener(() => {
     const messageRows = store.getTable('messages');
@@ -5540,6 +5545,8 @@ export const app = () => {
     });
   });
 };
+
+export {app};
 ",
   "src/chat/index.css": "/* Chat-specific styles are now in component CSS files */
 ",
@@ -5696,7 +5703,6 @@ export const createMessageInput = (store: any): HTMLDivElement => {
 
   const messageInput = createInput('Type a message...');
   messageInputContainer.appendChild(messageInput);
-  messageInput.focus();
 
   const sendMessage = () => {
     const text = messageInput.value.trim();
@@ -5906,7 +5912,7 @@ npm run dev
     />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>TinyBase / TypeScript</title>
+    <title>TinyBase Drawing</title>
     <style>
       * {
         box-sizing: border-box;
@@ -6368,7 +6374,7 @@ import {createDrawingControls} from '../components/drawingControls';
 
 import {createCanvas} from '../components/canvas';
 
-export const app = () => {
+const app = () => {
   const store = createStore()
     .setRow('settings', 'brush', {color: '#d81b60', size: 5})
     .setTable('strokes', {});
@@ -6378,6 +6384,8 @@ export const app = () => {
   appContainer.appendChild(createDrawingControls(store));
   appContainer.appendChild(createCanvas(store));
 };
+
+export {app};
 ",
   "src/drawing/index.css": "/* Drawing-specific styles are now in component CSS files */
 ",

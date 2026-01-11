@@ -10,7 +10,7 @@
   {{includeFile template="public/favicon.svg" output="public/favicon.svg"}}
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <title>
-    TinyBase / {{#if typescript}}TypeScript{{else}}JavaScript{{/if}}{{#if react}} + React{{/if}}
+    TinyBase {{#if (eq appType "chat")}}Chat{{else if (eq appType "drawing")}}Drawing{{else}}Demo{{/if}}
   </title>
   <style>
     * {
@@ -148,52 +148,30 @@
 </head>
 
 <body>
-  {{#if react}}
-    <div id="appContainer">
-      <div id="topBar">
-        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-        <div id="topBarTitle">TinyBase {{#if (eq appType "chat")}}Chat{{else if (eq appType "drawing")}}Drawing{{else}}Demo{{/if}}</div>
-        <div id="topBarInfo">
-          <div id="infoIcon">
-            i
-            <div id="infoTooltip">
-              {{#if (eq appType "basic")}}
-                A simple TinyBase app with key-values and tables mutated with buttons. See the full set of <a href="https://tinybase.org/demos/" target="_blank">TinyBase demos</a> for more examples.
-              {{else if (eq appType "chat")}}
-                A real-time chat application demonstrating TinyBase's reactive data management.
-              {{else if (eq appType "drawing")}}
-                A collaborative drawing canvas showcasing TinyBase's state synchronization.
-              {{/if}}
-              <br><br>
-              Built with {{#if typescript}}TypeScript{{else}}JavaScript{{/if}} + React.
-            </div>
+  <div id="appContainer">
+    <div id="topBar">
+      <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+      <div id="topBarTitle">TinyBase {{#if (eq appType "chat")}}Chat{{else if (eq appType "drawing")}}Drawing{{else}}Demo{{/if}}</div>
+      <div id="topBarInfo">
+        <div id="infoIcon">
+          i
+          <div id="infoTooltip">
+            {{#if (eq appType "basic")}}
+              A simple TinyBase app with key-values and tables mutated with buttons. See the full set of <a href="https://tinybase.org/demos/" target="_blank">TinyBase demos</a> for more examples.
+            {{else if (eq appType "chat")}}
+              A real-time chat application demonstrating TinyBase's reactive data management.
+            {{else if (eq appType "drawing")}}
+              A collaborative drawing canvas showcasing TinyBase's state synchronization.
+            {{/if}}
+            <br><br>
+            Built with {{#if typescript}}TypeScript{{else}}JavaScript{{/if}}{{#if react}} + React{{/if}}.
           </div>
         </div>
       </div>
-      <div id="app"></div>
     </div>
-  {{else}}
-    <div id="appContainer">
-      <div id="topBar">
-        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-        <div id="topBarTitle">TinyBase {{#if (eq appType "chat")}}Chat{{else if (eq appType "drawing")}}Drawing{{else}}Demo{{/if}}</div>
-        <div id="topBarInfo">
-          <div id="infoIcon">
-            i
-            <div id="infoTooltip">
-              {{#if (eq appType "basic")}}
-                A simple TinyBase app with key-values and tables mutated with buttons. See the full set of <a href="https://tinybase.org/demos/" target="_blank">TinyBase demos</a> for more examples.
-              {{else if (eq appType "chat")}}
-                A real-time chat application demonstrating TinyBase's reactive data management.
-              {{else if (eq appType "drawing")}}
-                A collaborative drawing canvas showcasing TinyBase's state synchronization.
-              {{/if}}
-              <br><br>
-              Built with {{#if typescript}}TypeScript{{else}}JavaScript{{/if}}.
-            </div>
-          </div>
-        </div>
-      </div>
+    {{#if react}}
+      <div id="app"></div>
+    {{else}}
       {{#if (eq appType "basic")}}
         <div id="app">
           <div id="buttons"></div>
@@ -206,15 +184,11 @@
             <pre id="tablesJson"></pre>
           </details>
         </div>
-      {{/if}}
-      {{#if (eq appType "chat")}}
+      {{else}}
         <div id="app"></div>
       {{/if}}
-      {{#if (eq appType "drawing")}}
-        <div id="app"></div>
-      {{/if}}
-    </div>
-  {{/if}}
+    {{/if}}
+  </div>
   {{includeFile template="src/index.tsx.hbs" output="src/index.{{ext}}"}}
   <script type="module" src="/src/index.{{ext}}"></script>
 </body>

@@ -6,11 +6,7 @@ import {createDrawingControls} from '../components/drawingControls';
 {{includeFile template="src/components/canvas.ts.hbs" output="src/components/canvas.{{ext}}"}}
 import {createCanvas} from '../components/canvas';
 
-{{#if typescript}}
-  export const app = () => {
-{{else}}
-  const app = () => {
-{{/if}}
+const app = () => {
 const store = createStore()
 .setRow('settings', 'brush', {color: '#d81b60', size: 5})
 .setTable('strokes', {});
@@ -20,6 +16,5 @@ const appContainer = document.getElementById('app')!;
 appContainer.appendChild(createDrawingControls(store));
 appContainer.appendChild(createCanvas(store));
 };
-{{#unless typescript}}
-  export {app};
-{{/unless}}
+
+export {app};

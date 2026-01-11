@@ -9,7 +9,7 @@ import {DrawingControls} from '../components/DrawingControls';
 {{includeFile template="src/components/Canvas.tsx.hbs" output="src/components/Canvas.{{ext}}"}}
 import {Canvas} from '../components/Canvas';
 
-{{#if typescript}}export {{/if}}const App = () => {
+const App = () => {
 const store = useCreateStore(() => {
 return createStore()
 .setRow('settings', 'brush', {color: '#d81b60', size: 5})
@@ -19,15 +19,12 @@ return createStore()
 return (
 <StrictMode>
   <Provider store={store}>
-    <>
-      <Canvas />
-      <DrawingControls />
-      <Inspector />
-    </>
+    <DrawingControls />
+    <Canvas />
+    <Inspector />
   </Provider>
 </StrictMode>
 );
 };
-{{#unless typescript}}
-  export {App};
-{{/unless}}
+
+export {App};

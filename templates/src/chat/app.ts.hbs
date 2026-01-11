@@ -14,11 +14,7 @@ import {createUsernameInput} from '../components/usernameInput';
 {{includeFile template="src/components/messageInput.ts.hbs" output="src/components/messageInput.{{ext}}"}}
 import {createMessageInput} from '../components/messageInput';
 
-{{#if typescript}}
-  export const app = () => {
-{{else}}
-  const app = () => {
-{{/if}}
+const app = () => {
 const store = createStore()
 .setValue('username', 'Carol')
 .setTable('messages', {
@@ -33,7 +29,12 @@ appContainer.appendChild(createUsernameInput(store));
 const messagesContainer = createMessages(store);
 appContainer.appendChild(messagesContainer);
 
-appContainer.appendChild(createMessageInput(store));
+const messageInputContainer = createMessageInput(store);
+appContainer.appendChild(messageInputContainer);
+
+// Focus the input after it's in the DOM
+const messageInput = messageInputContainer.querySelector('input')!;
+messageInput.focus();
 
 store.addTablesListener(() => {
 const messageRows = store.getTable('messages');
@@ -49,6 +50,5 @@ messagesContainer.appendChild(messageElement);
 });
 });
 };
-{{#unless typescript}}
-  export {app};
-{{/unless}}
+
+export {app};
