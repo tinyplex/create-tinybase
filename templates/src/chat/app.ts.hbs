@@ -7,21 +7,8 @@ import {createButton} from '../components/button';
 import {createInput} from '../components/input';
 {{includeFile template="src/components/message.ts.hbs" output="src/components/message.{{ext}}"}}
 import {createMessage} from '../components/message';
-
-const updateMessages = (store: any) => {
-const messagesContainer = document.getElementById('messages')!;
-const messageRows = store.getTable('messages');
-const sortedIds = Object.keys(messageRows).sort(
-(a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
-);
-
-messagesContainer.innerHTML = '';
-sortedIds.forEach((id) => {
-const msg = messageRows[id];
-const messageElement = createMessage(msg.username, msg.text, msg.timestamp);
-messagesContainer.appendChild(messageElement);
-});
-};
+{{includeFile template="src/components/messages.ts.hbs" output="src/components/messages.{{ext}}"}}
+import {createMessages} from '../components/messages';
 
 {{#if typescript}}
   export const app = () => {
@@ -72,8 +59,8 @@ sendMessage();
 const sendButton = createButton('Send', sendMessage, 'primary');
 messageInputContainer.appendChild(sendButton);
 
-store.addTablesListener(() => updateMessages(store));
-updateMessages(store);
+store.addTablesListener(() => createMessages(store));
+createMessages(store);
 };
 {{#unless typescript}}
   export {app};

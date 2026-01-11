@@ -1,0 +1,27 @@
+import {useMemo} from 'react';
+import {useRowIds, useStore} from 'tinybase/ui-react';
+{{includeFile template="src/components/messages.css.hbs" output="src/components/messages.css"}}
+import './messages.css';
+{{includeFile template="src/components/Message.tsx.hbs" output="src/components/Message.{{ext}}"}}
+import {Message} from './Message';
+
+export const Messages = () => {
+const store = useStore();
+const messageIds = useRowIds('messages');
+
+const sortedIds = useMemo(() => {
+return [...messageIds].sort((a, b) => {
+const rowA = store.getRow('messages', a) as any;
+const rowB = store.getRow('messages', b) as any;
+return rowA.timestamp - rowB.timestamp;
+});
+}, [messageIds, store]);
+
+return (
+<div id="messages">
+  {sortedIds.map((id) => (
+  <Message key={id} rowId={id} />
+  ))}
+</div>
+);
+};

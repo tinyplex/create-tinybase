@@ -677,7 +677,7 @@ npm run dev
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "src/chat/App.jsx": "import './index.css';
-import {StrictMode, useState, useMemo} from 'react';
+import {StrictMode, useState} from 'react';
 import {createStore} from 'tinybase';
 import {
   Provider,
@@ -685,13 +685,11 @@ import {
   useAddRowCallback,
   useSetValueCallback,
   useValue,
-  useRowIds,
-  useStore,
 } from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {Button} from '../components/Button';
 import {Input} from '../components/Input';
-import {Message} from '../components/Message';
+import {Messages} from '../components/Messages';
 const MessageInput = () => {
   const [message, setMessage] = useState('');
   const username = useValue('username') || 'Anonymous';
@@ -723,24 +721,6 @@ const MessageInput = () => {
         Send
       </Button>
     </form>
-  );
-};
-const Messages = () => {
-  const store = useStore();
-  const messageIds = useRowIds('messages');
-  const sortedIds = useMemo(() => {
-    return [...messageIds].sort((a, b) => {
-      const rowA = store.getRow('messages', a);
-      const rowB = store.getRow('messages', b);
-      return rowA.timestamp - rowB.timestamp;
-    });
-  }, [messageIds, store]);
-  return (
-    <div id="messages">
-      {sortedIds.map((id) => (
-        <Message key={id} rowId={id} />
-      ))}
-    </div>
   );
 };
 const UsernameInput = () => {
@@ -794,13 +774,6 @@ export {App};
   flex: 1;
 }
 
-#messages {
-  overflow-y: auto;
-  padding: 1rem 0;
-  height: 400px;
-  margin-bottom: 1rem;
-}
-
 #messageInput {
   display: flex;
   gap: 0.5rem;
@@ -850,6 +823,30 @@ const Message = ({rowId}) => {
   );
 };
 export {Message};
+",
+  "src/components/Messages.jsx": "import {useMemo} from 'react';
+import {useRowIds, useStore} from 'tinybase/ui-react';
+import './messages.css';
+import {Message} from './Message';
+const Messages = () => {
+  const store = useStore();
+  const messageIds = useRowIds('messages');
+  const sortedIds = useMemo(() => {
+    return [...messageIds].sort((a, b) => {
+      const rowA = store.getRow('messages', a);
+      const rowB = store.getRow('messages', b);
+      return rowA.timestamp - rowB.timestamp;
+    });
+  }, [messageIds, store]);
+  return (
+    <div id="messages">
+      {sortedIds.map((id) => (
+        <Message key={id} rowId={id} />
+      ))}
+    </div>
+  );
+};
+export {Messages};
 ",
   "src/components/button.css": "button {
   padding: 0.5rem 1rem;
@@ -919,6 +916,13 @@ input[type='text']::placeholder {
 .message .time {
   font-size: 0.8rem;
   color: #666;
+}
+",
+  "src/components/messages.css": "#messages {
+  overflow-y: auto;
+  padding: 1rem 0;
+  height: 400px;
+  margin-bottom: 1rem;
 }
 ",
   "src/index.css": "a {
@@ -2194,20 +2198,7 @@ npm run dev
 import {createStore} from 'tinybase';
 import {createButton} from '../components/button';
 import {createInput} from '../components/input';
-import {createMessage} from '../components/message';
-const updateMessages = (store) => {
-  const messagesContainer = document.getElementById('messages');
-  const messageRows = store.getTable('messages');
-  const sortedIds = Object.keys(messageRows).sort(
-    (a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
-  );
-  messagesContainer.innerHTML = '';
-  sortedIds.forEach((id) => {
-    const msg = messageRows[id];
-    const messageElement = createMessage(msg.username, msg.text, msg.timestamp);
-    messagesContainer.appendChild(messageElement);
-  });
-};
+import {createMessages} from '../components/messages';
 const app = () => {
   const store = createStore()
     .setValue('username', 'Carol')
@@ -2248,8 +2239,8 @@ const app = () => {
   });
   const sendButton = createButton('Send', sendMessage, 'primary');
   messageInputContainer.appendChild(sendButton);
-  store.addTablesListener(() => updateMessages(store));
-  updateMessages(store);
+  store.addTablesListener(() => createMessages(store));
+  createMessages(store);
 };
 export {app};
 ",
@@ -2266,13 +2257,6 @@ export {app};
 
 #usernameInput input {
   flex: 1;
-}
-
-#messages {
-  overflow-y: auto;
-  padding: 1rem 0;
-  height: 400px;
-  margin-bottom: 1rem;
 }
 
 #messageInput {
@@ -2401,6 +2385,30 @@ const createMessage = (username, text, timestamp) => {
   return messageDiv;
 };
 export {createMessage};
+",
+  "src/components/messages.css": "#messages {
+  overflow-y: auto;
+  padding: 1rem 0;
+  height: 400px;
+  margin-bottom: 1rem;
+}
+",
+  "src/components/messages.js": "import './messages.css';
+import {createMessage} from './message';
+const createMessages = (store) => {
+  const messagesContainer = document.getElementById('messages');
+  const messageRows = store.getTable('messages');
+  const sortedIds = Object.keys(messageRows).sort(
+    (a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
+  );
+  messagesContainer.innerHTML = '';
+  sortedIds.forEach((id) => {
+    const msg = messageRows[id];
+    const messageElement = createMessage(msg.username, msg.text, msg.timestamp);
+    messagesContainer.appendChild(messageElement);
+  });
+};
+export {createMessages};
 ",
   "src/index.css": "a {
   color: var(--fg);
@@ -3694,6 +3702,8 @@ import {Input} from '../components/Input';
 
 import {Message} from '../components/Message';
 
+import {Messages} from '../components/Messages';
+
 const MessageInput = () => {
   const [message, setMessage] = useState('');
   const username = useValue('username') || 'Anonymous';
@@ -3728,27 +3738,6 @@ const MessageInput = () => {
         Send
       </Button>
     </form>
-  );
-};
-
-const Messages = () => {
-  const store = useStore();
-  const messageIds = useRowIds('messages');
-
-  const sortedIds = useMemo(() => {
-    return [...messageIds].sort((a, b) => {
-      const rowA = store.getRow('messages', a) as any;
-      const rowB = store.getRow('messages', b) as any;
-      return rowA.timestamp - rowB.timestamp;
-    });
-  }, [messageIds, store]);
-
-  return (
-    <div id="messages">
-      {sortedIds.map((id) => (
-        <Message key={id} rowId={id} />
-      ))}
-    </div>
   );
 };
 
@@ -3807,13 +3796,6 @@ export const App = () => {
 
 #usernameInput input {
   flex: 1;
-}
-
-#messages {
-  overflow-y: auto;
-  padding: 1rem 0;
-  height: 400px;
-  margin-bottom: 1rem;
 }
 
 #messageInput {
@@ -3897,6 +3879,33 @@ export const Message = ({rowId}: MessageProps) => {
   );
 };
 ",
+  "src/components/Messages.tsx": "import {useMemo} from 'react';
+import {useRowIds, useStore} from 'tinybase/ui-react';
+import './messages.css';
+
+import {Message} from './Message';
+
+export const Messages = () => {
+  const store = useStore();
+  const messageIds = useRowIds('messages');
+
+  const sortedIds = useMemo(() => {
+    return [...messageIds].sort((a, b) => {
+      const rowA = store.getRow('messages', a) as any;
+      const rowB = store.getRow('messages', b) as any;
+      return rowA.timestamp - rowB.timestamp;
+    });
+  }, [messageIds, store]);
+
+  return (
+    <div id="messages">
+      {sortedIds.map((id) => (
+        <Message key={id} rowId={id} />
+      ))}
+    </div>
+  );
+};
+",
   "src/components/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
@@ -3965,6 +3974,13 @@ input[type='text']::placeholder {
 .message .time {
   font-size: 0.8rem;
   color: #666;
+}
+",
+  "src/components/messages.css": "#messages {
+  overflow-y: auto;
+  padding: 1rem 0;
+  height: 400px;
+  margin-bottom: 1rem;
 }
 ",
   "src/index.css": "a {
@@ -5366,20 +5382,7 @@ import {createInput} from '../components/input';
 
 import {createMessage} from '../components/message';
 
-const updateMessages = (store: any) => {
-  const messagesContainer = document.getElementById('messages')!;
-  const messageRows = store.getTable('messages');
-  const sortedIds = Object.keys(messageRows).sort(
-    (a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
-  );
-
-  messagesContainer.innerHTML = '';
-  sortedIds.forEach((id) => {
-    const msg = messageRows[id];
-    const messageElement = createMessage(msg.username, msg.text, msg.timestamp);
-    messagesContainer.appendChild(messageElement);
-  });
-};
+import {createMessages} from '../components/messages';
 
 export const app = () => {
   const store = createStore()
@@ -5429,8 +5432,8 @@ export const app = () => {
   const sendButton = createButton('Send', sendMessage, 'primary');
   messageInputContainer.appendChild(sendButton);
 
-  store.addTablesListener(() => updateMessages(store));
-  updateMessages(store);
+  store.addTablesListener(() => createMessages(store));
+  createMessages(store);
 };
 ",
   "src/chat/index.css": "#usernameInput {
@@ -5446,13 +5449,6 @@ export const app = () => {
 
 #usernameInput input {
   flex: 1;
-}
-
-#messages {
-  overflow-y: auto;
-  padding: 1rem 0;
-  height: 400px;
-  margin-bottom: 1rem;
 }
 
 #messageInput {
@@ -5598,6 +5594,32 @@ export const createMessage = (
   messageDiv.appendChild(timeSpan);
 
   return messageDiv;
+};
+",
+  "src/components/messages.css": "#messages {
+  overflow-y: auto;
+  padding: 1rem 0;
+  height: 400px;
+  margin-bottom: 1rem;
+}
+",
+  "src/components/messages.ts": "import './messages.css';
+
+import {createMessage} from './message';
+
+export const createMessages = (store: any): void => {
+  const messagesContainer = document.getElementById('messages')!;
+  const messageRows = store.getTable('messages');
+  const sortedIds = Object.keys(messageRows).sort(
+    (a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
+  );
+
+  messagesContainer.innerHTML = '';
+  sortedIds.forEach((id) => {
+    const msg = messageRows[id];
+    const messageElement = createMessage(msg.username, msg.text, msg.timestamp);
+    messagesContainer.appendChild(messageElement);
+  });
 };
 ",
   "src/index.css": "a {

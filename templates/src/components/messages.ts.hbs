@@ -1,0 +1,19 @@
+{{includeFile template="src/components/messages.css.hbs" output="src/components/messages.css"}}
+import './messages.css';
+{{includeFile template="src/components/message.ts.hbs" output="src/components/message.{{ext}}"}}
+import {createMessage} from './message';
+
+export const createMessages = (store: any): void => {
+const messagesContainer = document.getElementById('messages')!;
+const messageRows = store.getTable('messages');
+const sortedIds = Object.keys(messageRows).sort(
+(a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
+);
+
+messagesContainer.innerHTML = '';
+sortedIds.forEach((id) => {
+const msg = messageRows[id];
+const messageElement = createMessage(msg.username, msg.text, msg.timestamp);
+messagesContainer.appendChild(messageElement);
+});
+};
