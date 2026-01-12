@@ -1,12 +1,12 @@
-{{includeFile template="src/components/todoItem.css.hbs" output="src/components/todoItem.css"}}
+{{includeFile template="src/todos/todoItem.css.hbs" output="src/todos/todoItem.css"}}
 import './todoItem.css';
 {{#if schemas}}
-  import {useDelRowCallback, useRow, useSetPartialRowCallback} from '../todos/schemas';
+  import {useDelRowCallback, useRow, useSetPartialRowCallback} from './schemas';
 {{else}}
   import {useDelRowCallback, useRow, useSetPartialRowCallback} from 'tinybase/ui-react';
 {{/if}}
 {{includeFile template="src/components/Button.tsx.hbs" output="src/components/Button.{{ext}}"}}
-import {Button} from './Button';
+import {Button} from '../components/Button';
 
 export const TodoItem = ({rowId}: {rowId: string}) => {
 const todo = useRow('todos', rowId) as {text: string; completed: boolean};

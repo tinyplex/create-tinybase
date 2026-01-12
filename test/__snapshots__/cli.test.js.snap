@@ -1938,85 +1938,6 @@ const Input = ({value, onChange, placeholder = '', autoFocus = false}) => (
 );
 export {Input};
 ",
-  "src/components/TodoInput.jsx": "import './todoInput.css';
-import {useState} from 'react';
-import {useAddRowCallback} from 'tinybase/ui-react';
-import {Button} from './Button';
-import {Input} from './Input';
-const TodoInput = () => {
-  const [text, setText] = useState('');
-  const addRow = useAddRowCallback('todos', () => ({text, completed: false}), [
-    text,
-  ]);
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (text.trim()) {
-      addRow();
-      setText('');
-    }
-  };
-  return (
-    <form id="todoInput" onSubmit={handleSubmit}>
-      <Input
-        value={text}
-        onChange={setText}
-        placeholder="What needs to be done?"
-        autoFocus
-      />
-      <Button type="submit" variant="primary">
-        Add
-      </Button>
-    </form>
-  );
-};
-export {TodoInput};
-",
-  "src/components/TodoItem.jsx": "import './todoItem.css';
-import {
-  useDelRowCallback,
-  useRow,
-  useSetPartialRowCallback,
-} from 'tinybase/ui-react';
-import {Button} from './Button';
-const TodoItem = ({rowId}) => {
-  const todo = useRow('todos', rowId);
-  const setPartialRow = useSetPartialRowCallback(
-    'todos',
-    rowId,
-    (e) => ({completed: e.target.checked}),
-    [],
-  );
-  const delRow = useDelRowCallback('todos', rowId, () => [rowId], []);
-  return (
-    <div className={\`todoItem\${todo.completed ? ' completed' : ''}\`}>
-      <input
-        type="checkbox"
-        checked={todo.completed}
-        onChange={setPartialRow}
-        id={\`todo-\${rowId}\`}
-      />
-      <label htmlFor={\`todo-\${rowId}\`}>{todo.text}</label>
-      <Button onClick={delRow}>Delete</Button>
-    </div>
-  );
-};
-export {TodoItem};
-",
-  "src/components/TodoList.jsx": "import './todoList.css';
-import {useRowIds} from 'tinybase/ui-react';
-import {TodoItem} from './TodoItem';
-const TodoList = () => {
-  const todoIds = useRowIds('todos');
-  return (
-    <div id="todoList">
-      {todoIds.map((id) => (
-        <TodoItem key={id} rowId={id} />
-      ))}
-    </div>
-  );
-};
-export {TodoList};
-",
   "src/components/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
@@ -2063,65 +1984,6 @@ input[type='text']:focus {
 }
 
 input[type='text']::placeholder {
-  color: var(--fg2);
-}
-",
-  "src/components/todoInput.css": "#todoInput {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-
-#todoInput input {
-  flex: 1;
-}
-",
-  "src/components/todoItem.css": ".todoItem {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.todoItem:last-child {
-  border-bottom: none;
-}
-
-.todoItem input[type='checkbox'] {
-  width: 1.25rem;
-  height: 1.25rem;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.todoItem label {
-  flex: 1;
-  cursor: pointer;
-  user-select: none;
-}
-
-.todoItem.completed label {
-  text-decoration: line-through;
-  opacity: 0.6;
-}
-
-.todoItem button {
-  flex-shrink: 0;
-}
-",
-  "src/components/todoList.css": "#todoList {
-  border: 1px solid var(--border);
-  border-radius: 0.375rem;
-  overflow: hidden;
-  background: var(--bg2);
-}
-
-#todoList:empty::before {
-  content: 'No todos yet. Add one above!';
-  display: block;
-  padding: 2rem;
-  text-align: center;
   color: var(--fg2);
 }
 ",
@@ -2185,8 +2047,8 @@ import {StrictMode} from 'react';
 import {createMergeableStore} from 'tinybase';
 import {Provider, useCreateStore} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
-import {TodoInput} from '../components/TodoInput';
-import {TodoList} from '../components/TodoList';
+import {TodoInput} from './TodoInput';
+import {TodoList} from './TodoList';
 const App = () => {
   const store = useCreateStore(() => {
     return createMergeableStore('todos').setTable('todos', {
@@ -2206,7 +2068,145 @@ const App = () => {
 };
 export {App};
 ",
+  "src/todos/TodoInput.jsx": "import './todoInput.css';
+import {useState} from 'react';
+import {useAddRowCallback} from 'tinybase/ui-react';
+import {Button} from '../components/Button';
+import {Input} from '../components/Input';
+const TodoInput = () => {
+  const [text, setText] = useState('');
+  const addRow = useAddRowCallback('todos', () => ({text, completed: false}), [
+    text,
+  ]);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (text.trim()) {
+      addRow();
+      setText('');
+    }
+  };
+  return (
+    <form id="todoInput" onSubmit={handleSubmit}>
+      <Input
+        value={text}
+        onChange={setText}
+        placeholder="What needs to be done?"
+        autoFocus
+      />
+      <Button type="submit" variant="primary">
+        Add
+      </Button>
+    </form>
+  );
+};
+export {TodoInput};
+",
+  "src/todos/TodoItem.jsx": "import './todoItem.css';
+import {
+  useDelRowCallback,
+  useRow,
+  useSetPartialRowCallback,
+} from 'tinybase/ui-react';
+import {Button} from '../components/Button';
+const TodoItem = ({rowId}) => {
+  const todo = useRow('todos', rowId);
+  const setPartialRow = useSetPartialRowCallback(
+    'todos',
+    rowId,
+    (e) => ({completed: e.target.checked}),
+    [],
+  );
+  const delRow = useDelRowCallback('todos', rowId);
+  return (
+    <div className={\`todoItem\${todo.completed ? ' completed' : ''}\`}>
+      <input
+        type="checkbox"
+        checked={todo.completed}
+        onChange={setPartialRow}
+        id={\`todo-\${rowId}\`}
+      />
+      <label htmlFor={\`todo-\${rowId}\`}>{todo.text}</label>
+      <Button onClick={delRow}>Delete</Button>
+    </div>
+  );
+};
+export {TodoItem};
+",
+  "src/todos/TodoList.jsx": "import './todoList.css';
+import {useRowIds} from 'tinybase/ui-react';
+import {TodoItem} from './TodoItem';
+const TodoList = () => {
+  const todoIds = useRowIds('todos');
+  return (
+    <div id="todoList">
+      {todoIds.map((id) => (
+        <TodoItem key={id} rowId={id} />
+      ))}
+    </div>
+  );
+};
+export {TodoList};
+",
   "src/todos/index.css": "/* Add additional app styling here if needed */
+",
+  "src/todos/todoInput.css": "#todoInput {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+#todoInput input {
+  flex: 1;
+}
+",
+  "src/todos/todoItem.css": ".todoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.todoItem:last-child {
+  border-bottom: none;
+}
+
+.todoItem input[type='checkbox'] {
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.todoItem label {
+  flex: 1;
+  cursor: pointer;
+  user-select: none;
+}
+
+.todoItem.completed label {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.todoItem button {
+  flex-shrink: 0;
+}
+",
+  "src/todos/todoList.css": "#todoList {
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  overflow: hidden;
+  background: var(--bg2);
+}
+
+#todoList:empty::before {
+  content: 'No todos yet. Add one above!';
+  display: block;
+  padding: 2rem;
+  text-align: center;
+  color: var(--fg2);
+}
 ",
   "vite.config.js": "import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
@@ -4096,144 +4096,6 @@ const createInput = (placeholder = '', value = '', onInput) => {
 };
 export {createInput};
 ",
-  "src/components/todoInput.css": "#todoInput {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-
-#todoInput input {
-  flex: 1;
-}
-",
-  "src/components/todoInput.js": "import './todoInput.css';
-import {createButton} from './button';
-import {createInput} from './input';
-const createTodoInput = (store) => {
-  const container = document.createElement('div');
-  container.id = 'todoInput';
-  const input = createInput('What needs to be done?');
-  const addTodo = () => {
-    const text = input.value.trim();
-    if (text) {
-      store.addRow('todos', {text, completed: false});
-      input.value = '';
-      input.focus();
-    }
-  };
-  input.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      addTodo();
-    }
-  });
-  const addButton = createButton('Add', addTodo, 'primary');
-  container.appendChild(input);
-  container.appendChild(addButton);
-  return container;
-};
-export {createTodoInput};
-",
-  "src/components/todoItem.css": ".todoItem {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.todoItem:last-child {
-  border-bottom: none;
-}
-
-.todoItem input[type='checkbox'] {
-  width: 1.25rem;
-  height: 1.25rem;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.todoItem label {
-  flex: 1;
-  cursor: pointer;
-  user-select: none;
-}
-
-.todoItem.completed label {
-  text-decoration: line-through;
-  opacity: 0.6;
-}
-
-.todoItem button {
-  flex-shrink: 0;
-}
-",
-  "src/components/todoItem.js": "import './todoItem.css';
-import {createButton} from './button';
-const createTodoItem = (id, text, completed, onToggle, onDelete) => {
-  const item = document.createElement('div');
-  item.className = \`todoItem\${completed ? ' completed' : ''}\`;
-  const checkbox = document.createElement('input');
-  checkbox.type = 'checkbox';
-  checkbox.checked = completed;
-  checkbox.id = \`todo-\${id}\`;
-  checkbox.addEventListener('change', onToggle);
-  const label = document.createElement('label');
-  label.textContent = text;
-  label.htmlFor = \`todo-\${id}\`;
-  const deleteBtn = createButton('Delete', onDelete);
-  item.appendChild(checkbox);
-  item.appendChild(label);
-  item.appendChild(deleteBtn);
-  return item;
-};
-export {createTodoItem};
-",
-  "src/components/todoList.css": "#todoList {
-  border: 1px solid var(--border);
-  border-radius: 0.375rem;
-  overflow: hidden;
-  background: var(--bg2);
-}
-
-#todoList:empty::before {
-  content: 'No todos yet. Add one above!';
-  display: block;
-  padding: 2rem;
-  text-align: center;
-  color: var(--fg2);
-}
-",
-  "src/components/todoList.js": "import './todoList.css';
-import {createTodoItem} from './todoItem';
-const createTodoList = (store) => {
-  const list = document.createElement('div');
-  list.id = 'todoList';
-  const render = () => {
-    const todos = store.getTable('todos');
-    const todoIds = Object.keys(todos);
-    list.innerHTML = '';
-    todoIds.forEach((id) => {
-      const todo = todos[id];
-      const item = createTodoItem(
-        id,
-        todo.text,
-        todo.completed,
-        () => {
-          store.setPartialRow('todos', id, {completed: !todo.completed});
-        },
-        () => {
-          store.delRow('todos', id);
-        },
-      );
-      list.appendChild(item);
-    });
-  };
-  store.addTablesListener(render);
-  render();
-  return list;
-};
-export {createTodoList};
-",
   "src/index.css": "a {
   color: var(--fg);
 }
@@ -4288,8 +4150,8 @@ addEventListener('load', app);
 ",
   "src/todos/app.js": "import './index.css';
 import {createMergeableStore} from 'tinybase';
-import {createTodoInput} from '../components/todoInput';
-import {createTodoList} from '../components/todoList';
+import {createTodoInput} from './todoInput';
+import {createTodoList} from './todoList';
 const app = () => {
   const store = createMergeableStore('todos').setTable('todos', {
     1: {text: 'Learn TinyBase', completed: false},
@@ -4305,6 +4167,144 @@ const app = () => {
 export {app};
 ",
   "src/todos/index.css": "/* Add additional app styling here if needed */
+",
+  "src/todos/todoInput.css": "#todoInput {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+#todoInput input {
+  flex: 1;
+}
+",
+  "src/todos/todoInput.js": "import './todoInput.css';
+import {createButton} from '../components/button';
+import {createInput} from '../components/input';
+const createTodoInput = (store) => {
+  const container = document.createElement('div');
+  container.id = 'todoInput';
+  const input = createInput('What needs to be done?');
+  const addTodo = () => {
+    const text = input.value.trim();
+    if (text) {
+      store.addRow('todos', {text, completed: false});
+      input.value = '';
+      input.focus();
+    }
+  };
+  input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      addTodo();
+    }
+  });
+  const addButton = createButton('Add', addTodo, 'primary');
+  container.appendChild(input);
+  container.appendChild(addButton);
+  return container;
+};
+export {createTodoInput};
+",
+  "src/todos/todoItem.css": ".todoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.todoItem:last-child {
+  border-bottom: none;
+}
+
+.todoItem input[type='checkbox'] {
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.todoItem label {
+  flex: 1;
+  cursor: pointer;
+  user-select: none;
+}
+
+.todoItem.completed label {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.todoItem button {
+  flex-shrink: 0;
+}
+",
+  "src/todos/todoItem.js": "import './todoItem.css';
+import {createButton} from '../components/button';
+const createTodoItem = (id, text, completed, onToggle, onDelete) => {
+  const item = document.createElement('div');
+  item.className = \`todoItem\${completed ? ' completed' : ''}\`;
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.checked = completed;
+  checkbox.id = \`todo-\${id}\`;
+  checkbox.addEventListener('change', onToggle);
+  const label = document.createElement('label');
+  label.textContent = text;
+  label.htmlFor = \`todo-\${id}\`;
+  const deleteBtn = createButton('Delete', onDelete);
+  item.appendChild(checkbox);
+  item.appendChild(label);
+  item.appendChild(deleteBtn);
+  return item;
+};
+export {createTodoItem};
+",
+  "src/todos/todoList.css": "#todoList {
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  overflow: hidden;
+  background: var(--bg2);
+}
+
+#todoList:empty::before {
+  content: 'No todos yet. Add one above!';
+  display: block;
+  padding: 2rem;
+  text-align: center;
+  color: var(--fg2);
+}
+",
+  "src/todos/todoList.js": "import './todoList.css';
+import {createTodoItem} from './todoItem';
+const createTodoList = (store) => {
+  const list = document.createElement('div');
+  list.id = 'todoList';
+  const render = () => {
+    const todos = store.getTable('todos');
+    const todoIds = Object.keys(todos);
+    list.innerHTML = '';
+    todoIds.forEach((id) => {
+      const todo = todos[id];
+      const item = createTodoItem(
+        id,
+        todo.text,
+        todo.completed,
+        () => {
+          store.setPartialRow('todos', id, {completed: !todo.completed});
+        },
+        () => {
+          store.delRow('todos', id);
+        },
+      );
+      list.appendChild(item);
+    });
+  };
+  store.addTablesListener(render);
+  render();
+  return list;
+};
+export {createTodoList};
 ",
 }
 `;
@@ -6516,93 +6516,6 @@ export const Input = ({
   />
 );
 ",
-  "src/components/TodoInput.tsx": "import './todoInput.css';
-import {useState} from 'react';
-import {useAddRowCallback} from 'tinybase/ui-react';
-
-import {Button} from './Button';
-
-import {Input} from './Input';
-
-export const TodoInput = () => {
-  const [text, setText] = useState('');
-  const addRow = useAddRowCallback('todos', () => ({text, completed: false}), [
-    text,
-  ]);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (text.trim()) {
-      addRow();
-      setText('');
-    }
-  };
-
-  return (
-    <form id="todoInput" onSubmit={handleSubmit}>
-      <Input
-        value={text}
-        onChange={setText}
-        placeholder="What needs to be done?"
-        autoFocus
-      />
-      <Button type="submit" variant="primary">
-        Add
-      </Button>
-    </form>
-  );
-};
-",
-  "src/components/TodoItem.tsx": "import './todoItem.css';
-import {
-  useDelRowCallback,
-  useRow,
-  useSetPartialRowCallback,
-} from 'tinybase/ui-react';
-
-import {Button} from './Button';
-
-export const TodoItem = ({rowId}: {rowId: string}) => {
-  const todo = useRow('todos', rowId) as {text: string; completed: boolean};
-  const setPartialRow = useSetPartialRowCallback(
-    'todos',
-    rowId,
-    (e: React.ChangeEvent<HTMLInputElement>) => ({completed: e.target.checked}),
-    [],
-  );
-  const delRow = useDelRowCallback('todos', rowId, () => [rowId], []);
-
-  return (
-    <div className={\`todoItem\${todo.completed ? ' completed' : ''}\`}>
-      <input
-        type="checkbox"
-        checked={todo.completed}
-        onChange={setPartialRow}
-        id={\`todo-\${rowId}\`}
-      />
-      <label htmlFor={\`todo-\${rowId}\`}>{todo.text}</label>
-      <Button onClick={delRow}>Delete</Button>
-    </div>
-  );
-};
-",
-  "src/components/TodoList.tsx": "import './todoList.css';
-import {useRowIds} from 'tinybase/ui-react';
-
-import {TodoItem} from './TodoItem';
-
-export const TodoList = () => {
-  const todoIds = useRowIds('todos');
-
-  return (
-    <div id="todoList">
-      {todoIds.map((id) => (
-        <TodoItem key={id} rowId={id} />
-      ))}
-    </div>
-  );
-};
-",
   "src/components/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
@@ -6649,65 +6562,6 @@ input[type='text']:focus {
 }
 
 input[type='text']::placeholder {
-  color: var(--fg2);
-}
-",
-  "src/components/todoInput.css": "#todoInput {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-
-#todoInput input {
-  flex: 1;
-}
-",
-  "src/components/todoItem.css": ".todoItem {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.todoItem:last-child {
-  border-bottom: none;
-}
-
-.todoItem input[type='checkbox'] {
-  width: 1.25rem;
-  height: 1.25rem;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.todoItem label {
-  flex: 1;
-  cursor: pointer;
-  user-select: none;
-}
-
-.todoItem.completed label {
-  text-decoration: line-through;
-  opacity: 0.6;
-}
-
-.todoItem button {
-  flex-shrink: 0;
-}
-",
-  "src/components/todoList.css": "#todoList {
-  border: 1px solid var(--border);
-  border-radius: 0.375rem;
-  overflow: hidden;
-  background: var(--bg2);
-}
-
-#todoList:empty::before {
-  content: 'No todos yet. Add one above!';
-  display: block;
-  padding: 2rem;
-  text-align: center;
   color: var(--fg2);
 }
 ",
@@ -6773,9 +6627,9 @@ import {createMergeableStore} from 'tinybase';
 import {Provider, useCreateStore} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 
-import {TodoInput} from '../components/TodoInput';
+import {TodoInput} from './TodoInput';
 
-import {TodoList} from '../components/TodoList';
+import {TodoList} from './TodoList';
 
 const App = () => {
   const store = useCreateStore(() => {
@@ -6798,7 +6652,153 @@ const App = () => {
 
 export {App};
 ",
+  "src/todos/TodoInput.tsx": "import './todoInput.css';
+import {useState} from 'react';
+import {useAddRowCallback} from 'tinybase/ui-react';
+
+import {Button} from '../components/Button';
+
+import {Input} from '../components/Input';
+
+export const TodoInput = () => {
+  const [text, setText] = useState('');
+  const addRow = useAddRowCallback('todos', () => ({text, completed: false}), [
+    text,
+  ]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (text.trim()) {
+      addRow();
+      setText('');
+    }
+  };
+
+  return (
+    <form id="todoInput" onSubmit={handleSubmit}>
+      <Input
+        value={text}
+        onChange={setText}
+        placeholder="What needs to be done?"
+        autoFocus
+      />
+      <Button type="submit" variant="primary">
+        Add
+      </Button>
+    </form>
+  );
+};
+",
+  "src/todos/TodoItem.tsx": "import './todoItem.css';
+import {
+  useDelRowCallback,
+  useRow,
+  useSetPartialRowCallback,
+} from 'tinybase/ui-react';
+
+import {Button} from '../components/Button';
+
+export const TodoItem = ({rowId}: {rowId: string}) => {
+  const todo = useRow('todos', rowId) as {text: string; completed: boolean};
+  const setPartialRow = useSetPartialRowCallback(
+    'todos',
+    rowId,
+    (e: React.ChangeEvent<HTMLInputElement>) => ({completed: e.target.checked}),
+    [],
+  );
+  const delRow = useDelRowCallback('todos', rowId);
+
+  return (
+    <div className={\`todoItem\${todo.completed ? ' completed' : ''}\`}>
+      <input
+        type="checkbox"
+        checked={todo.completed}
+        onChange={setPartialRow}
+        id={\`todo-\${rowId}\`}
+      />
+      <label htmlFor={\`todo-\${rowId}\`}>{todo.text}</label>
+      <Button onClick={delRow}>Delete</Button>
+    </div>
+  );
+};
+",
+  "src/todos/TodoList.tsx": "import './todoList.css';
+import {useRowIds} from 'tinybase/ui-react';
+
+import {TodoItem} from './TodoItem';
+
+export const TodoList = () => {
+  const todoIds = useRowIds('todos');
+
+  return (
+    <div id="todoList">
+      {todoIds.map((id) => (
+        <TodoItem key={id} rowId={id} />
+      ))}
+    </div>
+  );
+};
+",
   "src/todos/index.css": "/* Add additional app styling here if needed */
+",
+  "src/todos/todoInput.css": "#todoInput {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+#todoInput input {
+  flex: 1;
+}
+",
+  "src/todos/todoItem.css": ".todoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.todoItem:last-child {
+  border-bottom: none;
+}
+
+.todoItem input[type='checkbox'] {
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.todoItem label {
+  flex: 1;
+  cursor: pointer;
+  user-select: none;
+}
+
+.todoItem.completed label {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.todoItem button {
+  flex-shrink: 0;
+}
+",
+  "src/todos/todoList.css": "#todoList {
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  overflow: hidden;
+  background: var(--bg2);
+}
+
+#todoList:empty::before {
+  content: 'No todos yet. Add one above!';
+  display: block;
+  padding: 2rem;
+  text-align: center;
+  color: var(--fg2);
+}
 ",
   "tsconfig.json": "{
   "compilerOptions": {
@@ -8937,169 +8937,6 @@ export const createInput = (
   return input;
 };
 ",
-  "src/components/todoInput.css": "#todoInput {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-
-#todoInput input {
-  flex: 1;
-}
-",
-  "src/components/todoInput.ts": "import './todoInput.css';
-
-import {createButton} from './button';
-
-import {createInput} from './input';
-
-export const createTodoInput = (store: any): HTMLDivElement => {
-  const container = document.createElement('div');
-  container.id = 'todoInput';
-
-  const input = createInput('What needs to be done?');
-
-  const addTodo = () => {
-    const text = input.value.trim();
-    if (text) {
-      store.addRow('todos', {text, completed: false});
-      input.value = '';
-      input.focus();
-    }
-  };
-
-  input.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      addTodo();
-    }
-  });
-
-  const addButton = createButton('Add', addTodo, 'primary');
-
-  container.appendChild(input);
-  container.appendChild(addButton);
-
-  return container;
-};
-",
-  "src/components/todoItem.css": ".todoItem {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.todoItem:last-child {
-  border-bottom: none;
-}
-
-.todoItem input[type='checkbox'] {
-  width: 1.25rem;
-  height: 1.25rem;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.todoItem label {
-  flex: 1;
-  cursor: pointer;
-  user-select: none;
-}
-
-.todoItem.completed label {
-  text-decoration: line-through;
-  opacity: 0.6;
-}
-
-.todoItem button {
-  flex-shrink: 0;
-}
-",
-  "src/components/todoItem.ts": "import './todoItem.css';
-
-import {createButton} from './button';
-
-export const createTodoItem = (
-  id: string,
-  text: string,
-  completed: boolean,
-  onToggle: () => void,
-  onDelete: () => void,
-): HTMLDivElement => {
-  const item = document.createElement('div');
-  item.className = \`todoItem\${completed ? ' completed' : ''}\`;
-
-  const checkbox = document.createElement('input');
-  checkbox.type = 'checkbox';
-  checkbox.checked = completed;
-  checkbox.id = \`todo-\${id}\`;
-  checkbox.addEventListener('change', onToggle);
-
-  const label = document.createElement('label');
-  label.textContent = text;
-  label.htmlFor = \`todo-\${id}\`;
-
-  const deleteBtn = createButton('Delete', onDelete);
-
-  item.appendChild(checkbox);
-  item.appendChild(label);
-  item.appendChild(deleteBtn);
-
-  return item;
-};
-",
-  "src/components/todoList.css": "#todoList {
-  border: 1px solid var(--border);
-  border-radius: 0.375rem;
-  overflow: hidden;
-  background: var(--bg2);
-}
-
-#todoList:empty::before {
-  content: 'No todos yet. Add one above!';
-  display: block;
-  padding: 2rem;
-  text-align: center;
-  color: var(--fg2);
-}
-",
-  "src/components/todoList.ts": "import './todoList.css';
-
-import {createTodoItem} from './todoItem';
-
-export const createTodoList = (store: any): HTMLDivElement => {
-  const list = document.createElement('div');
-  list.id = 'todoList';
-
-  const render = () => {
-    const todos = store.getTable('todos');
-    const todoIds = Object.keys(todos);
-
-    list.innerHTML = '';
-    todoIds.forEach((id) => {
-      const todo = todos[id];
-      const item = createTodoItem(
-        id,
-        todo.text,
-        todo.completed,
-        () => {
-          store.setPartialRow('todos', id, {completed: !todo.completed});
-        },
-        () => {
-          store.delRow('todos', id);
-        },
-      );
-      list.appendChild(item);
-    });
-  };
-
-  store.addTablesListener(render);
-  render();
-
-  return list;
-};
-",
   "src/index.css": "a {
   color: var(--fg);
 }
@@ -9156,9 +8993,9 @@ addEventListener('load', app);
   "src/todos/app.ts": "import './index.css';
 import {createMergeableStore} from 'tinybase';
 
-import {createTodoInput} from '../components/todoInput';
+import {createTodoInput} from './todoInput';
 
-import {createTodoList} from '../components/todoList';
+import {createTodoList} from './todoList';
 
 const app = () => {
   const store = createMergeableStore('todos').setTable('todos', {
@@ -9181,6 +9018,169 @@ const app = () => {
 export {app};
 ",
   "src/todos/index.css": "/* Add additional app styling here if needed */
+",
+  "src/todos/todoInput.css": "#todoInput {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+#todoInput input {
+  flex: 1;
+}
+",
+  "src/todos/todoInput.ts": "import './todoInput.css';
+
+import {createButton} from '../components/button';
+
+import {createInput} from '../components/input';
+
+export const createTodoInput = (store: any): HTMLDivElement => {
+  const container = document.createElement('div');
+  container.id = 'todoInput';
+
+  const input = createInput('What needs to be done?');
+
+  const addTodo = () => {
+    const text = input.value.trim();
+    if (text) {
+      store.addRow('todos', {text, completed: false});
+      input.value = '';
+      input.focus();
+    }
+  };
+
+  input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      addTodo();
+    }
+  });
+
+  const addButton = createButton('Add', addTodo, 'primary');
+
+  container.appendChild(input);
+  container.appendChild(addButton);
+
+  return container;
+};
+",
+  "src/todos/todoItem.css": ".todoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.todoItem:last-child {
+  border-bottom: none;
+}
+
+.todoItem input[type='checkbox'] {
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.todoItem label {
+  flex: 1;
+  cursor: pointer;
+  user-select: none;
+}
+
+.todoItem.completed label {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.todoItem button {
+  flex-shrink: 0;
+}
+",
+  "src/todos/todoItem.ts": "import './todoItem.css';
+
+import {createButton} from '../components/button';
+
+export const createTodoItem = (
+  id: string,
+  text: string,
+  completed: boolean,
+  onToggle: () => void,
+  onDelete: () => void,
+): HTMLDivElement => {
+  const item = document.createElement('div');
+  item.className = \`todoItem\${completed ? ' completed' : ''}\`;
+
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.checked = completed;
+  checkbox.id = \`todo-\${id}\`;
+  checkbox.addEventListener('change', onToggle);
+
+  const label = document.createElement('label');
+  label.textContent = text;
+  label.htmlFor = \`todo-\${id}\`;
+
+  const deleteBtn = createButton('Delete', onDelete);
+
+  item.appendChild(checkbox);
+  item.appendChild(label);
+  item.appendChild(deleteBtn);
+
+  return item;
+};
+",
+  "src/todos/todoList.css": "#todoList {
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  overflow: hidden;
+  background: var(--bg2);
+}
+
+#todoList:empty::before {
+  content: 'No todos yet. Add one above!';
+  display: block;
+  padding: 2rem;
+  text-align: center;
+  color: var(--fg2);
+}
+",
+  "src/todos/todoList.ts": "import './todoList.css';
+
+import {createTodoItem} from './todoItem';
+
+export const createTodoList = (store: any): HTMLDivElement => {
+  const list = document.createElement('div');
+  list.id = 'todoList';
+
+  const render = () => {
+    const todos = store.getTable('todos');
+    const todoIds = Object.keys(todos);
+
+    list.innerHTML = '';
+    todoIds.forEach((id) => {
+      const todo = todos[id];
+      const item = createTodoItem(
+        id,
+        todo.text,
+        todo.completed,
+        () => {
+          store.setPartialRow('todos', id, {completed: !todo.completed});
+        },
+        () => {
+          store.delRow('todos', id);
+        },
+      );
+      list.appendChild(item);
+    });
+  };
+
+  store.addTablesListener(render);
+  render();
+
+  return list;
+};
 ",
   "tsconfig.json": "{
   "compilerOptions": {

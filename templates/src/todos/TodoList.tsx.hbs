@@ -1,11 +1,11 @@
-{{includeFile template="src/components/todoList.css.hbs" output="src/components/todoList.css"}}
+{{includeFile template="src/todos/todoList.css.hbs" output="src/todos/todoList.css"}}
 import './todoList.css';
 {{#if schemas}}
-  import {useRowIds} from '../todos/schemas';
+  import {useRowIds} from './schemas';
 {{else}}
   import {useRowIds} from 'tinybase/ui-react';
 {{/if}}
-{{includeFile template="src/components/TodoItem.tsx.hbs" output="src/components/TodoItem.{{ext}}"}}
+{{includeFile template="src/todos/TodoItem.tsx.hbs" output="src/todos/TodoItem.{{ext}}"}}
 import {TodoItem} from './TodoItem';
 
 export const TodoList = () => {

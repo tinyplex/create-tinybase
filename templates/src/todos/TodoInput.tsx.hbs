@@ -1,15 +1,15 @@
-{{includeFile template="src/components/todoInput.css.hbs" output="src/components/todoInput.css"}}
+{{includeFile template="src/todos/todoInput.css.hbs" output="src/todos/todoInput.css"}}
 import './todoInput.css';
 import {useState} from 'react';
 {{#if schemas}}
-  import {useAddRowCallback} from '../todos/schemas';
+  import {useAddRowCallback} from './schemas';
 {{else}}
   import {useAddRowCallback} from 'tinybase/ui-react';
 {{/if}}
 {{includeFile template="src/components/Button.tsx.hbs" output="src/components/Button.{{ext}}"}}
-import {Button} from './Button';
+import {Button} from '../components/Button';
 {{includeFile template="src/components/Input.tsx.hbs" output="src/components/Input.{{ext}}"}}
-import {Input} from './Input';
+import {Input} from '../components/Input';
 
 export const TodoInput = () => {
 const [text, setText] = useState('');

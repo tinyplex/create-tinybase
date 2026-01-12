@@ -1,6 +1,6 @@
-{{includeFile template="src/components/todoList.css.hbs" output="src/components/todoList.css"}}
+{{includeFile template="src/todos/todoList.css.hbs" output="src/todos/todoList.css"}}
 import './todoList.css';
-{{includeFile template="src/components/todoItem.ts.hbs" output="src/components/todoItem.{{ext}}"}}
+{{includeFile template="src/todos/todoItem.ts.hbs" output="src/todos/todoItem.{{ext}}"}}
 import {createTodoItem} from './todoItem';
 
 export const createTodoList = (store: any): HTMLDivElement => {
