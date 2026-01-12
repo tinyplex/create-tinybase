@@ -1,6 +1,6 @@
 import {createMergeableStore} from 'tinybase';
-{{includeFile template="src/components/button.ts.hbs" output="src/components/button.{{ext}}"}}
-import {createButton} from '../components/button';
+{{includeFile template="src/shared/button.ts.hbs" output="src/shared/button.{{ext}}"}}
+import {createButton} from '../shared/button';
 {{includeFile template="src/game/board.ts.hbs" output="src/game/board.{{ext}}"}}
 import {createBoard} from './board';
 {{includeFile template="src/game/gameStatus.ts.hbs" output="src/game/gameStatus.{{ext}}"}}

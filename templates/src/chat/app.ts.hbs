@@ -1,8 +1,8 @@
 import {createStore, createMergeableStore} from 'tinybase';
-{{includeFile template="src/components/button.ts.hbs" output="src/components/button.{{ext}}"}}
-import {createButton} from '../components/button';
-{{includeFile template="src/components/input.ts.hbs" output="src/components/input.{{ext}}"}}
-import {createInput} from '../components/input';
+{{includeFile template="src/shared/button.ts.hbs" output="src/shared/button.{{ext}}"}}
+import {createButton} from '../shared/button';
+{{includeFile template="src/shared/input.ts.hbs" output="src/shared/input.{{ext}}"}}
+import {createInput} from '../shared/input';
 {{includeFile template="src/chat/message.ts.hbs" output="src/chat/message.{{ext}}"}}
 import {createMessage} from './message';
 {{includeFile template="src/chat/messages.ts.hbs" output="src/chat/messages.{{ext}}"}}

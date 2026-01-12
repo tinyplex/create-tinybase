@@ -1,8 +1,8 @@
 {{includeFile template="src/drawing/drawingControls.css.hbs" output="src/drawing/drawingControls.css"}}
 import './drawingControls.css';
 import {Store, MergeableStore} from 'tinybase';
-{{includeFile template="src/components/button.ts.hbs" output="src/components/button.{{ext}}"}}
-import {createButton} from '../components/button';
+{{includeFile template="src/shared/button.ts.hbs" output="src/shared/button.{{ext}}"}}
+import {createButton} from '../shared/button';
 {{includeFile template="src/drawing/colorPicker.ts.hbs" output="src/drawing/colorPicker.{{ext}}"}}
 import {createColorPicker} from './colorPicker';
 {{includeFile template="src/drawing/brushSize.ts.hbs" output="src/drawing/brushSize.{{ext}}"}}

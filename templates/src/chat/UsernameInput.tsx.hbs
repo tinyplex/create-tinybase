@@ -1,8 +1,8 @@
 {{includeFile template="src/chat/usernameInput.css.hbs" output="src/chat/usernameInput.css"}}
 import {useValue, useSetValueCallback} from 'tinybase/ui-react';
 import './usernameInput.css';
-{{includeFile template="src/components/Input.tsx.hbs" output="src/components/Input.{{ext}}"}}
-import {Input} from '../components/Input';
+{{includeFile template="src/shared/Input.tsx.hbs" output="src/shared/Input.{{ext}}"}}
+import {Input} from '../shared/Input';
 
 export const UsernameInput = () => {
 const username = useValue('username', 'settings') || '';
