@@ -218,8 +218,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/chat/App.jsx": "import './index.css';
-import {StrictMode} from 'react';
+  "src/chat/App.jsx": "import {StrictMode} from 'react';
 import {createStore, createMergeableStore} from 'tinybase';
 import {Provider, useCreateStore} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
@@ -352,8 +351,6 @@ const UsernameInput = () => {
   );
 };
 export {UsernameInput};
-",
-  "src/chat/index.css": "/* Add additional app styling here if needed */
 ",
   "src/chat/message.css": ".message {
   margin-bottom: 0.75rem;
@@ -765,7 +762,72 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/components/BrushSize.jsx": "import {useValue, useSetValueCallback} from 'tinybase/ui-react';
+  "src/components/Button.jsx": "import './button.css';
+const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
+  <button
+    onClick={onClick}
+    type={type}
+    className={variant === 'primary' ? 'primary' : void 0}
+  >
+    {children}
+  </button>
+);
+export {Button};
+",
+  "src/components/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "src/drawing/App.jsx": "import {StrictMode} from 'react';
+import {createMergeableStore, createStore} from 'tinybase';
+import {Provider, useCreateStore} from 'tinybase/ui-react';
+import {Inspector} from 'tinybase/ui-react-inspector';
+import {DrawingControls} from './DrawingControls';
+import {Canvas} from './Canvas';
+const App = () => {
+  const settingsStore = useCreateStore(() => {
+    return createStore()
+      .setValue('brushColor', '#d81b60')
+      .setValue('brushSize', 5);
+  });
+  const canvasStore = useCreateStore(() => {
+    return createMergeableStore('canvas').setTable('strokes', {});
+  });
+  return (
+    <StrictMode>
+      <Provider storesById={{settings: settingsStore, canvas: canvasStore}}>
+        <DrawingControls />
+        <Canvas />
+        <Inspector />
+      </Provider>
+    </StrictMode>
+  );
+};
+export {App};
+",
+  "src/drawing/BrushSize.jsx": "import {useValue, useSetValueCallback} from 'tinybase/ui-react';
 import './brushSize.css';
 const BrushSize = () => {
   const size = useValue('brushSize', 'settings') ?? 5;
@@ -785,19 +847,7 @@ const BrushSize = () => {
 };
 export {BrushSize};
 ",
-  "src/components/Button.jsx": "import './button.css';
-const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
-  <button
-    onClick={onClick}
-    type={type}
-    className={variant === 'primary' ? 'primary' : void 0}
-  >
-    {children}
-  </button>
-);
-export {Button};
-",
-  "src/components/Canvas.jsx": "import {useCallback, useEffect, useRef} from 'react';
+  "src/drawing/Canvas.jsx": "import {useCallback, useEffect, useRef} from 'react';
 import {
   useAddRowCallback,
   useRowIds,
@@ -879,7 +929,7 @@ const Canvas = () => {
 };
 export {Canvas};
 ",
-  "src/components/ColorPicker.jsx": "import './colorPicker.css';
+  "src/drawing/ColorPicker.jsx": "import './colorPicker.css';
 import {useValue, useSetValueCallback} from 'tinybase/ui-react';
 const ColorPicker = () => {
   const colors = [
@@ -912,9 +962,9 @@ const ColorPicker = () => {
 };
 export {ColorPicker};
 ",
-  "src/components/DrawingControls.jsx": "import './drawingControls.css';
+  "src/drawing/DrawingControls.jsx": "import './drawingControls.css';
 import {useDelTableCallback} from 'tinybase/ui-react';
-import {Button} from './Button';
+import {Button} from '../components/Button';
 import {ColorPicker} from './ColorPicker';
 import {BrushSize} from './BrushSize';
 const DrawingControls = () => {
@@ -931,7 +981,7 @@ const DrawingControls = () => {
 };
 export {DrawingControls};
 ",
-  "src/components/brushSize.css": "#brushSize {
+  "src/drawing/brushSize.css": "#brushSize {
   display: flex;
   gap: 0.5rem;
   align-items: center;
@@ -953,33 +1003,7 @@ export {DrawingControls};
   display: inline-block;
 }
 ",
-  "src/components/button.css": "button {
-  padding: 0.5rem 1rem;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  background: #222;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  cursor: pointer;
-  margin: 0.5rem;
-}
-
-button:hover {
-  border-color: #d81b60;
-}
-
-button.primary {
-  background: #d81b60;
-  border: none;
-  padding: 0.75rem 1.5rem;
-}
-
-button.primary:hover {
-  background: #c2185b;
-}
-",
-  "src/components/canvas.css": "#drawingCanvas {
+  "src/drawing/canvas.css": "#drawingCanvas {
   border: 1px solid var(--border);
   border-radius: 0.375rem;
   cursor: crosshair;
@@ -988,7 +1012,7 @@ button.primary:hover {
   margin: 0 auto;
 }
 ",
-  "src/components/colorPicker.css": "#colorPicker {
+  "src/drawing/colorPicker.css": "#colorPicker {
   display: flex;
   gap: 0;
   align-items: center;
@@ -1010,7 +1034,7 @@ button.primary:hover {
   border-color: var(--accent);
 }
 ",
-  "src/components/drawingControls.css": "#drawingControls {
+  "src/drawing/drawingControls.css": "#drawingControls {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
@@ -1022,36 +1046,6 @@ button.primary:hover {
   justify-content: space-between;
   max-width: 600px;
 }
-",
-  "src/drawing/App.jsx": "import './index.css';
-import {StrictMode} from 'react';
-import {createMergeableStore, createStore} from 'tinybase';
-import {Provider, useCreateStore} from 'tinybase/ui-react';
-import {Inspector} from 'tinybase/ui-react-inspector';
-import {DrawingControls} from '../components/DrawingControls';
-import {Canvas} from '../components/Canvas';
-const App = () => {
-  const settingsStore = useCreateStore(() => {
-    return createStore()
-      .setValue('brushColor', '#d81b60')
-      .setValue('brushSize', 5);
-  });
-  const canvasStore = useCreateStore(() => {
-    return createMergeableStore('canvas').setTable('strokes', {});
-  });
-  return (
-    <StrictMode>
-      <Provider storesById={{settings: settingsStore, canvas: canvasStore}}>
-        <DrawingControls />
-        <Canvas />
-        <Inspector />
-      </Provider>
-    </StrictMode>
-  );
-};
-export {App};
-",
-  "src/drawing/index.css": "/* Add additional app styling here if needed */
 ",
   "src/index.css": "a {
   color: var(--fg);
@@ -1529,8 +1523,7 @@ button.primary:hover {
   color: var(--bg);
 }
 ",
-  "src/game/App.jsx": "import './index.css';
-import {StrictMode} from 'react';
+  "src/game/App.jsx": "import {StrictMode} from 'react';
 import {createMergeableStore} from 'tinybase';
 import {
   Provider,
@@ -1624,8 +1617,6 @@ const App = () => {
   );
 };
 export {App};
-",
-  "src/game/index.css": "/* Game app styles are in component CSS files */
 ",
   "src/index.css": "a {
   color: var(--fg);
@@ -2042,8 +2033,7 @@ addEventListener('load', () =>
   ReactDOM.createRoot(document.getElementById('app')).render(<App />),
 );
 ",
-  "src/todos/App.jsx": "import './index.css';
-import {StrictMode} from 'react';
+  "src/todos/App.jsx": "import {StrictMode} from 'react';
 import {createMergeableStore} from 'tinybase';
 import {Provider, useCreateStore} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
@@ -2146,8 +2136,6 @@ const TodoList = () => {
   );
 };
 export {TodoList};
-",
-  "src/todos/index.css": "/* Add additional app styling here if needed */
 ",
   "src/todos/todoInput.css": "#todoInput {
   display: flex;
@@ -2437,8 +2425,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/chat/app.js": "import './index.css';
-import {createStore, createMergeableStore} from 'tinybase';
+  "src/chat/app.js": "import {createStore, createMergeableStore} from 'tinybase';
 import {createMessage} from './message';
 import {createMessages} from './messages';
 import {createUsernameInput} from './usernameInput';
@@ -2475,8 +2462,6 @@ const app = () => {
   });
 };
 export {app};
-",
-  "src/chat/index.css": "/* Add additional app styling here if needed */
 ",
   "src/chat/message.css": ".message {
   margin-bottom: 0.75rem;
@@ -2966,54 +2951,6 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/components/brushSize.css": "#brushSize {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-#brushSize label {
-  white-space: nowrap;
-}
-
-#brushSize input {
-  width: 100px;
-  vertical-align: middle;
-}
-
-#brushSizeValue {
-  width: 2rem;
-  min-width: 2rem;
-  text-align: center;
-  display: inline-block;
-}
-",
-  "src/components/brushSize.js": "import './brushSize.css';
-const createBrushSize = (store) => {
-  const container = document.createElement('div');
-  container.id = 'brushSize';
-  const label = document.createElement('label');
-  label.textContent = 'Size:';
-  const sizeSlider = document.createElement('input');
-  sizeSlider.type = 'range';
-  sizeSlider.min = '1';
-  sizeSlider.max = '50';
-  sizeSlider.value = '5';
-  const sizeLabel = document.createElement('span');
-  sizeLabel.id = 'brushSizeValue';
-  sizeLabel.textContent = '5';
-  sizeSlider.addEventListener('input', () => {
-    const size = parseInt(sizeSlider.value);
-    store.setValue('brushSize', size);
-    sizeLabel.textContent = \`\${size}\`;
-  });
-  container.appendChild(label);
-  container.appendChild(sizeSlider);
-  container.appendChild(sizeLabel);
-  return container;
-};
-export {createBrushSize};
-",
   "src/components/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
@@ -3052,7 +2989,69 @@ const createButton = (text, onClick, variant = 'default') => {
 };
 export {createButton};
 ",
-  "src/components/canvas.css": "#drawingCanvas {
+  "src/drawing/app.js": "import {createMergeableStore, createStore} from 'tinybase';
+import {createDrawingControls} from './drawingControls';
+import {createCanvas} from './canvas';
+const app = () => {
+  const settingsStore = createStore()
+    .setValue('brushColor', '#d81b60')
+    .setValue('brushSize', 5);
+  const canvasStore = createMergeableStore('canvas').setTable('strokes', {});
+  const appContainer = document.getElementById('app');
+  appContainer.appendChild(createDrawingControls(settingsStore, canvasStore));
+  appContainer.appendChild(createCanvas(settingsStore, canvasStore));
+};
+export {app};
+",
+  "src/drawing/brushSize.css": "#brushSize {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+#brushSize label {
+  white-space: nowrap;
+}
+
+#brushSize input {
+  width: 100px;
+  vertical-align: middle;
+}
+
+#brushSizeValue {
+  width: 2rem;
+  min-width: 2rem;
+  text-align: center;
+  display: inline-block;
+}
+",
+  "src/drawing/brushSize.js": "import './brushSize.css';
+const createBrushSize = (store) => {
+  const container = document.createElement('div');
+  container.id = 'brushSize';
+  const label = document.createElement('label');
+  label.textContent = 'Size:';
+  const sizeSlider = document.createElement('input');
+  sizeSlider.type = 'range';
+  sizeSlider.min = '1';
+  sizeSlider.max = '50';
+  sizeSlider.value = '5';
+  const sizeLabel = document.createElement('span');
+  sizeLabel.id = 'brushSizeValue';
+  sizeLabel.textContent = '5';
+  sizeSlider.addEventListener('input', () => {
+    const size = parseInt(sizeSlider.value);
+    store.setValue('brushSize', size);
+    sizeLabel.textContent = \`\${size}\`;
+  });
+  container.appendChild(label);
+  container.appendChild(sizeSlider);
+  container.appendChild(sizeLabel);
+  return container;
+};
+export {createBrushSize};
+",
+  "src/drawing/canvas.css": "#drawingCanvas {
   border: 1px solid var(--border);
   border-radius: 0.375rem;
   cursor: crosshair;
@@ -3061,7 +3060,7 @@ export {createButton};
   margin: 0 auto;
 }
 ",
-  "src/components/canvas.js": "import './canvas.css';
+  "src/drawing/canvas.js": "import './canvas.css';
 const createCanvas = (settingsStore, canvasStore) => {
   const canvas = document.createElement('canvas');
   canvas.id = 'drawingCanvas';
@@ -3123,7 +3122,7 @@ const createCanvas = (settingsStore, canvasStore) => {
 };
 export {createCanvas};
 ",
-  "src/components/colorPicker.css": "#colorPicker {
+  "src/drawing/colorPicker.css": "#colorPicker {
   display: flex;
   gap: 0;
   align-items: center;
@@ -3145,7 +3144,7 @@ export {createCanvas};
   border-color: var(--accent);
 }
 ",
-  "src/components/colorPicker.js": "import './colorPicker.css';
+  "src/drawing/colorPicker.js": "import './colorPicker.css';
 const createColorPicker = (store) => {
   const colors = [
     '#d81b60',
@@ -3180,7 +3179,7 @@ const createColorPicker = (store) => {
 };
 export {createColorPicker};
 ",
-  "src/components/drawingControls.css": "#drawingControls {
+  "src/drawing/drawingControls.css": "#drawingControls {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
@@ -3193,8 +3192,8 @@ export {createColorPicker};
   max-width: 600px;
 }
 ",
-  "src/components/drawingControls.js": "import './drawingControls.css';
-import {createButton} from './button';
+  "src/drawing/drawingControls.js": "import './drawingControls.css';
+import {createButton} from '../components/button';
 import {createColorPicker} from './colorPicker';
 import {createBrushSize} from './brushSize';
 const createDrawingControls = (settingsStore, canvasStore) => {
@@ -3211,23 +3210,6 @@ const createDrawingControls = (settingsStore, canvasStore) => {
   return controls;
 };
 export {createDrawingControls};
-",
-  "src/drawing/app.js": "import './index.css';
-import {createMergeableStore, createStore} from 'tinybase';
-import {createDrawingControls} from '../components/drawingControls';
-import {createCanvas} from '../components/canvas';
-const app = () => {
-  const settingsStore = createStore()
-    .setValue('brushColor', '#d81b60')
-    .setValue('brushSize', 5);
-  const canvasStore = createMergeableStore('canvas').setTable('strokes', {});
-  const appContainer = document.getElementById('app');
-  appContainer.appendChild(createDrawingControls(settingsStore, canvasStore));
-  appContainer.appendChild(createCanvas(settingsStore, canvasStore));
-};
-export {app};
-",
-  "src/drawing/index.css": "/* Add additional app styling here if needed */
 ",
   "src/index.css": "a {
   color: var(--fg);
@@ -3683,8 +3665,7 @@ const createSquare = (position, value, onClick, disabled, winning) => {
 };
 export {createSquare};
 ",
-  "src/game/app.js": "import './index.css';
-import {createMergeableStore} from 'tinybase';
+  "src/game/app.js": "import {createMergeableStore} from 'tinybase';
 import {createButton} from '../components/button';
 import {createBoard} from '../components/board';
 import {createGameStatus} from '../components/gameStatus';
@@ -3749,8 +3730,6 @@ const app = () => {
   appContainer.appendChild(buttonContainer);
 };
 export {app};
-",
-  "src/game/index.css": "/* Game app styles are in component CSS files */
 ",
   "src/index.css": "a {
   color: var(--fg);
@@ -4148,8 +4127,7 @@ pre {
 import {app} from './todos/app';
 addEventListener('load', app);
 ",
-  "src/todos/app.js": "import './index.css';
-import {createMergeableStore} from 'tinybase';
+  "src/todos/app.js": "import {createMergeableStore} from 'tinybase';
 import {createTodoInput} from './todoInput';
 import {createTodoList} from './todoList';
 const app = () => {
@@ -4165,8 +4143,6 @@ const app = () => {
   appContainer.appendChild(createTodoList(store));
 };
 export {app};
-",
-  "src/todos/index.css": "/* Add additional app styling here if needed */
 ",
   "src/todos/todoInput.css": "#todoInput {
   display: flex;
@@ -4531,8 +4507,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/chat/App.tsx": "import './index.css';
-import {StrictMode, useState, useMemo} from 'react';
+  "src/chat/App.tsx": "import {StrictMode, useState, useMemo} from 'react';
 import {createStore, createMergeableStore} from 'tinybase';
 import {
   Provider,
@@ -4702,8 +4677,6 @@ export const UsernameInput = () => {
     </div>
   );
 };
-",
-  "src/chat/index.css": "/* Add additional app styling here if needed */
 ",
   "src/chat/message.css": ".message {
   margin-bottom: 0.75rem;
@@ -5167,28 +5140,6 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/components/BrushSize.tsx": "import {useValue, useSetValueCallback} from 'tinybase/ui-react';
-import './brushSize.css';
-
-export const BrushSize = () => {
-  const size = (useValue('brushSize', 'settings') as number) ?? 5;
-
-  const setSize = useSetValueCallback(
-    'brushSize',
-    (e: React.ChangeEvent<HTMLInputElement>) => parseInt(e.target.value),
-    [],
-    'settings',
-  );
-
-  return (
-    <div id="brushSize">
-      <label>Size:</label>
-      <input type="range" min="1" max="50" value={size} onChange={setSize} />
-      <span id="brushSizeValue">{size}</span>
-    </div>
-  );
-};
-",
   "src/components/Button.tsx": "import './button.css';
 import {ReactNode} from 'react';
 
@@ -5214,7 +5165,96 @@ export const Button = ({
   </button>
 );
 ",
-  "src/components/Canvas.tsx": "import {useCallback, useEffect, useRef} from 'react';
+  "src/components/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "src/drawing/App.tsx": "import {StrictMode, useCallback, useEffect, useRef} from 'react';
+import {createMergeableStore, createStore} from 'tinybase';
+import {
+  Provider,
+  useAddRowCallback,
+  useCreateStore,
+  useDelTableCallback,
+  useRow,
+  useRowIds,
+  useStore,
+} from 'tinybase/ui-react';
+import {Inspector} from 'tinybase/ui-react-inspector';
+
+import {DrawingControls} from './DrawingControls';
+
+import {Canvas} from './Canvas';
+
+const App = () => {
+  const settingsStore = useCreateStore(() => {
+    return createStore()
+      .setValue('brushColor', '#d81b60')
+      .setValue('brushSize', 5);
+  });
+
+  const canvasStore = useCreateStore(() => {
+    return createMergeableStore('canvas').setTable('strokes', {});
+  });
+
+  return (
+    <StrictMode>
+      <Provider storesById={{settings: settingsStore, canvas: canvasStore}}>
+        <DrawingControls />
+        <Canvas />
+        <Inspector />
+      </Provider>
+    </StrictMode>
+  );
+};
+
+export {App};
+",
+  "src/drawing/BrushSize.tsx": "import {useValue, useSetValueCallback} from 'tinybase/ui-react';
+import './brushSize.css';
+
+export const BrushSize = () => {
+  const size = (useValue('brushSize', 'settings') as number) ?? 5;
+
+  const setSize = useSetValueCallback(
+    'brushSize',
+    (e: React.ChangeEvent<HTMLInputElement>) => parseInt(e.target.value),
+    [],
+    'settings',
+  );
+
+  return (
+    <div id="brushSize">
+      <label>Size:</label>
+      <input type="range" min="1" max="50" value={size} onChange={setSize} />
+      <span id="brushSizeValue">{size}</span>
+    </div>
+  );
+};
+",
+  "src/drawing/Canvas.tsx": "import {useCallback, useEffect, useRef} from 'react';
 import {
   useAddRowCallback,
   useRowIds,
@@ -5311,7 +5351,7 @@ export const Canvas = () => {
   );
 };
 ",
-  "src/components/ColorPicker.tsx": "import './colorPicker.css';
+  "src/drawing/ColorPicker.tsx": "import './colorPicker.css';
 import {useValue, useSetValueCallback} from 'tinybase/ui-react';
 
 export const ColorPicker = () => {
@@ -5346,10 +5386,10 @@ export const ColorPicker = () => {
   );
 };
 ",
-  "src/components/DrawingControls.tsx": "import './drawingControls.css';
+  "src/drawing/DrawingControls.tsx": "import './drawingControls.css';
 import {useDelTableCallback} from 'tinybase/ui-react';
 
-import {Button} from './Button';
+import {Button} from '../components/Button';
 
 import {ColorPicker} from './ColorPicker';
 
@@ -5369,7 +5409,7 @@ export const DrawingControls = () => {
   );
 };
 ",
-  "src/components/brushSize.css": "#brushSize {
+  "src/drawing/brushSize.css": "#brushSize {
   display: flex;
   gap: 0.5rem;
   align-items: center;
@@ -5391,33 +5431,7 @@ export const DrawingControls = () => {
   display: inline-block;
 }
 ",
-  "src/components/button.css": "button {
-  padding: 0.5rem 1rem;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  background: #222;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  cursor: pointer;
-  margin: 0.5rem;
-}
-
-button:hover {
-  border-color: #d81b60;
-}
-
-button.primary {
-  background: #d81b60;
-  border: none;
-  padding: 0.75rem 1.5rem;
-}
-
-button.primary:hover {
-  background: #c2185b;
-}
-",
-  "src/components/canvas.css": "#drawingCanvas {
+  "src/drawing/canvas.css": "#drawingCanvas {
   border: 1px solid var(--border);
   border-radius: 0.375rem;
   cursor: crosshair;
@@ -5426,7 +5440,7 @@ button.primary:hover {
   margin: 0 auto;
 }
 ",
-  "src/components/colorPicker.css": "#colorPicker {
+  "src/drawing/colorPicker.css": "#colorPicker {
   display: flex;
   gap: 0;
   align-items: center;
@@ -5448,7 +5462,7 @@ button.primary:hover {
   border-color: var(--accent);
 }
 ",
-  "src/components/drawingControls.css": "#drawingControls {
+  "src/drawing/drawingControls.css": "#drawingControls {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
@@ -5460,50 +5474,6 @@ button.primary:hover {
   justify-content: space-between;
   max-width: 600px;
 }
-",
-  "src/drawing/App.tsx": "import './index.css';
-import {StrictMode, useCallback, useEffect, useRef} from 'react';
-import {createMergeableStore, createStore} from 'tinybase';
-import {
-  Provider,
-  useAddRowCallback,
-  useCreateStore,
-  useDelTableCallback,
-  useRow,
-  useRowIds,
-  useStore,
-} from 'tinybase/ui-react';
-import {Inspector} from 'tinybase/ui-react-inspector';
-
-import {DrawingControls} from '../components/DrawingControls';
-
-import {Canvas} from '../components/Canvas';
-
-const App = () => {
-  const settingsStore = useCreateStore(() => {
-    return createStore()
-      .setValue('brushColor', '#d81b60')
-      .setValue('brushSize', 5);
-  });
-
-  const canvasStore = useCreateStore(() => {
-    return createMergeableStore('canvas').setTable('strokes', {});
-  });
-
-  return (
-    <StrictMode>
-      <Provider storesById={{settings: settingsStore, canvas: canvasStore}}>
-        <DrawingControls />
-        <Canvas />
-        <Inspector />
-      </Provider>
-    </StrictMode>
-  );
-};
-
-export {App};
-",
-  "src/drawing/index.css": "/* Add additional app styling here if needed */
 ",
   "src/index.css": "a {
   color: var(--fg);
@@ -6039,8 +6009,7 @@ button.primary:hover {
   color: var(--bg);
 }
 ",
-  "src/game/App.tsx": "import './index.css';
-import {StrictMode} from 'react';
+  "src/game/App.tsx": "import {StrictMode} from 'react';
 import {createMergeableStore} from 'tinybase';
 import {
   Provider,
@@ -6150,8 +6119,6 @@ const App = () => {
 };
 
 export {App};
-",
-  "src/game/index.css": "/* Game app styles are in component CSS files */
 ",
   "src/index.css": "a {
   color: var(--fg);
@@ -6621,8 +6588,7 @@ addEventListener('load', () =>
   ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
 );
 ",
-  "src/todos/App.tsx": "import './index.css';
-import {StrictMode} from 'react';
+  "src/todos/App.tsx": "import {StrictMode} from 'react';
 import {createMergeableStore} from 'tinybase';
 import {Provider, useCreateStore} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
@@ -6738,8 +6704,6 @@ export const TodoList = () => {
     </div>
   );
 };
-",
-  "src/todos/index.css": "/* Add additional app styling here if needed */
 ",
   "src/todos/todoInput.css": "#todoInput {
   display: flex;
@@ -7053,8 +7017,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/chat/app.ts": "import './index.css';
-import {createStore, createMergeableStore} from 'tinybase';
+  "src/chat/app.ts": "import {createStore, createMergeableStore} from 'tinybase';
 
 import {createButton} from '../components/button';
 
@@ -7110,8 +7073,6 @@ const app = () => {
 };
 
 export {app};
-",
-  "src/chat/index.css": "/* Add additional app styling here if needed */
 ",
   "src/chat/message.css": ".message {
   margin-bottom: 0.75rem;
@@ -7667,60 +7628,6 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/components/brushSize.css": "#brushSize {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-#brushSize label {
-  white-space: nowrap;
-}
-
-#brushSize input {
-  width: 100px;
-  vertical-align: middle;
-}
-
-#brushSizeValue {
-  width: 2rem;
-  min-width: 2rem;
-  text-align: center;
-  display: inline-block;
-}
-",
-  "src/components/brushSize.ts": "import './brushSize.css';
-
-export const createBrushSize = (store: any): HTMLDivElement => {
-  const container = document.createElement('div');
-  container.id = 'brushSize';
-
-  const label = document.createElement('label');
-  label.textContent = 'Size:';
-
-  const sizeSlider = document.createElement('input');
-  sizeSlider.type = 'range';
-  sizeSlider.min = '1';
-  sizeSlider.max = '50';
-  sizeSlider.value = '5';
-
-  const sizeLabel = document.createElement('span');
-  sizeLabel.id = 'brushSizeValue';
-  sizeLabel.textContent = '5';
-
-  sizeSlider.addEventListener('input', () => {
-    const size = parseInt(sizeSlider.value);
-    store.setValue('brushSize', size);
-    sizeLabel.textContent = \`\${size}\`;
-  });
-
-  container.appendChild(label);
-  container.appendChild(sizeSlider);
-  container.appendChild(sizeLabel);
-
-  return container;
-};
-",
   "src/components/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
@@ -7763,7 +7670,82 @@ export const createButton = (
   return button;
 };
 ",
-  "src/components/canvas.css": "#drawingCanvas {
+  "src/drawing/app.ts": "import {createMergeableStore, createStore} from 'tinybase';
+
+import {createDrawingControls} from './drawingControls';
+
+import {createCanvas} from './canvas';
+
+const app = () => {
+  const settingsStore = createStore()
+    .setValue('brushColor', '#d81b60')
+    .setValue('brushSize', 5);
+
+  const canvasStore = createMergeableStore('canvas').setTable('strokes', {});
+
+  const appContainer = document.getElementById('app')!;
+
+  appContainer.appendChild(createDrawingControls(settingsStore, canvasStore));
+  appContainer.appendChild(createCanvas(settingsStore, canvasStore));
+};
+
+export {app};
+",
+  "src/drawing/brushSize.css": "#brushSize {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+#brushSize label {
+  white-space: nowrap;
+}
+
+#brushSize input {
+  width: 100px;
+  vertical-align: middle;
+}
+
+#brushSizeValue {
+  width: 2rem;
+  min-width: 2rem;
+  text-align: center;
+  display: inline-block;
+}
+",
+  "src/drawing/brushSize.ts": "import './brushSize.css';
+
+export const createBrushSize = (store: any): HTMLDivElement => {
+  const container = document.createElement('div');
+  container.id = 'brushSize';
+
+  const label = document.createElement('label');
+  label.textContent = 'Size:';
+
+  const sizeSlider = document.createElement('input');
+  sizeSlider.type = 'range';
+  sizeSlider.min = '1';
+  sizeSlider.max = '50';
+  sizeSlider.value = '5';
+
+  const sizeLabel = document.createElement('span');
+  sizeLabel.id = 'brushSizeValue';
+  sizeLabel.textContent = '5';
+
+  sizeSlider.addEventListener('input', () => {
+    const size = parseInt(sizeSlider.value);
+    store.setValue('brushSize', size);
+    sizeLabel.textContent = \`\${size}\`;
+  });
+
+  container.appendChild(label);
+  container.appendChild(sizeSlider);
+  container.appendChild(sizeLabel);
+
+  return container;
+};
+",
+  "src/drawing/canvas.css": "#drawingCanvas {
   border: 1px solid var(--border);
   border-radius: 0.375rem;
   cursor: crosshair;
@@ -7772,7 +7754,7 @@ export const createButton = (
   margin: 0 auto;
 }
 ",
-  "src/components/canvas.ts": "import './canvas.css';
+  "src/drawing/canvas.ts": "import './canvas.css';
 import {Store, MergeableStore} from 'tinybase';
 
 export const createCanvas = (
@@ -7850,7 +7832,7 @@ export const createCanvas = (
   return canvas;
 };
 ",
-  "src/components/colorPicker.css": "#colorPicker {
+  "src/drawing/colorPicker.css": "#colorPicker {
   display: flex;
   gap: 0;
   align-items: center;
@@ -7872,7 +7854,7 @@ export const createCanvas = (
   border-color: var(--accent);
 }
 ",
-  "src/components/colorPicker.ts": "import './colorPicker.css';
+  "src/drawing/colorPicker.ts": "import './colorPicker.css';
 
 export const createColorPicker = (store: any): HTMLDivElement => {
   const colors = [
@@ -7912,7 +7894,7 @@ export const createColorPicker = (store: any): HTMLDivElement => {
   return container;
 };
 ",
-  "src/components/drawingControls.css": "#drawingControls {
+  "src/drawing/drawingControls.css": "#drawingControls {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
@@ -7925,10 +7907,10 @@ export const createColorPicker = (store: any): HTMLDivElement => {
   max-width: 600px;
 }
 ",
-  "src/components/drawingControls.ts": "import './drawingControls.css';
+  "src/drawing/drawingControls.ts": "import './drawingControls.css';
 import {Store, MergeableStore} from 'tinybase';
 
-import {createButton} from './button';
+import {createButton} from '../components/button';
 
 import {createColorPicker} from './colorPicker';
 
@@ -7953,30 +7935,6 @@ export const createDrawingControls = (
 
   return controls;
 };
-",
-  "src/drawing/app.ts": "import './index.css';
-import {createMergeableStore, createStore} from 'tinybase';
-
-import {createDrawingControls} from '../components/drawingControls';
-
-import {createCanvas} from '../components/canvas';
-
-const app = () => {
-  const settingsStore = createStore()
-    .setValue('brushColor', '#d81b60')
-    .setValue('brushSize', 5);
-
-  const canvasStore = createMergeableStore('canvas').setTable('strokes', {});
-
-  const appContainer = document.getElementById('app')!;
-
-  appContainer.appendChild(createDrawingControls(settingsStore, canvasStore));
-  appContainer.appendChild(createCanvas(settingsStore, canvasStore));
-};
-
-export {app};
-",
-  "src/drawing/index.css": "/* Add additional app styling here if needed */
 ",
   "src/index.css": "a {
   color: var(--fg);
@@ -8475,8 +8433,7 @@ export const createSquare = (
   return square;
 };
 ",
-  "src/game/app.ts": "import './index.css';
-import {createMergeableStore} from 'tinybase';
+  "src/game/app.ts": "import {createMergeableStore} from 'tinybase';
 
 import {createButton} from '../components/button';
 
@@ -8558,8 +8515,6 @@ const app = () => {
 };
 
 export {app};
-",
-  "src/game/index.css": "/* Game app styles are in component CSS files */
 ",
   "src/index.css": "a {
   color: var(--fg);
@@ -8990,8 +8945,7 @@ import {app} from './todos/app';
 
 addEventListener('load', app);
 ",
-  "src/todos/app.ts": "import './index.css';
-import {createMergeableStore} from 'tinybase';
+  "src/todos/app.ts": "import {createMergeableStore} from 'tinybase';
 
 import {createTodoInput} from './todoInput';
 
@@ -9016,8 +8970,6 @@ const app = () => {
 };
 
 export {app};
-",
-  "src/todos/index.css": "/* Add additional app styling here if needed */
 ",
   "src/todos/todoInput.css": "#todoInput {
   display: flex;

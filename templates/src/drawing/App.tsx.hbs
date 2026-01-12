@@ -2,10 +2,10 @@ import {StrictMode, useCallback, useEffect, useRef} from 'react';
 import {createMergeableStore, createStore} from 'tinybase';
 import {Provider, useAddRowCallback, useCreateStore, useDelTableCallback, useRow, useRowIds, useStore} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
-{{includeFile template="src/components/DrawingControls.tsx.hbs" output="src/components/DrawingControls.{{ext}}"}}
-import {DrawingControls} from '../components/DrawingControls';
-{{includeFile template="src/components/Canvas.tsx.hbs" output="src/components/Canvas.{{ext}}"}}
-import {Canvas} from '../components/Canvas';
+{{includeFile template="src/drawing/DrawingControls.tsx.hbs" output="src/drawing/DrawingControls.{{ext}}"}}
+import {DrawingControls} from './DrawingControls';
+{{includeFile template="src/drawing/Canvas.tsx.hbs" output="src/drawing/Canvas.{{ext}}"}}
+import {Canvas} from './Canvas';
 
 const App = () => {
 const settingsStore = useCreateStore(() => {
