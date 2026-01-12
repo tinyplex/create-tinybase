@@ -1,7 +1,7 @@
-{{includeFile template="src/todos/todoItem.css.hbs" output="src/todos/todoItem.css"}}
+{{includeFile template="src/todos/todoItem.css.hbs" output="src/todoItem.css"}}
 import './todoItem.css';
-{{includeFile template="src/shared/button.ts.hbs" output="src/shared/button.{{ext}}"}}
-import {createButton} from '../shared/button';
+{{includeFile template="src/shared/button.ts.hbs" output="src/button.{{ext}}"}}
+import {createButton} from './button';
 
 export const createTodoItem = (id: string, text: string, completed: boolean, onToggle: () => void, onDelete: () => void): HTMLDivElement => {
 const item = document.createElement('div');

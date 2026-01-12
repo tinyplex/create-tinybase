@@ -1,7 +1,7 @@
 import {createMergeableStore, createStore} from 'tinybase';
-{{includeFile template="src/drawing/drawingControls.ts.hbs" output="src/drawing/drawingControls.{{ext}}"}}
+{{includeFile template="src/drawing/drawingControls.ts.hbs" output="src/drawingControls.{{ext}}"}}
 import {createDrawingControls} from './drawingControls';
-{{includeFile template="src/drawing/canvas.ts.hbs" output="src/drawing/canvas.{{ext}}"}}
+{{includeFile template="src/drawing/canvas.ts.hbs" output="src/canvas.{{ext}}"}}
 import {createCanvas} from './canvas';
 
 const app = () => {

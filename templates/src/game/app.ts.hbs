@@ -1,9 +1,9 @@
 import {createMergeableStore} from 'tinybase';
-{{includeFile template="src/shared/button.ts.hbs" output="src/shared/button.{{ext}}"}}
-import {createButton} from '../shared/button';
-{{includeFile template="src/game/board.ts.hbs" output="src/game/board.{{ext}}"}}
+{{includeFile template="src/shared/button.ts.hbs" output="src/button.{{ext}}"}}
+import {createButton} from './button';
+{{includeFile template="src/game/board.ts.hbs" output="src/board.{{ext}}"}}
 import {createBoard} from './board';
-{{includeFile template="src/game/gameStatus.ts.hbs" output="src/game/gameStatus.{{ext}}"}}
+{{includeFile template="src/game/gameStatus.ts.hbs" output="src/gameStatus.{{ext}}"}}
 import {createGameStatus} from './gameStatus';
 
 const WINNING_LINES = [

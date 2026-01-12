@@ -234,8 +234,8 @@ for project in "${projects[@]}"; do
 done
 
 echo ""
-echo "Waiting for servers to start (1 second)..."
-sleep 1
+echo "Waiting for servers to start..."
+sleep 2
 
 echo ""
 echo "Opening browsers..."
@@ -244,7 +244,6 @@ for project in "${projects[@]}"; do
   URL="http://localhost:$port"
   echo "Opening $name at $URL"
   open "$URL"
-  sleep 1
 done
 
 echo ""

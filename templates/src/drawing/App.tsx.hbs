@@ -2,9 +2,9 @@ import {StrictMode, useCallback, useEffect, useRef} from 'react';
 import {createMergeableStore, createStore} from 'tinybase';
 import {Provider, useAddRowCallback, useCreateStore, useDelTableCallback, useRow, useRowIds, useStore} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
-{{includeFile template="src/drawing/DrawingControls.tsx.hbs" output="src/drawing/DrawingControls.{{ext}}"}}
+{{includeFile template="src/drawing/DrawingControls.tsx.hbs" output="src/DrawingControls.{{ext}}"}}
 import {DrawingControls} from './DrawingControls';
-{{includeFile template="src/drawing/Canvas.tsx.hbs" output="src/drawing/Canvas.{{ext}}"}}
+{{includeFile template="src/drawing/Canvas.tsx.hbs" output="src/Canvas.{{ext}}"}}
 import {Canvas} from './Canvas';
 
 const App = () => {

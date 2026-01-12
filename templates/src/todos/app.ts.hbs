@@ -1,7 +1,7 @@
 import {createMergeableStore} from 'tinybase';
-{{includeFile template="src/todos/todoInput.ts.hbs" output="src/todos/todoInput.{{ext}}"}}
+{{includeFile template="src/todos/todoInput.ts.hbs" output="src/todoInput.{{ext}}"}}
 import {createTodoInput} from './todoInput';
-{{includeFile template="src/todos/todoList.ts.hbs" output="src/todos/todoList.{{ext}}"}}
+{{includeFile template="src/todos/todoList.ts.hbs" output="src/todoList.{{ext}}"}}
 import {createTodoList} from './todoList';
 
 const app = () => {

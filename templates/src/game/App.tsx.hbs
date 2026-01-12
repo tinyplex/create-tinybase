@@ -2,11 +2,11 @@ import {StrictMode} from 'react';
 import {createMergeableStore} from 'tinybase';
 import {Provider, useCreateStore, useSetValuesCallback, useStore, useTableListener} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
-{{includeFile template="src/shared/Button.tsx.hbs" output="src/shared/Button.{{ext}}"}}
-import {Button} from '../shared/Button';
-{{includeFile template="src/game/Board.tsx.hbs" output="src/game/Board.{{ext}}"}}
+{{includeFile template="src/shared/Button.tsx.hbs" output="src/Button.{{ext}}"}}
+import {Button} from './Button';
+{{includeFile template="src/game/Board.tsx.hbs" output="src/Board.{{ext}}"}}
 import {Board} from './Board';
-{{includeFile template="src/game/GameStatus.tsx.hbs" output="src/game/GameStatus.{{ext}}"}}
+{{includeFile template="src/game/GameStatus.tsx.hbs" output="src/GameStatus.{{ext}}"}}
 import {GameStatus} from './GameStatus';
 
 const WINNING_LINES = [

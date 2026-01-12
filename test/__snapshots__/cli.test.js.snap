@@ -218,7 +218,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/chat/App.jsx": "import {StrictMode} from 'react';
+  "src/App.jsx": "import {StrictMode} from 'react';
 import {createStore, createMergeableStore} from 'tinybase';
 import {Provider, useCreateStore} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
@@ -248,7 +248,31 @@ const App = () => {
 };
 export {App};
 ",
-  "src/chat/Message.jsx": "import {useRow} from 'tinybase/ui-react';
+  "src/Button.jsx": "import './button.css';
+const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
+  <button
+    onClick={onClick}
+    type={type}
+    className={variant === 'primary' ? 'primary' : void 0}
+  >
+    {children}
+  </button>
+);
+export {Button};
+",
+  "src/Input.jsx": "import './input.css';
+const Input = ({value, onChange, placeholder = '', autoFocus = false}) => (
+  <input
+    type="text"
+    value={value}
+    onChange={(e) => onChange(e.target.value)}
+    placeholder={placeholder}
+    autoFocus={autoFocus}
+  />
+);
+export {Input};
+",
+  "src/Message.jsx": "import {useRow} from 'tinybase/ui-react';
 import './message.css';
 const Message = ({rowId}) => {
   const row = useRow('messages', rowId, 'chat');
@@ -263,11 +287,11 @@ const Message = ({rowId}) => {
 };
 export {Message};
 ",
-  "src/chat/MessageInput.jsx": "import {useState} from 'react';
+  "src/MessageInput.jsx": "import {useState} from 'react';
 import {useAddRowCallback, useValue} from 'tinybase/ui-react';
 import './messageInput.css';
-import {Button} from '../shared/Button';
-import {Input} from '../shared/Input';
+import {Button} from './Button';
+import {Input} from './Input';
 const MessageInput = () => {
   const [message, setMessage] = useState('');
   const username = useValue('username', 'settings') || 'Anonymous';
@@ -304,7 +328,7 @@ const MessageInput = () => {
 };
 export {MessageInput};
 ",
-  "src/chat/Messages.jsx": "import {useMemo} from 'react';
+  "src/Messages.jsx": "import {useMemo} from 'react';
 import {useRowIds, useStore} from 'tinybase/ui-react';
 import './messages.css';
 import {Message} from './Message';
@@ -328,9 +352,9 @@ const Messages = () => {
 };
 export {Messages};
 ",
-  "src/chat/UsernameInput.jsx": "import {useValue, useSetValueCallback} from 'tinybase/ui-react';
+  "src/UsernameInput.jsx": "import {useValue, useSetValueCallback} from 'tinybase/ui-react';
 import './usernameInput.css';
-import {Input} from '../shared/Input';
+import {Input} from './Input';
 const UsernameInput = () => {
   const username = useValue('username', 'settings') || '';
   const setUsername = useSetValueCallback(
@@ -352,87 +376,7 @@ const UsernameInput = () => {
 };
 export {UsernameInput};
 ",
-  "src/chat/message.css": ".message {
-  margin-bottom: 0.75rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.message .username {
-  font-weight: 800;
-  color: #d81b60;
-}
-
-.message .text {
-  flex: 1;
-}
-
-.message .time {
-  font-size: 0.8rem;
-  color: #666;
-}
-",
-  "src/chat/messageInput.css": "#messageInput {
-  display: flex;
-  gap: 0.5rem;
-  padding: 1rem;
-  border-top: 1px solid var(--border);
-}
-",
-  "src/chat/messages.css": "#messages {
-  overflow-y: auto;
-  padding: 1rem 0;
-  height: 400px;
-  margin-bottom: 1rem;
-}
-",
-  "src/chat/usernameInput.css": "#usernameInput {
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-#usernameInput label {
-  white-space: nowrap;
-}
-
-#usernameInput input {
-  flex: 1;
-}
-",
-  "src/index.jsx": "import ReactDOM from 'react-dom/client';
-import {App} from './chat/App';
-addEventListener('load', () =>
-  ReactDOM.createRoot(document.getElementById('app')).render(<App />),
-);
-",
-  "src/shared/Button.jsx": "import './button.css';
-const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
-  <button
-    onClick={onClick}
-    type={type}
-    className={variant === 'primary' ? 'primary' : void 0}
-  >
-    {children}
-  </button>
-);
-export {Button};
-",
-  "src/shared/Input.jsx": "import './input.css';
-const Input = ({value, onChange, placeholder = '', autoFocus = false}) => (
-  <input
-    type="text"
-    value={value}
-    onChange={(e) => onChange(e.target.value)}
-    placeholder={placeholder}
-    autoFocus={autoFocus}
-  />
-);
-export {Input};
-",
-  "src/shared/button.css": "button {
+  "src/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
   border-radius: 0.25rem;
@@ -458,7 +402,13 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/shared/input.css": "input[type='text'] {
+  "src/index.jsx": "import ReactDOM from 'react-dom/client';
+import {App} from './App';
+addEventListener('load', () =>
+  ReactDOM.createRoot(document.getElementById('app')).render(<App />),
+);
+",
+  "src/input.css": "input[type='text'] {
   padding: 0.5rem 0.75rem;
   background: var(--bg);
   border: 1px solid var(--border);
@@ -479,6 +429,56 @@ input[type='text']:focus {
 
 input[type='text']::placeholder {
   color: var(--fg2);
+}
+",
+  "src/message.css": ".message {
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.message .username {
+  font-weight: 800;
+  color: #d81b60;
+}
+
+.message .text {
+  flex: 1;
+}
+
+.message .time {
+  font-size: 0.8rem;
+  color: #666;
+}
+",
+  "src/messageInput.css": "#messageInput {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-top: 1px solid var(--border);
+}
+",
+  "src/messages.css": "#messages {
+  overflow-y: auto;
+  padding: 1rem 0;
+  height: 400px;
+  margin-bottom: 1rem;
+}
+",
+  "src/usernameInput.css": "#usernameInput {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#usernameInput label {
+  white-space: nowrap;
+}
+
+#usernameInput input {
+  flex: 1;
 }
 ",
   "vite.config.js": "import {defineConfig} from 'vite';
@@ -713,7 +713,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/drawing/App.jsx": "import {StrictMode} from 'react';
+  "src/App.jsx": "import {StrictMode} from 'react';
 import {createMergeableStore, createStore} from 'tinybase';
 import {Provider, useCreateStore} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
@@ -740,7 +740,7 @@ const App = () => {
 };
 export {App};
 ",
-  "src/drawing/BrushSize.jsx": "import {useValue, useSetValueCallback} from 'tinybase/ui-react';
+  "src/BrushSize.jsx": "import {useValue, useSetValueCallback} from 'tinybase/ui-react';
 import './brushSize.css';
 const BrushSize = () => {
   const size = useValue('brushSize', 'settings') ?? 5;
@@ -760,7 +760,19 @@ const BrushSize = () => {
 };
 export {BrushSize};
 ",
-  "src/drawing/Canvas.jsx": "import {useCallback, useEffect, useRef} from 'react';
+  "src/Button.jsx": "import './button.css';
+const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
+  <button
+    onClick={onClick}
+    type={type}
+    className={variant === 'primary' ? 'primary' : void 0}
+  >
+    {children}
+  </button>
+);
+export {Button};
+",
+  "src/Canvas.jsx": "import {useCallback, useEffect, useRef} from 'react';
 import {
   useAddRowCallback,
   useRowIds,
@@ -842,7 +854,7 @@ const Canvas = () => {
 };
 export {Canvas};
 ",
-  "src/drawing/ColorPicker.jsx": "import './colorPicker.css';
+  "src/ColorPicker.jsx": "import './colorPicker.css';
 import {useValue, useSetValueCallback} from 'tinybase/ui-react';
 const ColorPicker = () => {
   const colors = [
@@ -875,9 +887,9 @@ const ColorPicker = () => {
 };
 export {ColorPicker};
 ",
-  "src/drawing/DrawingControls.jsx": "import './drawingControls.css';
+  "src/DrawingControls.jsx": "import './drawingControls.css';
 import {useDelTableCallback} from 'tinybase/ui-react';
-import {Button} from '../shared/Button';
+import {Button} from './Button';
 import {ColorPicker} from './ColorPicker';
 import {BrushSize} from './BrushSize';
 const DrawingControls = () => {
@@ -894,7 +906,7 @@ const DrawingControls = () => {
 };
 export {DrawingControls};
 ",
-  "src/drawing/brushSize.css": "#brushSize {
+  "src/brushSize.css": "#brushSize {
   display: flex;
   gap: 0.5rem;
   align-items: center;
@@ -916,69 +928,7 @@ export {DrawingControls};
   display: inline-block;
 }
 ",
-  "src/drawing/canvas.css": "#drawingCanvas {
-  border: 1px solid var(--border);
-  border-radius: 0.375rem;
-  cursor: crosshair;
-  display: block;
-  touch-action: none;
-  margin: 0 auto;
-}
-",
-  "src/drawing/colorPicker.css": "#colorPicker {
-  display: flex;
-  gap: 0;
-  align-items: center;
-}
-
-.colorBtn {
-  width: 2rem;
-  height: 2rem;
-  border: 2px solid var(--border);
-  border-radius: 0.25rem;
-  cursor: pointer;
-  transition: border-color 0.2s;
-  margin: 0 0 0 0.5rem;
-  padding: 0;
-}
-
-.colorBtn:hover,
-.colorBtn.active {
-  border-color: var(--accent);
-}
-",
-  "src/drawing/drawingControls.css": "#drawingControls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  align-items: center;
-  margin: 0 auto 1rem;
-  padding: 0.75rem;
-  border: 1px solid var(--border);
-  border-radius: 0.375rem;
-  justify-content: space-between;
-  max-width: 600px;
-}
-",
-  "src/index.jsx": "import ReactDOM from 'react-dom/client';
-import {App} from './drawing/App';
-addEventListener('load', () =>
-  ReactDOM.createRoot(document.getElementById('app')).render(<App />),
-);
-",
-  "src/shared/Button.jsx": "import './button.css';
-const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
-  <button
-    onClick={onClick}
-    type={type}
-    className={variant === 'primary' ? 'primary' : void 0}
-  >
-    {children}
-  </button>
-);
-export {Button};
-",
-  "src/shared/button.css": "button {
+  "src/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
   border-radius: 0.25rem;
@@ -1003,6 +953,56 @@ button.primary {
 button.primary:hover {
   background: #c2185b;
 }
+",
+  "src/canvas.css": "#drawingCanvas {
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  cursor: crosshair;
+  display: block;
+  touch-action: none;
+  margin: 0 auto;
+}
+",
+  "src/colorPicker.css": "#colorPicker {
+  display: flex;
+  gap: 0;
+  align-items: center;
+}
+
+.colorBtn {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid var(--border);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  margin: 0 0 0 0.5rem;
+  padding: 0;
+}
+
+.colorBtn:hover,
+.colorBtn.active {
+  border-color: var(--accent);
+}
+",
+  "src/drawingControls.css": "#drawingControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin: 0 auto 1rem;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  justify-content: space-between;
+  max-width: 600px;
+}
+",
+  "src/index.jsx": "import ReactDOM from 'react-dom/client';
+import {App} from './App';
+addEventListener('load', () =>
+  ReactDOM.createRoot(document.getElementById('app')).render(<App />),
+);
 ",
   "vite.config.js": "import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
@@ -1236,7 +1236,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/game/App.jsx": "import {StrictMode} from 'react';
+  "src/App.jsx": "import {StrictMode} from 'react';
 import {createMergeableStore} from 'tinybase';
 import {
   Provider,
@@ -1246,7 +1246,7 @@ import {
   useTableListener,
 } from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
-import {Button} from '../shared/Button';
+import {Button} from './Button';
 import {Board} from './Board';
 import {GameStatus} from './GameStatus';
 const WINNING_LINES = [
@@ -1331,7 +1331,7 @@ const App = () => {
 };
 export {App};
 ",
-  "src/game/Board.jsx": "import './board.css';
+  "src/Board.jsx": "import './board.css';
 import {useMemo} from 'react';
 import {useValue} from 'tinybase/ui-react';
 import {Square} from './Square';
@@ -1358,7 +1358,19 @@ const Board = () => {
 };
 export {Board};
 ",
-  "src/game/GameStatus.jsx": "import './gameStatus.css';
+  "src/Button.jsx": "import './button.css';
+const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
+  <button
+    onClick={onClick}
+    type={type}
+    className={variant === 'primary' ? 'primary' : void 0}
+  >
+    {children}
+  </button>
+);
+export {Button};
+",
+  "src/GameStatus.jsx": "import './gameStatus.css';
 import {useValue} from 'tinybase/ui-react';
 const GameStatus = () => {
   const gameStatus = useValue('gameStatus');
@@ -1382,7 +1394,7 @@ const GameStatus = () => {
 };
 export {GameStatus};
 ",
-  "src/game/Square.jsx": "import './square.css';
+  "src/Square.jsx": "import './square.css';
 import {useCell, useStore, useValue} from 'tinybase/ui-react';
 const Square = ({position, disabled, winning}) => {
   const store = useStore();
@@ -1406,7 +1418,7 @@ const Square = ({position, disabled, winning}) => {
 };
 export {Square};
 ",
-  "src/game/board.css": "#board {
+  "src/board.css": "#board {
   display: grid;
   grid-template-columns: repeat(3, 100px);
   grid-template-rows: repeat(3, 100px);
@@ -1420,7 +1432,33 @@ export {Square};
   padding: 1px;
 }
 ",
-  "src/game/gameStatus.css": "#gameStatus {
+  "src/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "src/gameStatus.css": "#gameStatus {
   text-align: center;
   font-size: 1.5rem;
   font-weight: 800;
@@ -1443,7 +1481,13 @@ export {Square};
   }
 }
 ",
-  "src/game/square.css": ".square {
+  "src/index.jsx": "import ReactDOM from 'react-dom/client';
+import {App} from './App';
+addEventListener('load', () =>
+  ReactDOM.createRoot(document.getElementById('app')).render(<App />),
+);
+",
+  "src/square.css": ".square {
   width: 100px;
   height: 100px;
   background: var(--bg2);
@@ -1480,50 +1524,6 @@ export {Square};
 .square.winning {
   background: var(--accent);
   color: var(--bg);
-}
-",
-  "src/index.jsx": "import ReactDOM from 'react-dom/client';
-import {App} from './game/App';
-addEventListener('load', () =>
-  ReactDOM.createRoot(document.getElementById('app')).render(<App />),
-);
-",
-  "src/shared/Button.jsx": "import './button.css';
-const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
-  <button
-    onClick={onClick}
-    type={type}
-    className={variant === 'primary' ? 'primary' : void 0}
-  >
-    {children}
-  </button>
-);
-export {Button};
-",
-  "src/shared/button.css": "button {
-  padding: 0.5rem 1rem;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  background: #222;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  cursor: pointer;
-  margin: 0.5rem;
-}
-
-button:hover {
-  border-color: #d81b60;
-}
-
-button.primary {
-  background: #d81b60;
-  border: none;
-  padding: 0.75rem 1.5rem;
-}
-
-button.primary:hover {
-  background: #c2185b;
 }
 ",
   "vite.config.js": "import {defineConfig} from 'vite';
@@ -1758,86 +1758,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/index.jsx": "import ReactDOM from 'react-dom/client';
-import {App} from './todos/App';
-addEventListener('load', () =>
-  ReactDOM.createRoot(document.getElementById('app')).render(<App />),
-);
-",
-  "src/shared/Button.jsx": "import './button.css';
-const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
-  <button
-    onClick={onClick}
-    type={type}
-    className={variant === 'primary' ? 'primary' : void 0}
-  >
-    {children}
-  </button>
-);
-export {Button};
-",
-  "src/shared/Input.jsx": "import './input.css';
-const Input = ({value, onChange, placeholder = '', autoFocus = false}) => (
-  <input
-    type="text"
-    value={value}
-    onChange={(e) => onChange(e.target.value)}
-    placeholder={placeholder}
-    autoFocus={autoFocus}
-  />
-);
-export {Input};
-",
-  "src/shared/button.css": "button {
-  padding: 0.5rem 1rem;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  background: #222;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  cursor: pointer;
-  margin: 0.5rem;
-}
-
-button:hover {
-  border-color: #d81b60;
-}
-
-button.primary {
-  background: #d81b60;
-  border: none;
-  padding: 0.75rem 1.5rem;
-}
-
-button.primary:hover {
-  background: #c2185b;
-}
-",
-  "src/shared/input.css": "input[type='text'] {
-  padding: 0.5rem 0.75rem;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 0.375rem;
-  color: var(--fg);
-  font-family: inherit;
-  font-size: 1rem;
-  line-height: 1.5;
-  width: 100%;
-  box-sizing: border-box;
-  align-self: center;
-}
-
-input[type='text']:focus {
-  outline: none;
-  border-color: var(--accent);
-}
-
-input[type='text']::placeholder {
-  color: var(--fg2);
-}
-",
-  "src/todos/App.jsx": "import {StrictMode} from 'react';
+  "src/App.jsx": "import {StrictMode} from 'react';
 import {createMergeableStore} from 'tinybase';
 import {Provider, useCreateStore} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
@@ -1862,11 +1783,35 @@ const App = () => {
 };
 export {App};
 ",
-  "src/todos/TodoInput.jsx": "import './todoInput.css';
+  "src/Button.jsx": "import './button.css';
+const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
+  <button
+    onClick={onClick}
+    type={type}
+    className={variant === 'primary' ? 'primary' : void 0}
+  >
+    {children}
+  </button>
+);
+export {Button};
+",
+  "src/Input.jsx": "import './input.css';
+const Input = ({value, onChange, placeholder = '', autoFocus = false}) => (
+  <input
+    type="text"
+    value={value}
+    onChange={(e) => onChange(e.target.value)}
+    placeholder={placeholder}
+    autoFocus={autoFocus}
+  />
+);
+export {Input};
+",
+  "src/TodoInput.jsx": "import './todoInput.css';
 import {useState} from 'react';
 import {useAddRowCallback} from 'tinybase/ui-react';
-import {Button} from '../shared/Button';
-import {Input} from '../shared/Input';
+import {Button} from './Button';
+import {Input} from './Input';
 const TodoInput = () => {
   const [text, setText] = useState('');
   const addRow = useAddRowCallback('todos', () => ({text, completed: false}), [
@@ -1895,13 +1840,13 @@ const TodoInput = () => {
 };
 export {TodoInput};
 ",
-  "src/todos/TodoItem.jsx": "import './todoItem.css';
+  "src/TodoItem.jsx": "import './todoItem.css';
 import {
   useDelRowCallback,
   useRow,
   useSetPartialRowCallback,
 } from 'tinybase/ui-react';
-import {Button} from '../shared/Button';
+import {Button} from './Button';
 const TodoItem = ({rowId}) => {
   const todo = useRow('todos', rowId);
   const setPartialRow = useSetPartialRowCallback(
@@ -1926,7 +1871,7 @@ const TodoItem = ({rowId}) => {
 };
 export {TodoItem};
 ",
-  "src/todos/TodoList.jsx": "import './todoList.css';
+  "src/TodoList.jsx": "import './todoList.css';
 import {useRowIds} from 'tinybase/ui-react';
 import {TodoItem} from './TodoItem';
 const TodoList = () => {
@@ -1941,7 +1886,62 @@ const TodoList = () => {
 };
 export {TodoList};
 ",
-  "src/todos/todoInput.css": "#todoInput {
+  "src/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "src/index.jsx": "import ReactDOM from 'react-dom/client';
+import {App} from './App';
+addEventListener('load', () =>
+  ReactDOM.createRoot(document.getElementById('app')).render(<App />),
+);
+",
+  "src/input.css": "input[type='text'] {
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+input[type='text']:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input[type='text']::placeholder {
+  color: var(--fg2);
+}
+",
+  "src/todoInput.css": "#todoInput {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
@@ -1951,7 +1951,7 @@ export {TodoList};
   flex: 1;
 }
 ",
-  "src/todos/todoItem.css": ".todoItem {
+  "src/todoItem.css": ".todoItem {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -1985,7 +1985,7 @@ export {TodoList};
   flex-shrink: 0;
 }
 ",
-  "src/todos/todoList.css": "#todoList {
+  "src/todoList.css": "#todoList {
   border: 1px solid var(--border);
   border-radius: 0.375rem;
   overflow: hidden;
@@ -2229,7 +2229,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/chat/app.js": "import {createStore, createMergeableStore} from 'tinybase';
+  "src/app.js": "import {createStore, createMergeableStore} from 'tinybase';
 import {createMessage} from './message';
 import {createMessages} from './messages';
 import {createUsernameInput} from './usernameInput';
@@ -2267,7 +2267,84 @@ const app = () => {
 };
 export {app};
 ",
-  "src/chat/message.css": ".message {
+  "src/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "src/button.js": "import './button.css';
+const createButton = (text, onClick, variant = 'default') => {
+  const button = document.createElement('button');
+  button.textContent = text;
+  if (variant === 'primary') {
+    button.className = 'primary';
+  }
+  button.addEventListener('click', onClick);
+  return button;
+};
+export {createButton};
+",
+  "src/index.js": "import {app} from './app';
+addEventListener('load', app);
+",
+  "src/input.css": "input[type='text'] {
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+input[type='text']:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input[type='text']::placeholder {
+  color: var(--fg2);
+}
+",
+  "src/input.js": "import './input.css';
+const createInput = (placeholder = '', value = '', onInput) => {
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.placeholder = placeholder;
+  input.value = value;
+  if (onInput) {
+    input.addEventListener('input', () => onInput(input.value));
+  }
+  return input;
+};
+export {createInput};
+",
+  "src/message.css": ".message {
   margin-bottom: 0.75rem;
   display: flex;
   flex-wrap: wrap;
@@ -2288,7 +2365,7 @@ export {app};
   color: #666;
 }
 ",
-  "src/chat/message.js": "import './message.css';
+  "src/message.js": "import './message.css';
 const createMessage = (username, text, timestamp) => {
   const time = new Date(timestamp).toLocaleTimeString();
   const messageDiv = document.createElement('div');
@@ -2309,16 +2386,16 @@ const createMessage = (username, text, timestamp) => {
 };
 export {createMessage};
 ",
-  "src/chat/messageInput.css": "#messageInput {
+  "src/messageInput.css": "#messageInput {
   display: flex;
   gap: 0.5rem;
   padding: 1rem;
   border-top: 1px solid var(--border);
 }
 ",
-  "src/chat/messageInput.js": "import './messageInput.css';
-import {createButton} from '../shared/button';
-import {createInput} from '../shared/input';
+  "src/messageInput.js": "import './messageInput.css';
+import {createButton} from './button';
+import {createInput} from './input';
 const createMessageInput = (settingsStore, chatStore) => {
   const messageInputContainer = document.createElement('div');
   messageInputContainer.id = 'messageInput';
@@ -2347,14 +2424,14 @@ const createMessageInput = (settingsStore, chatStore) => {
 };
 export {createMessageInput};
 ",
-  "src/chat/messages.css": "#messages {
+  "src/messages.css": "#messages {
   overflow-y: auto;
   padding: 1rem 0;
   height: 400px;
   margin-bottom: 1rem;
 }
 ",
-  "src/chat/messages.js": "import './messages.css';
+  "src/messages.js": "import './messages.css';
 import {createMessage} from './message';
 const createMessages = (store) => {
   const messagesContainer = document.createElement('div');
@@ -2373,7 +2450,7 @@ const createMessages = (store) => {
 };
 export {createMessages};
 ",
-  "src/chat/usernameInput.css": "#usernameInput {
+  "src/usernameInput.css": "#usernameInput {
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
@@ -2388,8 +2465,8 @@ export {createMessages};
   flex: 1;
 }
 ",
-  "src/chat/usernameInput.js": "import './usernameInput.css';
-import {createInput} from '../shared/input';
+  "src/usernameInput.js": "import './usernameInput.css';
+import {createInput} from './input';
 const createUsernameInput = (settingsStore, chatStore) => {
   const container = document.createElement('div');
   container.id = 'usernameInput';
@@ -2410,83 +2487,6 @@ const createUsernameInput = (settingsStore, chatStore) => {
   return container;
 };
 export {createUsernameInput};
-",
-  "src/index.js": "import {app} from './chat/app';
-addEventListener('load', app);
-",
-  "src/shared/button.css": "button {
-  padding: 0.5rem 1rem;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  background: #222;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  cursor: pointer;
-  margin: 0.5rem;
-}
-
-button:hover {
-  border-color: #d81b60;
-}
-
-button.primary {
-  background: #d81b60;
-  border: none;
-  padding: 0.75rem 1.5rem;
-}
-
-button.primary:hover {
-  background: #c2185b;
-}
-",
-  "src/shared/button.js": "import './button.css';
-const createButton = (text, onClick, variant = 'default') => {
-  const button = document.createElement('button');
-  button.textContent = text;
-  if (variant === 'primary') {
-    button.className = 'primary';
-  }
-  button.addEventListener('click', onClick);
-  return button;
-};
-export {createButton};
-",
-  "src/shared/input.css": "input[type='text'] {
-  padding: 0.5rem 0.75rem;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 0.375rem;
-  color: var(--fg);
-  font-family: inherit;
-  font-size: 1rem;
-  line-height: 1.5;
-  width: 100%;
-  box-sizing: border-box;
-  align-self: center;
-}
-
-input[type='text']:focus {
-  outline: none;
-  border-color: var(--accent);
-}
-
-input[type='text']::placeholder {
-  color: var(--fg2);
-}
-",
-  "src/shared/input.js": "import './input.css';
-const createInput = (placeholder = '', value = '', onInput) => {
-  const input = document.createElement('input');
-  input.type = 'text';
-  input.placeholder = placeholder;
-  input.value = value;
-  if (onInput) {
-    input.addEventListener('input', () => onInput(input.value));
-  }
-  return input;
-};
-export {createInput};
 ",
 }
 `;
@@ -2706,7 +2706,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/drawing/app.js": "import {createMergeableStore, createStore} from 'tinybase';
+  "src/app.js": "import {createMergeableStore, createStore} from 'tinybase';
 import {createDrawingControls} from './drawingControls';
 import {createCanvas} from './canvas';
 const app = () => {
@@ -2720,7 +2720,7 @@ const app = () => {
 };
 export {app};
 ",
-  "src/drawing/brushSize.css": "#brushSize {
+  "src/brushSize.css": "#brushSize {
   display: flex;
   gap: 0.5rem;
   align-items: center;
@@ -2742,7 +2742,7 @@ export {app};
   display: inline-block;
 }
 ",
-  "src/drawing/brushSize.js": "import './brushSize.css';
+  "src/brushSize.js": "import './brushSize.css';
 const createBrushSize = (store) => {
   const container = document.createElement('div');
   container.id = 'brushSize';
@@ -2768,7 +2768,45 @@ const createBrushSize = (store) => {
 };
 export {createBrushSize};
 ",
-  "src/drawing/canvas.css": "#drawingCanvas {
+  "src/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "src/button.js": "import './button.css';
+const createButton = (text, onClick, variant = 'default') => {
+  const button = document.createElement('button');
+  button.textContent = text;
+  if (variant === 'primary') {
+    button.className = 'primary';
+  }
+  button.addEventListener('click', onClick);
+  return button;
+};
+export {createButton};
+",
+  "src/canvas.css": "#drawingCanvas {
   border: 1px solid var(--border);
   border-radius: 0.375rem;
   cursor: crosshair;
@@ -2777,7 +2815,7 @@ export {createBrushSize};
   margin: 0 auto;
 }
 ",
-  "src/drawing/canvas.js": "import './canvas.css';
+  "src/canvas.js": "import './canvas.css';
 const createCanvas = (settingsStore, canvasStore) => {
   const canvas = document.createElement('canvas');
   canvas.id = 'drawingCanvas';
@@ -2839,7 +2877,7 @@ const createCanvas = (settingsStore, canvasStore) => {
 };
 export {createCanvas};
 ",
-  "src/drawing/colorPicker.css": "#colorPicker {
+  "src/colorPicker.css": "#colorPicker {
   display: flex;
   gap: 0;
   align-items: center;
@@ -2861,7 +2899,7 @@ export {createCanvas};
   border-color: var(--accent);
 }
 ",
-  "src/drawing/colorPicker.js": "import './colorPicker.css';
+  "src/colorPicker.js": "import './colorPicker.css';
 const createColorPicker = (store) => {
   const colors = [
     '#d81b60',
@@ -2896,7 +2934,7 @@ const createColorPicker = (store) => {
 };
 export {createColorPicker};
 ",
-  "src/drawing/drawingControls.css": "#drawingControls {
+  "src/drawingControls.css": "#drawingControls {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
@@ -2909,8 +2947,8 @@ export {createColorPicker};
   max-width: 600px;
 }
 ",
-  "src/drawing/drawingControls.js": "import './drawingControls.css';
-import {createButton} from '../shared/button';
+  "src/drawingControls.js": "import './drawingControls.css';
+import {createButton} from './button';
 import {createColorPicker} from './colorPicker';
 import {createBrushSize} from './brushSize';
 const createDrawingControls = (settingsStore, canvasStore) => {
@@ -2928,46 +2966,8 @@ const createDrawingControls = (settingsStore, canvasStore) => {
 };
 export {createDrawingControls};
 ",
-  "src/index.js": "import {app} from './drawing/app';
+  "src/index.js": "import {app} from './app';
 addEventListener('load', app);
-",
-  "src/shared/button.css": "button {
-  padding: 0.5rem 1rem;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  background: #222;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  cursor: pointer;
-  margin: 0.5rem;
-}
-
-button:hover {
-  border-color: #d81b60;
-}
-
-button.primary {
-  background: #d81b60;
-  border: none;
-  padding: 0.75rem 1.5rem;
-}
-
-button.primary:hover {
-  background: #c2185b;
-}
-",
-  "src/shared/button.js": "import './button.css';
-const createButton = (text, onClick, variant = 'default') => {
-  const button = document.createElement('button');
-  button.textContent = text;
-  if (variant === 'primary') {
-    button.className = 'primary';
-  }
-  button.addEventListener('click', onClick);
-  return button;
-};
-export {createButton};
 ",
 }
 `;
@@ -3187,8 +3187,8 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/game/app.js": "import {createMergeableStore} from 'tinybase';
-import {createButton} from '../shared/button';
+  "src/app.js": "import {createMergeableStore} from 'tinybase';
+import {createButton} from './button';
 import {createBoard} from './board';
 import {createGameStatus} from './gameStatus';
 const WINNING_LINES = [
@@ -3253,7 +3253,7 @@ const app = () => {
 };
 export {app};
 ",
-  "src/game/board.css": "#board {
+  "src/board.css": "#board {
   display: grid;
   grid-template-columns: repeat(3, 100px);
   grid-template-rows: repeat(3, 100px);
@@ -3267,7 +3267,7 @@ export {app};
   padding: 1px;
 }
 ",
-  "src/game/board.js": "import './board.css';
+  "src/board.js": "import './board.css';
 import {createSquare} from './square';
 const createBoard = (store) => {
   const board = document.createElement('div');
@@ -3304,7 +3304,45 @@ const createBoard = (store) => {
 };
 export {createBoard};
 ",
-  "src/game/gameStatus.css": "#gameStatus {
+  "src/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "src/button.js": "import './button.css';
+const createButton = (text, onClick, variant = 'default') => {
+  const button = document.createElement('button');
+  button.textContent = text;
+  if (variant === 'primary') {
+    button.className = 'primary';
+  }
+  button.addEventListener('click', onClick);
+  return button;
+};
+export {createButton};
+",
+  "src/gameStatus.css": "#gameStatus {
   text-align: center;
   font-size: 1.5rem;
   font-weight: 800;
@@ -3327,7 +3365,7 @@ export {createBoard};
   }
 }
 ",
-  "src/game/gameStatus.js": "import './gameStatus.css';
+  "src/gameStatus.js": "import './gameStatus.css';
 const createGameStatus = (store) => {
   const status = document.createElement('div');
   status.id = 'gameStatus';
@@ -3349,7 +3387,10 @@ const createGameStatus = (store) => {
 };
 export {createGameStatus};
 ",
-  "src/game/square.css": ".square {
+  "src/index.js": "import {app} from './app';
+addEventListener('load', app);
+",
+  "src/square.css": ".square {
   width: 100px;
   height: 100px;
   background: var(--bg2);
@@ -3388,7 +3429,7 @@ export {createGameStatus};
   color: var(--bg);
 }
 ",
-  "src/game/square.js": "import './square.css';
+  "src/square.js": "import './square.css';
 const createSquare = (position, value, onClick, disabled, winning) => {
   const square = document.createElement('button');
   square.className = \`square\${disabled ? ' disabled' : ''}\${winning ? ' winning' : ''}\`;
@@ -3398,47 +3439,6 @@ const createSquare = (position, value, onClick, disabled, winning) => {
   return square;
 };
 export {createSquare};
-",
-  "src/index.js": "import {app} from './game/app';
-addEventListener('load', app);
-",
-  "src/shared/button.css": "button {
-  padding: 0.5rem 1rem;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  background: #222;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  cursor: pointer;
-  margin: 0.5rem;
-}
-
-button:hover {
-  border-color: #d81b60;
-}
-
-button.primary {
-  background: #d81b60;
-  border: none;
-  padding: 0.75rem 1.5rem;
-}
-
-button.primary:hover {
-  background: #c2185b;
-}
-",
-  "src/shared/button.js": "import './button.css';
-const createButton = (text, onClick, variant = 'default') => {
-  const button = document.createElement('button');
-  button.textContent = text;
-  if (variant === 'primary') {
-    button.className = 'primary';
-  }
-  button.addEventListener('click', onClick);
-  return button;
-};
-export {createButton};
 ",
 }
 `;
@@ -3658,10 +3658,24 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/index.js": "import {app} from './todos/app';
-addEventListener('load', app);
+  "src/app.js": "import {createMergeableStore} from 'tinybase';
+import {createTodoInput} from './todoInput';
+import {createTodoList} from './todoList';
+const app = () => {
+  const store = createMergeableStore('todos').setTable('todos', {
+    1: {text: 'Learn TinyBase', completed: false},
+    2: {text: 'Build an app', completed: false},
+  });
+  const appContainer = document.getElementById('app');
+  const todoInputContainer = createTodoInput(store);
+  appContainer.appendChild(todoInputContainer);
+  const input = todoInputContainer.querySelector('input');
+  input.focus();
+  appContainer.appendChild(createTodoList(store));
+};
+export {app};
 ",
-  "src/shared/button.css": "button {
+  "src/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
   border-radius: 0.25rem;
@@ -3687,7 +3701,7 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/shared/button.js": "import './button.css';
+  "src/button.js": "import './button.css';
 const createButton = (text, onClick, variant = 'default') => {
   const button = document.createElement('button');
   button.textContent = text;
@@ -3699,7 +3713,10 @@ const createButton = (text, onClick, variant = 'default') => {
 };
 export {createButton};
 ",
-  "src/shared/input.css": "input[type='text'] {
+  "src/index.js": "import {app} from './app';
+addEventListener('load', app);
+",
+  "src/input.css": "input[type='text'] {
   padding: 0.5rem 0.75rem;
   background: var(--bg);
   border: 1px solid var(--border);
@@ -3722,7 +3739,7 @@ input[type='text']::placeholder {
   color: var(--fg2);
 }
 ",
-  "src/shared/input.js": "import './input.css';
+  "src/input.js": "import './input.css';
 const createInput = (placeholder = '', value = '', onInput) => {
   const input = document.createElement('input');
   input.type = 'text';
@@ -3735,24 +3752,7 @@ const createInput = (placeholder = '', value = '', onInput) => {
 };
 export {createInput};
 ",
-  "src/todos/app.js": "import {createMergeableStore} from 'tinybase';
-import {createTodoInput} from './todoInput';
-import {createTodoList} from './todoList';
-const app = () => {
-  const store = createMergeableStore('todos').setTable('todos', {
-    1: {text: 'Learn TinyBase', completed: false},
-    2: {text: 'Build an app', completed: false},
-  });
-  const appContainer = document.getElementById('app');
-  const todoInputContainer = createTodoInput(store);
-  appContainer.appendChild(todoInputContainer);
-  const input = todoInputContainer.querySelector('input');
-  input.focus();
-  appContainer.appendChild(createTodoList(store));
-};
-export {app};
-",
-  "src/todos/todoInput.css": "#todoInput {
+  "src/todoInput.css": "#todoInput {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
@@ -3762,9 +3762,9 @@ export {app};
   flex: 1;
 }
 ",
-  "src/todos/todoInput.js": "import './todoInput.css';
-import {createButton} from '../shared/button';
-import {createInput} from '../shared/input';
+  "src/todoInput.js": "import './todoInput.css';
+import {createButton} from './button';
+import {createInput} from './input';
 const createTodoInput = (store) => {
   const container = document.createElement('div');
   container.id = 'todoInput';
@@ -3789,7 +3789,7 @@ const createTodoInput = (store) => {
 };
 export {createTodoInput};
 ",
-  "src/todos/todoItem.css": ".todoItem {
+  "src/todoItem.css": ".todoItem {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -3823,8 +3823,8 @@ export {createTodoInput};
   flex-shrink: 0;
 }
 ",
-  "src/todos/todoItem.js": "import './todoItem.css';
-import {createButton} from '../shared/button';
+  "src/todoItem.js": "import './todoItem.css';
+import {createButton} from './button';
 const createTodoItem = (id, text, completed, onToggle, onDelete) => {
   const item = document.createElement('div');
   item.className = \`todoItem\${completed ? ' completed' : ''}\`;
@@ -3844,7 +3844,7 @@ const createTodoItem = (id, text, completed, onToggle, onDelete) => {
 };
 export {createTodoItem};
 ",
-  "src/todos/todoList.css": "#todoList {
+  "src/todoList.css": "#todoList {
   border: 1px solid var(--border);
   border-radius: 0.375rem;
   overflow: hidden;
@@ -3859,7 +3859,7 @@ export {createTodoItem};
   color: var(--fg2);
 }
 ",
-  "src/todos/todoList.js": "import './todoList.css';
+  "src/todoList.js": "import './todoList.css';
 import {createTodoItem} from './todoItem';
 const createTodoList = (store) => {
   const list = document.createElement('div');
@@ -4115,7 +4115,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/chat/App.tsx": "import {StrictMode, useState, useMemo} from 'react';
+  "src/App.tsx": "import {StrictMode, useState, useMemo} from 'react';
 import {createStore, createMergeableStore} from 'tinybase';
 import {
   Provider,
@@ -4129,9 +4129,9 @@ import {
 } from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 
-import {Button} from '../shared/Button';
+import {Button} from './Button';
 
-import {Input} from '../shared/Input';
+import {Input} from './Input';
 
 import {Message} from './Message';
 
@@ -4165,7 +4165,56 @@ export const App = () => {
   );
 };
 ",
-  "src/chat/Message.tsx": "import {useRow} from 'tinybase/ui-react';
+  "src/Button.tsx": "import './button.css';
+import {ReactNode} from 'react';
+
+interface ButtonProps {
+  children: ReactNode;
+  onClick?: () => void;
+  variant?: 'default' | 'primary';
+  type?: 'button' | 'submit';
+}
+
+export const Button = ({
+  children,
+  onClick,
+  variant = 'default',
+  type = 'button',
+}: ButtonProps) => (
+  <button
+    onClick={onClick}
+    type={type}
+    className={variant === 'primary' ? 'primary' : undefined}
+  >
+    {children}
+  </button>
+);
+",
+  "src/Input.tsx": "import './input.css';
+
+interface InputProps {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  autoFocus?: boolean;
+}
+
+export const Input = ({
+  value,
+  onChange,
+  placeholder = '',
+  autoFocus = false,
+}: InputProps) => (
+  <input
+    type="text"
+    value={value}
+    onChange={(e) => onChange(e.target.value)}
+    placeholder={placeholder}
+    autoFocus={autoFocus}
+  />
+);
+",
+  "src/Message.tsx": "import {useRow} from 'tinybase/ui-react';
 
 import './message.css';
 
@@ -4186,13 +4235,13 @@ export const Message = ({rowId}: MessageProps) => {
   );
 };
 ",
-  "src/chat/MessageInput.tsx": "import {useState} from 'react';
+  "src/MessageInput.tsx": "import {useState} from 'react';
 import {useAddRowCallback, useValue} from 'tinybase/ui-react';
 import './messageInput.css';
 
-import {Button} from '../shared/Button';
+import {Button} from './Button';
 
-import {Input} from '../shared/Input';
+import {Input} from './Input';
 
 export const MessageInput = () => {
   const [message, setMessage] = useState('');
@@ -4232,7 +4281,7 @@ export const MessageInput = () => {
   );
 };
 ",
-  "src/chat/Messages.tsx": "import {useMemo} from 'react';
+  "src/Messages.tsx": "import {useMemo} from 'react';
 import {useRowIds, useStore} from 'tinybase/ui-react';
 
 import './messages.css';
@@ -4260,10 +4309,10 @@ export const Messages = () => {
   );
 };
 ",
-  "src/chat/UsernameInput.tsx": "import {useValue, useSetValueCallback} from 'tinybase/ui-react';
+  "src/UsernameInput.tsx": "import {useValue, useSetValueCallback} from 'tinybase/ui-react';
 import './usernameInput.css';
 
-import {Input} from '../shared/Input';
+import {Input} from './Input';
 
 export const UsernameInput = () => {
   const username = useValue('username', 'settings') || '';
@@ -4286,113 +4335,7 @@ export const UsernameInput = () => {
   );
 };
 ",
-  "src/chat/message.css": ".message {
-  margin-bottom: 0.75rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.message .username {
-  font-weight: 800;
-  color: #d81b60;
-}
-
-.message .text {
-  flex: 1;
-}
-
-.message .time {
-  font-size: 0.8rem;
-  color: #666;
-}
-",
-  "src/chat/messageInput.css": "#messageInput {
-  display: flex;
-  gap: 0.5rem;
-  padding: 1rem;
-  border-top: 1px solid var(--border);
-}
-",
-  "src/chat/messages.css": "#messages {
-  overflow-y: auto;
-  padding: 1rem 0;
-  height: 400px;
-  margin-bottom: 1rem;
-}
-",
-  "src/chat/usernameInput.css": "#usernameInput {
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-#usernameInput label {
-  white-space: nowrap;
-}
-
-#usernameInput input {
-  flex: 1;
-}
-",
-  "src/index.tsx": "import ReactDOM from 'react-dom/client';
-import {App} from './chat/App';
-
-addEventListener('load', () =>
-  ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
-);
-",
-  "src/shared/Button.tsx": "import './button.css';
-import {ReactNode} from 'react';
-
-interface ButtonProps {
-  children: ReactNode;
-  onClick?: () => void;
-  variant?: 'default' | 'primary';
-  type?: 'button' | 'submit';
-}
-
-export const Button = ({
-  children,
-  onClick,
-  variant = 'default',
-  type = 'button',
-}: ButtonProps) => (
-  <button
-    onClick={onClick}
-    type={type}
-    className={variant === 'primary' ? 'primary' : undefined}
-  >
-    {children}
-  </button>
-);
-",
-  "src/shared/Input.tsx": "import './input.css';
-
-interface InputProps {
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  autoFocus?: boolean;
-}
-
-export const Input = ({
-  value,
-  onChange,
-  placeholder = '',
-  autoFocus = false,
-}: InputProps) => (
-  <input
-    type="text"
-    value={value}
-    onChange={(e) => onChange(e.target.value)}
-    placeholder={placeholder}
-    autoFocus={autoFocus}
-  />
-);
-",
-  "src/shared/button.css": "button {
+  "src/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
   border-radius: 0.25rem;
@@ -4418,7 +4361,14 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/shared/input.css": "input[type='text'] {
+  "src/index.tsx": "import ReactDOM from 'react-dom/client';
+import {App} from './App';
+
+addEventListener('load', () =>
+  ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
+);
+",
+  "src/input.css": "input[type='text'] {
   padding: 0.5rem 0.75rem;
   background: var(--bg);
   border: 1px solid var(--border);
@@ -4439,6 +4389,56 @@ input[type='text']:focus {
 
 input[type='text']::placeholder {
   color: var(--fg2);
+}
+",
+  "src/message.css": ".message {
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.message .username {
+  font-weight: 800;
+  color: #d81b60;
+}
+
+.message .text {
+  flex: 1;
+}
+
+.message .time {
+  font-size: 0.8rem;
+  color: #666;
+}
+",
+  "src/messageInput.css": "#messageInput {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-top: 1px solid var(--border);
+}
+",
+  "src/messages.css": "#messages {
+  overflow-y: auto;
+  padding: 1rem 0;
+  height: 400px;
+  margin-bottom: 1rem;
+}
+",
+  "src/usernameInput.css": "#usernameInput {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#usernameInput label {
+  white-space: nowrap;
+}
+
+#usernameInput input {
+  flex: 1;
 }
 ",
   "tsconfig.json": "{
@@ -4699,7 +4699,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/drawing/App.tsx": "import {StrictMode, useCallback, useEffect, useRef} from 'react';
+  "src/App.tsx": "import {StrictMode, useCallback, useEffect, useRef} from 'react';
 import {createMergeableStore, createStore} from 'tinybase';
 import {
   Provider,
@@ -4740,7 +4740,7 @@ const App = () => {
 
 export {App};
 ",
-  "src/drawing/BrushSize.tsx": "import {useValue, useSetValueCallback} from 'tinybase/ui-react';
+  "src/BrushSize.tsx": "import {useValue, useSetValueCallback} from 'tinybase/ui-react';
 import './brushSize.css';
 
 export const BrushSize = () => {
@@ -4762,7 +4762,32 @@ export const BrushSize = () => {
   );
 };
 ",
-  "src/drawing/Canvas.tsx": "import {useCallback, useEffect, useRef} from 'react';
+  "src/Button.tsx": "import './button.css';
+import {ReactNode} from 'react';
+
+interface ButtonProps {
+  children: ReactNode;
+  onClick?: () => void;
+  variant?: 'default' | 'primary';
+  type?: 'button' | 'submit';
+}
+
+export const Button = ({
+  children,
+  onClick,
+  variant = 'default',
+  type = 'button',
+}: ButtonProps) => (
+  <button
+    onClick={onClick}
+    type={type}
+    className={variant === 'primary' ? 'primary' : undefined}
+  >
+    {children}
+  </button>
+);
+",
+  "src/Canvas.tsx": "import {useCallback, useEffect, useRef} from 'react';
 import {
   useAddRowCallback,
   useRowIds,
@@ -4859,7 +4884,7 @@ export const Canvas = () => {
   );
 };
 ",
-  "src/drawing/ColorPicker.tsx": "import './colorPicker.css';
+  "src/ColorPicker.tsx": "import './colorPicker.css';
 import {useValue, useSetValueCallback} from 'tinybase/ui-react';
 
 export const ColorPicker = () => {
@@ -4894,10 +4919,10 @@ export const ColorPicker = () => {
   );
 };
 ",
-  "src/drawing/DrawingControls.tsx": "import './drawingControls.css';
+  "src/DrawingControls.tsx": "import './drawingControls.css';
 import {useDelTableCallback} from 'tinybase/ui-react';
 
-import {Button} from '../shared/Button';
+import {Button} from './Button';
 
 import {ColorPicker} from './ColorPicker';
 
@@ -4917,7 +4942,7 @@ export const DrawingControls = () => {
   );
 };
 ",
-  "src/drawing/brushSize.css": "#brushSize {
+  "src/brushSize.css": "#brushSize {
   display: flex;
   gap: 0.5rem;
   align-items: center;
@@ -4939,83 +4964,7 @@ export const DrawingControls = () => {
   display: inline-block;
 }
 ",
-  "src/drawing/canvas.css": "#drawingCanvas {
-  border: 1px solid var(--border);
-  border-radius: 0.375rem;
-  cursor: crosshair;
-  display: block;
-  touch-action: none;
-  margin: 0 auto;
-}
-",
-  "src/drawing/colorPicker.css": "#colorPicker {
-  display: flex;
-  gap: 0;
-  align-items: center;
-}
-
-.colorBtn {
-  width: 2rem;
-  height: 2rem;
-  border: 2px solid var(--border);
-  border-radius: 0.25rem;
-  cursor: pointer;
-  transition: border-color 0.2s;
-  margin: 0 0 0 0.5rem;
-  padding: 0;
-}
-
-.colorBtn:hover,
-.colorBtn.active {
-  border-color: var(--accent);
-}
-",
-  "src/drawing/drawingControls.css": "#drawingControls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  align-items: center;
-  margin: 0 auto 1rem;
-  padding: 0.75rem;
-  border: 1px solid var(--border);
-  border-radius: 0.375rem;
-  justify-content: space-between;
-  max-width: 600px;
-}
-",
-  "src/index.tsx": "import ReactDOM from 'react-dom/client';
-import {App} from './drawing/App';
-
-addEventListener('load', () =>
-  ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
-);
-",
-  "src/shared/Button.tsx": "import './button.css';
-import {ReactNode} from 'react';
-
-interface ButtonProps {
-  children: ReactNode;
-  onClick?: () => void;
-  variant?: 'default' | 'primary';
-  type?: 'button' | 'submit';
-}
-
-export const Button = ({
-  children,
-  onClick,
-  variant = 'default',
-  type = 'button',
-}: ButtonProps) => (
-  <button
-    onClick={onClick}
-    type={type}
-    className={variant === 'primary' ? 'primary' : undefined}
-  >
-    {children}
-  </button>
-);
-",
-  "src/shared/button.css": "button {
+  "src/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
   border-radius: 0.25rem;
@@ -5040,6 +4989,57 @@ button.primary {
 button.primary:hover {
   background: #c2185b;
 }
+",
+  "src/canvas.css": "#drawingCanvas {
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  cursor: crosshair;
+  display: block;
+  touch-action: none;
+  margin: 0 auto;
+}
+",
+  "src/colorPicker.css": "#colorPicker {
+  display: flex;
+  gap: 0;
+  align-items: center;
+}
+
+.colorBtn {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid var(--border);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  margin: 0 0 0 0.5rem;
+  padding: 0;
+}
+
+.colorBtn:hover,
+.colorBtn.active {
+  border-color: var(--accent);
+}
+",
+  "src/drawingControls.css": "#drawingControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin: 0 auto 1rem;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  justify-content: space-between;
+  max-width: 600px;
+}
+",
+  "src/index.tsx": "import ReactDOM from 'react-dom/client';
+import {App} from './App';
+
+addEventListener('load', () =>
+  ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
+);
 ",
   "tsconfig.json": "{
   "compilerOptions": {
@@ -5299,7 +5299,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/game/App.tsx": "import {StrictMode} from 'react';
+  "src/App.tsx": "import {StrictMode} from 'react';
 import {createMergeableStore} from 'tinybase';
 import {
   Provider,
@@ -5310,7 +5310,7 @@ import {
 } from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 
-import {Button} from '../shared/Button';
+import {Button} from './Button';
 
 import {Board} from './Board';
 
@@ -5410,7 +5410,7 @@ const App = () => {
 
 export {App};
 ",
-  "src/game/Board.tsx": "import './board.css';
+  "src/Board.tsx": "import './board.css';
 import {useMemo} from 'react';
 import {useValue} from 'tinybase/ui-react';
 
@@ -5441,7 +5441,32 @@ export const Board = () => {
   );
 };
 ",
-  "src/game/GameStatus.tsx": "import './gameStatus.css';
+  "src/Button.tsx": "import './button.css';
+import {ReactNode} from 'react';
+
+interface ButtonProps {
+  children: ReactNode;
+  onClick?: () => void;
+  variant?: 'default' | 'primary';
+  type?: 'button' | 'submit';
+}
+
+export const Button = ({
+  children,
+  onClick,
+  variant = 'default',
+  type = 'button',
+}: ButtonProps) => (
+  <button
+    onClick={onClick}
+    type={type}
+    className={variant === 'primary' ? 'primary' : undefined}
+  >
+    {children}
+  </button>
+);
+",
+  "src/GameStatus.tsx": "import './gameStatus.css';
 import {useValue} from 'tinybase/ui-react';
 
 export const GameStatus = () => {
@@ -5466,7 +5491,7 @@ export const GameStatus = () => {
   );
 };
 ",
-  "src/game/Square.tsx": "import './square.css';
+  "src/Square.tsx": "import './square.css';
 import {useCell, useStore, useValue} from 'tinybase/ui-react';
 
 export const Square = ({
@@ -5503,7 +5528,7 @@ export const Square = ({
   );
 };
 ",
-  "src/game/board.css": "#board {
+  "src/board.css": "#board {
   display: grid;
   grid-template-columns: repeat(3, 100px);
   grid-template-rows: repeat(3, 100px);
@@ -5517,7 +5542,33 @@ export const Square = ({
   padding: 1px;
 }
 ",
-  "src/game/gameStatus.css": "#gameStatus {
+  "src/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "src/gameStatus.css": "#gameStatus {
   text-align: center;
   font-size: 1.5rem;
   font-weight: 800;
@@ -5540,7 +5591,14 @@ export const Square = ({
   }
 }
 ",
-  "src/game/square.css": ".square {
+  "src/index.tsx": "import ReactDOM from 'react-dom/client';
+import {App} from './App';
+
+addEventListener('load', () =>
+  ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
+);
+",
+  "src/square.css": ".square {
   width: 100px;
   height: 100px;
   background: var(--bg2);
@@ -5577,64 +5635,6 @@ export const Square = ({
 .square.winning {
   background: var(--accent);
   color: var(--bg);
-}
-",
-  "src/index.tsx": "import ReactDOM from 'react-dom/client';
-import {App} from './game/App';
-
-addEventListener('load', () =>
-  ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
-);
-",
-  "src/shared/Button.tsx": "import './button.css';
-import {ReactNode} from 'react';
-
-interface ButtonProps {
-  children: ReactNode;
-  onClick?: () => void;
-  variant?: 'default' | 'primary';
-  type?: 'button' | 'submit';
-}
-
-export const Button = ({
-  children,
-  onClick,
-  variant = 'default',
-  type = 'button',
-}: ButtonProps) => (
-  <button
-    onClick={onClick}
-    type={type}
-    className={variant === 'primary' ? 'primary' : undefined}
-  >
-    {children}
-  </button>
-);
-",
-  "src/shared/button.css": "button {
-  padding: 0.5rem 1rem;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  background: #222;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  cursor: pointer;
-  margin: 0.5rem;
-}
-
-button:hover {
-  border-color: #d81b60;
-}
-
-button.primary {
-  background: #d81b60;
-  border: none;
-  padding: 0.75rem 1.5rem;
-}
-
-button.primary:hover {
-  background: #c2185b;
 }
 ",
   "tsconfig.json": "{
@@ -5895,112 +5895,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/index.tsx": "import ReactDOM from 'react-dom/client';
-import {App} from './todos/App';
-
-addEventListener('load', () =>
-  ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
-);
-",
-  "src/shared/Button.tsx": "import './button.css';
-import {ReactNode} from 'react';
-
-interface ButtonProps {
-  children: ReactNode;
-  onClick?: () => void;
-  variant?: 'default' | 'primary';
-  type?: 'button' | 'submit';
-}
-
-export const Button = ({
-  children,
-  onClick,
-  variant = 'default',
-  type = 'button',
-}: ButtonProps) => (
-  <button
-    onClick={onClick}
-    type={type}
-    className={variant === 'primary' ? 'primary' : undefined}
-  >
-    {children}
-  </button>
-);
-",
-  "src/shared/Input.tsx": "import './input.css';
-
-interface InputProps {
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  autoFocus?: boolean;
-}
-
-export const Input = ({
-  value,
-  onChange,
-  placeholder = '',
-  autoFocus = false,
-}: InputProps) => (
-  <input
-    type="text"
-    value={value}
-    onChange={(e) => onChange(e.target.value)}
-    placeholder={placeholder}
-    autoFocus={autoFocus}
-  />
-);
-",
-  "src/shared/button.css": "button {
-  padding: 0.5rem 1rem;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  background: #222;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  cursor: pointer;
-  margin: 0.5rem;
-}
-
-button:hover {
-  border-color: #d81b60;
-}
-
-button.primary {
-  background: #d81b60;
-  border: none;
-  padding: 0.75rem 1.5rem;
-}
-
-button.primary:hover {
-  background: #c2185b;
-}
-",
-  "src/shared/input.css": "input[type='text'] {
-  padding: 0.5rem 0.75rem;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 0.375rem;
-  color: var(--fg);
-  font-family: inherit;
-  font-size: 1rem;
-  line-height: 1.5;
-  width: 100%;
-  box-sizing: border-box;
-  align-self: center;
-}
-
-input[type='text']:focus {
-  outline: none;
-  border-color: var(--accent);
-}
-
-input[type='text']::placeholder {
-  color: var(--fg2);
-}
-",
-  "src/todos/App.tsx": "import {StrictMode} from 'react';
+  "src/App.tsx": "import {StrictMode} from 'react';
 import {createMergeableStore} from 'tinybase';
 import {Provider, useCreateStore} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
@@ -6030,13 +5925,62 @@ const App = () => {
 
 export {App};
 ",
-  "src/todos/TodoInput.tsx": "import './todoInput.css';
+  "src/Button.tsx": "import './button.css';
+import {ReactNode} from 'react';
+
+interface ButtonProps {
+  children: ReactNode;
+  onClick?: () => void;
+  variant?: 'default' | 'primary';
+  type?: 'button' | 'submit';
+}
+
+export const Button = ({
+  children,
+  onClick,
+  variant = 'default',
+  type = 'button',
+}: ButtonProps) => (
+  <button
+    onClick={onClick}
+    type={type}
+    className={variant === 'primary' ? 'primary' : undefined}
+  >
+    {children}
+  </button>
+);
+",
+  "src/Input.tsx": "import './input.css';
+
+interface InputProps {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  autoFocus?: boolean;
+}
+
+export const Input = ({
+  value,
+  onChange,
+  placeholder = '',
+  autoFocus = false,
+}: InputProps) => (
+  <input
+    type="text"
+    value={value}
+    onChange={(e) => onChange(e.target.value)}
+    placeholder={placeholder}
+    autoFocus={autoFocus}
+  />
+);
+",
+  "src/TodoInput.tsx": "import './todoInput.css';
 import {useState} from 'react';
 import {useAddRowCallback} from 'tinybase/ui-react';
 
-import {Button} from '../shared/Button';
+import {Button} from './Button';
 
-import {Input} from '../shared/Input';
+import {Input} from './Input';
 
 export const TodoInput = () => {
   const [text, setText] = useState('');
@@ -6067,14 +6011,14 @@ export const TodoInput = () => {
   );
 };
 ",
-  "src/todos/TodoItem.tsx": "import './todoItem.css';
+  "src/TodoItem.tsx": "import './todoItem.css';
 import {
   useDelRowCallback,
   useRow,
   useSetPartialRowCallback,
 } from 'tinybase/ui-react';
 
-import {Button} from '../shared/Button';
+import {Button} from './Button';
 
 export const TodoItem = ({rowId}: {rowId: string}) => {
   const todo = useRow('todos', rowId) as {text: string; completed: boolean};
@@ -6100,7 +6044,7 @@ export const TodoItem = ({rowId}: {rowId: string}) => {
   );
 };
 ",
-  "src/todos/TodoList.tsx": "import './todoList.css';
+  "src/TodoList.tsx": "import './todoList.css';
 import {useRowIds} from 'tinybase/ui-react';
 
 import {TodoItem} from './TodoItem';
@@ -6117,7 +6061,63 @@ export const TodoList = () => {
   );
 };
 ",
-  "src/todos/todoInput.css": "#todoInput {
+  "src/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "src/index.tsx": "import ReactDOM from 'react-dom/client';
+import {App} from './App';
+
+addEventListener('load', () =>
+  ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
+);
+",
+  "src/input.css": "input[type='text'] {
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+input[type='text']:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input[type='text']::placeholder {
+  color: var(--fg2);
+}
+",
+  "src/todoInput.css": "#todoInput {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
@@ -6127,7 +6127,7 @@ export const TodoList = () => {
   flex: 1;
 }
 ",
-  "src/todos/todoItem.css": ".todoItem {
+  "src/todoItem.css": ".todoItem {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -6161,7 +6161,7 @@ export const TodoList = () => {
   flex-shrink: 0;
 }
 ",
-  "src/todos/todoList.css": "#todoList {
+  "src/todoList.css": "#todoList {
   border: 1px solid var(--border);
   border-radius: 0.375rem;
   overflow: hidden;
@@ -6429,11 +6429,11 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/chat/app.ts": "import {createStore, createMergeableStore} from 'tinybase';
+  "src/app.ts": "import {createStore, createMergeableStore} from 'tinybase';
 
-import {createButton} from '../shared/button';
+import {createButton} from './button';
 
-import {createInput} from '../shared/input';
+import {createInput} from './input';
 
 import {createMessage} from './message';
 
@@ -6486,7 +6486,93 @@ const app = () => {
 
 export {app};
 ",
-  "src/chat/message.css": ".message {
+  "src/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "src/button.ts": "import './button.css';
+
+export const createButton = (
+  text: string,
+  onClick: () => void,
+  variant: 'default' | 'primary' = 'default',
+): HTMLButtonElement => {
+  const button = document.createElement('button');
+  button.textContent = text;
+  if (variant === 'primary') {
+    button.className = 'primary';
+  }
+  button.addEventListener('click', onClick);
+  return button;
+};
+",
+  "src/index.ts": "import {app} from './app';
+
+addEventListener('load', app);
+",
+  "src/input.css": "input[type='text'] {
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+input[type='text']:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input[type='text']::placeholder {
+  color: var(--fg2);
+}
+",
+  "src/input.ts": "import './input.css';
+
+export const createInput = (
+  placeholder: string = '',
+  value: string = '',
+  onInput?: (value: string) => void,
+): HTMLInputElement => {
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.placeholder = placeholder;
+  input.value = value;
+  if (onInput) {
+    input.addEventListener('input', () => onInput(input.value));
+  }
+  return input;
+};
+",
+  "src/message.css": ".message {
   margin-bottom: 0.75rem;
   display: flex;
   flex-wrap: wrap;
@@ -6507,7 +6593,7 @@ export {app};
   color: #666;
 }
 ",
-  "src/chat/message.ts": "import './message.css';
+  "src/message.ts": "import './message.css';
 
 export const createMessage = (
   username: string,
@@ -6538,18 +6624,18 @@ export const createMessage = (
   return messageDiv;
 };
 ",
-  "src/chat/messageInput.css": "#messageInput {
+  "src/messageInput.css": "#messageInput {
   display: flex;
   gap: 0.5rem;
   padding: 1rem;
   border-top: 1px solid var(--border);
 }
 ",
-  "src/chat/messageInput.ts": "import './messageInput.css';
+  "src/messageInput.ts": "import './messageInput.css';
 
-import {createButton} from '../shared/button';
+import {createButton} from './button';
 
-import {createInput} from '../shared/input';
+import {createInput} from './input';
 
 export const createMessageInput = (
   settingsStore: any,
@@ -6586,14 +6672,14 @@ export const createMessageInput = (
   return messageInputContainer;
 };
 ",
-  "src/chat/messages.css": "#messages {
+  "src/messages.css": "#messages {
   overflow-y: auto;
   padding: 1rem 0;
   height: 400px;
   margin-bottom: 1rem;
 }
 ",
-  "src/chat/messages.ts": "import './messages.css';
+  "src/messages.ts": "import './messages.css';
 
 import {createMessage} from './message';
 
@@ -6616,7 +6702,7 @@ export const createMessages = (store: any): HTMLDivElement => {
   return messagesContainer;
 };
 ",
-  "src/chat/usernameInput.css": "#usernameInput {
+  "src/usernameInput.css": "#usernameInput {
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
@@ -6631,9 +6717,9 @@ export const createMessages = (store: any): HTMLDivElement => {
   flex: 1;
 }
 ",
-  "src/chat/usernameInput.ts": "import './usernameInput.css';
+  "src/usernameInput.ts": "import './usernameInput.css';
 
-import {createInput} from '../shared/input';
+import {createInput} from './input';
 
 export const createUsernameInput = (
   settingsStore: any,
@@ -6662,92 +6748,6 @@ export const createUsernameInput = (
   });
 
   return container;
-};
-",
-  "src/index.ts": "import {app} from './chat/app';
-
-addEventListener('load', app);
-",
-  "src/shared/button.css": "button {
-  padding: 0.5rem 1rem;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  background: #222;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  cursor: pointer;
-  margin: 0.5rem;
-}
-
-button:hover {
-  border-color: #d81b60;
-}
-
-button.primary {
-  background: #d81b60;
-  border: none;
-  padding: 0.75rem 1.5rem;
-}
-
-button.primary:hover {
-  background: #c2185b;
-}
-",
-  "src/shared/button.ts": "import './button.css';
-
-export const createButton = (
-  text: string,
-  onClick: () => void,
-  variant: 'default' | 'primary' = 'default',
-): HTMLButtonElement => {
-  const button = document.createElement('button');
-  button.textContent = text;
-  if (variant === 'primary') {
-    button.className = 'primary';
-  }
-  button.addEventListener('click', onClick);
-  return button;
-};
-",
-  "src/shared/input.css": "input[type='text'] {
-  padding: 0.5rem 0.75rem;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 0.375rem;
-  color: var(--fg);
-  font-family: inherit;
-  font-size: 1rem;
-  line-height: 1.5;
-  width: 100%;
-  box-sizing: border-box;
-  align-self: center;
-}
-
-input[type='text']:focus {
-  outline: none;
-  border-color: var(--accent);
-}
-
-input[type='text']::placeholder {
-  color: var(--fg2);
-}
-",
-  "src/shared/input.ts": "import './input.css';
-
-export const createInput = (
-  placeholder: string = '',
-  value: string = '',
-  onInput?: (value: string) => void,
-): HTMLInputElement => {
-  const input = document.createElement('input');
-  input.type = 'text';
-  input.placeholder = placeholder;
-  input.value = value;
-  if (onInput) {
-    input.addEventListener('input', () => onInput(input.value));
-  }
-  return input;
 };
 ",
   "tsconfig.json": "{
@@ -6991,7 +6991,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/drawing/app.ts": "import {createMergeableStore, createStore} from 'tinybase';
+  "src/app.ts": "import {createMergeableStore, createStore} from 'tinybase';
 
 import {createDrawingControls} from './drawingControls';
 
@@ -7012,7 +7012,7 @@ const app = () => {
 
 export {app};
 ",
-  "src/drawing/brushSize.css": "#brushSize {
+  "src/brushSize.css": "#brushSize {
   display: flex;
   gap: 0.5rem;
   align-items: center;
@@ -7034,7 +7034,7 @@ export {app};
   display: inline-block;
 }
 ",
-  "src/drawing/brushSize.ts": "import './brushSize.css';
+  "src/brushSize.ts": "import './brushSize.css';
 
 export const createBrushSize = (store: any): HTMLDivElement => {
   const container = document.createElement('div');
@@ -7066,7 +7066,49 @@ export const createBrushSize = (store: any): HTMLDivElement => {
   return container;
 };
 ",
-  "src/drawing/canvas.css": "#drawingCanvas {
+  "src/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "src/button.ts": "import './button.css';
+
+export const createButton = (
+  text: string,
+  onClick: () => void,
+  variant: 'default' | 'primary' = 'default',
+): HTMLButtonElement => {
+  const button = document.createElement('button');
+  button.textContent = text;
+  if (variant === 'primary') {
+    button.className = 'primary';
+  }
+  button.addEventListener('click', onClick);
+  return button;
+};
+",
+  "src/canvas.css": "#drawingCanvas {
   border: 1px solid var(--border);
   border-radius: 0.375rem;
   cursor: crosshair;
@@ -7075,7 +7117,7 @@ export const createBrushSize = (store: any): HTMLDivElement => {
   margin: 0 auto;
 }
 ",
-  "src/drawing/canvas.ts": "import './canvas.css';
+  "src/canvas.ts": "import './canvas.css';
 import {Store, MergeableStore} from 'tinybase';
 
 export const createCanvas = (
@@ -7153,7 +7195,7 @@ export const createCanvas = (
   return canvas;
 };
 ",
-  "src/drawing/colorPicker.css": "#colorPicker {
+  "src/colorPicker.css": "#colorPicker {
   display: flex;
   gap: 0;
   align-items: center;
@@ -7175,7 +7217,7 @@ export const createCanvas = (
   border-color: var(--accent);
 }
 ",
-  "src/drawing/colorPicker.ts": "import './colorPicker.css';
+  "src/colorPicker.ts": "import './colorPicker.css';
 
 export const createColorPicker = (store: any): HTMLDivElement => {
   const colors = [
@@ -7215,7 +7257,7 @@ export const createColorPicker = (store: any): HTMLDivElement => {
   return container;
 };
 ",
-  "src/drawing/drawingControls.css": "#drawingControls {
+  "src/drawingControls.css": "#drawingControls {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
@@ -7228,10 +7270,10 @@ export const createColorPicker = (store: any): HTMLDivElement => {
   max-width: 600px;
 }
 ",
-  "src/drawing/drawingControls.ts": "import './drawingControls.css';
+  "src/drawingControls.ts": "import './drawingControls.css';
 import {Store, MergeableStore} from 'tinybase';
 
-import {createButton} from '../shared/button';
+import {createButton} from './button';
 
 import {createColorPicker} from './colorPicker';
 
@@ -7257,51 +7299,9 @@ export const createDrawingControls = (
   return controls;
 };
 ",
-  "src/index.ts": "import {app} from './drawing/app';
+  "src/index.ts": "import {app} from './app';
 
 addEventListener('load', app);
-",
-  "src/shared/button.css": "button {
-  padding: 0.5rem 1rem;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  background: #222;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  cursor: pointer;
-  margin: 0.5rem;
-}
-
-button:hover {
-  border-color: #d81b60;
-}
-
-button.primary {
-  background: #d81b60;
-  border: none;
-  padding: 0.75rem 1.5rem;
-}
-
-button.primary:hover {
-  background: #c2185b;
-}
-",
-  "src/shared/button.ts": "import './button.css';
-
-export const createButton = (
-  text: string,
-  onClick: () => void,
-  variant: 'default' | 'primary' = 'default',
-): HTMLButtonElement => {
-  const button = document.createElement('button');
-  button.textContent = text;
-  if (variant === 'primary') {
-    button.className = 'primary';
-  }
-  button.addEventListener('click', onClick);
-  return button;
-};
 ",
   "tsconfig.json": "{
   "compilerOptions": {
@@ -7544,9 +7544,9 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/game/app.ts": "import {createMergeableStore} from 'tinybase';
+  "src/app.ts": "import {createMergeableStore} from 'tinybase';
 
-import {createButton} from '../shared/button';
+import {createButton} from './button';
 
 import {createBoard} from './board';
 
@@ -7627,7 +7627,7 @@ const app = () => {
 
 export {app};
 ",
-  "src/game/board.css": "#board {
+  "src/board.css": "#board {
   display: grid;
   grid-template-columns: repeat(3, 100px);
   grid-template-rows: repeat(3, 100px);
@@ -7641,7 +7641,7 @@ export {app};
   padding: 1px;
 }
 ",
-  "src/game/board.ts": "import './board.css';
+  "src/board.ts": "import './board.css';
 
 import {createSquare} from './square';
 
@@ -7683,7 +7683,49 @@ export const createBoard = (store: any): HTMLDivElement => {
   return board;
 };
 ",
-  "src/game/gameStatus.css": "#gameStatus {
+  "src/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "src/button.ts": "import './button.css';
+
+export const createButton = (
+  text: string,
+  onClick: () => void,
+  variant: 'default' | 'primary' = 'default',
+): HTMLButtonElement => {
+  const button = document.createElement('button');
+  button.textContent = text;
+  if (variant === 'primary') {
+    button.className = 'primary';
+  }
+  button.addEventListener('click', onClick);
+  return button;
+};
+",
+  "src/gameStatus.css": "#gameStatus {
   text-align: center;
   font-size: 1.5rem;
   font-weight: 800;
@@ -7706,7 +7748,7 @@ export const createBoard = (store: any): HTMLDivElement => {
   }
 }
 ",
-  "src/game/gameStatus.ts": "import './gameStatus.css';
+  "src/gameStatus.ts": "import './gameStatus.css';
 
 export const createGameStatus = (store: any): HTMLDivElement => {
   const status = document.createElement('div');
@@ -7732,7 +7774,11 @@ export const createGameStatus = (store: any): HTMLDivElement => {
   return status;
 };
 ",
-  "src/game/square.css": ".square {
+  "src/index.ts": "import {app} from './app';
+
+addEventListener('load', app);
+",
+  "src/square.css": ".square {
   width: 100px;
   height: 100px;
   background: var(--bg2);
@@ -7771,7 +7817,7 @@ export const createGameStatus = (store: any): HTMLDivElement => {
   color: var(--bg);
 }
 ",
-  "src/game/square.ts": "import './square.css';
+  "src/square.ts": "import './square.css';
 
 export const createSquare = (
   position: number,
@@ -7786,52 +7832,6 @@ export const createSquare = (
   square.disabled = disabled;
   square.addEventListener('click', onClick);
   return square;
-};
-",
-  "src/index.ts": "import {app} from './game/app';
-
-addEventListener('load', app);
-",
-  "src/shared/button.css": "button {
-  padding: 0.5rem 1rem;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  background: #222;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  cursor: pointer;
-  margin: 0.5rem;
-}
-
-button:hover {
-  border-color: #d81b60;
-}
-
-button.primary {
-  background: #d81b60;
-  border: none;
-  padding: 0.75rem 1.5rem;
-}
-
-button.primary:hover {
-  background: #c2185b;
-}
-",
-  "src/shared/button.ts": "import './button.css';
-
-export const createButton = (
-  text: string,
-  onClick: () => void,
-  variant: 'default' | 'primary' = 'default',
-): HTMLButtonElement => {
-  const button = document.createElement('button');
-  button.textContent = text;
-  if (variant === 'primary') {
-    button.className = 'primary';
-  }
-  button.addEventListener('click', onClick);
-  return button;
 };
 ",
   "tsconfig.json": "{
@@ -8075,93 +8075,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/index.ts": "import {app} from './todos/app';
-
-addEventListener('load', app);
-",
-  "src/shared/button.css": "button {
-  padding: 0.5rem 1rem;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  background: #222;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  cursor: pointer;
-  margin: 0.5rem;
-}
-
-button:hover {
-  border-color: #d81b60;
-}
-
-button.primary {
-  background: #d81b60;
-  border: none;
-  padding: 0.75rem 1.5rem;
-}
-
-button.primary:hover {
-  background: #c2185b;
-}
-",
-  "src/shared/button.ts": "import './button.css';
-
-export const createButton = (
-  text: string,
-  onClick: () => void,
-  variant: 'default' | 'primary' = 'default',
-): HTMLButtonElement => {
-  const button = document.createElement('button');
-  button.textContent = text;
-  if (variant === 'primary') {
-    button.className = 'primary';
-  }
-  button.addEventListener('click', onClick);
-  return button;
-};
-",
-  "src/shared/input.css": "input[type='text'] {
-  padding: 0.5rem 0.75rem;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 0.375rem;
-  color: var(--fg);
-  font-family: inherit;
-  font-size: 1rem;
-  line-height: 1.5;
-  width: 100%;
-  box-sizing: border-box;
-  align-self: center;
-}
-
-input[type='text']:focus {
-  outline: none;
-  border-color: var(--accent);
-}
-
-input[type='text']::placeholder {
-  color: var(--fg2);
-}
-",
-  "src/shared/input.ts": "import './input.css';
-
-export const createInput = (
-  placeholder: string = '',
-  value: string = '',
-  onInput?: (value: string) => void,
-): HTMLInputElement => {
-  const input = document.createElement('input');
-  input.type = 'text';
-  input.placeholder = placeholder;
-  input.value = value;
-  if (onInput) {
-    input.addEventListener('input', () => onInput(input.value));
-  }
-  return input;
-};
-",
-  "src/todos/app.ts": "import {createMergeableStore} from 'tinybase';
+  "src/app.ts": "import {createMergeableStore} from 'tinybase';
 
 import {createTodoInput} from './todoInput';
 
@@ -8187,7 +8101,93 @@ const app = () => {
 
 export {app};
 ",
-  "src/todos/todoInput.css": "#todoInput {
+  "src/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "src/button.ts": "import './button.css';
+
+export const createButton = (
+  text: string,
+  onClick: () => void,
+  variant: 'default' | 'primary' = 'default',
+): HTMLButtonElement => {
+  const button = document.createElement('button');
+  button.textContent = text;
+  if (variant === 'primary') {
+    button.className = 'primary';
+  }
+  button.addEventListener('click', onClick);
+  return button;
+};
+",
+  "src/index.ts": "import {app} from './app';
+
+addEventListener('load', app);
+",
+  "src/input.css": "input[type='text'] {
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+input[type='text']:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input[type='text']::placeholder {
+  color: var(--fg2);
+}
+",
+  "src/input.ts": "import './input.css';
+
+export const createInput = (
+  placeholder: string = '',
+  value: string = '',
+  onInput?: (value: string) => void,
+): HTMLInputElement => {
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.placeholder = placeholder;
+  input.value = value;
+  if (onInput) {
+    input.addEventListener('input', () => onInput(input.value));
+  }
+  return input;
+};
+",
+  "src/todoInput.css": "#todoInput {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
@@ -8197,11 +8197,11 @@ export {app};
   flex: 1;
 }
 ",
-  "src/todos/todoInput.ts": "import './todoInput.css';
+  "src/todoInput.ts": "import './todoInput.css';
 
-import {createButton} from '../shared/button';
+import {createButton} from './button';
 
-import {createInput} from '../shared/input';
+import {createInput} from './input';
 
 export const createTodoInput = (store: any): HTMLDivElement => {
   const container = document.createElement('div');
@@ -8232,7 +8232,7 @@ export const createTodoInput = (store: any): HTMLDivElement => {
   return container;
 };
 ",
-  "src/todos/todoItem.css": ".todoItem {
+  "src/todoItem.css": ".todoItem {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -8266,9 +8266,9 @@ export const createTodoInput = (store: any): HTMLDivElement => {
   flex-shrink: 0;
 }
 ",
-  "src/todos/todoItem.ts": "import './todoItem.css';
+  "src/todoItem.ts": "import './todoItem.css';
 
-import {createButton} from '../shared/button';
+import {createButton} from './button';
 
 export const createTodoItem = (
   id: string,
@@ -8299,7 +8299,7 @@ export const createTodoItem = (
   return item;
 };
 ",
-  "src/todos/todoList.css": "#todoList {
+  "src/todoList.css": "#todoList {
   border: 1px solid var(--border);
   border-radius: 0.375rem;
   overflow: hidden;
@@ -8314,7 +8314,7 @@ export const createTodoItem = (
   color: var(--fg2);
 }
 ",
-  "src/todos/todoList.ts": "import './todoList.css';
+  "src/todoList.ts": "import './todoList.css';
 
 import {createTodoItem} from './todoItem';
 

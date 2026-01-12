@@ -1,7 +1,7 @@
-{{includeFile template="src/chat/usernameInput.css.hbs" output="src/chat/usernameInput.css"}}
+{{includeFile template="src/chat/usernameInput.css.hbs" output="src/usernameInput.css"}}
 import './usernameInput.css';
-{{includeFile template="src/shared/input.ts.hbs" output="src/shared/input.{{ext}}"}}
-import {createInput} from '../shared/input';
+{{includeFile template="src/shared/input.ts.hbs" output="src/input.{{ext}}"}}
+import {createInput} from './input';
 
 export const createUsernameInput = (settingsStore: any, chatStore: any): HTMLDivElement => {
 const container = document.createElement('div');

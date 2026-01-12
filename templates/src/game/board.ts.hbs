@@ -1,6 +1,6 @@
-{{includeFile template="src/game/board.css.hbs" output="src/game/board.css"}}
+{{includeFile template="src/game/board.css.hbs" output="src/board.css"}}
 import './board.css';
-{{includeFile template="src/game/square.ts.hbs" output="src/game/square.{{ext}}"}}
+{{includeFile template="src/game/square.ts.hbs" output="src/square.{{ext}}"}}
 import {createSquare} from './square';
 
 export const createBoard = (store: any): HTMLDivElement => {

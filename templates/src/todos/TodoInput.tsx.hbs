@@ -1,4 +1,4 @@
-{{includeFile template="src/todos/todoInput.css.hbs" output="src/todos/todoInput.css"}}
+{{includeFile template="src/todos/todoInput.css.hbs" output="src/todoInput.css"}}
 import './todoInput.css';
 import {useState} from 'react';
 {{#if schemas}}
@@ -6,10 +6,10 @@ import {useState} from 'react';
 {{else}}
   import {useAddRowCallback} from 'tinybase/ui-react';
 {{/if}}
-{{includeFile template="src/shared/Button.tsx.hbs" output="src/shared/Button.{{ext}}"}}
-import {Button} from '../shared/Button';
-{{includeFile template="src/shared/Input.tsx.hbs" output="src/shared/Input.{{ext}}"}}
-import {Input} from '../shared/Input';
+{{includeFile template="src/shared/Button.tsx.hbs" output="src/Button.{{ext}}"}}
+import {Button} from './Button';
+{{includeFile template="src/shared/Input.tsx.hbs" output="src/Input.{{ext}}"}}
+import {Input} from './Input';
 
 export const TodoInput = () => {
 const [text, setText] = useState('');

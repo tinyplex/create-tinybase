@@ -1,15 +1,15 @@
 import {createStore, createMergeableStore} from 'tinybase';
-{{includeFile template="src/shared/button.ts.hbs" output="src/shared/button.{{ext}}"}}
-import {createButton} from '../shared/button';
-{{includeFile template="src/shared/input.ts.hbs" output="src/shared/input.{{ext}}"}}
-import {createInput} from '../shared/input';
-{{includeFile template="src/chat/message.ts.hbs" output="src/chat/message.{{ext}}"}}
+{{includeFile template="src/shared/button.ts.hbs" output="src/button.{{ext}}"}}
+import {createButton} from './button';
+{{includeFile template="src/shared/input.ts.hbs" output="src/input.{{ext}}"}}
+import {createInput} from './input';
+{{includeFile template="src/chat/message.ts.hbs" output="src/message.{{ext}}"}}
 import {createMessage} from './message';
-{{includeFile template="src/chat/messages.ts.hbs" output="src/chat/messages.{{ext}}"}}
+{{includeFile template="src/chat/messages.ts.hbs" output="src/messages.{{ext}}"}}
 import {createMessages} from './messages';
-{{includeFile template="src/chat/usernameInput.ts.hbs" output="src/chat/usernameInput.{{ext}}"}}
+{{includeFile template="src/chat/usernameInput.ts.hbs" output="src/usernameInput.{{ext}}"}}
 import {createUsernameInput} from './usernameInput';
-{{includeFile template="src/chat/messageInput.ts.hbs" output="src/chat/messageInput.{{ext}}"}}
+{{includeFile template="src/chat/messageInput.ts.hbs" output="src/messageInput.{{ext}}"}}
 import {createMessageInput} from './messageInput';
 
 const app = () => {

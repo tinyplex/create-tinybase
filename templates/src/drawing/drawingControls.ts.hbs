@@ -1,11 +1,11 @@
-{{includeFile template="src/drawing/drawingControls.css.hbs" output="src/drawing/drawingControls.css"}}
+{{includeFile template="src/drawing/drawingControls.css.hbs" output="src/drawingControls.css"}}
 import './drawingControls.css';
 import {Store, MergeableStore} from 'tinybase';
-{{includeFile template="src/shared/button.ts.hbs" output="src/shared/button.{{ext}}"}}
-import {createButton} from '../shared/button';
-{{includeFile template="src/drawing/colorPicker.ts.hbs" output="src/drawing/colorPicker.{{ext}}"}}
+{{includeFile template="src/shared/button.ts.hbs" output="src/button.{{ext}}"}}
+import {createButton} from './button';
+{{includeFile template="src/drawing/colorPicker.ts.hbs" output="src/colorPicker.{{ext}}"}}
 import {createColorPicker} from './colorPicker';
-{{includeFile template="src/drawing/brushSize.ts.hbs" output="src/drawing/brushSize.{{ext}}"}}
+{{includeFile template="src/drawing/brushSize.ts.hbs" output="src/brushSize.{{ext}}"}}
 import {createBrushSize} from './brushSize';
 
 export const createDrawingControls = (settingsStore: Store, canvasStore: MergeableStore): HTMLDivElement => {

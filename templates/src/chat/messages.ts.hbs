@@ -1,6 +1,6 @@
-{{includeFile template="src/chat/messages.css.hbs" output="src/chat/messages.css"}}
+{{includeFile template="src/chat/messages.css.hbs" output="src/messages.css"}}
 import './messages.css';
-{{includeFile template="src/chat/message.ts.hbs" output="src/chat/message.{{ext}}"}}
+{{includeFile template="src/chat/message.ts.hbs" output="src/message.{{ext}}"}}
 import {createMessage} from './message';
 
 export const createMessages = (store: any): HTMLDivElement => {

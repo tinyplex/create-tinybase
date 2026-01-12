@@ -1,9 +1,9 @@
-{{includeFile template="src/chat/messageInput.css.hbs" output="src/chat/messageInput.css"}}
+{{includeFile template="src/chat/messageInput.css.hbs" output="src/messageInput.css"}}
 import './messageInput.css';
-{{includeFile template="src/shared/button.ts.hbs" output="src/shared/button.{{ext}}"}}
-import {createButton} from '../shared/button';
-{{includeFile template="src/shared/input.ts.hbs" output="src/shared/input.{{ext}}"}}
-import {createInput} from '../shared/input';
+{{includeFile template="src/shared/button.ts.hbs" output="src/button.{{ext}}"}}
+import {createButton} from './button';
+{{includeFile template="src/shared/input.ts.hbs" output="src/input.{{ext}}"}}
+import {createInput} from './input';
 
 export const createMessageInput = (settingsStore: any, chatStore: any): HTMLDivElement => {
 const messageInputContainer = document.createElement('div');

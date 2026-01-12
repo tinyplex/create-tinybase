@@ -1,11 +1,11 @@
-{{includeFile template="src/drawing/drawingControls.css.hbs" output="src/drawing/drawingControls.css"}}
+{{includeFile template="src/drawing/drawingControls.css.hbs" output="src/drawingControls.css"}}
 import './drawingControls.css';
 import {useDelTableCallback} from 'tinybase/ui-react';
-{{includeFile template="src/shared/Button.tsx.hbs" output="src/shared/Button.{{ext}}"}}
-import {Button} from '../shared/Button';
-{{includeFile template="src/drawing/ColorPicker.tsx.hbs" output="src/drawing/ColorPicker.{{ext}}"}}
+{{includeFile template="src/shared/Button.tsx.hbs" output="src/Button.{{ext}}"}}
+import {Button} from './Button';
+{{includeFile template="src/drawing/ColorPicker.tsx.hbs" output="src/ColorPicker.{{ext}}"}}
 import {ColorPicker} from './ColorPicker';
-{{includeFile template="src/drawing/BrushSize.tsx.hbs" output="src/drawing/BrushSize.{{ext}}"}}
+{{includeFile template="src/drawing/BrushSize.tsx.hbs" output="src/BrushSize.{{ext}}"}}
 import {BrushSize} from './BrushSize';
 
 export const DrawingControls = () => {
