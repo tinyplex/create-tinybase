@@ -1,8 +1,8 @@
 import {useMemo} from 'react';
 import {useRowIds, useStore} from 'tinybase/ui-react';
-{{includeFile template="src/components/messages.css.hbs" output="src/components/messages.css"}}
+{{includeFile template="src/chat/messages.css.hbs" output="src/chat/messages.css"}}
 import './messages.css';
-{{includeFile template="src/components/Message.tsx.hbs" output="src/components/Message.{{ext}}"}}
+{{includeFile template="src/chat/Message.tsx.hbs" output="src/chat/Message.{{ext}}"}}
 import {Message} from './Message';
 
 export const Messages = () => {

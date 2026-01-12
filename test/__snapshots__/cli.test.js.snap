@@ -223,9 +223,9 @@ import {StrictMode} from 'react';
 import {createStore, createMergeableStore} from 'tinybase';
 import {Provider, useCreateStore} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
-import {Messages} from '../components/Messages';
-import {MessageInput} from '../components/MessageInput';
-import {UsernameInput} from '../components/UsernameInput';
+import {Messages} from './Messages';
+import {MessageInput} from './MessageInput';
+import {UsernameInput} from './UsernameInput';
 const App = () => {
   const settingsStore = useCreateStore(() => {
     return createStore().setValue('username', 'Carol');
@@ -249,33 +249,7 @@ const App = () => {
 };
 export {App};
 ",
-  "src/chat/index.css": "/* Add additional app styling here if needed */
-",
-  "src/components/Button.jsx": "import './button.css';
-const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
-  <button
-    onClick={onClick}
-    type={type}
-    className={variant === 'primary' ? 'primary' : void 0}
-  >
-    {children}
-  </button>
-);
-export {Button};
-",
-  "src/components/Input.jsx": "import './input.css';
-const Input = ({value, onChange, placeholder = '', autoFocus = false}) => (
-  <input
-    type="text"
-    value={value}
-    onChange={(e) => onChange(e.target.value)}
-    placeholder={placeholder}
-    autoFocus={autoFocus}
-  />
-);
-export {Input};
-",
-  "src/components/Message.jsx": "import {useRow} from 'tinybase/ui-react';
+  "src/chat/Message.jsx": "import {useRow} from 'tinybase/ui-react';
 import './message.css';
 const Message = ({rowId}) => {
   const row = useRow('messages', rowId, 'chat');
@@ -290,11 +264,11 @@ const Message = ({rowId}) => {
 };
 export {Message};
 ",
-  "src/components/MessageInput.jsx": "import {useState} from 'react';
+  "src/chat/MessageInput.jsx": "import {useState} from 'react';
 import {useAddRowCallback, useValue} from 'tinybase/ui-react';
 import './messageInput.css';
-import {Button} from './Button';
-import {Input} from './Input';
+import {Button} from '../components/Button';
+import {Input} from '../components/Input';
 const MessageInput = () => {
   const [message, setMessage] = useState('');
   const username = useValue('username', 'settings') || 'Anonymous';
@@ -331,7 +305,7 @@ const MessageInput = () => {
 };
 export {MessageInput};
 ",
-  "src/components/Messages.jsx": "import {useMemo} from 'react';
+  "src/chat/Messages.jsx": "import {useMemo} from 'react';
 import {useRowIds, useStore} from 'tinybase/ui-react';
 import './messages.css';
 import {Message} from './Message';
@@ -355,9 +329,9 @@ const Messages = () => {
 };
 export {Messages};
 ",
-  "src/components/UsernameInput.jsx": "import {useValue, useSetValueCallback} from 'tinybase/ui-react';
+  "src/chat/UsernameInput.jsx": "import {useValue, useSetValueCallback} from 'tinybase/ui-react';
 import './usernameInput.css';
-import {Input} from './Input';
+import {Input} from '../components/Input';
 const UsernameInput = () => {
   const username = useValue('username', 'settings') || '';
   const setUsername = useSetValueCallback(
@@ -378,6 +352,82 @@ const UsernameInput = () => {
   );
 };
 export {UsernameInput};
+",
+  "src/chat/index.css": "/* Add additional app styling here if needed */
+",
+  "src/chat/message.css": ".message {
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.message .username {
+  font-weight: 800;
+  color: #d81b60;
+}
+
+.message .text {
+  flex: 1;
+}
+
+.message .time {
+  font-size: 0.8rem;
+  color: #666;
+}
+",
+  "src/chat/messageInput.css": "#messageInput {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-top: 1px solid var(--border);
+}
+",
+  "src/chat/messages.css": "#messages {
+  overflow-y: auto;
+  padding: 1rem 0;
+  height: 400px;
+  margin-bottom: 1rem;
+}
+",
+  "src/chat/usernameInput.css": "#usernameInput {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#usernameInput label {
+  white-space: nowrap;
+}
+
+#usernameInput input {
+  flex: 1;
+}
+",
+  "src/components/Button.jsx": "import './button.css';
+const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
+  <button
+    onClick={onClick}
+    type={type}
+    className={variant === 'primary' ? 'primary' : void 0}
+  >
+    {children}
+  </button>
+);
+export {Button};
+",
+  "src/components/Input.jsx": "import './input.css';
+const Input = ({value, onChange, placeholder = '', autoFocus = false}) => (
+  <input
+    type="text"
+    value={value}
+    onChange={(e) => onChange(e.target.value)}
+    placeholder={placeholder}
+    autoFocus={autoFocus}
+  />
+);
+export {Input};
 ",
   "src/components/button.css": "button {
   padding: 0.5rem 1rem;
@@ -426,56 +476,6 @@ input[type='text']:focus {
 
 input[type='text']::placeholder {
   color: var(--fg2);
-}
-",
-  "src/components/message.css": ".message {
-  margin-bottom: 0.75rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.message .username {
-  font-weight: 800;
-  color: #d81b60;
-}
-
-.message .text {
-  flex: 1;
-}
-
-.message .time {
-  font-size: 0.8rem;
-  color: #666;
-}
-",
-  "src/components/messageInput.css": "#messageInput {
-  display: flex;
-  gap: 0.5rem;
-  padding: 1rem;
-  border-top: 1px solid var(--border);
-}
-",
-  "src/components/messages.css": "#messages {
-  overflow-y: auto;
-  padding: 1rem 0;
-  height: 400px;
-  margin-bottom: 1rem;
-}
-",
-  "src/components/usernameInput.css": "#usernameInput {
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-#usernameInput label {
-  white-space: nowrap;
-}
-
-#usernameInput input {
-  flex: 1;
 }
 ",
   "src/index.css": "a {
@@ -2439,10 +2439,10 @@ npm run dev
 </svg>",
   "src/chat/app.js": "import './index.css';
 import {createStore, createMergeableStore} from 'tinybase';
-import {createMessage} from '../components/message';
-import {createMessages} from '../components/messages';
-import {createUsernameInput} from '../components/usernameInput';
-import {createMessageInput} from '../components/messageInput';
+import {createMessage} from './message';
+import {createMessages} from './messages';
+import {createUsernameInput} from './usernameInput';
+import {createMessageInput} from './messageInput';
 const app = () => {
   const settingsStore = createStore().setValue('username', 'Carol');
   const chatStore = createMergeableStore('chat').setTable('messages', {
@@ -2477,6 +2477,150 @@ const app = () => {
 export {app};
 ",
   "src/chat/index.css": "/* Add additional app styling here if needed */
+",
+  "src/chat/message.css": ".message {
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.message .username {
+  font-weight: 800;
+  color: #d81b60;
+}
+
+.message .text {
+  flex: 1;
+}
+
+.message .time {
+  font-size: 0.8rem;
+  color: #666;
+}
+",
+  "src/chat/message.js": "import './message.css';
+const createMessage = (username, text, timestamp) => {
+  const time = new Date(timestamp).toLocaleTimeString();
+  const messageDiv = document.createElement('div');
+  messageDiv.className = 'message';
+  const usernameSpan = document.createElement('span');
+  usernameSpan.className = 'username';
+  usernameSpan.textContent = \`\${username}:\`;
+  const textSpan = document.createElement('span');
+  textSpan.className = 'text';
+  textSpan.textContent = text;
+  const timeSpan = document.createElement('span');
+  timeSpan.className = 'time';
+  timeSpan.textContent = time;
+  messageDiv.appendChild(usernameSpan);
+  messageDiv.appendChild(textSpan);
+  messageDiv.appendChild(timeSpan);
+  return messageDiv;
+};
+export {createMessage};
+",
+  "src/chat/messageInput.css": "#messageInput {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-top: 1px solid var(--border);
+}
+",
+  "src/chat/messageInput.js": "import './messageInput.css';
+import {createButton} from '../components/button';
+import {createInput} from '../components/input';
+const createMessageInput = (settingsStore, chatStore) => {
+  const messageInputContainer = document.createElement('div');
+  messageInputContainer.id = 'messageInput';
+  const messageInput = createInput('Type a message...');
+  messageInputContainer.appendChild(messageInput);
+  const sendMessage = () => {
+    const text = messageInput.value.trim();
+    if (text) {
+      chatStore.addRow('messages', {
+        username: settingsStore.getValue('username'),
+        text,
+        timestamp: Date.now(),
+      });
+      messageInput.value = '';
+      messageInput.focus();
+    }
+  };
+  messageInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      sendMessage();
+    }
+  });
+  const sendButton = createButton('Send', sendMessage, 'primary');
+  messageInputContainer.appendChild(sendButton);
+  return messageInputContainer;
+};
+export {createMessageInput};
+",
+  "src/chat/messages.css": "#messages {
+  overflow-y: auto;
+  padding: 1rem 0;
+  height: 400px;
+  margin-bottom: 1rem;
+}
+",
+  "src/chat/messages.js": "import './messages.css';
+import {createMessage} from './message';
+const createMessages = (store) => {
+  const messagesContainer = document.createElement('div');
+  messagesContainer.id = 'messages';
+  const messageRows = store.getTable('messages');
+  const sortedIds = Object.keys(messageRows).sort(
+    (a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
+  );
+  messagesContainer.innerHTML = '';
+  sortedIds.forEach((id) => {
+    const msg = messageRows[id];
+    const messageElement = createMessage(msg.username, msg.text, msg.timestamp);
+    messagesContainer.appendChild(messageElement);
+  });
+  return messagesContainer;
+};
+export {createMessages};
+",
+  "src/chat/usernameInput.css": "#usernameInput {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#usernameInput label {
+  white-space: nowrap;
+}
+
+#usernameInput input {
+  flex: 1;
+}
+",
+  "src/chat/usernameInput.js": "import './usernameInput.css';
+import {createInput} from '../components/input';
+const createUsernameInput = (settingsStore, chatStore) => {
+  const container = document.createElement('div');
+  container.id = 'usernameInput';
+  const label = document.createElement('label');
+  label.textContent = 'Your name:';
+  const usernameInput = createInput(
+    'Enter your name',
+    settingsStore.getValue('username'),
+  );
+  container.appendChild(label);
+  container.appendChild(usernameInput);
+  usernameInput.addEventListener('input', () => {
+    settingsStore.setValue('username', usernameInput.value);
+  });
+  settingsStore.addValuesListener(() => {
+    usernameInput.value = settingsStore.getValue('username');
+  });
+  return container;
+};
+export {createUsernameInput};
 ",
   "src/components/button.css": "button {
   padding: 0.5rem 1rem;
@@ -2551,150 +2695,6 @@ const createInput = (placeholder = '', value = '', onInput) => {
   return input;
 };
 export {createInput};
-",
-  "src/components/message.css": ".message {
-  margin-bottom: 0.75rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.message .username {
-  font-weight: 800;
-  color: #d81b60;
-}
-
-.message .text {
-  flex: 1;
-}
-
-.message .time {
-  font-size: 0.8rem;
-  color: #666;
-}
-",
-  "src/components/message.js": "import './message.css';
-const createMessage = (username, text, timestamp) => {
-  const time = new Date(timestamp).toLocaleTimeString();
-  const messageDiv = document.createElement('div');
-  messageDiv.className = 'message';
-  const usernameSpan = document.createElement('span');
-  usernameSpan.className = 'username';
-  usernameSpan.textContent = \`\${username}:\`;
-  const textSpan = document.createElement('span');
-  textSpan.className = 'text';
-  textSpan.textContent = text;
-  const timeSpan = document.createElement('span');
-  timeSpan.className = 'time';
-  timeSpan.textContent = time;
-  messageDiv.appendChild(usernameSpan);
-  messageDiv.appendChild(textSpan);
-  messageDiv.appendChild(timeSpan);
-  return messageDiv;
-};
-export {createMessage};
-",
-  "src/components/messageInput.css": "#messageInput {
-  display: flex;
-  gap: 0.5rem;
-  padding: 1rem;
-  border-top: 1px solid var(--border);
-}
-",
-  "src/components/messageInput.js": "import './messageInput.css';
-import {createButton} from './button';
-import {createInput} from './input';
-const createMessageInput = (settingsStore, chatStore) => {
-  const messageInputContainer = document.createElement('div');
-  messageInputContainer.id = 'messageInput';
-  const messageInput = createInput('Type a message...');
-  messageInputContainer.appendChild(messageInput);
-  const sendMessage = () => {
-    const text = messageInput.value.trim();
-    if (text) {
-      chatStore.addRow('messages', {
-        username: settingsStore.getValue('username'),
-        text,
-        timestamp: Date.now(),
-      });
-      messageInput.value = '';
-      messageInput.focus();
-    }
-  };
-  messageInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      sendMessage();
-    }
-  });
-  const sendButton = createButton('Send', sendMessage, 'primary');
-  messageInputContainer.appendChild(sendButton);
-  return messageInputContainer;
-};
-export {createMessageInput};
-",
-  "src/components/messages.css": "#messages {
-  overflow-y: auto;
-  padding: 1rem 0;
-  height: 400px;
-  margin-bottom: 1rem;
-}
-",
-  "src/components/messages.js": "import './messages.css';
-import {createMessage} from './message';
-const createMessages = (store) => {
-  const messagesContainer = document.createElement('div');
-  messagesContainer.id = 'messages';
-  const messageRows = store.getTable('messages');
-  const sortedIds = Object.keys(messageRows).sort(
-    (a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
-  );
-  messagesContainer.innerHTML = '';
-  sortedIds.forEach((id) => {
-    const msg = messageRows[id];
-    const messageElement = createMessage(msg.username, msg.text, msg.timestamp);
-    messagesContainer.appendChild(messageElement);
-  });
-  return messagesContainer;
-};
-export {createMessages};
-",
-  "src/components/usernameInput.css": "#usernameInput {
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-#usernameInput label {
-  white-space: nowrap;
-}
-
-#usernameInput input {
-  flex: 1;
-}
-",
-  "src/components/usernameInput.js": "import './usernameInput.css';
-import {createInput} from './input';
-const createUsernameInput = (settingsStore, chatStore) => {
-  const container = document.createElement('div');
-  container.id = 'usernameInput';
-  const label = document.createElement('label');
-  label.textContent = 'Your name:';
-  const usernameInput = createInput(
-    'Enter your name',
-    settingsStore.getValue('username'),
-  );
-  container.appendChild(label);
-  container.appendChild(usernameInput);
-  usernameInput.addEventListener('input', () => {
-    settingsStore.setValue('username', usernameInput.value);
-  });
-  settingsStore.addValuesListener(() => {
-    usernameInput.value = settingsStore.getValue('username');
-  });
-  return container;
-};
-export {createUsernameInput};
 ",
   "src/index.css": "a {
   color: var(--fg);
@@ -4550,13 +4550,13 @@ import {Button} from '../components/Button';
 
 import {Input} from '../components/Input';
 
-import {Message} from '../components/Message';
+import {Message} from './Message';
 
-import {Messages} from '../components/Messages';
+import {Messages} from './Messages';
 
-import {MessageInput} from '../components/MessageInput';
+import {MessageInput} from './MessageInput';
 
-import {UsernameInput} from '../components/UsernameInput';
+import {UsernameInput} from './UsernameInput';
 
 export const App = () => {
   const settingsStore = useCreateStore(() => {
@@ -4582,7 +4582,178 @@ export const App = () => {
   );
 };
 ",
+  "src/chat/Message.tsx": "import {useRow} from 'tinybase/ui-react';
+
+import './message.css';
+
+interface MessageProps {
+  rowId: string;
+}
+
+export const Message = ({rowId}: MessageProps) => {
+  const row = useRow('messages', rowId, 'chat');
+  const time = new Date((row as any).timestamp).toLocaleTimeString();
+
+  return (
+    <div className="message">
+      <span className="username">{(row as any).username}:</span>
+      <span className="text">{(row as any).text}</span>
+      <span className="time">{time}</span>
+    </div>
+  );
+};
+",
+  "src/chat/MessageInput.tsx": "import {useState} from 'react';
+import {useAddRowCallback, useValue} from 'tinybase/ui-react';
+import './messageInput.css';
+
+import {Button} from '../components/Button';
+
+import {Input} from '../components/Input';
+
+export const MessageInput = () => {
+  const [message, setMessage] = useState('');
+  const username = useValue('username', 'settings') || 'Anonymous';
+
+  const handleSend = useAddRowCallback(
+    'messages',
+    () => ({
+      username,
+      text: message,
+      timestamp: Date.now(),
+    }),
+    [message, username],
+    'chat',
+  );
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (message.trim()) {
+      handleSend();
+      setMessage('');
+    }
+  };
+
+  return (
+    <form onSubmit={onSubmit} id="messageInput">
+      <Input
+        value={message}
+        onChange={setMessage}
+        placeholder="Type a message..."
+        autoFocus
+      />
+      <Button type="submit" variant="primary">
+        Send
+      </Button>
+    </form>
+  );
+};
+",
+  "src/chat/Messages.tsx": "import {useMemo} from 'react';
+import {useRowIds, useStore} from 'tinybase/ui-react';
+
+import './messages.css';
+
+import {Message} from './Message';
+
+export const Messages = () => {
+  const store = useStore('chat');
+  const messageIds = useRowIds('messages', 'chat');
+
+  const sortedIds = useMemo(() => {
+    return [...messageIds].sort((a, b) => {
+      const rowA = store.getRow('messages', a) as any;
+      const rowB = store.getRow('messages', b) as any;
+      return rowA.timestamp - rowB.timestamp;
+    });
+  }, [messageIds, store]);
+
+  return (
+    <div id="messages">
+      {sortedIds.map((id) => (
+        <Message key={id} rowId={id} />
+      ))}
+    </div>
+  );
+};
+",
+  "src/chat/UsernameInput.tsx": "import {useValue, useSetValueCallback} from 'tinybase/ui-react';
+import './usernameInput.css';
+
+import {Input} from '../components/Input';
+
+export const UsernameInput = () => {
+  const username = useValue('username', 'settings') || '';
+  const setUsername = useSetValueCallback(
+    'username',
+    (_e) => _e,
+    [],
+    'settings',
+  );
+
+  return (
+    <div id="usernameInput">
+      <label>Your name:</label>
+      <Input
+        value={username}
+        onChange={setUsername}
+        placeholder="Enter your name"
+      />
+    </div>
+  );
+};
+",
   "src/chat/index.css": "/* Add additional app styling here if needed */
+",
+  "src/chat/message.css": ".message {
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.message .username {
+  font-weight: 800;
+  color: #d81b60;
+}
+
+.message .text {
+  flex: 1;
+}
+
+.message .time {
+  font-size: 0.8rem;
+  color: #666;
+}
+",
+  "src/chat/messageInput.css": "#messageInput {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-top: 1px solid var(--border);
+}
+",
+  "src/chat/messages.css": "#messages {
+  overflow-y: auto;
+  padding: 1rem 0;
+  height: 400px;
+  margin-bottom: 1rem;
+}
+",
+  "src/chat/usernameInput.css": "#usernameInput {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#usernameInput label {
+  white-space: nowrap;
+}
+
+#usernameInput input {
+  flex: 1;
+}
 ",
   "src/components/Button.tsx": "import './button.css';
 import {ReactNode} from 'react';
@@ -4633,127 +4804,6 @@ export const Input = ({
   />
 );
 ",
-  "src/components/Message.tsx": "import {useRow} from 'tinybase/ui-react';
-
-import './message.css';
-
-interface MessageProps {
-  rowId: string;
-}
-
-export const Message = ({rowId}: MessageProps) => {
-  const row = useRow('messages', rowId, 'chat');
-  const time = new Date((row as any).timestamp).toLocaleTimeString();
-
-  return (
-    <div className="message">
-      <span className="username">{(row as any).username}:</span>
-      <span className="text">{(row as any).text}</span>
-      <span className="time">{time}</span>
-    </div>
-  );
-};
-",
-  "src/components/MessageInput.tsx": "import {useState} from 'react';
-import {useAddRowCallback, useValue} from 'tinybase/ui-react';
-import './messageInput.css';
-
-import {Button} from './Button';
-
-import {Input} from './Input';
-
-export const MessageInput = () => {
-  const [message, setMessage] = useState('');
-  const username = useValue('username', 'settings') || 'Anonymous';
-
-  const handleSend = useAddRowCallback(
-    'messages',
-    () => ({
-      username,
-      text: message,
-      timestamp: Date.now(),
-    }),
-    [message, username],
-    'chat',
-  );
-
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (message.trim()) {
-      handleSend();
-      setMessage('');
-    }
-  };
-
-  return (
-    <form onSubmit={onSubmit} id="messageInput">
-      <Input
-        value={message}
-        onChange={setMessage}
-        placeholder="Type a message..."
-        autoFocus
-      />
-      <Button type="submit" variant="primary">
-        Send
-      </Button>
-    </form>
-  );
-};
-",
-  "src/components/Messages.tsx": "import {useMemo} from 'react';
-import {useRowIds, useStore} from 'tinybase/ui-react';
-
-import './messages.css';
-
-import {Message} from './Message';
-
-export const Messages = () => {
-  const store = useStore('chat');
-  const messageIds = useRowIds('messages', 'chat');
-
-  const sortedIds = useMemo(() => {
-    return [...messageIds].sort((a, b) => {
-      const rowA = store.getRow('messages', a) as any;
-      const rowB = store.getRow('messages', b) as any;
-      return rowA.timestamp - rowB.timestamp;
-    });
-  }, [messageIds, store]);
-
-  return (
-    <div id="messages">
-      {sortedIds.map((id) => (
-        <Message key={id} rowId={id} />
-      ))}
-    </div>
-  );
-};
-",
-  "src/components/UsernameInput.tsx": "import {useValue, useSetValueCallback} from 'tinybase/ui-react';
-import './usernameInput.css';
-
-import {Input} from './Input';
-
-export const UsernameInput = () => {
-  const username = useValue('username', 'settings') || '';
-  const setUsername = useSetValueCallback(
-    'username',
-    (_e) => _e,
-    [],
-    'settings',
-  );
-
-  return (
-    <div id="usernameInput">
-      <label>Your name:</label>
-      <Input
-        value={username}
-        onChange={setUsername}
-        placeholder="Enter your name"
-      />
-    </div>
-  );
-};
-",
   "src/components/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
@@ -4801,56 +4851,6 @@ input[type='text']:focus {
 
 input[type='text']::placeholder {
   color: var(--fg2);
-}
-",
-  "src/components/message.css": ".message {
-  margin-bottom: 0.75rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.message .username {
-  font-weight: 800;
-  color: #d81b60;
-}
-
-.message .text {
-  flex: 1;
-}
-
-.message .time {
-  font-size: 0.8rem;
-  color: #666;
-}
-",
-  "src/components/messageInput.css": "#messageInput {
-  display: flex;
-  gap: 0.5rem;
-  padding: 1rem;
-  border-top: 1px solid var(--border);
-}
-",
-  "src/components/messages.css": "#messages {
-  overflow-y: auto;
-  padding: 1rem 0;
-  height: 400px;
-  margin-bottom: 1rem;
-}
-",
-  "src/components/usernameInput.css": "#usernameInput {
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-#usernameInput label {
-  white-space: nowrap;
-}
-
-#usernameInput input {
-  flex: 1;
 }
 ",
   "src/index.css": "a {
@@ -7060,13 +7060,13 @@ import {createButton} from '../components/button';
 
 import {createInput} from '../components/input';
 
-import {createMessage} from '../components/message';
+import {createMessage} from './message';
 
-import {createMessages} from '../components/messages';
+import {createMessages} from './messages';
 
-import {createUsernameInput} from '../components/usernameInput';
+import {createUsernameInput} from './usernameInput';
 
-import {createMessageInput} from '../components/messageInput';
+import {createMessageInput} from './messageInput';
 
 const app = () => {
   const settingsStore = createStore().setValue('username', 'Carol');
@@ -7112,6 +7112,184 @@ const app = () => {
 export {app};
 ",
   "src/chat/index.css": "/* Add additional app styling here if needed */
+",
+  "src/chat/message.css": ".message {
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.message .username {
+  font-weight: 800;
+  color: #d81b60;
+}
+
+.message .text {
+  flex: 1;
+}
+
+.message .time {
+  font-size: 0.8rem;
+  color: #666;
+}
+",
+  "src/chat/message.ts": "import './message.css';
+
+export const createMessage = (
+  username: string,
+  text: string,
+  timestamp: number,
+): HTMLDivElement => {
+  const time = new Date(timestamp).toLocaleTimeString();
+
+  const messageDiv = document.createElement('div');
+  messageDiv.className = 'message';
+
+  const usernameSpan = document.createElement('span');
+  usernameSpan.className = 'username';
+  usernameSpan.textContent = \`\${username}:\`;
+
+  const textSpan = document.createElement('span');
+  textSpan.className = 'text';
+  textSpan.textContent = text;
+
+  const timeSpan = document.createElement('span');
+  timeSpan.className = 'time';
+  timeSpan.textContent = time;
+
+  messageDiv.appendChild(usernameSpan);
+  messageDiv.appendChild(textSpan);
+  messageDiv.appendChild(timeSpan);
+
+  return messageDiv;
+};
+",
+  "src/chat/messageInput.css": "#messageInput {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-top: 1px solid var(--border);
+}
+",
+  "src/chat/messageInput.ts": "import './messageInput.css';
+
+import {createButton} from '../components/button';
+
+import {createInput} from '../components/input';
+
+export const createMessageInput = (
+  settingsStore: any,
+  chatStore: any,
+): HTMLDivElement => {
+  const messageInputContainer = document.createElement('div');
+  messageInputContainer.id = 'messageInput';
+
+  const messageInput = createInput('Type a message...');
+  messageInputContainer.appendChild(messageInput);
+
+  const sendMessage = () => {
+    const text = messageInput.value.trim();
+    if (text) {
+      chatStore.addRow('messages', {
+        username: settingsStore.getValue('username'),
+        text,
+        timestamp: Date.now(),
+      });
+      messageInput.value = '';
+      messageInput.focus();
+    }
+  };
+
+  messageInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      sendMessage();
+    }
+  });
+
+  const sendButton = createButton('Send', sendMessage, 'primary');
+  messageInputContainer.appendChild(sendButton);
+
+  return messageInputContainer;
+};
+",
+  "src/chat/messages.css": "#messages {
+  overflow-y: auto;
+  padding: 1rem 0;
+  height: 400px;
+  margin-bottom: 1rem;
+}
+",
+  "src/chat/messages.ts": "import './messages.css';
+
+import {createMessage} from './message';
+
+export const createMessages = (store: any): HTMLDivElement => {
+  const messagesContainer = document.createElement('div');
+  messagesContainer.id = 'messages';
+
+  const messageRows = store.getTable('messages');
+  const sortedIds = Object.keys(messageRows).sort(
+    (a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
+  );
+
+  messagesContainer.innerHTML = '';
+  sortedIds.forEach((id) => {
+    const msg = messageRows[id];
+    const messageElement = createMessage(msg.username, msg.text, msg.timestamp);
+    messagesContainer.appendChild(messageElement);
+  });
+
+  return messagesContainer;
+};
+",
+  "src/chat/usernameInput.css": "#usernameInput {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#usernameInput label {
+  white-space: nowrap;
+}
+
+#usernameInput input {
+  flex: 1;
+}
+",
+  "src/chat/usernameInput.ts": "import './usernameInput.css';
+
+import {createInput} from '../components/input';
+
+export const createUsernameInput = (
+  settingsStore: any,
+  chatStore: any,
+): HTMLDivElement => {
+  const container = document.createElement('div');
+  container.id = 'usernameInput';
+
+  const label = document.createElement('label');
+  label.textContent = 'Your name:';
+
+  const usernameInput = createInput(
+    'Enter your name',
+    settingsStore.getValue('username') as string,
+  );
+
+  container.appendChild(label);
+  container.appendChild(usernameInput);
+
+  usernameInput.addEventListener('input', () => {
+    settingsStore.setValue('username', usernameInput.value);
+  });
+
+  settingsStore.addValuesListener(() => {
+    usernameInput.value = settingsStore.getValue('username') as string;
+  });
+
+  return container;
+};
 ",
   "src/components/button.css": "button {
   padding: 0.5rem 1rem;
@@ -7193,184 +7371,6 @@ export const createInput = (
     input.addEventListener('input', () => onInput(input.value));
   }
   return input;
-};
-",
-  "src/components/message.css": ".message {
-  margin-bottom: 0.75rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.message .username {
-  font-weight: 800;
-  color: #d81b60;
-}
-
-.message .text {
-  flex: 1;
-}
-
-.message .time {
-  font-size: 0.8rem;
-  color: #666;
-}
-",
-  "src/components/message.ts": "import './message.css';
-
-export const createMessage = (
-  username: string,
-  text: string,
-  timestamp: number,
-): HTMLDivElement => {
-  const time = new Date(timestamp).toLocaleTimeString();
-
-  const messageDiv = document.createElement('div');
-  messageDiv.className = 'message';
-
-  const usernameSpan = document.createElement('span');
-  usernameSpan.className = 'username';
-  usernameSpan.textContent = \`\${username}:\`;
-
-  const textSpan = document.createElement('span');
-  textSpan.className = 'text';
-  textSpan.textContent = text;
-
-  const timeSpan = document.createElement('span');
-  timeSpan.className = 'time';
-  timeSpan.textContent = time;
-
-  messageDiv.appendChild(usernameSpan);
-  messageDiv.appendChild(textSpan);
-  messageDiv.appendChild(timeSpan);
-
-  return messageDiv;
-};
-",
-  "src/components/messageInput.css": "#messageInput {
-  display: flex;
-  gap: 0.5rem;
-  padding: 1rem;
-  border-top: 1px solid var(--border);
-}
-",
-  "src/components/messageInput.ts": "import './messageInput.css';
-
-import {createButton} from './button';
-
-import {createInput} from './input';
-
-export const createMessageInput = (
-  settingsStore: any,
-  chatStore: any,
-): HTMLDivElement => {
-  const messageInputContainer = document.createElement('div');
-  messageInputContainer.id = 'messageInput';
-
-  const messageInput = createInput('Type a message...');
-  messageInputContainer.appendChild(messageInput);
-
-  const sendMessage = () => {
-    const text = messageInput.value.trim();
-    if (text) {
-      chatStore.addRow('messages', {
-        username: settingsStore.getValue('username'),
-        text,
-        timestamp: Date.now(),
-      });
-      messageInput.value = '';
-      messageInput.focus();
-    }
-  };
-
-  messageInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      sendMessage();
-    }
-  });
-
-  const sendButton = createButton('Send', sendMessage, 'primary');
-  messageInputContainer.appendChild(sendButton);
-
-  return messageInputContainer;
-};
-",
-  "src/components/messages.css": "#messages {
-  overflow-y: auto;
-  padding: 1rem 0;
-  height: 400px;
-  margin-bottom: 1rem;
-}
-",
-  "src/components/messages.ts": "import './messages.css';
-
-import {createMessage} from './message';
-
-export const createMessages = (store: any): HTMLDivElement => {
-  const messagesContainer = document.createElement('div');
-  messagesContainer.id = 'messages';
-
-  const messageRows = store.getTable('messages');
-  const sortedIds = Object.keys(messageRows).sort(
-    (a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
-  );
-
-  messagesContainer.innerHTML = '';
-  sortedIds.forEach((id) => {
-    const msg = messageRows[id];
-    const messageElement = createMessage(msg.username, msg.text, msg.timestamp);
-    messagesContainer.appendChild(messageElement);
-  });
-
-  return messagesContainer;
-};
-",
-  "src/components/usernameInput.css": "#usernameInput {
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-#usernameInput label {
-  white-space: nowrap;
-}
-
-#usernameInput input {
-  flex: 1;
-}
-",
-  "src/components/usernameInput.ts": "import './usernameInput.css';
-
-import {createInput} from './input';
-
-export const createUsernameInput = (
-  settingsStore: any,
-  chatStore: any,
-): HTMLDivElement => {
-  const container = document.createElement('div');
-  container.id = 'usernameInput';
-
-  const label = document.createElement('label');
-  label.textContent = 'Your name:';
-
-  const usernameInput = createInput(
-    'Enter your name',
-    settingsStore.getValue('username') as string,
-  );
-
-  container.appendChild(label);
-  container.appendChild(usernameInput);
-
-  usernameInput.addEventListener('input', () => {
-    settingsStore.setValue('username', usernameInput.value);
-  });
-
-  settingsStore.addValuesListener(() => {
-    usernameInput.value = settingsStore.getValue('username') as string;
-  });
-
-  return container;
 };
 ",
   "src/index.css": "a {

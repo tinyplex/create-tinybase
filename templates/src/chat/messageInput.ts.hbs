@@ -1,9 +1,9 @@
-{{includeFile template="src/components/messageInput.css.hbs" output="src/components/messageInput.css"}}
+{{includeFile template="src/chat/messageInput.css.hbs" output="src/chat/messageInput.css"}}
 import './messageInput.css';
 {{includeFile template="src/components/button.ts.hbs" output="src/components/button.{{ext}}"}}
-import {createButton} from './button';
+import {createButton} from '../components/button';
 {{includeFile template="src/components/input.ts.hbs" output="src/components/input.{{ext}}"}}
-import {createInput} from './input';
+import {createInput} from '../components/input';
 
 export const createMessageInput = (settingsStore: any, chatStore: any): HTMLDivElement => {
 const messageInputContainer = document.createElement('div');

@@ -1,11 +1,11 @@
-{{includeFile template="src/components/messageInput.css.hbs" output="src/components/messageInput.css"}}
+{{includeFile template="src/chat/messageInput.css.hbs" output="src/chat/messageInput.css"}}
 import {useState} from 'react';
 import {useAddRowCallback, useValue} from 'tinybase/ui-react';
 import './messageInput.css';
 {{includeFile template="src/components/Button.tsx.hbs" output="src/components/Button.{{ext}}"}}
-import {Button} from './Button';
+import {Button} from '../components/Button';
 {{includeFile template="src/components/Input.tsx.hbs" output="src/components/Input.{{ext}}"}}
-import {Input} from './Input';
+import {Input} from '../components/Input';
 
 export const MessageInput = () => {
 const [message, setMessage] = useState('');

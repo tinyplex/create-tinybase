@@ -1,5 +1,3 @@
-{{includeFile template="src/chat/index.css.hbs" output="src/chat/index.css"}}
-import './index.css';
 import {StrictMode, useState, useMemo} from 'react';
 import {createStore, createMergeableStore} from 'tinybase';
 import {Provider, useCreateStore, useAddRowCallback, useRow, useSetValueCallback, useValue, useRowIds, useStore} from 'tinybase/ui-react';
@@ -8,14 +6,14 @@ import {Inspector} from 'tinybase/ui-react-inspector';
 import {Button} from '../components/Button';
 {{includeFile template="src/components/Input.tsx.hbs" output="src/components/Input.{{ext}}"}}
 import {Input} from '../components/Input';
-{{includeFile template="src/components/Message.tsx.hbs" output="src/components/Message.{{ext}}"}}
-import {Message} from '../components/Message';
-{{includeFile template="src/components/Messages.tsx.hbs" output="src/components/Messages.{{ext}}"}}
-import {Messages} from '../components/Messages';
-{{includeFile template="src/components/MessageInput.tsx.hbs" output="src/components/MessageInput.{{ext}}"}}
-import {MessageInput} from '../components/MessageInput';
-{{includeFile template="src/components/UsernameInput.tsx.hbs" output="src/components/UsernameInput.{{ext}}"}}
-import {UsernameInput} from '../components/UsernameInput';
+{{includeFile template="src/chat/Message.tsx.hbs" output="src/chat/Message.{{ext}}"}}
+import {Message} from './Message';
+{{includeFile template="src/chat/Messages.tsx.hbs" output="src/chat/Messages.{{ext}}"}}
+import {Messages} from './Messages';
+{{includeFile template="src/chat/MessageInput.tsx.hbs" output="src/chat/MessageInput.{{ext}}"}}
+import {MessageInput} from './MessageInput';
+{{includeFile template="src/chat/UsernameInput.tsx.hbs" output="src/chat/UsernameInput.{{ext}}"}}
+import {UsernameInput} from './UsernameInput';
 
 export const App = () => {
 const settingsStore = useCreateStore(() => {
