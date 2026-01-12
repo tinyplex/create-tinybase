@@ -1,14 +1,13 @@
-import {createMergeableStore, createStore} from 'tinybase';
+{{includeFile template="src/drawing/settingsStore.ts.hbs" output="src/settingsStore.ts"}}
+import {settingsStore} from './settingsStore';
+{{includeFile template="src/drawing/canvasStore.ts.hbs" output="src/canvasStore.ts"}}
+import {canvasStore} from './canvasStore';
 {{includeFile template="src/drawing/drawingControls.ts.hbs" output="src/drawingControls.{{ext}}"}}
 import {createDrawingControls} from './drawingControls';
 {{includeFile template="src/drawing/canvas.ts.hbs" output="src/canvas.{{ext}}"}}
 import {createCanvas} from './canvas';
 
 const app = () => {
-const settingsStore = createStore().setValue('brushColor', '#d81b60').setValue('brushSize', 5);
-
-const canvasStore = createMergeableStore('canvas').setTable('strokes', {});
-
 const appContainer = document.getElementById('app')!;
 
 appContainer.appendChild(createDrawingControls(settingsStore, canvasStore));

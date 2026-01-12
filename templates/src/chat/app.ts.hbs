@@ -1,4 +1,7 @@
-import {createStore, createMergeableStore} from 'tinybase';
+{{includeFile template="src/chat/settingsStore.ts.hbs" output="src/settingsStore.ts"}}
+import {settingsStore} from './settingsStore';
+{{includeFile template="src/chat/chatStore.ts.hbs" output="src/chatStore.ts"}}
+import {chatStore} from './chatStore';
 {{includeFile template="src/shared/button.ts.hbs" output="src/button.{{ext}}"}}
 import {createButton} from './button';
 {{includeFile template="src/shared/input.ts.hbs" output="src/input.{{ext}}"}}
@@ -13,13 +16,6 @@ import {createUsernameInput} from './usernameInput';
 import {createMessageInput} from './messageInput';
 
 const app = () => {
-const settingsStore = createStore().setValue('username', 'Carol');
-
-const chatStore = createMergeableStore('chat').setTable('messages', {
-'1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
-'2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
-});
-
 const appContainer = document.getElementById('app')!;
 
 appContainer.appendChild(createUsernameInput(settingsStore, chatStore));

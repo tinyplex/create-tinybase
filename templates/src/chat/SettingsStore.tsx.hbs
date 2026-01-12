@@ -1,0 +1,34 @@
+{{#if schemas}}
+  import {createStore} from 'tinybase/with-schemas';
+  import * as UiReact from 'tinybase/ui-react/with-schemas';
+  import {type NoTablesSchema} from 'tinybase/with-schemas';
+{{else}}
+  import {createStore} from 'tinybase';
+  import {useCreateStore, useProvideStore, useValue, useSetValueCallback} from 'tinybase/ui-react';
+{{/if}}
+
+const STORE_ID = 'settings';
+
+{{#if schemas}}
+  const VALUES_SCHEMA = {
+  username: {type: 'string'},
+  } as const;
+
+  type Schemas = [NoTablesSchema, typeof VALUES_SCHEMA];
+
+  const {useCreateStore, useProvideStore, useValue, useSetValueCallback} = UiReact as UiReact.WithSchemas<Schemas>;
+{{/if}}
+
+export {useValue, useSetValueCallback};
+
+export const SettingsStore = () => {
+const store = useCreateStore(() =>
+createStore(){{#if schemas}}
+  .setValuesSchema(VALUES_SCHEMA){{/if}}
+.setValue('username', 'Carol'),
+);
+
+useProvideStore(STORE_ID, store);
+
+return null;
+};

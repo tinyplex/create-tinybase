@@ -1,0 +1,36 @@
+{{#if schemas}}
+  import {createStore} from 'tinybase/with-schemas';
+  import * as UiReact from 'tinybase/ui-react/with-schemas';
+  import {type NoTablesSchema} from 'tinybase/with-schemas';
+{{else}}
+  import {createStore} from 'tinybase';
+  import {useCreateStore, useProvideStore, useValue, useSetValueCallback, useValues} from 'tinybase/ui-react';
+{{/if}}
+
+const STORE_ID = 'settings';
+
+{{#if schemas}}
+  const VALUES_SCHEMA = {
+  brushColor: {type: 'string'},
+  brushSize: {type: 'number'},
+  } as const;
+
+  type Schemas = [NoTablesSchema, typeof VALUES_SCHEMA];
+
+  const {useCreateStore, useProvideStore, useValue, useSetValueCallback, useValues} = UiReact as UiReact.WithSchemas<Schemas>;
+{{/if}}
+
+export {useValue, useSetValueCallback, useValues};
+
+export const SettingsStore = () => {
+const store = useCreateStore(() =>
+createStore(){{#if schemas}}
+  .setValuesSchema(VALUES_SCHEMA){{/if}}
+.setValue('brushColor', '#d81b60')
+.setValue('brushSize', 5),
+);
+
+useProvideStore(STORE_ID, store);
+
+return null;
+};

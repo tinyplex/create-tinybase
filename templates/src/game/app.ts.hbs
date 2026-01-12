@@ -1,4 +1,5 @@
-import {createMergeableStore} from 'tinybase';
+{{includeFile template="src/game/store.ts.hbs" output="src/store.ts"}}
+import {store} from './store';
 {{includeFile template="src/shared/button.ts.hbs" output="src/button.{{ext}}"}}
 import {createButton} from './button';
 {{includeFile template="src/game/board.ts.hbs" output="src/board.{{ext}}"}}
@@ -13,10 +14,6 @@ const WINNING_LINES = [
 ];
 
 const app = () => {
-const store = createMergeableStore('game')
-.setValue('currentPlayer', 'X')
-.setValue('gameStatus', 'playing');
-
 const checkGameState = () => {
 const gameStatus = store.getValue('gameStatus');
 if (gameStatus !== 'playing') return;

@@ -1,8 +1,9 @@
 {{includeFile template="src/drawing/canvas.css.hbs" output="src/canvas.css"}}
 import './canvas.css';
-import {Store, MergeableStore} from 'tinybase';
+import type {Store as SettingsStore} from './settingsStore';
+import type {Store as CanvasStore} from './canvasStore';
 
-export const createCanvas = (settingsStore: Store, canvasStore: MergeableStore): HTMLCanvasElement => {
+export const createCanvas = (settingsStore: SettingsStore, canvasStore: CanvasStore): HTMLCanvasElement => {
 const canvas = document.createElement('canvas');
 canvas.id = 'drawingCanvas';
 canvas.width = 600;

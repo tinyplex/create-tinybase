@@ -1,35 +1,27 @@
-import {StrictMode, useState, useMemo} from 'react';
-import {createStore, createMergeableStore} from 'tinybase';
-import {Provider, useCreateStore, useAddRowCallback, useRow, useSetValueCallback, useValue, useRowIds, useStore} from 'tinybase/ui-react';
+import {StrictMode} from 'react';
+{{#if schemas}}
+  import {Provider} from 'tinybase/ui-react/with-schemas';
+{{else}}
+  import {Provider} from 'tinybase/ui-react';
+{{/if}}
 import {Inspector} from 'tinybase/ui-react-inspector';
-{{includeFile template="src/shared/Button.tsx.hbs" output="src/Button.{{ext}}"}}
-import {Button} from './Button';
-{{includeFile template="src/shared/Input.tsx.hbs" output="src/Input.{{ext}}"}}
-import {Input} from './Input';
-{{includeFile template="src/chat/Message.tsx.hbs" output="src/Message.{{ext}}"}}
-import {Message} from './Message';
+{{includeFile template="src/chat/SettingsStore.tsx.hbs" output="src/SettingsStore.{{ext}}"}}
+import {SettingsStore} from './SettingsStore';
+{{includeFile template="src/chat/ChatStore.tsx.hbs" output="src/ChatStore.{{ext}}"}}
+import {ChatStore} from './ChatStore';
+{{includeFile template="src/chat/UsernameInput.tsx.hbs" output="src/UsernameInput.{{ext}}"}}
+import {UsernameInput} from './UsernameInput';
 {{includeFile template="src/chat/Messages.tsx.hbs" output="src/Messages.{{ext}}"}}
 import {Messages} from './Messages';
 {{includeFile template="src/chat/MessageInput.tsx.hbs" output="src/MessageInput.{{ext}}"}}
 import {MessageInput} from './MessageInput';
-{{includeFile template="src/chat/UsernameInput.tsx.hbs" output="src/UsernameInput.{{ext}}"}}
-import {UsernameInput} from './UsernameInput';
 
 export const App = () => {
-const settingsStore = useCreateStore(() => {
-return createStore().setValue('username', 'Carol');
-});
-
-const chatStore = useCreateStore(() => {
-return createMergeableStore('chat').setTable('messages', {
-'1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
-'2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
-});
-});
-
 return (
 <StrictMode>
-  <Provider storesById=\{{settings: settingsStore, chat: chatStore}}>
+  <Provider>
+    <SettingsStore />
+    <ChatStore />
     <UsernameInput />
     <Messages />
     <MessageInput />

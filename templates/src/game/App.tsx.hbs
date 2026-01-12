@@ -1,7 +1,12 @@
 import {StrictMode} from 'react';
-import {createMergeableStore} from 'tinybase';
-import {Provider, useCreateStore, useSetValuesCallback, useStore, useTableListener} from 'tinybase/ui-react';
+{{#if schemas}}
+  import {Provider} from 'tinybase/ui-react/with-schemas';
+{{else}}
+  import {Provider} from 'tinybase/ui-react';
+{{/if}}
 import {Inspector} from 'tinybase/ui-react-inspector';
+{{includeFile template="src/game/Store.tsx.hbs" output="src/Store.{{ext}}"}}
+import {Store, useStore, useSetValuesCallback, useTableListener} from './Store';
 {{includeFile template="src/shared/Button.tsx.hbs" output="src/Button.{{ext}}"}}
 import {Button} from './Button';
 {{includeFile template="src/game/Board.tsx.hbs" output="src/Board.{{ext}}"}}
@@ -16,7 +21,7 @@ const WINNING_LINES = [
 ];
 
 const Game = () => {
-const store = useStore();
+const store = useStore('game');
 
 useTableListener(
 'board',
@@ -80,15 +85,10 @@ return (
 };
 
 const App = () => {
-const store = useCreateStore(() => {
-return createMergeableStore('game')
-.setValue('currentPlayer', 'X')
-.setValue('gameStatus', 'playing');
-});
-
 return (
 <StrictMode>
-  <Provider store={store}>
+  <Provider>
+    <Store />
     <Game />
   </Provider>
 </StrictMode>

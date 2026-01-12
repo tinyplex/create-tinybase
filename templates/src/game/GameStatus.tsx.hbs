@@ -1,11 +1,11 @@
 {{includeFile template="src/game/gameStatus.css.hbs" output="src/gameStatus.css"}}
 import './gameStatus.css';
-import {useValue} from 'tinybase/ui-react';
+import {useValue} from './Store';
 
 export const GameStatus = () => {
-const gameStatus = useValue('gameStatus') as string;
-const currentPlayer = useValue('currentPlayer') as string;
-const winner = useValue('winner') as string | undefined;
+const gameStatus = useValue('gameStatus', 'game') as string;
+const currentPlayer = useValue('currentPlayer', 'game') as string;
+const winner = useValue('winner', 'game') as string | undefined;
 
 return (
 <div id="gameStatus">

@@ -1,9 +1,10 @@
 {{includeFile template="src/chat/messages.css.hbs" output="src/messages.css"}}
 import './messages.css';
+import {type ChatStore} from './chatStore';
 {{includeFile template="src/chat/message.ts.hbs" output="src/message.{{ext}}"}}
 import {createMessage} from './message';
 
-export const createMessages = (store: any): HTMLDivElement => {
+export const createMessages = (store: ChatStore): HTMLDivElement => {
 const messagesContainer = document.createElement('div');
 messagesContainer.id = 'messages';
 

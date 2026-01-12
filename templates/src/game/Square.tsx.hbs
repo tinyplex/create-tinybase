@@ -1,11 +1,11 @@
 {{includeFile template="src/game/square.css.hbs" output="src/square.css"}}
 import './square.css';
-import {useCell, useStore, useValue} from 'tinybase/ui-react';
+import {useCell, useStore, useValue} from './Store';
 
 export const Square = ({position, disabled, winning}: {position: number; disabled: boolean; winning: boolean}) => {
-const store = useStore();
-const value = useCell('board', position.toString(), 'value') as string | undefined;
-const currentPlayer = useValue('currentPlayer') as string;
+const store = useStore('game');
+const value = useCell('board', position.toString(), 'value', 'game') as string | undefined;
+const currentPlayer = useValue('currentPlayer', 'game') as string;
 
 const isDisabled = disabled || !!value;
 

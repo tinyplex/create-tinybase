@@ -1,0 +1,41 @@
+{{#if schemas}}
+  import {createMergeableStore} from 'tinybase/with-schemas';
+  import * as UiReact from 'tinybase/ui-react/with-schemas';
+  import {type NoValuesSchema} from 'tinybase/with-schemas';
+{{else}}
+  import {createMergeableStore} from 'tinybase';
+  import {useCreateStore, useProvideStore, useAddRowCallback, useRow, useRowIds, useStore} from 'tinybase/ui-react';
+{{/if}}
+
+const STORE_ID = 'chat';
+
+{{#if schemas}}
+  const TABLES_SCHEMA = {
+  messages: {
+  username: {type: 'string'},
+  text: {type: 'string'},
+  timestamp: {type: 'number'},
+  },
+  } as const;
+
+  type Schemas = [typeof TABLES_SCHEMA, NoValuesSchema];
+
+  const {useCreateStore, useProvideStore, useAddRowCallback, useRow, useRowIds, useStore} = UiReact as UiReact.WithSchemas<Schemas>;
+{{/if}}
+
+export {useAddRowCallback, useRow, useRowIds, useStore};
+
+export const ChatStore = () => {
+const store = useCreateStore(() =>
+createMergeableStore(STORE_ID){{#if schemas}}
+  .setTablesSchema(TABLES_SCHEMA){{/if}}
+.setTable('messages', {
+'1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
+'2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
+}),
+);
+
+useProvideStore(STORE_ID, store);
+
+return null;
+};

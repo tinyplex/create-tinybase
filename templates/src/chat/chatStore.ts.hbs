@@ -1,0 +1,26 @@
+{{#if schemas}}
+  import {createMergeableStore} from 'tinybase/with-schemas';
+{{else}}
+  import {createMergeableStore} from 'tinybase';
+{{/if}}
+
+const STORE_ID = 'chat';
+
+{{#if schemas}}
+  const TABLES_SCHEMA = {
+  messages: {
+  username: {type: 'string'},
+  text: {type: 'string'},
+  timestamp: {type: 'number'},
+  },
+  } as const;
+
+{{/if}}
+export const chatStore = createMergeableStore(STORE_ID){{#if schemas}}
+  .setTablesSchema(TABLES_SCHEMA){{/if}}
+.setTable('messages', {
+'1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
+'2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
+});
+
+export type ChatStore = typeof chatStore;

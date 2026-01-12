@@ -1,6 +1,7 @@
 {{includeFile template="src/drawing/drawingControls.css.hbs" output="src/drawingControls.css"}}
 import './drawingControls.css';
-import {Store, MergeableStore} from 'tinybase';
+import type {Store as SettingsStore} from './settingsStore';
+import type {Store as CanvasStore} from './canvasStore';
 {{includeFile template="src/shared/button.ts.hbs" output="src/button.{{ext}}"}}
 import {createButton} from './button';
 {{includeFile template="src/drawing/colorPicker.ts.hbs" output="src/colorPicker.{{ext}}"}}
@@ -8,7 +9,7 @@ import {createColorPicker} from './colorPicker';
 {{includeFile template="src/drawing/brushSize.ts.hbs" output="src/brushSize.{{ext}}"}}
 import {createBrushSize} from './brushSize';
 
-export const createDrawingControls = (settingsStore: Store, canvasStore: MergeableStore): HTMLDivElement => {
+export const createDrawingControls = (settingsStore: SettingsStore, canvasStore: CanvasStore): HTMLDivElement => {
 const controls = document.createElement('div');
 controls.id = 'drawingControls';
 

@@ -1,0 +1,19 @@
+{{#if schemas}}
+  import {createStore} from 'tinybase/with-schemas';
+{{else}}
+  import {createStore} from 'tinybase';
+{{/if}}
+
+const STORE_ID = 'settings';
+
+{{#if schemas}}
+  const VALUES_SCHEMA = {
+  username: {type: 'string'},
+  } as const;
+
+{{/if}}
+export const settingsStore = createStore(){{#if schemas}}
+  .setValuesSchema(VALUES_SCHEMA){{/if}}
+.setValue('username', 'Carol');
+
+export type SettingsStore = typeof settingsStore;

@@ -1,6 +1,6 @@
 {{includeFile template="src/drawing/colorPicker.css.hbs" output="src/colorPicker.css"}}
 import './colorPicker.css';
-import {useValue, useSetValueCallback} from 'tinybase/ui-react';
+import {useValue, useSetValueCallback} from './SettingsStore';
 
 export const ColorPicker = () => {
 const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];

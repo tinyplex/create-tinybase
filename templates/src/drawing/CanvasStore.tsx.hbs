@@ -1,0 +1,38 @@
+{{#if schemas}}
+  import {createMergeableStore} from 'tinybase/with-schemas';
+  import * as UiReact from 'tinybase/ui-react/with-schemas';
+  import {type NoValuesSchema} from 'tinybase/with-schemas';
+{{else}}
+  import {createMergeableStore} from 'tinybase';
+  import {useCreateStore, useProvideStore, useAddRowCallback, useDelTableCallback, useRow, useRowIds, useStore, useTable} from 'tinybase/ui-react';
+{{/if}}
+
+const STORE_ID = 'canvas';
+
+{{#if schemas}}
+  const TABLES_SCHEMA = {
+  strokes: {
+  points: {type: 'string'},
+  color: {type: 'string'},
+  size: {type: 'number'},
+  },
+  } as const;
+
+  type Schemas = [typeof TABLES_SCHEMA, NoValuesSchema];
+
+  const {useCreateStore, useProvideStore, useAddRowCallback, useDelTableCallback, useRow, useRowIds, useStore, useTable} = UiReact as UiReact.WithSchemas<Schemas>;
+{{/if}}
+
+export {useAddRowCallback, useDelTableCallback, useRow, useRowIds, useStore, useTable};
+
+export const CanvasStore = () => {
+const store = useCreateStore(() =>
+createMergeableStore(STORE_ID){{#if schemas}}
+  .setTablesSchema(TABLES_SCHEMA){{/if}}
+.setTable('strokes', {}),
+);
+
+useProvideStore(STORE_ID, store);
+
+return null;
+};

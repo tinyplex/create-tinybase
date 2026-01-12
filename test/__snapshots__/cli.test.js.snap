@@ -219,25 +219,19 @@ npm run dev
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "src/App.jsx": "import {StrictMode} from 'react';
-import {createStore, createMergeableStore} from 'tinybase';
-import {Provider, useCreateStore} from 'tinybase/ui-react';
+import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
+import {SettingsStore} from './SettingsStore';
+import {ChatStore} from './ChatStore';
+import {UsernameInput} from './UsernameInput';
 import {Messages} from './Messages';
 import {MessageInput} from './MessageInput';
-import {UsernameInput} from './UsernameInput';
 const App = () => {
-  const settingsStore = useCreateStore(() => {
-    return createStore().setValue('username', 'Carol');
-  });
-  const chatStore = useCreateStore(() => {
-    return createMergeableStore('chat').setTable('messages', {
-      1: {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 6e4},
-      2: {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 3e4},
-    });
-  });
   return (
     <StrictMode>
-      <Provider storesById={{settings: settingsStore, chat: chatStore}}>
+      <Provider>
+        <SettingsStore />
+        <ChatStore />
         <UsernameInput />
         <Messages />
         <MessageInput />
@@ -260,6 +254,28 @@ const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
 );
 export {Button};
 ",
+  "src/ChatStore.jsx": "import {createMergeableStore} from 'tinybase';
+import {
+  useCreateStore,
+  useProvideStore,
+  useAddRowCallback,
+  useRow,
+  useRowIds,
+  useStore,
+} from 'tinybase/ui-react';
+const STORE_ID = 'chat';
+const ChatStore = () => {
+  const store = useCreateStore(() =>
+    createMergeableStore(STORE_ID).setTable('messages', {
+      1: {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 6e4},
+      2: {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 3e4},
+    }),
+  );
+  useProvideStore(STORE_ID, store);
+  return null;
+};
+export {ChatStore, useAddRowCallback, useRow, useRowIds, useStore};
+",
   "src/Input.jsx": "import './input.css';
 const Input = ({value, onChange, placeholder = '', autoFocus = false}) => (
   <input
@@ -272,7 +288,7 @@ const Input = ({value, onChange, placeholder = '', autoFocus = false}) => (
 );
 export {Input};
 ",
-  "src/Message.jsx": "import {useRow} from 'tinybase/ui-react';
+  "src/Message.jsx": "import {useRow} from './ChatStore';
 import './message.css';
 const Message = ({rowId}) => {
   const row = useRow('messages', rowId, 'chat');
@@ -288,7 +304,8 @@ const Message = ({rowId}) => {
 export {Message};
 ",
   "src/MessageInput.jsx": "import {useState} from 'react';
-import {useAddRowCallback, useValue} from 'tinybase/ui-react';
+import {useAddRowCallback} from './ChatStore';
+import {useValue} from './SettingsStore';
 import './messageInput.css';
 import {Button} from './Button';
 import {Input} from './Input';
@@ -329,7 +346,7 @@ const MessageInput = () => {
 export {MessageInput};
 ",
   "src/Messages.jsx": "import {useMemo} from 'react';
-import {useRowIds, useStore} from 'tinybase/ui-react';
+import {useRowIds, useStore} from './ChatStore';
 import './messages.css';
 import {Message} from './Message';
 const Messages = () => {
@@ -352,7 +369,24 @@ const Messages = () => {
 };
 export {Messages};
 ",
-  "src/UsernameInput.jsx": "import {useValue, useSetValueCallback} from 'tinybase/ui-react';
+  "src/SettingsStore.jsx": "import {createStore} from 'tinybase';
+import {
+  useCreateStore,
+  useProvideStore,
+  useValue,
+  useSetValueCallback,
+} from 'tinybase/ui-react';
+const STORE_ID = 'settings';
+const SettingsStore = () => {
+  const store = useCreateStore(() =>
+    createStore().setValue('username', 'Carol'),
+  );
+  useProvideStore(STORE_ID, store);
+  return null;
+};
+export {SettingsStore, useSetValueCallback, useValue};
+",
+  "src/UsernameInput.jsx": "import {useValue, useSetValueCallback} from './SettingsStore';
 import './usernameInput.css';
 import {Input} from './Input';
 const UsernameInput = () => {
@@ -714,23 +748,18 @@ npm run dev
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "src/App.jsx": "import {StrictMode} from 'react';
-import {createMergeableStore, createStore} from 'tinybase';
-import {Provider, useCreateStore} from 'tinybase/ui-react';
+import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
+import {SettingsStore} from './SettingsStore';
+import {CanvasStore} from './CanvasStore';
 import {DrawingControls} from './DrawingControls';
 import {Canvas} from './Canvas';
 const App = () => {
-  const settingsStore = useCreateStore(() => {
-    return createStore()
-      .setValue('brushColor', '#d81b60')
-      .setValue('brushSize', 5);
-  });
-  const canvasStore = useCreateStore(() => {
-    return createMergeableStore('canvas').setTable('strokes', {});
-  });
   return (
     <StrictMode>
-      <Provider storesById={{settings: settingsStore, canvas: canvasStore}}>
+      <Provider>
+        <SettingsStore />
+        <CanvasStore />
         <DrawingControls />
         <Canvas />
         <Inspector />
@@ -740,7 +769,7 @@ const App = () => {
 };
 export {App};
 ",
-  "src/BrushSize.jsx": "import {useValue, useSetValueCallback} from 'tinybase/ui-react';
+  "src/BrushSize.jsx": "import {useValue, useSetValueCallback} from './SettingsStore';
 import './brushSize.css';
 const BrushSize = () => {
   const size = useValue('brushSize', 'settings') ?? 5;
@@ -773,12 +802,8 @@ const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
 export {Button};
 ",
   "src/Canvas.jsx": "import {useCallback, useEffect, useRef} from 'react';
-import {
-  useAddRowCallback,
-  useRowIds,
-  useTable,
-  useValues,
-} from 'tinybase/ui-react';
+import {useAddRowCallback, useRowIds, useTable} from './CanvasStore';
+import {useValues} from './SettingsStore';
 import './canvas.css';
 const Canvas = () => {
   const canvasRef = useRef(null);
@@ -854,8 +879,37 @@ const Canvas = () => {
 };
 export {Canvas};
 ",
+  "src/CanvasStore.jsx": "import {createMergeableStore} from 'tinybase';
+import {
+  useCreateStore,
+  useProvideStore,
+  useAddRowCallback,
+  useDelTableCallback,
+  useRow,
+  useRowIds,
+  useStore,
+  useTable,
+} from 'tinybase/ui-react';
+const STORE_ID = 'canvas';
+const CanvasStore = () => {
+  const store = useCreateStore(() =>
+    createMergeableStore(STORE_ID).setTable('strokes', {}),
+  );
+  useProvideStore(STORE_ID, store);
+  return null;
+};
+export {
+  CanvasStore,
+  useAddRowCallback,
+  useDelTableCallback,
+  useRow,
+  useRowIds,
+  useStore,
+  useTable,
+};
+",
   "src/ColorPicker.jsx": "import './colorPicker.css';
-import {useValue, useSetValueCallback} from 'tinybase/ui-react';
+import {useValue, useSetValueCallback} from './SettingsStore';
 const ColorPicker = () => {
   const colors = [
     '#d81b60',
@@ -888,7 +942,7 @@ const ColorPicker = () => {
 export {ColorPicker};
 ",
   "src/DrawingControls.jsx": "import './drawingControls.css';
-import {useDelTableCallback} from 'tinybase/ui-react';
+import {useDelTableCallback} from './CanvasStore';
 import {Button} from './Button';
 import {ColorPicker} from './ColorPicker';
 import {BrushSize} from './BrushSize';
@@ -905,6 +959,24 @@ const DrawingControls = () => {
   );
 };
 export {DrawingControls};
+",
+  "src/SettingsStore.jsx": "import {createStore} from 'tinybase';
+import {
+  useCreateStore,
+  useProvideStore,
+  useValue,
+  useSetValueCallback,
+  useValues,
+} from 'tinybase/ui-react';
+const STORE_ID = 'settings';
+const SettingsStore = () => {
+  const store = useCreateStore(() =>
+    createStore().setValue('brushColor', '#d81b60').setValue('brushSize', 5),
+  );
+  useProvideStore(STORE_ID, store);
+  return null;
+};
+export {SettingsStore, useSetValueCallback, useValue, useValues};
 ",
   "src/brushSize.css": "#brushSize {
   display: flex;
@@ -1237,15 +1309,9 @@ npm run dev
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "src/App.jsx": "import {StrictMode} from 'react';
-import {createMergeableStore} from 'tinybase';
-import {
-  Provider,
-  useCreateStore,
-  useSetValuesCallback,
-  useStore,
-  useTableListener,
-} from 'tinybase/ui-react';
+import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
+import {Store, useStore, useSetValuesCallback, useTableListener} from './Store';
 import {Button} from './Button';
 import {Board} from './Board';
 import {GameStatus} from './GameStatus';
@@ -1263,7 +1329,7 @@ const WINNING_LINES = [
   // diagonals
 ];
 const Game = () => {
-  const store = useStore();
+  const store = useStore('game');
   useTableListener(
     'board',
     () => {
@@ -1316,14 +1382,10 @@ const Game = () => {
   );
 };
 const App = () => {
-  const store = useCreateStore(() => {
-    return createMergeableStore('game')
-      .setValue('currentPlayer', 'X')
-      .setValue('gameStatus', 'playing');
-  });
   return (
     <StrictMode>
-      <Provider store={store}>
+      <Provider>
+        <Store />
         <Game />
       </Provider>
     </StrictMode>
@@ -1333,11 +1395,11 @@ export {App};
 ",
   "src/Board.jsx": "import './board.css';
 import {useMemo} from 'react';
-import {useValue} from 'tinybase/ui-react';
+import {useValue} from './Store';
 import {Square} from './Square';
 const Board = () => {
-  const gameStatus = useValue('gameStatus');
-  const winningLine = useValue('winningLine');
+  const gameStatus = useValue('gameStatus', 'game');
+  const winningLine = useValue('winningLine', 'game');
   const winningPositions = useMemo(() => {
     if (!winningLine) return /* @__PURE__ */ new Set();
     return new Set(winningLine.split(',').map(Number));
@@ -1371,11 +1433,11 @@ const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
 export {Button};
 ",
   "src/GameStatus.jsx": "import './gameStatus.css';
-import {useValue} from 'tinybase/ui-react';
+import {useValue} from './Store';
 const GameStatus = () => {
-  const gameStatus = useValue('gameStatus');
-  const currentPlayer = useValue('currentPlayer');
-  const winner = useValue('winner');
+  const gameStatus = useValue('gameStatus', 'game');
+  const currentPlayer = useValue('currentPlayer', 'game');
+  const winner = useValue('winner', 'game');
   return (
     <div id="gameStatus">
       {gameStatus === 'playing' && (
@@ -1395,11 +1457,11 @@ const GameStatus = () => {
 export {GameStatus};
 ",
   "src/Square.jsx": "import './square.css';
-import {useCell, useStore, useValue} from 'tinybase/ui-react';
+import {useCell, useStore, useValue} from './Store';
 const Square = ({position, disabled, winning}) => {
-  const store = useStore();
-  const value = useCell('board', position.toString(), 'value');
-  const currentPlayer = useValue('currentPlayer');
+  const store = useStore('game');
+  const value = useCell('board', position.toString(), 'value', 'game');
+  const currentPlayer = useValue('currentPlayer', 'game');
   const isDisabled = disabled || !!value;
   const handleClick = () => {
     if (!isDisabled) {
@@ -1417,6 +1479,35 @@ const Square = ({position, disabled, winning}) => {
   );
 };
 export {Square};
+",
+  "src/Store.jsx": "import {createMergeableStore} from 'tinybase';
+import {
+  useCreateStore,
+  useProvideStore,
+  useStore,
+  useSetValuesCallback,
+  useTableListener,
+  useCell,
+  useValue,
+} from 'tinybase/ui-react';
+const STORE_ID = 'game';
+const Store = () => {
+  const store = useCreateStore(() =>
+    createMergeableStore(STORE_ID)
+      .setValue('currentPlayer', 'X')
+      .setValue('gameStatus', 'playing'),
+  );
+  useProvideStore(STORE_ID, store);
+  return null;
+};
+export {
+  Store,
+  useCell,
+  useSetValuesCallback,
+  useStore,
+  useTableListener,
+  useValue,
+};
 ",
   "src/board.css": "#board {
   display: grid;
@@ -2251,17 +2342,13 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/app.js": "import {createStore, createMergeableStore} from 'tinybase';
+  "src/app.js": "import {settingsStore} from './settingsStore';
+import {chatStore} from './chatStore';
 import {createMessage} from './message';
 import {createMessages} from './messages';
 import {createUsernameInput} from './usernameInput';
 import {createMessageInput} from './messageInput';
 const app = () => {
-  const settingsStore = createStore().setValue('username', 'Carol');
-  const chatStore = createMergeableStore('chat').setTable('messages', {
-    1: {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 6e4},
-    2: {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 3e4},
-  });
   const appContainer = document.getElementById('app');
   appContainer.appendChild(createUsernameInput(settingsStore, chatStore));
   const messagesContainer = createMessages(chatStore);
@@ -2326,6 +2413,14 @@ const createButton = (text, onClick, variant = 'default') => {
   return button;
 };
 export {createButton};
+",
+  "src/chatStore.js": "import {createMergeableStore} from 'tinybase';
+const STORE_ID = 'chat';
+const chatStore = createMergeableStore(STORE_ID).setTable('messages', {
+  1: {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 6e4},
+  2: {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 3e4},
+});
+export {chatStore};
 ",
   "src/index.js": "import {app} from './app';
 addEventListener('load', app);
@@ -2471,6 +2566,11 @@ const createMessages = (store) => {
   return messagesContainer;
 };
 export {createMessages};
+",
+  "src/settingsStore.js": "import {createStore} from 'tinybase';
+const STORE_ID = 'settings';
+const settingsStore = createStore().setValue('username', 'Carol');
+export {settingsStore};
 ",
   "src/usernameInput.css": "#usernameInput {
   margin-bottom: 1rem;
@@ -2728,14 +2828,11 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/app.js": "import {createMergeableStore, createStore} from 'tinybase';
+  "src/app.js": "import {settingsStore} from './settingsStore';
+import {canvasStore} from './canvasStore';
 import {createDrawingControls} from './drawingControls';
 import {createCanvas} from './canvas';
 const app = () => {
-  const settingsStore = createStore()
-    .setValue('brushColor', '#d81b60')
-    .setValue('brushSize', 5);
-  const canvasStore = createMergeableStore('canvas').setTable('strokes', {});
   const appContainer = document.getElementById('app');
   appContainer.appendChild(createDrawingControls(settingsStore, canvasStore));
   appContainer.appendChild(createCanvas(settingsStore, canvasStore));
@@ -2899,6 +2996,11 @@ const createCanvas = (settingsStore, canvasStore) => {
 };
 export {createCanvas};
 ",
+  "src/canvasStore.js": "import {createMergeableStore} from 'tinybase';
+const STORE_ID = 'canvas';
+const canvasStore = createMergeableStore(STORE_ID).setTable('strokes', {});
+export {canvasStore};
+",
   "src/colorPicker.css": "#colorPicker {
   display: flex;
   gap: 0;
@@ -2990,6 +3092,13 @@ export {createDrawingControls};
 ",
   "src/index.js": "import {app} from './app';
 addEventListener('load', app);
+",
+  "src/settingsStore.js": "import {createStore} from 'tinybase';
+const STORE_ID = 'settings';
+const settingsStore = createStore()
+  .setValue('brushColor', '#d81b60')
+  .setValue('brushSize', 5);
+export {settingsStore};
 ",
 }
 `;
@@ -3209,7 +3318,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/app.js": "import {createMergeableStore} from 'tinybase';
+  "src/app.js": "import {store} from './store';
 import {createButton} from './button';
 import {createBoard} from './board';
 import {createGameStatus} from './gameStatus';
@@ -3227,9 +3336,6 @@ const WINNING_LINES = [
   // diagonals
 ];
 const app = () => {
-  const store = createMergeableStore('game')
-    .setValue('currentPlayer', 'X')
-    .setValue('gameStatus', 'playing');
   const checkGameState = () => {
     const gameStatus = store.getValue('gameStatus');
     if (gameStatus !== 'playing') return;
@@ -3461,6 +3567,13 @@ const createSquare = (position, value, onClick, disabled, winning) => {
   return square;
 };
 export {createSquare};
+",
+  "src/store.js": "import {createMergeableStore} from 'tinybase';
+const STORE_ID = 'game';
+const store = createMergeableStore(STORE_ID)
+  .setValue('currentPlayer', 'X')
+  .setValue('gameStatus', 'playing');
+export {store};
 ",
 }
 `;
@@ -4141,47 +4254,26 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/App.tsx": "import {StrictMode, useState, useMemo} from 'react';
-import {createStore, createMergeableStore} from 'tinybase';
-import {
-  Provider,
-  useCreateStore,
-  useAddRowCallback,
-  useRow,
-  useSetValueCallback,
-  useValue,
-  useRowIds,
-  useStore,
-} from 'tinybase/ui-react';
+  "src/App.tsx": "import {StrictMode} from 'react';
+import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 
-import {Button} from './Button';
+import {SettingsStore} from './SettingsStore';
 
-import {Input} from './Input';
+import {ChatStore} from './ChatStore';
 
-import {Message} from './Message';
+import {UsernameInput} from './UsernameInput';
 
 import {Messages} from './Messages';
 
 import {MessageInput} from './MessageInput';
 
-import {UsernameInput} from './UsernameInput';
-
 export const App = () => {
-  const settingsStore = useCreateStore(() => {
-    return createStore().setValue('username', 'Carol');
-  });
-
-  const chatStore = useCreateStore(() => {
-    return createMergeableStore('chat').setTable('messages', {
-      '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
-      '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
-    });
-  });
-
   return (
     <StrictMode>
-      <Provider storesById={{settings: settingsStore, chat: chatStore}}>
+      <Provider>
+        <SettingsStore />
+        <ChatStore />
         <UsernameInput />
         <Messages />
         <MessageInput />
@@ -4216,6 +4308,33 @@ export const Button = ({
   </button>
 );
 ",
+  "src/ChatStore.tsx": "import {createMergeableStore} from 'tinybase';
+import {
+  useCreateStore,
+  useProvideStore,
+  useAddRowCallback,
+  useRow,
+  useRowIds,
+  useStore,
+} from 'tinybase/ui-react';
+
+const STORE_ID = 'chat';
+
+export {useAddRowCallback, useRow, useRowIds, useStore};
+
+export const ChatStore = () => {
+  const store = useCreateStore(() =>
+    createMergeableStore(STORE_ID).setTable('messages', {
+      '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
+      '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
+    }),
+  );
+
+  useProvideStore(STORE_ID, store);
+
+  return null;
+};
+",
   "src/Input.tsx": "import './input.css';
 
 interface InputProps {
@@ -4240,7 +4359,7 @@ export const Input = ({
   />
 );
 ",
-  "src/Message.tsx": "import {useRow} from 'tinybase/ui-react';
+  "src/Message.tsx": "import {useRow} from './ChatStore';
 
 import './message.css';
 
@@ -4262,7 +4381,8 @@ export const Message = ({rowId}: MessageProps) => {
 };
 ",
   "src/MessageInput.tsx": "import {useState} from 'react';
-import {useAddRowCallback, useValue} from 'tinybase/ui-react';
+import {useAddRowCallback} from './ChatStore';
+import {useValue} from './SettingsStore';
 import './messageInput.css';
 
 import {Button} from './Button';
@@ -4308,7 +4428,7 @@ export const MessageInput = () => {
 };
 ",
   "src/Messages.tsx": "import {useMemo} from 'react';
-import {useRowIds, useStore} from 'tinybase/ui-react';
+import {useRowIds, useStore} from './ChatStore';
 
 import './messages.css';
 
@@ -4335,7 +4455,29 @@ export const Messages = () => {
   );
 };
 ",
-  "src/UsernameInput.tsx": "import {useValue, useSetValueCallback} from 'tinybase/ui-react';
+  "src/SettingsStore.tsx": "import {createStore} from 'tinybase';
+import {
+  useCreateStore,
+  useProvideStore,
+  useValue,
+  useSetValueCallback,
+} from 'tinybase/ui-react';
+
+const STORE_ID = 'settings';
+
+export {useValue, useSetValueCallback};
+
+export const SettingsStore = () => {
+  const store = useCreateStore(() =>
+    createStore().setValue('username', 'Carol'),
+  );
+
+  useProvideStore(STORE_ID, store);
+
+  return null;
+};
+",
+  "src/UsernameInput.tsx": "import {useValue, useSetValueCallback} from './SettingsStore';
 import './usernameInput.css';
 
 import {Input} from './Input';
@@ -4725,37 +4867,24 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/App.tsx": "import {StrictMode, useCallback, useEffect, useRef} from 'react';
-import {createMergeableStore, createStore} from 'tinybase';
-import {
-  Provider,
-  useAddRowCallback,
-  useCreateStore,
-  useDelTableCallback,
-  useRow,
-  useRowIds,
-  useStore,
-} from 'tinybase/ui-react';
+  "src/App.tsx": "import {StrictMode} from 'react';
+import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
+
+import {SettingsStore} from './SettingsStore';
+
+import {CanvasStore} from './CanvasStore';
 
 import {DrawingControls} from './DrawingControls';
 
 import {Canvas} from './Canvas';
 
 const App = () => {
-  const settingsStore = useCreateStore(() => {
-    return createStore()
-      .setValue('brushColor', '#d81b60')
-      .setValue('brushSize', 5);
-  });
-
-  const canvasStore = useCreateStore(() => {
-    return createMergeableStore('canvas').setTable('strokes', {});
-  });
-
   return (
     <StrictMode>
-      <Provider storesById={{settings: settingsStore, canvas: canvasStore}}>
+      <Provider>
+        <SettingsStore />
+        <CanvasStore />
         <DrawingControls />
         <Canvas />
         <Inspector />
@@ -4766,7 +4895,7 @@ const App = () => {
 
 export {App};
 ",
-  "src/BrushSize.tsx": "import {useValue, useSetValueCallback} from 'tinybase/ui-react';
+  "src/BrushSize.tsx": "import {useValue, useSetValueCallback} from './SettingsStore';
 import './brushSize.css';
 
 export const BrushSize = () => {
@@ -4814,12 +4943,8 @@ export const Button = ({
 );
 ",
   "src/Canvas.tsx": "import {useCallback, useEffect, useRef} from 'react';
-import {
-  useAddRowCallback,
-  useRowIds,
-  useTable,
-  useValues,
-} from 'tinybase/ui-react';
+import {useAddRowCallback, useRowIds, useTable} from './CanvasStore';
+import {useValues} from './SettingsStore';
 import './canvas.css';
 
 export const Canvas = () => {
@@ -4910,8 +5035,41 @@ export const Canvas = () => {
   );
 };
 ",
+  "src/CanvasStore.tsx": "import {createMergeableStore} from 'tinybase';
+import {
+  useCreateStore,
+  useProvideStore,
+  useAddRowCallback,
+  useDelTableCallback,
+  useRow,
+  useRowIds,
+  useStore,
+  useTable,
+} from 'tinybase/ui-react';
+
+const STORE_ID = 'canvas';
+
+export {
+  useAddRowCallback,
+  useDelTableCallback,
+  useRow,
+  useRowIds,
+  useStore,
+  useTable,
+};
+
+export const CanvasStore = () => {
+  const store = useCreateStore(() =>
+    createMergeableStore(STORE_ID).setTable('strokes', {}),
+  );
+
+  useProvideStore(STORE_ID, store);
+
+  return null;
+};
+",
   "src/ColorPicker.tsx": "import './colorPicker.css';
-import {useValue, useSetValueCallback} from 'tinybase/ui-react';
+import {useValue, useSetValueCallback} from './SettingsStore';
 
 export const ColorPicker = () => {
   const colors = [
@@ -4946,7 +5104,7 @@ export const ColorPicker = () => {
 };
 ",
   "src/DrawingControls.tsx": "import './drawingControls.css';
-import {useDelTableCallback} from 'tinybase/ui-react';
+import {useDelTableCallback} from './CanvasStore';
 
 import {Button} from './Button';
 
@@ -4966,6 +5124,29 @@ export const DrawingControls = () => {
       </Button>
     </div>
   );
+};
+",
+  "src/SettingsStore.tsx": "import {createStore} from 'tinybase';
+import {
+  useCreateStore,
+  useProvideStore,
+  useValue,
+  useSetValueCallback,
+  useValues,
+} from 'tinybase/ui-react';
+
+const STORE_ID = 'settings';
+
+export {useValue, useSetValueCallback, useValues};
+
+export const SettingsStore = () => {
+  const store = useCreateStore(() =>
+    createStore().setValue('brushColor', '#d81b60').setValue('brushSize', 5),
+  );
+
+  useProvideStore(STORE_ID, store);
+
+  return null;
 };
 ",
   "src/brushSize.css": "#brushSize {
@@ -5326,15 +5507,10 @@ npm run dev
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "src/App.tsx": "import {StrictMode} from 'react';
-import {createMergeableStore} from 'tinybase';
-import {
-  Provider,
-  useCreateStore,
-  useSetValuesCallback,
-  useStore,
-  useTableListener,
-} from 'tinybase/ui-react';
+import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
+
+import {Store, useStore, useSetValuesCallback, useTableListener} from './Store';
 
 import {Button} from './Button';
 
@@ -5354,7 +5530,7 @@ const WINNING_LINES = [
 ];
 
 const Game = () => {
-  const store = useStore();
+  const store = useStore('game');
 
   useTableListener(
     'board',
@@ -5419,15 +5595,10 @@ const Game = () => {
 };
 
 const App = () => {
-  const store = useCreateStore(() => {
-    return createMergeableStore('game')
-      .setValue('currentPlayer', 'X')
-      .setValue('gameStatus', 'playing');
-  });
-
   return (
     <StrictMode>
-      <Provider store={store}>
+      <Provider>
+        <Store />
         <Game />
       </Provider>
     </StrictMode>
@@ -5438,13 +5609,13 @@ export {App};
 ",
   "src/Board.tsx": "import './board.css';
 import {useMemo} from 'react';
-import {useValue} from 'tinybase/ui-react';
+import {useValue} from './Store';
 
 import {Square} from './Square';
 
 export const Board = () => {
-  const gameStatus = useValue('gameStatus') as string;
-  const winningLine = useValue('winningLine') as string | undefined;
+  const gameStatus = useValue('gameStatus', 'game') as string;
+  const winningLine = useValue('winningLine', 'game') as string | undefined;
 
   const winningPositions = useMemo(() => {
     if (!winningLine) return new Set();
@@ -5493,12 +5664,12 @@ export const Button = ({
 );
 ",
   "src/GameStatus.tsx": "import './gameStatus.css';
-import {useValue} from 'tinybase/ui-react';
+import {useValue} from './Store';
 
 export const GameStatus = () => {
-  const gameStatus = useValue('gameStatus') as string;
-  const currentPlayer = useValue('currentPlayer') as string;
-  const winner = useValue('winner') as string | undefined;
+  const gameStatus = useValue('gameStatus', 'game') as string;
+  const currentPlayer = useValue('currentPlayer', 'game') as string;
+  const winner = useValue('winner', 'game') as string | undefined;
 
   return (
     <div id="gameStatus">
@@ -5518,7 +5689,7 @@ export const GameStatus = () => {
 };
 ",
   "src/Square.tsx": "import './square.css';
-import {useCell, useStore, useValue} from 'tinybase/ui-react';
+import {useCell, useStore, useValue} from './Store';
 
 export const Square = ({
   position,
@@ -5529,11 +5700,11 @@ export const Square = ({
   disabled: boolean;
   winning: boolean;
 }) => {
-  const store = useStore();
-  const value = useCell('board', position.toString(), 'value') as
+  const store = useStore('game');
+  const value = useCell('board', position.toString(), 'value', 'game') as
     | string
     | undefined;
-  const currentPlayer = useValue('currentPlayer') as string;
+  const currentPlayer = useValue('currentPlayer', 'game') as string;
 
   const isDisabled = disabled || !!value;
 
@@ -5552,6 +5723,33 @@ export const Square = ({
       {value || ''}
     </button>
   );
+};
+",
+  "src/Store.tsx": "import {createMergeableStore} from 'tinybase';
+import {
+  useCreateStore,
+  useProvideStore,
+  useStore,
+  useSetValuesCallback,
+  useTableListener,
+  useCell,
+  useValue,
+} from 'tinybase/ui-react';
+
+const STORE_ID = 'game';
+
+export {useStore, useSetValuesCallback, useTableListener, useCell, useValue};
+
+export const Store = () => {
+  const store = useCreateStore(() =>
+    createMergeableStore(STORE_ID)
+      .setValue('currentPlayer', 'X')
+      .setValue('gameStatus', 'playing'),
+  );
+
+  useProvideStore(STORE_ID, store);
+
+  return null;
 };
 ",
   "src/board.css": "#board {
@@ -6484,7 +6682,9 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/app.ts": "import {createStore, createMergeableStore} from 'tinybase';
+  "src/app.ts": "import {settingsStore} from './settingsStore';
+
+import {chatStore} from './chatStore';
 
 import {createButton} from './button';
 
@@ -6499,13 +6699,6 @@ import {createUsernameInput} from './usernameInput';
 import {createMessageInput} from './messageInput';
 
 const app = () => {
-  const settingsStore = createStore().setValue('username', 'Carol');
-
-  const chatStore = createMergeableStore('chat').setTable('messages', {
-    '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
-    '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
-  });
-
   const appContainer = document.getElementById('app')!;
 
   appContainer.appendChild(createUsernameInput(settingsStore, chatStore));
@@ -6582,6 +6775,17 @@ export const createButton = (
   button.addEventListener('click', onClick);
   return button;
 };
+",
+  "src/chatStore.ts": "import {createMergeableStore} from 'tinybase';
+
+const STORE_ID = 'chat';
+
+export const chatStore = createMergeableStore(STORE_ID).setTable('messages', {
+  '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
+  '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
+});
+
+export type ChatStore = typeof chatStore;
 ",
   "src/index.ts": "import {app} from './app';
 
@@ -6687,14 +6891,16 @@ export const createMessage = (
 }
 ",
   "src/messageInput.ts": "import './messageInput.css';
+import {type SettingsStore} from './settingsStore';
+import {type ChatStore} from './chatStore';
 
 import {createButton} from './button';
 
 import {createInput} from './input';
 
 export const createMessageInput = (
-  settingsStore: any,
-  chatStore: any,
+  settingsStore: SettingsStore,
+  chatStore: ChatStore,
 ): HTMLDivElement => {
   const messageInputContainer = document.createElement('div');
   messageInputContainer.id = 'messageInput';
@@ -6735,10 +6941,11 @@ export const createMessageInput = (
 }
 ",
   "src/messages.ts": "import './messages.css';
+import {type ChatStore} from './chatStore';
 
 import {createMessage} from './message';
 
-export const createMessages = (store: any): HTMLDivElement => {
+export const createMessages = (store: ChatStore): HTMLDivElement => {
   const messagesContainer = document.createElement('div');
   messagesContainer.id = 'messages';
 
@@ -6757,6 +6964,14 @@ export const createMessages = (store: any): HTMLDivElement => {
   return messagesContainer;
 };
 ",
+  "src/settingsStore.ts": "import {createStore} from 'tinybase';
+
+const STORE_ID = 'settings';
+
+export const settingsStore = createStore().setValue('username', 'Carol');
+
+export type SettingsStore = typeof settingsStore;
+",
   "src/usernameInput.css": "#usernameInput {
   margin-bottom: 1rem;
   display: flex;
@@ -6773,12 +6988,14 @@ export const createMessages = (store: any): HTMLDivElement => {
 }
 ",
   "src/usernameInput.ts": "import './usernameInput.css';
+import {type SettingsStore} from './settingsStore';
+import {type ChatStore} from './chatStore';
 
 import {createInput} from './input';
 
 export const createUsernameInput = (
-  settingsStore: any,
-  chatStore: any,
+  settingsStore: SettingsStore,
+  chatStore: ChatStore,
 ): HTMLDivElement => {
   const container = document.createElement('div');
   container.id = 'usernameInput';
@@ -7046,19 +7263,15 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/app.ts": "import {createMergeableStore, createStore} from 'tinybase';
+  "src/app.ts": "import {settingsStore} from './settingsStore';
+
+import {canvasStore} from './canvasStore';
 
 import {createDrawingControls} from './drawingControls';
 
 import {createCanvas} from './canvas';
 
 const app = () => {
-  const settingsStore = createStore()
-    .setValue('brushColor', '#d81b60')
-    .setValue('brushSize', 5);
-
-  const canvasStore = createMergeableStore('canvas').setTable('strokes', {});
-
   const appContainer = document.getElementById('app')!;
 
   appContainer.appendChild(createDrawingControls(settingsStore, canvasStore));
@@ -7090,8 +7303,9 @@ export {app};
 }
 ",
   "src/brushSize.ts": "import './brushSize.css';
+import type {Store as SettingsStore} from './settingsStore';
 
-export const createBrushSize = (store: any): HTMLDivElement => {
+export const createBrushSize = (store: SettingsStore): HTMLDivElement => {
   const container = document.createElement('div');
   container.id = 'brushSize';
 
@@ -7173,11 +7387,12 @@ export const createButton = (
 }
 ",
   "src/canvas.ts": "import './canvas.css';
-import {Store, MergeableStore} from 'tinybase';
+import type {Store as SettingsStore} from './settingsStore';
+import type {Store as CanvasStore} from './canvasStore';
 
 export const createCanvas = (
-  settingsStore: Store,
-  canvasStore: MergeableStore,
+  settingsStore: SettingsStore,
+  canvasStore: CanvasStore,
 ): HTMLCanvasElement => {
   const canvas = document.createElement('canvas');
   canvas.id = 'drawingCanvas';
@@ -7250,6 +7465,17 @@ export const createCanvas = (
   return canvas;
 };
 ",
+  "src/canvasStore.ts": "import {createMergeableStore} from 'tinybase';
+
+const STORE_ID = 'canvas';
+
+export const canvasStore = createMergeableStore(STORE_ID).setTable(
+  'strokes',
+  {},
+);
+
+export type CanvasStore = typeof canvasStore;
+",
   "src/colorPicker.css": "#colorPicker {
   display: flex;
   gap: 0;
@@ -7273,8 +7499,9 @@ export const createCanvas = (
 }
 ",
   "src/colorPicker.ts": "import './colorPicker.css';
+import type {Store as SettingsStore} from './settingsStore';
 
-export const createColorPicker = (store: any): HTMLDivElement => {
+export const createColorPicker = (store: SettingsStore): HTMLDivElement => {
   const colors = [
     '#d81b60',
     '#1976d2',
@@ -7326,7 +7553,8 @@ export const createColorPicker = (store: any): HTMLDivElement => {
 }
 ",
   "src/drawingControls.ts": "import './drawingControls.css';
-import {Store, MergeableStore} from 'tinybase';
+import type {Store as SettingsStore} from './settingsStore';
+import type {Store as CanvasStore} from './canvasStore';
 
 import {createButton} from './button';
 
@@ -7335,8 +7563,8 @@ import {createColorPicker} from './colorPicker';
 import {createBrushSize} from './brushSize';
 
 export const createDrawingControls = (
-  settingsStore: Store,
-  canvasStore: MergeableStore,
+  settingsStore: SettingsStore,
+  canvasStore: CanvasStore,
 ): HTMLDivElement => {
   const controls = document.createElement('div');
   controls.id = 'drawingControls';
@@ -7357,6 +7585,16 @@ export const createDrawingControls = (
   "src/index.ts": "import {app} from './app';
 
 addEventListener('load', app);
+",
+  "src/settingsStore.ts": "import {createStore} from 'tinybase';
+
+const STORE_ID = 'settings';
+
+export const settingsStore = createStore()
+  .setValue('brushColor', '#d81b60')
+  .setValue('brushSize', 5);
+
+export type SettingsStore = typeof settingsStore;
 ",
   "tsconfig.json": "{
   "compilerOptions": {
@@ -7599,7 +7837,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/app.ts": "import {createMergeableStore} from 'tinybase';
+  "src/app.ts": "import {store} from './store';
 
 import {createButton} from './button';
 
@@ -7619,10 +7857,6 @@ const WINNING_LINES = [
 ];
 
 const app = () => {
-  const store = createMergeableStore('game')
-    .setValue('currentPlayer', 'X')
-    .setValue('gameStatus', 'playing');
-
   const checkGameState = () => {
     const gameStatus = store.getValue('gameStatus');
     if (gameStatus !== 'playing') return;
@@ -7888,6 +8122,16 @@ export const createSquare = (
   square.addEventListener('click', onClick);
   return square;
 };
+",
+  "src/store.ts": "import {createMergeableStore} from 'tinybase';
+
+const STORE_ID = 'game';
+
+export const store = createMergeableStore(STORE_ID)
+  .setValue('currentPlayer', 'X')
+  .setValue('gameStatus', 'playing');
+
+export type Store = typeof store;
 ",
   "tsconfig.json": "{
   "compilerOptions": {
@@ -8245,6 +8489,8 @@ export const store = createMergeableStore(STORE_ID).setTable('todos', {
   '1': {text: 'Learn TinyBase', completed: false},
   '2': {text: 'Build an app', completed: false},
 });
+
+export type Store = typeof store;
 ",
   "src/todoInput.css": "#todoInput {
   display: flex;
@@ -8257,7 +8503,7 @@ export const store = createMergeableStore(STORE_ID).setTable('todos', {
 }
 ",
   "src/todoInput.ts": "import './todoInput.css';
-import {type Store} from 'tinybase';
+import {type Store} from './store';
 
 import {createButton} from './button';
 
@@ -8375,7 +8621,7 @@ export const createTodoItem = (
 }
 ",
   "src/todoList.ts": "import './todoList.css';
-import {type Store} from 'tinybase';
+import {type Store} from './store';
 
 import {createTodoItem} from './todoItem';
 

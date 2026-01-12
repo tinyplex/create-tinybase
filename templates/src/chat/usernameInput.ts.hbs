@@ -1,9 +1,11 @@
 {{includeFile template="src/chat/usernameInput.css.hbs" output="src/usernameInput.css"}}
 import './usernameInput.css';
+import {type SettingsStore} from './settingsStore';
+import {type ChatStore} from './chatStore';
 {{includeFile template="src/shared/input.ts.hbs" output="src/input.{{ext}}"}}
 import {createInput} from './input';
 
-export const createUsernameInput = (settingsStore: any, chatStore: any): HTMLDivElement => {
+export const createUsernameInput = (settingsStore: SettingsStore, chatStore: ChatStore): HTMLDivElement => {
 const container = document.createElement('div');
 container.id = 'usernameInput';
 

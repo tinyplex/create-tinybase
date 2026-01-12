@@ -1,0 +1,38 @@
+{{#if schemas}}
+  import {createMergeableStore} from 'tinybase/with-schemas';
+  import * as UiReact from 'tinybase/ui-react/with-schemas';
+  import {type NoTablesSchema} from 'tinybase/with-schemas';
+{{else}}
+  import {createMergeableStore} from 'tinybase';
+  import {useCreateStore, useProvideStore, useStore, useSetValuesCallback, useTableListener, useCell, useValue} from 'tinybase/ui-react';
+{{/if}}
+
+const STORE_ID = 'game';
+
+{{#if schemas}}
+  const VALUES_SCHEMA = {
+  currentPlayer: {type: 'string'},
+  gameStatus: {type: 'string'},
+  winner: {type: 'string', default: ''},
+  winningLine: {type: 'string', default: ''},
+  } as const;
+
+  type Schemas = [NoTablesSchema, typeof VALUES_SCHEMA];
+
+  const {useCreateStore, useProvideStore, useStore, useSetValuesCallback, useTableListener, useCell, useValue} = UiReact as UiReact.WithSchemas<Schemas>;
+{{/if}}
+
+export {useStore, useSetValuesCallback, useTableListener, useCell, useValue};
+
+export const Store = () => {
+const store = useCreateStore(() =>
+createMergeableStore(STORE_ID){{#if schemas}}
+  .setValuesSchema(VALUES_SCHEMA){{/if}}
+.setValue('currentPlayer', 'X')
+.setValue('gameStatus', 'playing'),
+);
+
+useProvideStore(STORE_ID, store);
+
+return null;
+};
