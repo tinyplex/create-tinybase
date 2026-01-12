@@ -74,22 +74,30 @@ pkill -f "vite.*--port.*51[7-8][0-9]" 2>/dev/null || true
 mkdir -p "$TEST_DIR"
 
 declare -a all_projects=(
-  "test-js-vanilla-todos:javascript:vanilla:todos:5173"
-  "test-js-react-todos:javascript:react:todos:5174"
-  "test-ts-vanilla-todos:typescript:vanilla:todos:5175"
-  "test-ts-react-todos:typescript:react:todos:5176"
-  "test-js-vanilla-chat:javascript:vanilla:chat:5177"
-  "test-js-react-chat:javascript:react:chat:5178"
-  "test-ts-vanilla-chat:typescript:vanilla:chat:5179"
-  "test-ts-react-chat:typescript:react:chat:5180"
-  "test-js-vanilla-drawing:javascript:vanilla:drawing:5181"
-  "test-js-react-drawing:javascript:react:drawing:5182"
-  "test-ts-vanilla-drawing:typescript:vanilla:drawing:5183"
-  "test-ts-react-drawing:typescript:react:drawing:5184"
-  "test-js-vanilla-game:javascript:vanilla:game:5185"
-  "test-js-react-game:javascript:react:game:5186"
-  "test-ts-vanilla-game:typescript:vanilla:game:5187"
-  "test-ts-react-game:typescript:react:game:5188"
+  "test-js-vanilla-todos:javascript:vanilla:todos:5173:false"
+  "test-js-react-todos:javascript:react:todos:5174:false"
+  "test-ts-vanilla-todos:typescript:vanilla:todos:5175:false"
+  "test-ts-react-todos:typescript:react:todos:5176:false"
+  "test-ts-vanilla-todos-schemas:typescript:vanilla:todos:5189:true"
+  "test-ts-react-todos-schemas:typescript:react:todos:5190:true"
+  "test-js-vanilla-chat:javascript:vanilla:chat:5177:false"
+  "test-js-react-chat:javascript:react:chat:5178:false"
+  "test-ts-vanilla-chat:typescript:vanilla:chat:5179:false"
+  "test-ts-react-chat:typescript:react:chat:5180:false"
+  "test-ts-vanilla-chat-schemas:typescript:vanilla:chat:5191:true"
+  "test-ts-react-chat-schemas:typescript:react:chat:5192:true"
+  "test-js-vanilla-drawing:javascript:vanilla:drawing:5181:false"
+  "test-js-react-drawing:javascript:react:drawing:5182:false"
+  "test-ts-vanilla-drawing:typescript:vanilla:drawing:5183:false"
+  "test-ts-react-drawing:typescript:react:drawing:5184:false"
+  "test-ts-vanilla-drawing-schemas:typescript:vanilla:drawing:5193:true"
+  "test-ts-react-drawing-schemas:typescript:react:drawing:5194:true"
+  "test-js-vanilla-game:javascript:vanilla:game:5185:false"
+  "test-js-react-game:javascript:react:game:5186:false"
+  "test-ts-vanilla-game:typescript:vanilla:game:5187:false"
+  "test-ts-react-game:typescript:react:game:5188:false"
+  "test-ts-vanilla-game-schemas:typescript:vanilla:game:5195:true"
+  "test-ts-react-game-schemas:typescript:react:game:5196:true"
 )
 
 # Filter projects if requested
@@ -97,7 +105,7 @@ declare -a projects=()
 if [ -n "$FILTER" ]; then
   echo "Filtering projects by: $FILTER"
   for project in "${all_projects[@]}"; do
-    IFS=':' read -r name _ _ _ _ <<< "$project"
+    IFS=':' read -r name _ _ _ _ _ <<< "$project"
     if [[ "$name" == *"$FILTER"* ]]; then
       projects+=("$project")
     fi
@@ -123,7 +131,7 @@ else
   echo "Smart mode: preserving node_modules where possible..."
   # For each project we're about to build, backup node_modules if it exists
   for project in "${projects[@]}"; do
-    IFS=':' read -r name _ _ _ _ <<< "$project"
+    IFS=':' read -r name _ _ _ _ _ <<< "$project"
     project_path="$TEST_DIR/$name"
     if [ -d "$project_path" ]; then
       if [ -d "$project_path/node_modules" ]; then
@@ -143,7 +151,7 @@ cd "$TEST_DIR"
 
 echo "Creating projects..."
 for project in "${projects[@]}"; do
-  IFS=':' read -r name lang framework appType port <<< "$project"
+  IFS=':' read -r name lang framework appType port schemas <<< "$project"
   echo "Creating $name..."
   node "$CLI_PATH" \
     --non-interactive \
@@ -151,6 +159,7 @@ for project in "${projects[@]}"; do
     --language "$lang" \
     --framework "$framework" \
     --appType "$appType" \
+    --schemas "$schemas" \
     --prettier false \
     --eslint false
   
@@ -192,7 +201,7 @@ if [ "$SKIP_INSTALL" = false ]; then
     echo "Installing dependencies in parallel..."
     INSTALL_PIDS=()
     for project in "${projects[@]}"; do
-      IFS=':' read -r name _ _ _ _ <<< "$project"
+      IFS=':' read -r name _ _ _ _ _ <<< "$project"
       smart_install "$name" &
       INSTALL_PIDS+=($!)
     done
@@ -205,7 +214,7 @@ if [ "$SKIP_INSTALL" = false ]; then
   else
     echo "Installing dependencies sequentially..."
     for project in "${projects[@]}"; do
-      IFS=':' read -r name _ _ _ _ <<< "$project"
+      IFS=':' read -r name _ _ _ _ _ <<< "$project"
       smart_install "$name"
     done
   fi
@@ -218,7 +227,7 @@ echo ""
 echo "Starting dev servers..."
 PIDS=()
 for project in "${projects[@]}"; do
-  IFS=':' read -r name _ _ _ port <<< "$project"
+  IFS=':' read -r name _ _ _ port _ <<< "$project"
   echo "Starting $name on port $port..."
   (cd "$name" && npm run dev -- --port "$port" --force > "/tmp/${name}.log" 2>&1) &
   PIDS+=($!)
@@ -231,7 +240,7 @@ sleep 1
 echo ""
 echo "Opening browsers..."
 for project in "${projects[@]}"; do
-  IFS=':' read -r name _ _ _ port <<< "$project"
+  IFS=':' read -r name _ _ _ port _ <<< "$project"
   URL="http://localhost:$port"
   echo "Opening $name at $URL"
   open "$URL"
@@ -241,7 +250,7 @@ done
 echo ""
 echo "Projects running on ports:"
 for project in "${projects[@]}"; do
-  IFS=':' read -r name _ _ _ port <<< "$project"
+  IFS=':' read -r name _ _ _ port _ <<< "$project"
   printf "  - %-25s http://localhost:%s\n" "$name:" "$port"
 done
 echo ""

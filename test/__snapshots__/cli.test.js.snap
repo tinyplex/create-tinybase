@@ -179,7 +179,7 @@ npm run dev
               A real-time chat application demonstrating TinyBase's reactive
               data management.
               <br /><br />
-              Built with JavaScript + React.
+              Built with JavaScript and React.
             </div>
           </div>
         </div>
@@ -726,7 +726,7 @@ npm run dev
               A collaborative drawing canvas showcasing TinyBase's state
               synchronization.
               <br /><br />
-              Built with JavaScript + React.
+              Built with JavaScript and React.
             </div>
           </div>
         </div>
@@ -1301,7 +1301,7 @@ npm run dev
               A tic-tac-toe game demonstrating turn-based logic and computed
               game state.
               <br /><br />
-              Built with JavaScript + React.
+              Built with JavaScript and React.
             </div>
           </div>
         </div>
@@ -1875,7 +1875,7 @@ npm run dev
               A simple todo list application demonstrating TinyBase's reactive
               data management with CRUD operations.
               <br /><br />
-              Built with JavaScript + React.
+              Built with JavaScript and React.
             </div>
           </div>
         </div>
@@ -1959,7 +1959,7 @@ const TodoInput = () => {
     <form id="todoInput" onSubmit={handleSubmit}>
       <Input
         value={text}
-        onChange={(e) => setText(e.target.value)}
+        onChange={setText}
         placeholder="What needs to be done?"
         autoFocus
       />
@@ -1972,9 +1972,13 @@ const TodoInput = () => {
 export {TodoInput};
 ",
   "src/components/TodoItem.jsx": "import './todoItem.css';
-import {useRow, useSetPartialRowCallback} from 'tinybase/ui-react';
+import {
+  useDelRowCallback,
+  useRow,
+  useSetPartialRowCallback,
+} from 'tinybase/ui-react';
 import {Button} from './Button';
-const TodoItem = ({rowId, onDelete}) => {
+const TodoItem = ({rowId}) => {
   const todo = useRow('todos', rowId);
   const setPartialRow = useSetPartialRowCallback(
     'todos',
@@ -1982,6 +1986,7 @@ const TodoItem = ({rowId, onDelete}) => {
     (e) => ({completed: e.target.checked}),
     [],
   );
+  const delRow = useDelRowCallback('todos', rowId, () => [rowId], []);
   return (
     <div className={\`todoItem\${todo.completed ? ' completed' : ''}\`}>
       <input
@@ -1991,22 +1996,21 @@ const TodoItem = ({rowId, onDelete}) => {
         id={\`todo-\${rowId}\`}
       />
       <label htmlFor={\`todo-\${rowId}\`}>{todo.text}</label>
-      <Button onClick={() => onDelete(rowId)}>Delete</Button>
+      <Button onClick={delRow}>Delete</Button>
     </div>
   );
 };
 export {TodoItem};
 ",
   "src/components/TodoList.jsx": "import './todoList.css';
-import {useDelRowCallback, useRowIds} from 'tinybase/ui-react';
+import {useRowIds} from 'tinybase/ui-react';
 import {TodoItem} from './TodoItem';
 const TodoList = () => {
   const todoIds = useRowIds('todos');
-  const delRow = useDelRowCallback('todos', (id) => id, []);
   return (
     <div id="todoList">
       {todoIds.map((id) => (
-        <TodoItem key={id} rowId={id} onDelete={delRow} />
+        <TodoItem key={id} rowId={id} />
       ))}
     </div>
   );
@@ -4484,7 +4488,7 @@ npm run dev
               A real-time chat application demonstrating TinyBase's reactive
               data management.
               <br /><br />
-              Built with TypeScript + React.
+              Built with TypeScript and React.
             </div>
           </div>
         </div>
@@ -5120,7 +5124,7 @@ npm run dev
               A collaborative drawing canvas showcasing TinyBase's state
               synchronization.
               <br /><br />
-              Built with TypeScript + React.
+              Built with TypeScript and React.
             </div>
           </div>
         </div>
@@ -5772,7 +5776,7 @@ npm run dev
               A tic-tac-toe game demonstrating turn-based logic and computed
               game state.
               <br /><br />
-              Built with TypeScript + React.
+              Built with TypeScript and React.
             </div>
           </div>
         </div>
@@ -6420,7 +6424,7 @@ npm run dev
               A simple todo list application demonstrating TinyBase's reactive
               data management with CRUD operations.
               <br /><br />
-              Built with TypeScript + React.
+              Built with TypeScript and React.
             </div>
           </div>
         </div>
@@ -6538,7 +6542,7 @@ export const TodoInput = () => {
     <form id="todoInput" onSubmit={handleSubmit}>
       <Input
         value={text}
-        onChange={(e) => setText(e.target.value)}
+        onChange={setText}
         placeholder="What needs to be done?"
         autoFocus
       />
@@ -6550,17 +6554,15 @@ export const TodoInput = () => {
 };
 ",
   "src/components/TodoItem.tsx": "import './todoItem.css';
-import {useRow, useSetPartialRowCallback} from 'tinybase/ui-react';
+import {
+  useDelRowCallback,
+  useRow,
+  useSetPartialRowCallback,
+} from 'tinybase/ui-react';
 
 import {Button} from './Button';
 
-export const TodoItem = ({
-  rowId,
-  onDelete,
-}: {
-  rowId: string;
-  onDelete: (id: string) => void;
-}) => {
+export const TodoItem = ({rowId}: {rowId: string}) => {
   const todo = useRow('todos', rowId) as {text: string; completed: boolean};
   const setPartialRow = useSetPartialRowCallback(
     'todos',
@@ -6568,6 +6570,7 @@ export const TodoItem = ({
     (e: React.ChangeEvent<HTMLInputElement>) => ({completed: e.target.checked}),
     [],
   );
+  const delRow = useDelRowCallback('todos', rowId, () => [rowId], []);
 
   return (
     <div className={\`todoItem\${todo.completed ? ' completed' : ''}\`}>
@@ -6578,24 +6581,23 @@ export const TodoItem = ({
         id={\`todo-\${rowId}\`}
       />
       <label htmlFor={\`todo-\${rowId}\`}>{todo.text}</label>
-      <Button onClick={() => onDelete(rowId)}>Delete</Button>
+      <Button onClick={delRow}>Delete</Button>
     </div>
   );
 };
 ",
   "src/components/TodoList.tsx": "import './todoList.css';
-import {useDelRowCallback, useRowIds} from 'tinybase/ui-react';
+import {useRowIds} from 'tinybase/ui-react';
 
 import {TodoItem} from './TodoItem';
 
 export const TodoList = () => {
   const todoIds = useRowIds('todos');
-  const delRow = useDelRowCallback('todos', (id: string) => id, []);
 
   return (
     <div id="todoList">
       {todoIds.map((id) => (
-        <TodoItem key={id} rowId={id} onDelete={delRow} />
+        <TodoItem key={id} rowId={id} />
       ))}
     </div>
   );

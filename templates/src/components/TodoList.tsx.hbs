@@ -1,17 +1,20 @@
 {{includeFile template="src/components/todoList.css.hbs" output="src/components/todoList.css"}}
 import './todoList.css';
-import {useDelRowCallback, useRowIds} from 'tinybase/ui-react';
+{{#if schemas}}
+  import {useRowIds} from '../todos/schemas';
+{{else}}
+  import {useRowIds} from 'tinybase/ui-react';
+{{/if}}
 {{includeFile template="src/components/TodoItem.tsx.hbs" output="src/components/TodoItem.{{ext}}"}}
 import {TodoItem} from './TodoItem';
 
 export const TodoList = () => {
 const todoIds = useRowIds('todos');
-const delRow = useDelRowCallback('todos', (id: string) => id, []);
 
 return (
 <div id="todoList">
   {todoIds.map((id) => (
-  <TodoItem key={id} rowId={id} onDelete={delRow} />
+  <TodoItem key={id} rowId={id} />
   ))}
 </div>
 );

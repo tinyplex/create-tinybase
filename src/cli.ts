@@ -61,6 +61,13 @@ const config = {
       initial: 0,
     },
     {
+      type: (prev: unknown, answers: Record<string, unknown>) =>
+        answers.language === 'typescript' ? ('confirm' as const) : null,
+      name: 'schemas',
+      message: 'Include store schemas?',
+      initial: false,
+    },
+    {
       type: 'confirm' as const,
       name: 'prettier',
       message: 'Include Prettier?',
@@ -75,8 +82,15 @@ const config = {
   ],
 
   createContext: (answers: Record<string, unknown>) => {
-    const {projectName, language, framework, appType, prettier, eslint} =
-      answers;
+    const {
+      projectName,
+      language,
+      framework,
+      appType,
+      prettier,
+      eslint,
+      schemas,
+    } = answers;
     const typescript = language === 'typescript';
     const javascript = !typescript;
     const react = framework === 'react';
@@ -89,6 +103,7 @@ const config = {
       appType,
       prettier,
       eslint,
+      schemas: typescript && (schemas === true || schemas === 'true'),
       typescript,
       javascript,
       react,
