@@ -402,56 +402,7 @@ export {UsernameInput};
   flex: 1;
 }
 ",
-  "src/index.css": "a {
-  color: var(--fg);
-}
-
-h1 {
-  font-weight: 600;
-  img {
-    margin-right: 1rem;
-    height: 2.5rem;
-    vertical-align: text-bottom;
-  }
-}
-
-h2 {
-  font-weight: 800;
-  font-size: 1.3rem;
-  margin: 1rem 0 0;
-}
-
-p {
-  margin: 0 0 1rem;
-  line-height: 1.5;
-}
-
-details {
-  border: 1px solid var(--border);
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-}
-
-details summary {
-  cursor: pointer;
-  font-weight: 800;
-  margin: -0.5rem -0.5rem 0;
-  padding: 0.5rem;
-}
-
-details[open] summary {
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-pre {
-  margin: 0;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-",
-  "src/index.jsx": "import './index.css';
-import ReactDOM from 'react-dom/client';
+  "src/index.jsx": "import ReactDOM from 'react-dom/client';
 import {App} from './chat/App';
 addEventListener('load', () =>
   ReactDOM.createRoot(document.getElementById('app')).render(<App />),
@@ -1009,56 +960,7 @@ export {DrawingControls};
   max-width: 600px;
 }
 ",
-  "src/index.css": "a {
-  color: var(--fg);
-}
-
-h1 {
-  font-weight: 600;
-  img {
-    margin-right: 1rem;
-    height: 2.5rem;
-    vertical-align: text-bottom;
-  }
-}
-
-h2 {
-  font-weight: 800;
-  font-size: 1.3rem;
-  margin: 1rem 0 0;
-}
-
-p {
-  margin: 0 0 1rem;
-  line-height: 1.5;
-}
-
-details {
-  border: 1px solid var(--border);
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-}
-
-details summary {
-  cursor: pointer;
-  font-weight: 800;
-  margin: -0.5rem -0.5rem 0;
-  padding: 0.5rem;
-}
-
-details[open] summary {
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-pre {
-  margin: 0;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-",
-  "src/index.jsx": "import './index.css';
-import ReactDOM from 'react-dom/client';
+  "src/index.jsx": "import ReactDOM from 'react-dom/client';
 import {App} from './drawing/App';
 addEventListener('load', () =>
   ReactDOM.createRoot(document.getElementById('app')).render(<App />),
@@ -1580,56 +1482,7 @@ export {Square};
   color: var(--bg);
 }
 ",
-  "src/index.css": "a {
-  color: var(--fg);
-}
-
-h1 {
-  font-weight: 600;
-  img {
-    margin-right: 1rem;
-    height: 2.5rem;
-    vertical-align: text-bottom;
-  }
-}
-
-h2 {
-  font-weight: 800;
-  font-size: 1.3rem;
-  margin: 1rem 0 0;
-}
-
-p {
-  margin: 0 0 1rem;
-  line-height: 1.5;
-}
-
-details {
-  border: 1px solid var(--border);
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-}
-
-details summary {
-  cursor: pointer;
-  font-weight: 800;
-  margin: -0.5rem -0.5rem 0;
-  padding: 0.5rem;
-}
-
-details[open] summary {
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-pre {
-  margin: 0;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-",
-  "src/index.jsx": "import './index.css';
-import ReactDOM from 'react-dom/client';
+  "src/index.jsx": "import ReactDOM from 'react-dom/client';
 import {App} from './game/App';
 addEventListener('load', () =>
   ReactDOM.createRoot(document.getElementById('app')).render(<App />),
@@ -1905,56 +1758,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/index.css": "a {
-  color: var(--fg);
-}
-
-h1 {
-  font-weight: 600;
-  img {
-    margin-right: 1rem;
-    height: 2.5rem;
-    vertical-align: text-bottom;
-  }
-}
-
-h2 {
-  font-weight: 800;
-  font-size: 1.3rem;
-  margin: 1rem 0 0;
-}
-
-p {
-  margin: 0 0 1rem;
-  line-height: 1.5;
-}
-
-details {
-  border: 1px solid var(--border);
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-}
-
-details summary {
-  cursor: pointer;
-  font-weight: 800;
-  margin: -0.5rem -0.5rem 0;
-  padding: 0.5rem;
-}
-
-details[open] summary {
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-pre {
-  margin: 0;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-",
-  "src/index.jsx": "import './index.css';
-import ReactDOM from 'react-dom/client';
+  "src/index.jsx": "import ReactDOM from 'react-dom/client';
 import {App} from './todos/App';
 addEventListener('load', () =>
   ReactDOM.createRoot(document.getElementById('app')).render(<App />),
@@ -2607,56 +2411,7 @@ const createUsernameInput = (settingsStore, chatStore) => {
 };
 export {createUsernameInput};
 ",
-  "src/index.css": "a {
-  color: var(--fg);
-}
-
-h1 {
-  font-weight: 600;
-  img {
-    margin-right: 1rem;
-    height: 2.5rem;
-    vertical-align: text-bottom;
-  }
-}
-
-h2 {
-  font-weight: 800;
-  font-size: 1.3rem;
-  margin: 1rem 0 0;
-}
-
-p {
-  margin: 0 0 1rem;
-  line-height: 1.5;
-}
-
-details {
-  border: 1px solid var(--border);
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-}
-
-details summary {
-  cursor: pointer;
-  font-weight: 800;
-  margin: -0.5rem -0.5rem 0;
-  padding: 0.5rem;
-}
-
-details[open] summary {
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-pre {
-  margin: 0;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-",
-  "src/index.js": "import './index.css';
-import {app} from './chat/app';
+  "src/index.js": "import {app} from './chat/app';
 addEventListener('load', app);
 ",
   "src/shared/button.css": "button {
@@ -3173,56 +2928,7 @@ const createDrawingControls = (settingsStore, canvasStore) => {
 };
 export {createDrawingControls};
 ",
-  "src/index.css": "a {
-  color: var(--fg);
-}
-
-h1 {
-  font-weight: 600;
-  img {
-    margin-right: 1rem;
-    height: 2.5rem;
-    vertical-align: text-bottom;
-  }
-}
-
-h2 {
-  font-weight: 800;
-  font-size: 1.3rem;
-  margin: 1rem 0 0;
-}
-
-p {
-  margin: 0 0 1rem;
-  line-height: 1.5;
-}
-
-details {
-  border: 1px solid var(--border);
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-}
-
-details summary {
-  cursor: pointer;
-  font-weight: 800;
-  margin: -0.5rem -0.5rem 0;
-  padding: 0.5rem;
-}
-
-details[open] summary {
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-pre {
-  margin: 0;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-",
-  "src/index.js": "import './index.css';
-import {app} from './drawing/app';
+  "src/index.js": "import {app} from './drawing/app';
 addEventListener('load', app);
 ",
   "src/shared/button.css": "button {
@@ -3693,56 +3399,7 @@ const createSquare = (position, value, onClick, disabled, winning) => {
 };
 export {createSquare};
 ",
-  "src/index.css": "a {
-  color: var(--fg);
-}
-
-h1 {
-  font-weight: 600;
-  img {
-    margin-right: 1rem;
-    height: 2.5rem;
-    vertical-align: text-bottom;
-  }
-}
-
-h2 {
-  font-weight: 800;
-  font-size: 1.3rem;
-  margin: 1rem 0 0;
-}
-
-p {
-  margin: 0 0 1rem;
-  line-height: 1.5;
-}
-
-details {
-  border: 1px solid var(--border);
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-}
-
-details summary {
-  cursor: pointer;
-  font-weight: 800;
-  margin: -0.5rem -0.5rem 0;
-  padding: 0.5rem;
-}
-
-details[open] summary {
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-pre {
-  margin: 0;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-",
-  "src/index.js": "import './index.css';
-import {app} from './game/app';
+  "src/index.js": "import {app} from './game/app';
 addEventListener('load', app);
 ",
   "src/shared/button.css": "button {
@@ -4001,56 +3658,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/index.css": "a {
-  color: var(--fg);
-}
-
-h1 {
-  font-weight: 600;
-  img {
-    margin-right: 1rem;
-    height: 2.5rem;
-    vertical-align: text-bottom;
-  }
-}
-
-h2 {
-  font-weight: 800;
-  font-size: 1.3rem;
-  margin: 1rem 0 0;
-}
-
-p {
-  margin: 0 0 1rem;
-  line-height: 1.5;
-}
-
-details {
-  border: 1px solid var(--border);
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-}
-
-details summary {
-  cursor: pointer;
-  font-weight: 800;
-  margin: -0.5rem -0.5rem 0;
-  padding: 0.5rem;
-}
-
-details[open] summary {
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-pre {
-  margin: 0;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-",
-  "src/index.js": "import './index.css';
-import {app} from './todos/app';
+  "src/index.js": "import {app} from './todos/app';
 addEventListener('load', app);
 ",
   "src/shared/button.css": "button {
@@ -4728,56 +4336,7 @@ export const UsernameInput = () => {
   flex: 1;
 }
 ",
-  "src/index.css": "a {
-  color: var(--fg);
-}
-
-h1 {
-  font-weight: 600;
-  img {
-    margin-right: 1rem;
-    height: 2.5rem;
-    vertical-align: text-bottom;
-  }
-}
-
-h2 {
-  font-weight: 800;
-  font-size: 1.3rem;
-  margin: 1rem 0 0;
-}
-
-p {
-  margin: 0 0 1rem;
-  line-height: 1.5;
-}
-
-details {
-  border: 1px solid var(--border);
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-}
-
-details summary {
-  cursor: pointer;
-  font-weight: 800;
-  margin: -0.5rem -0.5rem 0;
-  padding: 0.5rem;
-}
-
-details[open] summary {
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-pre {
-  margin: 0;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-",
-  "src/index.tsx": "import './index.css';
-import ReactDOM from 'react-dom/client';
+  "src/index.tsx": "import ReactDOM from 'react-dom/client';
 import {App} from './chat/App';
 
 addEventListener('load', () =>
@@ -5424,56 +4983,7 @@ export const DrawingControls = () => {
   max-width: 600px;
 }
 ",
-  "src/index.css": "a {
-  color: var(--fg);
-}
-
-h1 {
-  font-weight: 600;
-  img {
-    margin-right: 1rem;
-    height: 2.5rem;
-    vertical-align: text-bottom;
-  }
-}
-
-h2 {
-  font-weight: 800;
-  font-size: 1.3rem;
-  margin: 1rem 0 0;
-}
-
-p {
-  margin: 0 0 1rem;
-  line-height: 1.5;
-}
-
-details {
-  border: 1px solid var(--border);
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-}
-
-details summary {
-  cursor: pointer;
-  font-weight: 800;
-  margin: -0.5rem -0.5rem 0;
-  padding: 0.5rem;
-}
-
-details[open] summary {
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-pre {
-  margin: 0;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-",
-  "src/index.tsx": "import './index.css';
-import ReactDOM from 'react-dom/client';
+  "src/index.tsx": "import ReactDOM from 'react-dom/client';
 import {App} from './drawing/App';
 
 addEventListener('load', () =>
@@ -6069,56 +5579,7 @@ export const Square = ({
   color: var(--bg);
 }
 ",
-  "src/index.css": "a {
-  color: var(--fg);
-}
-
-h1 {
-  font-weight: 600;
-  img {
-    margin-right: 1rem;
-    height: 2.5rem;
-    vertical-align: text-bottom;
-  }
-}
-
-h2 {
-  font-weight: 800;
-  font-size: 1.3rem;
-  margin: 1rem 0 0;
-}
-
-p {
-  margin: 0 0 1rem;
-  line-height: 1.5;
-}
-
-details {
-  border: 1px solid var(--border);
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-}
-
-details summary {
-  cursor: pointer;
-  font-weight: 800;
-  margin: -0.5rem -0.5rem 0;
-  padding: 0.5rem;
-}
-
-details[open] summary {
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-pre {
-  margin: 0;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-",
-  "src/index.tsx": "import './index.css';
-import ReactDOM from 'react-dom/client';
+  "src/index.tsx": "import ReactDOM from 'react-dom/client';
 import {App} from './game/App';
 
 addEventListener('load', () =>
@@ -6434,56 +5895,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/index.css": "a {
-  color: var(--fg);
-}
-
-h1 {
-  font-weight: 600;
-  img {
-    margin-right: 1rem;
-    height: 2.5rem;
-    vertical-align: text-bottom;
-  }
-}
-
-h2 {
-  font-weight: 800;
-  font-size: 1.3rem;
-  margin: 1rem 0 0;
-}
-
-p {
-  margin: 0 0 1rem;
-  line-height: 1.5;
-}
-
-details {
-  border: 1px solid var(--border);
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-}
-
-details summary {
-  cursor: pointer;
-  font-weight: 800;
-  margin: -0.5rem -0.5rem 0;
-  padding: 0.5rem;
-}
-
-details[open] summary {
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-pre {
-  margin: 0;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-",
-  "src/index.tsx": "import './index.css';
-import ReactDOM from 'react-dom/client';
+  "src/index.tsx": "import ReactDOM from 'react-dom/client';
 import {App} from './todos/App';
 
 addEventListener('load', () =>
@@ -7252,56 +6664,7 @@ export const createUsernameInput = (
   return container;
 };
 ",
-  "src/index.css": "a {
-  color: var(--fg);
-}
-
-h1 {
-  font-weight: 600;
-  img {
-    margin-right: 1rem;
-    height: 2.5rem;
-    vertical-align: text-bottom;
-  }
-}
-
-h2 {
-  font-weight: 800;
-  font-size: 1.3rem;
-  margin: 1rem 0 0;
-}
-
-p {
-  margin: 0 0 1rem;
-  line-height: 1.5;
-}
-
-details {
-  border: 1px solid var(--border);
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-}
-
-details summary {
-  cursor: pointer;
-  font-weight: 800;
-  margin: -0.5rem -0.5rem 0;
-  padding: 0.5rem;
-}
-
-details[open] summary {
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-pre {
-  margin: 0;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-",
-  "src/index.ts": "import './index.css';
-import {app} from './chat/app';
+  "src/index.ts": "import {app} from './chat/app';
 
 addEventListener('load', app);
 ",
@@ -7894,56 +7257,7 @@ export const createDrawingControls = (
   return controls;
 };
 ",
-  "src/index.css": "a {
-  color: var(--fg);
-}
-
-h1 {
-  font-weight: 600;
-  img {
-    margin-right: 1rem;
-    height: 2.5rem;
-    vertical-align: text-bottom;
-  }
-}
-
-h2 {
-  font-weight: 800;
-  font-size: 1.3rem;
-  margin: 1rem 0 0;
-}
-
-p {
-  margin: 0 0 1rem;
-  line-height: 1.5;
-}
-
-details {
-  border: 1px solid var(--border);
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-}
-
-details summary {
-  cursor: pointer;
-  font-weight: 800;
-  margin: -0.5rem -0.5rem 0;
-  padding: 0.5rem;
-}
-
-details[open] summary {
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-pre {
-  margin: 0;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-",
-  "src/index.ts": "import './index.css';
-import {app} from './drawing/app';
+  "src/index.ts": "import {app} from './drawing/app';
 
 addEventListener('load', app);
 ",
@@ -8474,56 +7788,7 @@ export const createSquare = (
   return square;
 };
 ",
-  "src/index.css": "a {
-  color: var(--fg);
-}
-
-h1 {
-  font-weight: 600;
-  img {
-    margin-right: 1rem;
-    height: 2.5rem;
-    vertical-align: text-bottom;
-  }
-}
-
-h2 {
-  font-weight: 800;
-  font-size: 1.3rem;
-  margin: 1rem 0 0;
-}
-
-p {
-  margin: 0 0 1rem;
-  line-height: 1.5;
-}
-
-details {
-  border: 1px solid var(--border);
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-}
-
-details summary {
-  cursor: pointer;
-  font-weight: 800;
-  margin: -0.5rem -0.5rem 0;
-  padding: 0.5rem;
-}
-
-details[open] summary {
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-pre {
-  margin: 0;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-",
-  "src/index.ts": "import './index.css';
-import {app} from './game/app';
+  "src/index.ts": "import {app} from './game/app';
 
 addEventListener('load', app);
 ",
@@ -8810,56 +8075,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/index.css": "a {
-  color: var(--fg);
-}
-
-h1 {
-  font-weight: 600;
-  img {
-    margin-right: 1rem;
-    height: 2.5rem;
-    vertical-align: text-bottom;
-  }
-}
-
-h2 {
-  font-weight: 800;
-  font-size: 1.3rem;
-  margin: 1rem 0 0;
-}
-
-p {
-  margin: 0 0 1rem;
-  line-height: 1.5;
-}
-
-details {
-  border: 1px solid var(--border);
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-}
-
-details summary {
-  cursor: pointer;
-  font-weight: 800;
-  margin: -0.5rem -0.5rem 0;
-  padding: 0.5rem;
-}
-
-details[open] summary {
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-pre {
-  margin: 0;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-",
-  "src/index.ts": "import './index.css';
-import {app} from './todos/app';
+  "src/index.ts": "import {app} from './todos/app';
 
 addEventListener('load', app);
 ",
