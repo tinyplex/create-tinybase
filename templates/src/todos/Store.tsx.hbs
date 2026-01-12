@@ -1,0 +1,40 @@
+{{#if schemas}}
+  import {createMergeableStore} from 'tinybase/with-schemas';
+  import * as UiReact from 'tinybase/ui-react/with-schemas';
+  import {type NoValuesSchema} from 'tinybase/with-schemas';
+{{else}}
+  import {createMergeableStore} from 'tinybase';
+  import {useCreateStore, useProvideStore, useAddRowCallback, useDelRowCallback, useRow, useRowIds, useSetPartialRowCallback} from 'tinybase/ui-react';
+{{/if}}
+
+const STORE_ID = 'todos';
+
+{{#if schemas}}
+  const TODOS_SCHEMA = {
+  todos: {
+  text: {type: 'string'},
+  completed: {type: 'boolean'},
+  },
+  } as const;
+
+  type Schemas = [typeof TODOS_SCHEMA, NoValuesSchema];
+
+  const {useCreateStore, useProvideStore, useAddRowCallback, useDelRowCallback, useRow, useRowIds, useSetPartialRowCallback} = UiReact as UiReact.WithSchemas<Schemas>;
+{{/if}}
+
+export {useAddRowCallback, useDelRowCallback, useRow, useRowIds, useSetPartialRowCallback};
+
+export const Store = () => {
+const store = useCreateStore(() =>
+createMergeableStore(STORE_ID){{#if schemas}}
+  .setTablesSchema(TODOS_SCHEMA){{/if}}
+.setTable('todos', {
+'1': {text: 'Learn TinyBase', completed: false},
+'2': {text: 'Build an app', completed: false},
+}),
+);
+
+useProvideStore(STORE_ID, store);
+
+return null;
+};

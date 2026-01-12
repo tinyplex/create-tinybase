@@ -1,11 +1,7 @@
 {{includeFile template="src/todos/todoInput.css.hbs" output="src/todoInput.css"}}
 import './todoInput.css';
 import {useState} from 'react';
-{{#if schemas}}
-  import {useAddRowCallback} from './schemas';
-{{else}}
-  import {useAddRowCallback} from 'tinybase/ui-react';
-{{/if}}
+import {useAddRowCallback} from './Store';
 {{includeFile template="src/shared/Button.tsx.hbs" output="src/Button.{{ext}}"}}
 import {Button} from './Button';
 {{includeFile template="src/shared/Input.tsx.hbs" output="src/Input.{{ext}}"}}
@@ -13,7 +9,11 @@ import {Input} from './Input';
 
 export const TodoInput = () => {
 const [text, setText] = useState('');
-const addRow = useAddRowCallback('todos', () => ({text, completed: false}), [text]);
+{{#if schemas}}
+  const addRow = useAddRowCallback('todos', () => ({text, completed: false}), [text], 'todos');
+{{else}}
+  const addRow = useAddRowCallback('todos', () => ({text, completed: false}), [text]);
+{{/if}}
 
 const handleSubmit = (e: React.FormEvent) => {
 e.preventDefault();

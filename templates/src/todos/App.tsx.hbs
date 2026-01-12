@@ -1,34 +1,22 @@
 import {StrictMode} from 'react';
 {{#if schemas}}
-  {{includeFile template="src/todos/schemas.ts.hbs" output="src/schemas.ts"}}
-  import {createMergeableStore} from 'tinybase/with-schemas';
-  import * as UiReact from 'tinybase/ui-react/with-schemas';
-  import {TODOS_SCHEMA} from './schemas';
+  import {Provider} from 'tinybase/ui-react/with-schemas';
 {{else}}
-  import {createMergeableStore} from 'tinybase';
-  import {Provider, useCreateStore} from 'tinybase/ui-react';
+  import {Provider} from 'tinybase/ui-react';
 {{/if}}
 import {Inspector} from 'tinybase/ui-react-inspector';
+{{includeFile template="src/todos/Store.tsx.hbs" output="src/Store.{{ext}}"}}
+import {Store} from './Store';
 {{includeFile template="src/todos/TodoInput.tsx.hbs" output="src/TodoInput.{{ext}}"}}
 import {TodoInput} from './TodoInput';
 {{includeFile template="src/todos/TodoList.tsx.hbs" output="src/TodoList.{{ext}}"}}
 import {TodoList} from './TodoList';
 
-{{#if schemas}}
-  const {Provider, useCreateStore} = UiReact as UiReact.WithSchemas< [typeof TODOS_SCHEMA]>;
-
-{{/if}}
 const App = () => {
-const store = useCreateStore(() => {
-return createMergeableStore('todos'){{#if schemas}}.setTablesSchema(TODOS_SCHEMA){{/if}}.setTable('todos', {
-'1': {text: 'Learn TinyBase', completed: false},
-'2': {text: 'Build an app', completed: false},
-});
-});
-
 return (
 <StrictMode>
-  <Provider store={store}>
+  <Provider>
+    <Store />
     <TodoInput />
     <TodoList />
     <Inspector />

@@ -1759,21 +1759,16 @@ npm run dev
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "src/App.jsx": "import {StrictMode} from 'react';
-import {createMergeableStore} from 'tinybase';
-import {Provider, useCreateStore} from 'tinybase/ui-react';
+import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
+import {Store} from './Store';
 import {TodoInput} from './TodoInput';
 import {TodoList} from './TodoList';
 const App = () => {
-  const store = useCreateStore(() => {
-    return createMergeableStore('todos').setTable('todos', {
-      1: {text: 'Learn TinyBase', completed: false},
-      2: {text: 'Build an app', completed: false},
-    });
-  });
   return (
     <StrictMode>
-      <Provider store={store}>
+      <Provider>
+        <Store />
         <TodoInput />
         <TodoList />
         <Inspector />
@@ -1807,9 +1802,39 @@ const Input = ({value, onChange, placeholder = '', autoFocus = false}) => (
 );
 export {Input};
 ",
+  "src/Store.jsx": "import {createMergeableStore} from 'tinybase';
+import {
+  useCreateStore,
+  useProvideStore,
+  useAddRowCallback,
+  useDelRowCallback,
+  useRow,
+  useRowIds,
+  useSetPartialRowCallback,
+} from 'tinybase/ui-react';
+const STORE_ID = 'todos';
+const Store = () => {
+  const store = useCreateStore(() =>
+    createMergeableStore(STORE_ID).setTable('todos', {
+      1: {text: 'Learn TinyBase', completed: false},
+      2: {text: 'Build an app', completed: false},
+    }),
+  );
+  useProvideStore(STORE_ID, store);
+  return null;
+};
+export {
+  Store,
+  useAddRowCallback,
+  useDelRowCallback,
+  useRow,
+  useRowIds,
+  useSetPartialRowCallback,
+};
+",
   "src/TodoInput.jsx": "import './todoInput.css';
 import {useState} from 'react';
-import {useAddRowCallback} from 'tinybase/ui-react';
+import {useAddRowCallback} from './Store';
 import {Button} from './Button';
 import {Input} from './Input';
 const TodoInput = () => {
@@ -1841,21 +1866,18 @@ const TodoInput = () => {
 export {TodoInput};
 ",
   "src/TodoItem.jsx": "import './todoItem.css';
-import {
-  useDelRowCallback,
-  useRow,
-  useSetPartialRowCallback,
-} from 'tinybase/ui-react';
+import {useDelRowCallback, useRow, useSetPartialRowCallback} from './Store';
 import {Button} from './Button';
 const TodoItem = ({rowId}) => {
-  const todo = useRow('todos', rowId);
+  const todo = useRow('todos', rowId, 'todos');
   const setPartialRow = useSetPartialRowCallback(
     'todos',
     rowId,
     (e) => ({completed: e.target.checked}),
     [],
+    'todos',
   );
-  const delRow = useDelRowCallback('todos', rowId);
+  const delRow = useDelRowCallback('todos', rowId, 'todos');
   return (
     <div className={\`todoItem\${todo.completed ? ' completed' : ''}\`}>
       <input
@@ -1872,10 +1894,10 @@ const TodoItem = ({rowId}) => {
 export {TodoItem};
 ",
   "src/TodoList.jsx": "import './todoList.css';
-import {useRowIds} from 'tinybase/ui-react';
+import {useRowIds} from './Store';
 import {TodoItem} from './TodoItem';
 const TodoList = () => {
-  const todoIds = useRowIds('todos');
+  const todoIds = useRowIds('todos', 'todos');
   return (
     <div id="todoList">
       {todoIds.map((id) => (
@@ -3658,14 +3680,10 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/app.js": "import {createMergeableStore} from 'tinybase';
+  "src/app.js": "import {store} from './store';
 import {createTodoInput} from './todoInput';
 import {createTodoList} from './todoList';
 const app = () => {
-  const store = createMergeableStore('todos').setTable('todos', {
-    1: {text: 'Learn TinyBase', completed: false},
-    2: {text: 'Build an app', completed: false},
-  });
   const appContainer = document.getElementById('app');
   const todoInputContainer = createTodoInput(store);
   appContainer.appendChild(todoInputContainer);
@@ -3751,6 +3769,14 @@ const createInput = (placeholder = '', value = '', onInput) => {
   return input;
 };
 export {createInput};
+",
+  "src/store.js": "import {createMergeableStore} from 'tinybase';
+const STORE_ID = 'todos';
+const store = createMergeableStore(STORE_ID).setTable('todos', {
+  1: {text: 'Learn TinyBase', completed: false},
+  2: {text: 'Build an app', completed: false},
+});
+export {store};
 ",
   "src/todoInput.css": "#todoInput {
   display: flex;
@@ -5896,25 +5922,20 @@ npm run dev
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "src/App.tsx": "import {StrictMode} from 'react';
-import {createMergeableStore} from 'tinybase';
-import {Provider, useCreateStore} from 'tinybase/ui-react';
+import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
+
+import {Store} from './Store';
 
 import {TodoInput} from './TodoInput';
 
 import {TodoList} from './TodoList';
 
 const App = () => {
-  const store = useCreateStore(() => {
-    return createMergeableStore('todos').setTable('todos', {
-      '1': {text: 'Learn TinyBase', completed: false},
-      '2': {text: 'Build an app', completed: false},
-    });
-  });
-
   return (
     <StrictMode>
-      <Provider store={store}>
+      <Provider>
+        <Store />
         <TodoInput />
         <TodoList />
         <Inspector />
@@ -5974,9 +5995,43 @@ export const Input = ({
   />
 );
 ",
+  "src/Store.tsx": "import {createMergeableStore} from 'tinybase';
+import {
+  useCreateStore,
+  useProvideStore,
+  useAddRowCallback,
+  useDelRowCallback,
+  useRow,
+  useRowIds,
+  useSetPartialRowCallback,
+} from 'tinybase/ui-react';
+
+const STORE_ID = 'todos';
+
+export {
+  useAddRowCallback,
+  useDelRowCallback,
+  useRow,
+  useRowIds,
+  useSetPartialRowCallback,
+};
+
+export const Store = () => {
+  const store = useCreateStore(() =>
+    createMergeableStore(STORE_ID).setTable('todos', {
+      '1': {text: 'Learn TinyBase', completed: false},
+      '2': {text: 'Build an app', completed: false},
+    }),
+  );
+
+  useProvideStore(STORE_ID, store);
+
+  return null;
+};
+",
   "src/TodoInput.tsx": "import './todoInput.css';
 import {useState} from 'react';
-import {useAddRowCallback} from 'tinybase/ui-react';
+import {useAddRowCallback} from './Store';
 
 import {Button} from './Button';
 
@@ -6012,23 +6067,23 @@ export const TodoInput = () => {
 };
 ",
   "src/TodoItem.tsx": "import './todoItem.css';
-import {
-  useDelRowCallback,
-  useRow,
-  useSetPartialRowCallback,
-} from 'tinybase/ui-react';
+import {useDelRowCallback, useRow, useSetPartialRowCallback} from './Store';
 
 import {Button} from './Button';
 
 export const TodoItem = ({rowId}: {rowId: string}) => {
-  const todo = useRow('todos', rowId) as {text: string; completed: boolean};
+  const todo = useRow('todos', rowId, 'todos') as {
+    text: string;
+    completed: boolean;
+  };
   const setPartialRow = useSetPartialRowCallback(
     'todos',
     rowId,
     (e: React.ChangeEvent<HTMLInputElement>) => ({completed: e.target.checked}),
     [],
+    'todos',
   );
-  const delRow = useDelRowCallback('todos', rowId);
+  const delRow = useDelRowCallback('todos', rowId, 'todos');
 
   return (
     <div className={\`todoItem\${todo.completed ? ' completed' : ''}\`}>
@@ -6045,12 +6100,12 @@ export const TodoItem = ({rowId}: {rowId: string}) => {
 };
 ",
   "src/TodoList.tsx": "import './todoList.css';
-import {useRowIds} from 'tinybase/ui-react';
+import {useRowIds} from './Store';
 
 import {TodoItem} from './TodoItem';
 
 export const TodoList = () => {
-  const todoIds = useRowIds('todos');
+  const todoIds = useRowIds('todos', 'todos');
 
   return (
     <div id="todoList">
@@ -8075,18 +8130,13 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/app.ts": "import {createMergeableStore} from 'tinybase';
+  "src/app.ts": "import {store} from './store';
 
 import {createTodoInput} from './todoInput';
 
 import {createTodoList} from './todoList';
 
 const app = () => {
-  const store = createMergeableStore('todos').setTable('todos', {
-    '1': {text: 'Learn TinyBase', completed: false},
-    '2': {text: 'Build an app', completed: false},
-  });
-
   const appContainer = document.getElementById('app')!;
 
   const todoInputContainer = createTodoInput(store);
@@ -8187,6 +8237,15 @@ export const createInput = (
   return input;
 };
 ",
+  "src/store.ts": "import {createMergeableStore} from 'tinybase';
+
+const STORE_ID = 'todos';
+
+export const store = createMergeableStore(STORE_ID).setTable('todos', {
+  '1': {text: 'Learn TinyBase', completed: false},
+  '2': {text: 'Build an app', completed: false},
+});
+",
   "src/todoInput.css": "#todoInput {
   display: flex;
   gap: 0.5rem;
@@ -8198,12 +8257,13 @@ export const createInput = (
 }
 ",
   "src/todoInput.ts": "import './todoInput.css';
+import {type Store} from 'tinybase';
 
 import {createButton} from './button';
 
 import {createInput} from './input';
 
-export const createTodoInput = (store: any): HTMLDivElement => {
+export const createTodoInput = (store: Store): HTMLDivElement => {
   const container = document.createElement('div');
   container.id = 'todoInput';
 
@@ -8315,10 +8375,11 @@ export const createTodoItem = (
 }
 ",
   "src/todoList.ts": "import './todoList.css';
+import {type Store} from 'tinybase';
 
 import {createTodoItem} from './todoItem';
 
-export const createTodoList = (store: any): HTMLDivElement => {
+export const createTodoList = (store: Store): HTMLDivElement => {
   const list = document.createElement('div');
   list.id = 'todoList';
 

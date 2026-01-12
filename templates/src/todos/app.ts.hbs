@@ -1,15 +1,11 @@
-import {createMergeableStore} from 'tinybase';
+{{includeFile template="src/todos/store.ts.hbs" output="src/store.ts"}}
+import {store} from './store';
 {{includeFile template="src/todos/todoInput.ts.hbs" output="src/todoInput.{{ext}}"}}
 import {createTodoInput} from './todoInput';
 {{includeFile template="src/todos/todoList.ts.hbs" output="src/todoList.{{ext}}"}}
 import {createTodoList} from './todoList';
 
 const app = () => {
-const store = createMergeableStore('todos').setTable('todos', {
-'1': {text: 'Learn TinyBase', completed: false},
-'2': {text: 'Build an app', completed: false},
-});
-
 const appContainer = document.getElementById('app')!;
 
 const todoInputContainer = createTodoInput(store);

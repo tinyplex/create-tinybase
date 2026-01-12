@@ -1,11 +1,12 @@
 {{includeFile template="src/todos/todoInput.css.hbs" output="src/todoInput.css"}}
 import './todoInput.css';
+import {type Store} from './store';
 {{includeFile template="src/shared/button.ts.hbs" output="src/button.{{ext}}"}}
 import {createButton} from './button';
 {{includeFile template="src/shared/input.ts.hbs" output="src/input.{{ext}}"}}
 import {createInput} from './input';
 
-export const createTodoInput = (store: any): HTMLDivElement => {
+export const createTodoInput = (store: Store): HTMLDivElement => {
 const container = document.createElement('div');
 container.id = 'todoInput';
 

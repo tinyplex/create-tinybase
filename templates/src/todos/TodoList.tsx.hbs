@@ -1,15 +1,11 @@
 {{includeFile template="src/todos/todoList.css.hbs" output="src/todoList.css"}}
 import './todoList.css';
-{{#if schemas}}
-  import {useRowIds} from './schemas';
-{{else}}
-  import {useRowIds} from 'tinybase/ui-react';
-{{/if}}
+import {useRowIds} from './Store';
 {{includeFile template="src/todos/TodoItem.tsx.hbs" output="src/TodoItem.{{ext}}"}}
 import {TodoItem} from './TodoItem';
 
 export const TodoList = () => {
-const todoIds = useRowIds('todos');
+const todoIds = useRowIds('todos', 'todos');
 
 return (
 <div id="todoList">

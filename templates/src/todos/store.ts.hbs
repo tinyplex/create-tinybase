@@ -1,0 +1,25 @@
+{{#if schemas}}
+  import {createMergeableStore} from 'tinybase/with-schemas';
+{{else}}
+  import {createMergeableStore} from 'tinybase';
+{{/if}}
+
+const STORE_ID = 'todos';
+
+{{#if schemas}}
+  const TODOS_SCHEMA = {
+  todos: {
+  text: {type: 'string'},
+  completed: {type: 'boolean'},
+  },
+  } as const;
+
+{{/if}}
+export const store = createMergeableStore(STORE_ID){{#if schemas}}
+  .setTablesSchema(TODOS_SCHEMA){{/if}}
+.setTable('todos', {
+'1': {text: 'Learn TinyBase', completed: false},
+'2': {text: 'Build an app', completed: false},
+});
+
+export type Store = typeof store;

@@ -1,9 +1,10 @@
 {{includeFile template="src/todos/todoList.css.hbs" output="src/todoList.css"}}
 import './todoList.css';
+import {type Store} from './store';
 {{includeFile template="src/todos/todoItem.ts.hbs" output="src/todoItem.{{ext}}"}}
 import {createTodoItem} from './todoItem';
 
-export const createTodoList = (store: any): HTMLDivElement => {
+export const createTodoList = (store: Store): HTMLDivElement => {
 const list = document.createElement('div');
 list.id = 'todoList';
 
