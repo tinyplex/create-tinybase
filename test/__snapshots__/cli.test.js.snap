@@ -1334,33 +1334,6 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/components/Board.jsx": "import './board.css';
-import {useMemo} from 'react';
-import {useValue} from 'tinybase/ui-react';
-import {Square} from './Square';
-const Board = () => {
-  const gameStatus = useValue('gameStatus');
-  const winningLine = useValue('winningLine');
-  const winningPositions = useMemo(() => {
-    if (!winningLine) return /* @__PURE__ */ new Set();
-    return new Set(winningLine.split(',').map(Number));
-  }, [winningLine]);
-  const disabled = gameStatus !== 'playing';
-  return (
-    <div id="board">
-      {Array.from({length: 9}, (_, i) => (
-        <Square
-          key={i}
-          position={i}
-          disabled={disabled}
-          winning={winningPositions.has(i)}
-        />
-      ))}
-    </div>
-  );
-};
-export {Board};
-",
   "src/components/Button.jsx": "import './button.css';
 const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
   <button
@@ -1372,68 +1345,6 @@ const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
   </button>
 );
 export {Button};
-",
-  "src/components/GameStatus.jsx": "import './gameStatus.css';
-import {useValue} from 'tinybase/ui-react';
-const GameStatus = () => {
-  const gameStatus = useValue('gameStatus');
-  const currentPlayer = useValue('currentPlayer');
-  const winner = useValue('winner');
-  return (
-    <div id="gameStatus">
-      {gameStatus === 'playing' && (
-        <>
-          Player <span className="player">{currentPlayer}</span>'s turn
-        </>
-      )}
-      {gameStatus === 'won' && (
-        <>
-          Player <span className="winner">{winner}</span> wins!
-        </>
-      )}
-      {gameStatus === 'draw' && <>It's a draw!</>}
-    </div>
-  );
-};
-export {GameStatus};
-",
-  "src/components/Square.jsx": "import './square.css';
-import {useCell, useStore, useValue} from 'tinybase/ui-react';
-const Square = ({position, disabled, winning}) => {
-  const store = useStore();
-  const value = useCell('board', position.toString(), 'value');
-  const currentPlayer = useValue('currentPlayer');
-  const isDisabled = disabled || !!value;
-  const handleClick = () => {
-    if (!isDisabled) {
-      store.setCell('board', position.toString(), 'value', currentPlayer);
-    }
-  };
-  return (
-    <button
-      className={\`square\${isDisabled ? ' disabled' : ''}\${winning ? ' winning' : ''}\`}
-      onClick={handleClick}
-      disabled={isDisabled}
-    >
-      {value || ''}
-    </button>
-  );
-};
-export {Square};
-",
-  "src/components/board.css": "#board {
-  display: grid;
-  grid-template-columns: repeat(3, 100px);
-  grid-template-rows: repeat(3, 100px);
-  gap: 1px;
-  background: var(--border);
-  border: 2px solid var(--border);
-  border-radius: 0.5rem;
-  overflow: hidden;
-  margin: 0 auto 2rem;
-  width: fit-content;
-  padding: 1px;
-}
 ",
   "src/components/button.css": "button {
   padding: 0.5rem 1rem;
@@ -1461,68 +1372,6 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/components/gameStatus.css": "#gameStatus {
-  text-align: center;
-  font-size: 1.5rem;
-  font-weight: 800;
-  margin: 2rem 0 1rem;
-  color: var(--accent);
-}
-
-#gameStatus .winner {
-  color: var(--accent);
-  animation: pulse 1s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
-}
-",
-  "src/components/square.css": ".square {
-  width: 100px;
-  height: 100px;
-  background: var(--bg2);
-  border: none;
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: var(--fg);
-  cursor: pointer;
-  transition: all 0.15s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  margin: 0;
-}
-
-.square:hover:not(.square.disabled) {
-  background: var(--bg);
-  outline: 2px solid var(--accent);
-  outline-offset: -2px;
-  z-index: 1;
-  position: relative;
-}
-
-.square:disabled {
-  cursor: not-allowed;
-}
-
-.square.disabled {
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-.square.winning {
-  background: var(--accent);
-  color: var(--bg);
-}
-",
   "src/game/App.jsx": "import {StrictMode} from 'react';
 import {createMergeableStore} from 'tinybase';
 import {
@@ -1534,8 +1383,8 @@ import {
 } from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {Button} from '../components/Button';
-import {Board} from '../components/Board';
-import {GameStatus} from '../components/GameStatus';
+import {Board} from './Board';
+import {GameStatus} from './GameStatus';
 const WINNING_LINES = [
   [0, 1, 2],
   [3, 4, 5],
@@ -1617,6 +1466,157 @@ const App = () => {
   );
 };
 export {App};
+",
+  "src/game/Board.jsx": "import './board.css';
+import {useMemo} from 'react';
+import {useValue} from 'tinybase/ui-react';
+import {Square} from './Square';
+const Board = () => {
+  const gameStatus = useValue('gameStatus');
+  const winningLine = useValue('winningLine');
+  const winningPositions = useMemo(() => {
+    if (!winningLine) return /* @__PURE__ */ new Set();
+    return new Set(winningLine.split(',').map(Number));
+  }, [winningLine]);
+  const disabled = gameStatus !== 'playing';
+  return (
+    <div id="board">
+      {Array.from({length: 9}, (_, i) => (
+        <Square
+          key={i}
+          position={i}
+          disabled={disabled}
+          winning={winningPositions.has(i)}
+        />
+      ))}
+    </div>
+  );
+};
+export {Board};
+",
+  "src/game/GameStatus.jsx": "import './gameStatus.css';
+import {useValue} from 'tinybase/ui-react';
+const GameStatus = () => {
+  const gameStatus = useValue('gameStatus');
+  const currentPlayer = useValue('currentPlayer');
+  const winner = useValue('winner');
+  return (
+    <div id="gameStatus">
+      {gameStatus === 'playing' && (
+        <>
+          Player <span className="player">{currentPlayer}</span>'s turn
+        </>
+      )}
+      {gameStatus === 'won' && (
+        <>
+          Player <span className="winner">{winner}</span> wins!
+        </>
+      )}
+      {gameStatus === 'draw' && <>It's a draw!</>}
+    </div>
+  );
+};
+export {GameStatus};
+",
+  "src/game/Square.jsx": "import './square.css';
+import {useCell, useStore, useValue} from 'tinybase/ui-react';
+const Square = ({position, disabled, winning}) => {
+  const store = useStore();
+  const value = useCell('board', position.toString(), 'value');
+  const currentPlayer = useValue('currentPlayer');
+  const isDisabled = disabled || !!value;
+  const handleClick = () => {
+    if (!isDisabled) {
+      store.setCell('board', position.toString(), 'value', currentPlayer);
+    }
+  };
+  return (
+    <button
+      className={\`square\${isDisabled ? ' disabled' : ''}\${winning ? ' winning' : ''}\`}
+      onClick={handleClick}
+      disabled={isDisabled}
+    >
+      {value || ''}
+    </button>
+  );
+};
+export {Square};
+",
+  "src/game/board.css": "#board {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+  gap: 1px;
+  background: var(--border);
+  border: 2px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  margin: 0 auto 2rem;
+  width: fit-content;
+  padding: 1px;
+}
+",
+  "src/game/gameStatus.css": "#gameStatus {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 2rem 0 1rem;
+  color: var(--accent);
+}
+
+#gameStatus .winner {
+  color: var(--accent);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+",
+  "src/game/square.css": ".square {
+  width: 100px;
+  height: 100px;
+  background: var(--bg2);
+  border: none;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--fg);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+}
+
+.square:hover:not(.square.disabled) {
+  background: var(--bg);
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  z-index: 1;
+  position: relative;
+}
+
+.square:disabled {
+  cursor: not-allowed;
+}
+
+.square.disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.square.winning {
+  background: var(--accent);
+  color: var(--bg);
+}
 ",
   "src/index.css": "a {
   color: var(--fg);
@@ -3481,57 +3481,6 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/components/board.css": "#board {
-  display: grid;
-  grid-template-columns: repeat(3, 100px);
-  grid-template-rows: repeat(3, 100px);
-  gap: 1px;
-  background: var(--border);
-  border: 2px solid var(--border);
-  border-radius: 0.5rem;
-  overflow: hidden;
-  margin: 0 auto 2rem;
-  width: fit-content;
-  padding: 1px;
-}
-",
-  "src/components/board.js": "import './board.css';
-import {createSquare} from './square';
-const createBoard = (store) => {
-  const board = document.createElement('div');
-  board.id = 'board';
-  const render = () => {
-    const gameStatus = store.getValue('gameStatus');
-    const winningLine = store.getValue('winningLine');
-    const currentPlayer = store.getValue('currentPlayer');
-    const winningPositions = new Set(
-      winningLine ? winningLine.split(',').map(Number) : [],
-    );
-    const disabled = gameStatus !== 'playing';
-    board.innerHTML = '';
-    for (let i = 0; i < 9; i++) {
-      const cell = store.getCell('board', i.toString(), 'value');
-      const square = createSquare(
-        i,
-        cell,
-        () => {
-          if (gameStatus === 'playing' && !cell) {
-            store.setCell('board', i.toString(), 'value', currentPlayer);
-          }
-        },
-        disabled || !!cell,
-        winningPositions.has(i),
-      );
-      board.appendChild(square);
-    }
-  };
-  store.addValuesListener(render);
-  store.addTableListener('board', render);
-  render();
-  return board;
-};
-export {createBoard};
-",
   "src/components/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
@@ -3570,105 +3519,10 @@ const createButton = (text, onClick, variant = 'default') => {
 };
 export {createButton};
 ",
-  "src/components/gameStatus.css": "#gameStatus {
-  text-align: center;
-  font-size: 1.5rem;
-  font-weight: 800;
-  margin: 2rem 0 1rem;
-  color: var(--accent);
-}
-
-#gameStatus .winner {
-  color: var(--accent);
-  animation: pulse 1s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
-}
-",
-  "src/components/gameStatus.js": "import './gameStatus.css';
-const createGameStatus = (store) => {
-  const status = document.createElement('div');
-  status.id = 'gameStatus';
-  const render = () => {
-    const gameStatus = store.getValue('gameStatus');
-    const currentPlayer = store.getValue('currentPlayer');
-    const winner = store.getValue('winner');
-    if (gameStatus === 'playing') {
-      status.innerHTML = \`Player <span class="player">\${currentPlayer}</span>'s turn\`;
-    } else if (gameStatus === 'won') {
-      status.innerHTML = \`Player <span class="winner">\${winner}</span> wins!\`;
-    } else if (gameStatus === 'draw') {
-      status.textContent = "It's a draw!";
-    }
-  };
-  store.addValuesListener(render);
-  render();
-  return status;
-};
-export {createGameStatus};
-",
-  "src/components/square.css": ".square {
-  width: 100px;
-  height: 100px;
-  background: var(--bg2);
-  border: none;
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: var(--fg);
-  cursor: pointer;
-  transition: all 0.15s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  margin: 0;
-}
-
-.square:hover:not(.square.disabled) {
-  background: var(--bg);
-  outline: 2px solid var(--accent);
-  outline-offset: -2px;
-  z-index: 1;
-  position: relative;
-}
-
-.square:disabled {
-  cursor: not-allowed;
-}
-
-.square.disabled {
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-.square.winning {
-  background: var(--accent);
-  color: var(--bg);
-}
-",
-  "src/components/square.js": "import './square.css';
-const createSquare = (position, value, onClick, disabled, winning) => {
-  const square = document.createElement('button');
-  square.className = \`square\${disabled ? ' disabled' : ''}\${winning ? ' winning' : ''}\`;
-  square.textContent = value || '';
-  square.disabled = disabled;
-  square.addEventListener('click', onClick);
-  return square;
-};
-export {createSquare};
-",
   "src/game/app.js": "import {createMergeableStore} from 'tinybase';
 import {createButton} from '../components/button';
-import {createBoard} from '../components/board';
-import {createGameStatus} from '../components/gameStatus';
+import {createBoard} from './board';
+import {createGameStatus} from './gameStatus';
 const WINNING_LINES = [
   [0, 1, 2],
   [3, 4, 5],
@@ -3730,6 +3584,152 @@ const app = () => {
   appContainer.appendChild(buttonContainer);
 };
 export {app};
+",
+  "src/game/board.css": "#board {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+  gap: 1px;
+  background: var(--border);
+  border: 2px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  margin: 0 auto 2rem;
+  width: fit-content;
+  padding: 1px;
+}
+",
+  "src/game/board.js": "import './board.css';
+import {createSquare} from './square';
+const createBoard = (store) => {
+  const board = document.createElement('div');
+  board.id = 'board';
+  const render = () => {
+    const gameStatus = store.getValue('gameStatus');
+    const winningLine = store.getValue('winningLine');
+    const currentPlayer = store.getValue('currentPlayer');
+    const winningPositions = new Set(
+      winningLine ? winningLine.split(',').map(Number) : [],
+    );
+    const disabled = gameStatus !== 'playing';
+    board.innerHTML = '';
+    for (let i = 0; i < 9; i++) {
+      const cell = store.getCell('board', i.toString(), 'value');
+      const square = createSquare(
+        i,
+        cell,
+        () => {
+          if (gameStatus === 'playing' && !cell) {
+            store.setCell('board', i.toString(), 'value', currentPlayer);
+          }
+        },
+        disabled || !!cell,
+        winningPositions.has(i),
+      );
+      board.appendChild(square);
+    }
+  };
+  store.addValuesListener(render);
+  store.addTableListener('board', render);
+  render();
+  return board;
+};
+export {createBoard};
+",
+  "src/game/gameStatus.css": "#gameStatus {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 2rem 0 1rem;
+  color: var(--accent);
+}
+
+#gameStatus .winner {
+  color: var(--accent);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+",
+  "src/game/gameStatus.js": "import './gameStatus.css';
+const createGameStatus = (store) => {
+  const status = document.createElement('div');
+  status.id = 'gameStatus';
+  const render = () => {
+    const gameStatus = store.getValue('gameStatus');
+    const currentPlayer = store.getValue('currentPlayer');
+    const winner = store.getValue('winner');
+    if (gameStatus === 'playing') {
+      status.innerHTML = \`Player <span class="player">\${currentPlayer}</span>'s turn\`;
+    } else if (gameStatus === 'won') {
+      status.innerHTML = \`Player <span class="winner">\${winner}</span> wins!\`;
+    } else if (gameStatus === 'draw') {
+      status.textContent = "It's a draw!";
+    }
+  };
+  store.addValuesListener(render);
+  render();
+  return status;
+};
+export {createGameStatus};
+",
+  "src/game/square.css": ".square {
+  width: 100px;
+  height: 100px;
+  background: var(--bg2);
+  border: none;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--fg);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+}
+
+.square:hover:not(.square.disabled) {
+  background: var(--bg);
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  z-index: 1;
+  position: relative;
+}
+
+.square:disabled {
+  cursor: not-allowed;
+}
+
+.square.disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.square.winning {
+  background: var(--accent);
+  color: var(--bg);
+}
+",
+  "src/game/square.js": "import './square.css';
+const createSquare = (position, value, onClick, disabled, winning) => {
+  const square = document.createElement('button');
+  square.className = \`square\${disabled ? ' disabled' : ''}\${winning ? ' winning' : ''}\`;
+  square.textContent = value || '';
+  square.disabled = disabled;
+  square.addEventListener('click', onClick);
+  return square;
+};
+export {createSquare};
 ",
   "src/index.css": "a {
   color: var(--fg);
@@ -5789,37 +5789,6 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/components/Board.tsx": "import './board.css';
-import {useMemo} from 'react';
-import {useValue} from 'tinybase/ui-react';
-
-import {Square} from './Square';
-
-export const Board = () => {
-  const gameStatus = useValue('gameStatus') as string;
-  const winningLine = useValue('winningLine') as string | undefined;
-
-  const winningPositions = useMemo(() => {
-    if (!winningLine) return new Set();
-    return new Set(winningLine.split(',').map(Number));
-  }, [winningLine]);
-
-  const disabled = gameStatus !== 'playing';
-
-  return (
-    <div id="board">
-      {Array.from({length: 9}, (_, i) => (
-        <Square
-          key={i}
-          position={i}
-          disabled={disabled}
-          winning={winningPositions.has(i)}
-        />
-      ))}
-    </div>
-  );
-};
-",
   "src/components/Button.tsx": "import './button.css';
 import {ReactNode} from 'react';
 
@@ -5844,82 +5813,6 @@ export const Button = ({
     {children}
   </button>
 );
-",
-  "src/components/GameStatus.tsx": "import './gameStatus.css';
-import {useValue} from 'tinybase/ui-react';
-
-export const GameStatus = () => {
-  const gameStatus = useValue('gameStatus') as string;
-  const currentPlayer = useValue('currentPlayer') as string;
-  const winner = useValue('winner') as string | undefined;
-
-  return (
-    <div id="gameStatus">
-      {gameStatus === 'playing' && (
-        <>
-          Player <span className="player">{currentPlayer}</span>'s turn
-        </>
-      )}
-      {gameStatus === 'won' && (
-        <>
-          Player <span className="winner">{winner}</span> wins!
-        </>
-      )}
-      {gameStatus === 'draw' && <>It's a draw!</>}
-    </div>
-  );
-};
-",
-  "src/components/Square.tsx": "import './square.css';
-import {useCell, useStore, useValue} from 'tinybase/ui-react';
-
-export const Square = ({
-  position,
-  disabled,
-  winning,
-}: {
-  position: number;
-  disabled: boolean;
-  winning: boolean;
-}) => {
-  const store = useStore();
-  const value = useCell('board', position.toString(), 'value') as
-    | string
-    | undefined;
-  const currentPlayer = useValue('currentPlayer') as string;
-
-  const isDisabled = disabled || !!value;
-
-  const handleClick = () => {
-    if (!isDisabled) {
-      store.setCell('board', position.toString(), 'value', currentPlayer);
-    }
-  };
-
-  return (
-    <button
-      className={\`square\${isDisabled ? ' disabled' : ''}\${winning ? ' winning' : ''}\`}
-      onClick={handleClick}
-      disabled={isDisabled}
-    >
-      {value || ''}
-    </button>
-  );
-};
-",
-  "src/components/board.css": "#board {
-  display: grid;
-  grid-template-columns: repeat(3, 100px);
-  grid-template-rows: repeat(3, 100px);
-  gap: 1px;
-  background: var(--border);
-  border: 2px solid var(--border);
-  border-radius: 0.5rem;
-  overflow: hidden;
-  margin: 0 auto 2rem;
-  width: fit-content;
-  padding: 1px;
-}
 ",
   "src/components/button.css": "button {
   padding: 0.5rem 1rem;
@@ -5947,68 +5840,6 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/components/gameStatus.css": "#gameStatus {
-  text-align: center;
-  font-size: 1.5rem;
-  font-weight: 800;
-  margin: 2rem 0 1rem;
-  color: var(--accent);
-}
-
-#gameStatus .winner {
-  color: var(--accent);
-  animation: pulse 1s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
-}
-",
-  "src/components/square.css": ".square {
-  width: 100px;
-  height: 100px;
-  background: var(--bg2);
-  border: none;
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: var(--fg);
-  cursor: pointer;
-  transition: all 0.15s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  margin: 0;
-}
-
-.square:hover:not(.square.disabled) {
-  background: var(--bg);
-  outline: 2px solid var(--accent);
-  outline-offset: -2px;
-  z-index: 1;
-  position: relative;
-}
-
-.square:disabled {
-  cursor: not-allowed;
-}
-
-.square.disabled {
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-.square.winning {
-  background: var(--accent);
-  color: var(--bg);
-}
-",
   "src/game/App.tsx": "import {StrictMode} from 'react';
 import {createMergeableStore} from 'tinybase';
 import {
@@ -6022,9 +5853,9 @@ import {Inspector} from 'tinybase/ui-react-inspector';
 
 import {Button} from '../components/Button';
 
-import {Board} from '../components/Board';
+import {Board} from './Board';
 
-import {GameStatus} from '../components/GameStatus';
+import {GameStatus} from './GameStatus';
 
 const WINNING_LINES = [
   [0, 1, 2],
@@ -6119,6 +5950,175 @@ const App = () => {
 };
 
 export {App};
+",
+  "src/game/Board.tsx": "import './board.css';
+import {useMemo} from 'react';
+import {useValue} from 'tinybase/ui-react';
+
+import {Square} from './Square';
+
+export const Board = () => {
+  const gameStatus = useValue('gameStatus') as string;
+  const winningLine = useValue('winningLine') as string | undefined;
+
+  const winningPositions = useMemo(() => {
+    if (!winningLine) return new Set();
+    return new Set(winningLine.split(',').map(Number));
+  }, [winningLine]);
+
+  const disabled = gameStatus !== 'playing';
+
+  return (
+    <div id="board">
+      {Array.from({length: 9}, (_, i) => (
+        <Square
+          key={i}
+          position={i}
+          disabled={disabled}
+          winning={winningPositions.has(i)}
+        />
+      ))}
+    </div>
+  );
+};
+",
+  "src/game/GameStatus.tsx": "import './gameStatus.css';
+import {useValue} from 'tinybase/ui-react';
+
+export const GameStatus = () => {
+  const gameStatus = useValue('gameStatus') as string;
+  const currentPlayer = useValue('currentPlayer') as string;
+  const winner = useValue('winner') as string | undefined;
+
+  return (
+    <div id="gameStatus">
+      {gameStatus === 'playing' && (
+        <>
+          Player <span className="player">{currentPlayer}</span>'s turn
+        </>
+      )}
+      {gameStatus === 'won' && (
+        <>
+          Player <span className="winner">{winner}</span> wins!
+        </>
+      )}
+      {gameStatus === 'draw' && <>It's a draw!</>}
+    </div>
+  );
+};
+",
+  "src/game/Square.tsx": "import './square.css';
+import {useCell, useStore, useValue} from 'tinybase/ui-react';
+
+export const Square = ({
+  position,
+  disabled,
+  winning,
+}: {
+  position: number;
+  disabled: boolean;
+  winning: boolean;
+}) => {
+  const store = useStore();
+  const value = useCell('board', position.toString(), 'value') as
+    | string
+    | undefined;
+  const currentPlayer = useValue('currentPlayer') as string;
+
+  const isDisabled = disabled || !!value;
+
+  const handleClick = () => {
+    if (!isDisabled) {
+      store.setCell('board', position.toString(), 'value', currentPlayer);
+    }
+  };
+
+  return (
+    <button
+      className={\`square\${isDisabled ? ' disabled' : ''}\${winning ? ' winning' : ''}\`}
+      onClick={handleClick}
+      disabled={isDisabled}
+    >
+      {value || ''}
+    </button>
+  );
+};
+",
+  "src/game/board.css": "#board {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+  gap: 1px;
+  background: var(--border);
+  border: 2px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  margin: 0 auto 2rem;
+  width: fit-content;
+  padding: 1px;
+}
+",
+  "src/game/gameStatus.css": "#gameStatus {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 2rem 0 1rem;
+  color: var(--accent);
+}
+
+#gameStatus .winner {
+  color: var(--accent);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+",
+  "src/game/square.css": ".square {
+  width: 100px;
+  height: 100px;
+  background: var(--bg2);
+  border: none;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--fg);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+}
+
+.square:hover:not(.square.disabled) {
+  background: var(--bg);
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  z-index: 1;
+  position: relative;
+}
+
+.square:disabled {
+  cursor: not-allowed;
+}
+
+.square.disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.square.winning {
+  background: var(--accent);
+  color: var(--bg);
+}
 ",
   "src/index.css": "a {
   color: var(--fg);
@@ -8230,62 +8230,6 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/components/board.css": "#board {
-  display: grid;
-  grid-template-columns: repeat(3, 100px);
-  grid-template-rows: repeat(3, 100px);
-  gap: 1px;
-  background: var(--border);
-  border: 2px solid var(--border);
-  border-radius: 0.5rem;
-  overflow: hidden;
-  margin: 0 auto 2rem;
-  width: fit-content;
-  padding: 1px;
-}
-",
-  "src/components/board.ts": "import './board.css';
-
-import {createSquare} from './square';
-
-export const createBoard = (store: any): HTMLDivElement => {
-  const board = document.createElement('div');
-  board.id = 'board';
-
-  const render = () => {
-    const gameStatus = store.getValue('gameStatus');
-    const winningLine = store.getValue('winningLine');
-    const currentPlayer = store.getValue('currentPlayer');
-    const winningPositions = new Set(
-      winningLine ? winningLine.split(',').map(Number) : [],
-    );
-    const disabled = gameStatus !== 'playing';
-
-    board.innerHTML = '';
-    for (let i = 0; i < 9; i++) {
-      const cell = store.getCell('board', i.toString(), 'value');
-      const square = createSquare(
-        i,
-        cell,
-        () => {
-          if (gameStatus === 'playing' && !cell) {
-            store.setCell('board', i.toString(), 'value', currentPlayer);
-          }
-        },
-        disabled || !!cell,
-        winningPositions.has(i),
-      );
-      board.appendChild(square);
-    }
-  };
-
-  store.addValuesListener(render);
-  store.addTableListener('board', render);
-  render();
-
-  return board;
-};
-",
   "src/components/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
@@ -8328,118 +8272,13 @@ export const createButton = (
   return button;
 };
 ",
-  "src/components/gameStatus.css": "#gameStatus {
-  text-align: center;
-  font-size: 1.5rem;
-  font-weight: 800;
-  margin: 2rem 0 1rem;
-  color: var(--accent);
-}
-
-#gameStatus .winner {
-  color: var(--accent);
-  animation: pulse 1s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
-}
-",
-  "src/components/gameStatus.ts": "import './gameStatus.css';
-
-export const createGameStatus = (store: any): HTMLDivElement => {
-  const status = document.createElement('div');
-  status.id = 'gameStatus';
-
-  const render = () => {
-    const gameStatus = store.getValue('gameStatus');
-    const currentPlayer = store.getValue('currentPlayer');
-    const winner = store.getValue('winner');
-
-    if (gameStatus === 'playing') {
-      status.innerHTML = \`Player <span class="player">\${currentPlayer}</span>'s turn\`;
-    } else if (gameStatus === 'won') {
-      status.innerHTML = \`Player <span class="winner">\${winner}</span> wins!\`;
-    } else if (gameStatus === 'draw') {
-      status.textContent = "It's a draw!";
-    }
-  };
-
-  store.addValuesListener(render);
-  render();
-
-  return status;
-};
-",
-  "src/components/square.css": ".square {
-  width: 100px;
-  height: 100px;
-  background: var(--bg2);
-  border: none;
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: var(--fg);
-  cursor: pointer;
-  transition: all 0.15s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  margin: 0;
-}
-
-.square:hover:not(.square.disabled) {
-  background: var(--bg);
-  outline: 2px solid var(--accent);
-  outline-offset: -2px;
-  z-index: 1;
-  position: relative;
-}
-
-.square:disabled {
-  cursor: not-allowed;
-}
-
-.square.disabled {
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-.square.winning {
-  background: var(--accent);
-  color: var(--bg);
-}
-",
-  "src/components/square.ts": "import './square.css';
-
-export const createSquare = (
-  position: number,
-  value: string | undefined,
-  onClick: () => void,
-  disabled: boolean,
-  winning: boolean,
-): HTMLButtonElement => {
-  const square = document.createElement('button');
-  square.className = \`square\${disabled ? ' disabled' : ''}\${winning ? ' winning' : ''}\`;
-  square.textContent = value || '';
-  square.disabled = disabled;
-  square.addEventListener('click', onClick);
-  return square;
-};
-",
   "src/game/app.ts": "import {createMergeableStore} from 'tinybase';
 
 import {createButton} from '../components/button';
 
-import {createBoard} from '../components/board';
+import {createBoard} from './board';
 
-import {createGameStatus} from '../components/gameStatus';
+import {createGameStatus} from './gameStatus';
 
 const WINNING_LINES = [
   [0, 1, 2],
@@ -8515,6 +8354,167 @@ const app = () => {
 };
 
 export {app};
+",
+  "src/game/board.css": "#board {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+  gap: 1px;
+  background: var(--border);
+  border: 2px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  margin: 0 auto 2rem;
+  width: fit-content;
+  padding: 1px;
+}
+",
+  "src/game/board.ts": "import './board.css';
+
+import {createSquare} from './square';
+
+export const createBoard = (store: any): HTMLDivElement => {
+  const board = document.createElement('div');
+  board.id = 'board';
+
+  const render = () => {
+    const gameStatus = store.getValue('gameStatus');
+    const winningLine = store.getValue('winningLine');
+    const currentPlayer = store.getValue('currentPlayer');
+    const winningPositions = new Set(
+      winningLine ? winningLine.split(',').map(Number) : [],
+    );
+    const disabled = gameStatus !== 'playing';
+
+    board.innerHTML = '';
+    for (let i = 0; i < 9; i++) {
+      const cell = store.getCell('board', i.toString(), 'value');
+      const square = createSquare(
+        i,
+        cell,
+        () => {
+          if (gameStatus === 'playing' && !cell) {
+            store.setCell('board', i.toString(), 'value', currentPlayer);
+          }
+        },
+        disabled || !!cell,
+        winningPositions.has(i),
+      );
+      board.appendChild(square);
+    }
+  };
+
+  store.addValuesListener(render);
+  store.addTableListener('board', render);
+  render();
+
+  return board;
+};
+",
+  "src/game/gameStatus.css": "#gameStatus {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 2rem 0 1rem;
+  color: var(--accent);
+}
+
+#gameStatus .winner {
+  color: var(--accent);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+",
+  "src/game/gameStatus.ts": "import './gameStatus.css';
+
+export const createGameStatus = (store: any): HTMLDivElement => {
+  const status = document.createElement('div');
+  status.id = 'gameStatus';
+
+  const render = () => {
+    const gameStatus = store.getValue('gameStatus');
+    const currentPlayer = store.getValue('currentPlayer');
+    const winner = store.getValue('winner');
+
+    if (gameStatus === 'playing') {
+      status.innerHTML = \`Player <span class="player">\${currentPlayer}</span>'s turn\`;
+    } else if (gameStatus === 'won') {
+      status.innerHTML = \`Player <span class="winner">\${winner}</span> wins!\`;
+    } else if (gameStatus === 'draw') {
+      status.textContent = "It's a draw!";
+    }
+  };
+
+  store.addValuesListener(render);
+  render();
+
+  return status;
+};
+",
+  "src/game/square.css": ".square {
+  width: 100px;
+  height: 100px;
+  background: var(--bg2);
+  border: none;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--fg);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+}
+
+.square:hover:not(.square.disabled) {
+  background: var(--bg);
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  z-index: 1;
+  position: relative;
+}
+
+.square:disabled {
+  cursor: not-allowed;
+}
+
+.square.disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.square.winning {
+  background: var(--accent);
+  color: var(--bg);
+}
+",
+  "src/game/square.ts": "import './square.css';
+
+export const createSquare = (
+  position: number,
+  value: string | undefined,
+  onClick: () => void,
+  disabled: boolean,
+  winning: boolean,
+): HTMLButtonElement => {
+  const square = document.createElement('button');
+  square.className = \`square\${disabled ? ' disabled' : ''}\${winning ? ' winning' : ''}\`;
+  square.textContent = value || '';
+  square.disabled = disabled;
+  square.addEventListener('click', onClick);
+  return square;
+};
 ",
   "src/index.css": "a {
   color: var(--fg);

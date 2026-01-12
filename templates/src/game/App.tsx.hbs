@@ -4,10 +4,10 @@ import {Provider, useCreateStore, useSetValuesCallback, useStore, useTableListen
 import {Inspector} from 'tinybase/ui-react-inspector';
 {{includeFile template="src/components/Button.tsx.hbs" output="src/components/Button.{{ext}}"}}
 import {Button} from '../components/Button';
-{{includeFile template="src/components/Board.tsx.hbs" output="src/components/Board.{{ext}}"}}
-import {Board} from '../components/Board';
-{{includeFile template="src/components/GameStatus.tsx.hbs" output="src/components/GameStatus.{{ext}}"}}
-import {GameStatus} from '../components/GameStatus';
+{{includeFile template="src/game/Board.tsx.hbs" output="src/game/Board.{{ext}}"}}
+import {Board} from './Board';
+{{includeFile template="src/game/GameStatus.tsx.hbs" output="src/game/GameStatus.{{ext}}"}}
+import {GameStatus} from './GameStatus';
 
 const WINNING_LINES = [
 [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows

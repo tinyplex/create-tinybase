@@ -1,10 +1,10 @@
 import {createMergeableStore} from 'tinybase';
 {{includeFile template="src/components/button.ts.hbs" output="src/components/button.{{ext}}"}}
 import {createButton} from '../components/button';
-{{includeFile template="src/components/board.ts.hbs" output="src/components/board.{{ext}}"}}
-import {createBoard} from '../components/board';
-{{includeFile template="src/components/gameStatus.ts.hbs" output="src/components/gameStatus.{{ext}}"}}
-import {createGameStatus} from '../components/gameStatus';
+{{includeFile template="src/game/board.ts.hbs" output="src/game/board.{{ext}}"}}
+import {createBoard} from './board';
+{{includeFile template="src/game/gameStatus.ts.hbs" output="src/game/gameStatus.{{ext}}"}}
+import {createGameStatus} from './gameStatus';
 
 const WINNING_LINES = [
 [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows

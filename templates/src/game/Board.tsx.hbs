@@ -1,8 +1,8 @@
-{{includeFile template="src/components/board.css.hbs" output="src/components/board.css"}}
+{{includeFile template="src/game/board.css.hbs" output="src/game/board.css"}}
 import './board.css';
 import {useMemo} from 'react';
 import {useValue} from 'tinybase/ui-react';
-{{includeFile template="src/components/Square.tsx.hbs" output="src/components/Square.{{ext}}"}}
+{{includeFile template="src/game/Square.tsx.hbs" output="src/game/Square.{{ext}}"}}
 import {Square} from './Square';
 
 export const Board = () => {
