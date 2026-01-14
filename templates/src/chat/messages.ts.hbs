@@ -8,6 +8,7 @@ export const createMessages = (store: ChatStore): HTMLDivElement => {
 const messagesContainer = document.createElement('div');
 messagesContainer.id = 'messages';
 
+const updateMessages = () => {
 const messageRows = store.getTable('messages');
 const sortedIds = Object.keys(messageRows).sort(
 (a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
@@ -19,6 +20,13 @@ const msg = messageRows[id];
 const messageElement = createMessage(msg.username, msg.text, msg.timestamp);
 messagesContainer.appendChild(messageElement);
 });
+};
+
+// Initial render
+updateMessages();
+
+// Listen for changes
+store.addTablesListener(updateMessages);
 
 return messagesContainer;
 };

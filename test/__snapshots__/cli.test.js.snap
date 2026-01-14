@@ -1311,7 +1311,61 @@ npm run dev
   "src/App.jsx": "import {StrictMode} from 'react';
 import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
-import {Store, useStore, useSetValuesCallback, useTableListener} from './Store';
+import {Store} from './Store';
+import {Game} from './Game';
+const App = () => {
+  return (
+    <StrictMode>
+      <Provider>
+        <Store />
+        <Game />
+        <Inspector />
+      </Provider>
+    </StrictMode>
+  );
+};
+export {App};
+",
+  "src/Board.jsx": "import './board.css';
+import {useMemo} from 'react';
+import {useValue} from './Store';
+import {Square} from './Square';
+const Board = () => {
+  const gameStatus = useValue('gameStatus', 'game');
+  const winningLine = useValue('winningLine', 'game');
+  const winningPositions = useMemo(() => {
+    if (!winningLine) return /* @__PURE__ */ new Set();
+    return new Set(winningLine.split(',').map(Number));
+  }, [winningLine]);
+  const disabled = gameStatus !== 'playing';
+  return (
+    <div id="board">
+      {Array.from({length: 9}, (_, i) => (
+        <Square
+          key={i}
+          position={i}
+          disabled={disabled}
+          winning={winningPositions.has(i)}
+        />
+      ))}
+    </div>
+  );
+};
+export {Board};
+",
+  "src/Button.jsx": "import './button.css';
+const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
+  <button
+    onClick={onClick}
+    type={type}
+    className={variant === 'primary' ? 'primary' : void 0}
+  >
+    {children}
+  </button>
+);
+export {Button};
+",
+  "src/Game.jsx": "import {useStore, useSetValuesCallback, useTableListener} from './Store';
 import {Button} from './Button';
 import {Board} from './Board';
 import {GameStatus} from './GameStatus';
@@ -1377,60 +1431,10 @@ const Game = () => {
           New Game
         </Button>
       </div>
-      <Inspector />
     </>
   );
 };
-const App = () => {
-  return (
-    <StrictMode>
-      <Provider>
-        <Store />
-        <Game />
-      </Provider>
-    </StrictMode>
-  );
-};
-export {App};
-",
-  "src/Board.jsx": "import './board.css';
-import {useMemo} from 'react';
-import {useValue} from './Store';
-import {Square} from './Square';
-const Board = () => {
-  const gameStatus = useValue('gameStatus', 'game');
-  const winningLine = useValue('winningLine', 'game');
-  const winningPositions = useMemo(() => {
-    if (!winningLine) return /* @__PURE__ */ new Set();
-    return new Set(winningLine.split(',').map(Number));
-  }, [winningLine]);
-  const disabled = gameStatus !== 'playing';
-  return (
-    <div id="board">
-      {Array.from({length: 9}, (_, i) => (
-        <Square
-          key={i}
-          position={i}
-          disabled={disabled}
-          winning={winningPositions.has(i)}
-        />
-      ))}
-    </div>
-  );
-};
-export {Board};
-",
-  "src/Button.jsx": "import './button.css';
-const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
-  <button
-    onClick={onClick}
-    type={type}
-    className={variant === 'primary' ? 'primary' : void 0}
-  >
-    {children}
-  </button>
-);
-export {Button};
+export {Game};
 ",
   "src/GameStatus.jsx": "import './gameStatus.css';
 import {useValue} from './Store';
@@ -2344,35 +2348,17 @@ npm run dev
 </svg>",
   "src/app.js": "import {settingsStore} from './settingsStore';
 import {chatStore} from './chatStore';
-import {createMessage} from './message';
 import {createMessages} from './messages';
 import {createUsernameInput} from './usernameInput';
 import {createMessageInput} from './messageInput';
 const app = () => {
   const appContainer = document.getElementById('app');
   appContainer.appendChild(createUsernameInput(settingsStore, chatStore));
-  const messagesContainer = createMessages(chatStore);
-  appContainer.appendChild(messagesContainer);
+  appContainer.appendChild(createMessages(chatStore));
   const messageInputContainer = createMessageInput(settingsStore, chatStore);
   appContainer.appendChild(messageInputContainer);
   const messageInput = messageInputContainer.querySelector('input');
   messageInput.focus();
-  chatStore.addTablesListener(() => {
-    const messageRows = chatStore.getTable('messages');
-    const sortedIds = Object.keys(messageRows).sort(
-      (a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
-    );
-    messagesContainer.innerHTML = '';
-    sortedIds.forEach((id) => {
-      const msg = messageRows[id];
-      const messageElement = createMessage(
-        msg.username,
-        msg.text,
-        msg.timestamp,
-      );
-      messagesContainer.appendChild(messageElement);
-    });
-  });
 };
 export {app};
 ",
@@ -2553,16 +2539,24 @@ import {createMessage} from './message';
 const createMessages = (store) => {
   const messagesContainer = document.createElement('div');
   messagesContainer.id = 'messages';
-  const messageRows = store.getTable('messages');
-  const sortedIds = Object.keys(messageRows).sort(
-    (a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
-  );
-  messagesContainer.innerHTML = '';
-  sortedIds.forEach((id) => {
-    const msg = messageRows[id];
-    const messageElement = createMessage(msg.username, msg.text, msg.timestamp);
-    messagesContainer.appendChild(messageElement);
-  });
+  const updateMessages = () => {
+    const messageRows = store.getTable('messages');
+    const sortedIds = Object.keys(messageRows).sort(
+      (a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
+    );
+    messagesContainer.innerHTML = '';
+    sortedIds.forEach((id) => {
+      const msg = messageRows[id];
+      const messageElement = createMessage(
+        msg.username,
+        msg.text,
+        msg.timestamp,
+      );
+      messagesContainer.appendChild(messageElement);
+    });
+  };
+  updateMessages();
+  store.addTablesListener(updateMessages);
   return messagesContainer;
 };
 export {createMessages};
@@ -3319,65 +3313,10 @@ npm run dev
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "src/app.js": "import {store} from './store';
-import {createButton} from './button';
-import {createBoard} from './board';
-import {createGameStatus} from './gameStatus';
-const WINNING_LINES = [
-  [0, 1, 2],
-  [3, 4, 5],
-  [6, 7, 8],
-  // rows
-  [0, 3, 6],
-  [1, 4, 7],
-  [2, 5, 8],
-  // columns
-  [0, 4, 8],
-  [2, 4, 6],
-  // diagonals
-];
+import {createGame} from './game';
 const app = () => {
-  const checkGameState = () => {
-    const gameStatus = store.getValue('gameStatus');
-    if (gameStatus !== 'playing') return;
-    const board = store.getTable('board');
-    for (const line of WINNING_LINES) {
-      const [a, b, c] = line;
-      const cellA = board[a]?.value;
-      const cellB = board[b]?.value;
-      const cellC = board[c]?.value;
-      if (cellA && cellA === cellB && cellA === cellC) {
-        store.setValue('gameStatus', 'won');
-        store.setValue('winner', cellA);
-        store.setValue('winningLine', line.join(','));
-        return;
-      }
-    }
-    const filledCells = Object.values(board).filter(
-      (cell) => cell.value,
-    ).length;
-    if (filledCells === 9) {
-      store.setValue('gameStatus', 'draw');
-      return;
-    }
-    const currentPlayer = store.getValue('currentPlayer');
-    store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
-  };
-  store.addTableListener('board', checkGameState, true);
-  const resetGame = () => {
-    store.delTable('board');
-    store.setValues({
-      currentPlayer: 'X',
-      gameStatus: 'playing',
-    });
-  };
   const appContainer = document.getElementById('app');
-  appContainer.appendChild(createGameStatus(store));
-  appContainer.appendChild(createBoard(store));
-  const buttonContainer = document.createElement('div');
-  buttonContainer.style.textAlign = 'center';
-  buttonContainer.style.marginTop = '2rem';
-  buttonContainer.appendChild(createButton('New Game', resetGame, 'primary'));
-  appContainer.appendChild(buttonContainer);
+  appContainer.appendChild(createGame(store));
 };
 export {app};
 ",
@@ -3469,6 +3408,69 @@ const createButton = (text, onClick, variant = 'default') => {
   return button;
 };
 export {createButton};
+",
+  "src/game.js": "import {createButton} from './button';
+import {createBoard} from './board';
+import {createGameStatus} from './gameStatus';
+const WINNING_LINES = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  // rows
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  // columns
+  [0, 4, 8],
+  [2, 4, 6],
+  // diagonals
+];
+const createGame = (store) => {
+  const checkGameState = () => {
+    const gameStatus = store.getValue('gameStatus');
+    if (gameStatus !== 'playing') return;
+    const board = store.getTable('board');
+    for (const line of WINNING_LINES) {
+      const [a, b, c] = line;
+      const cellA = board[a]?.value;
+      const cellB = board[b]?.value;
+      const cellC = board[c]?.value;
+      if (cellA && cellA === cellB && cellA === cellC) {
+        store.setValue('gameStatus', 'won');
+        store.setValue('winner', cellA);
+        store.setValue('winningLine', line.join(','));
+        return;
+      }
+    }
+    const filledCells = Object.values(board).filter(
+      (cell) => cell.value,
+    ).length;
+    if (filledCells === 9) {
+      store.setValue('gameStatus', 'draw');
+      return;
+    }
+    const currentPlayer = store.getValue('currentPlayer');
+    store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
+  };
+  store.addTableListener('board', checkGameState, true);
+  const resetGame = () => {
+    store.delTable('board');
+    store.setValues({
+      currentPlayer: 'X',
+      gameStatus: 'playing',
+    });
+  };
+  const gameContainer = document.createElement('div');
+  gameContainer.appendChild(createGameStatus(store));
+  gameContainer.appendChild(createBoard(store));
+  const buttonContainer = document.createElement('div');
+  buttonContainer.style.textAlign = 'center';
+  buttonContainer.style.marginTop = '2rem';
+  buttonContainer.appendChild(createButton('New Game', resetGame, 'primary'));
+  gameContainer.appendChild(buttonContainer);
+  return gameContainer;
+};
+export {createGame};
 ",
   "src/gameStatus.css": "#gameStatus {
   text-align: center;
@@ -5510,89 +5512,9 @@ npm run dev
 import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 
-import {Store, useStore, useSetValuesCallback, useTableListener} from './Store';
+import {Store} from './Store';
 
-import {Button} from './Button';
-
-import {Board} from './Board';
-
-import {GameStatus} from './GameStatus';
-
-const WINNING_LINES = [
-  [0, 1, 2],
-  [3, 4, 5],
-  [6, 7, 8], // rows
-  [0, 3, 6],
-  [1, 4, 7],
-  [2, 5, 8], // columns
-  [0, 4, 8],
-  [2, 4, 6], // diagonals
-];
-
-const Game = () => {
-  const store = useStore('game');
-
-  useTableListener(
-    'board',
-    () => {
-      const gameStatus = store.getValue('gameStatus');
-      if (gameStatus !== 'playing') return;
-
-      const board = store.getTable('board');
-
-      // Check for winner
-      for (const line of WINNING_LINES) {
-        const [a, b, c] = line;
-        const cellA = board[a]?.value;
-        const cellB = board[b]?.value;
-        const cellC = board[c]?.value;
-
-        if (cellA && cellA === cellB && cellA === cellC) {
-          store.setValue('gameStatus', 'won');
-          store.setValue('winner', cellA);
-          store.setValue('winningLine', line.join(','));
-          return;
-        }
-      }
-
-      // Check for draw
-      const filledCells = Object.values(board).filter(
-        (cell: any) => cell.value,
-      ).length;
-      if (filledCells === 9) {
-        store.setValue('gameStatus', 'draw');
-        return;
-      }
-
-      // Switch player after each move
-      const currentPlayer = store.getValue('currentPlayer');
-      store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
-    },
-    [],
-    true,
-  );
-
-  const resetGame = useSetValuesCallback(() => {
-    store.delTable('board');
-    return {
-      currentPlayer: 'X',
-      gameStatus: 'playing',
-    };
-  }, []);
-
-  return (
-    <>
-      <GameStatus />
-      <Board />
-      <div style={{textAlign: 'center', marginTop: '2rem'}}>
-        <Button onClick={resetGame} variant="primary">
-          New Game
-        </Button>
-      </div>
-      <Inspector />
-    </>
-  );
-};
+import {Game} from './Game';
 
 const App = () => {
   return (
@@ -5600,6 +5522,7 @@ const App = () => {
       <Provider>
         <Store />
         <Game />
+        <Inspector />
       </Provider>
     </StrictMode>
   );
@@ -5662,6 +5585,89 @@ export const Button = ({
     {children}
   </button>
 );
+",
+  "src/Game.tsx": "import {useStore, useSetValuesCallback, useTableListener} from './Store';
+
+import {Button} from './Button';
+
+import {Board} from './Board';
+
+import {GameStatus} from './GameStatus';
+
+const WINNING_LINES = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8], // rows
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8], // columns
+  [0, 4, 8],
+  [2, 4, 6], // diagonals
+];
+
+export const Game = () => {
+  const store = useStore('game');
+
+  useTableListener(
+    'board',
+    () => {
+      const gameStatus = store.getValue('gameStatus');
+      if (gameStatus !== 'playing') return;
+
+      const board = store.getTable('board');
+
+      // Check for winner
+      for (const line of WINNING_LINES) {
+        const [a, b, c] = line;
+        const cellA = board[a]?.value;
+        const cellB = board[b]?.value;
+        const cellC = board[c]?.value;
+
+        if (cellA && cellA === cellB && cellA === cellC) {
+          store.setValue('gameStatus', 'won');
+          store.setValue('winner', cellA);
+          store.setValue('winningLine', line.join(','));
+          return;
+        }
+      }
+
+      // Check for draw
+      const filledCells = Object.values(board).filter(
+        (cell: any) => cell.value,
+      ).length;
+      if (filledCells === 9) {
+        store.setValue('gameStatus', 'draw');
+        return;
+      }
+
+      // Switch player after each move
+      const currentPlayer = store.getValue('currentPlayer');
+      store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
+    },
+    [],
+    true,
+  );
+
+  const resetGame = useSetValuesCallback(() => {
+    store.delTable('board');
+    return {
+      currentPlayer: 'X',
+      gameStatus: 'playing',
+    };
+  }, []);
+
+  return (
+    <>
+      <GameStatus />
+      <Board />
+      <div style={{textAlign: 'center', marginTop: '2rem'}}>
+        <Button onClick={resetGame} variant="primary">
+          New Game
+        </Button>
+      </div>
+    </>
+  );
+};
 ",
   "src/GameStatus.tsx": "import './gameStatus.css';
 import {useValue} from './Store';
@@ -6702,9 +6708,7 @@ const app = () => {
   const appContainer = document.getElementById('app')!;
 
   appContainer.appendChild(createUsernameInput(settingsStore, chatStore));
-
-  const messagesContainer = createMessages(chatStore);
-  appContainer.appendChild(messagesContainer);
+  appContainer.appendChild(createMessages(chatStore));
 
   const messageInputContainer = createMessageInput(settingsStore, chatStore);
   appContainer.appendChild(messageInputContainer);
@@ -6712,24 +6716,6 @@ const app = () => {
   // Focus the input after it's in the DOM
   const messageInput = messageInputContainer.querySelector('input')!;
   messageInput.focus();
-
-  chatStore.addTablesListener(() => {
-    const messageRows = chatStore.getTable('messages');
-    const sortedIds = Object.keys(messageRows).sort(
-      (a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
-    );
-
-    messagesContainer.innerHTML = '';
-    sortedIds.forEach((id) => {
-      const msg = messageRows[id];
-      const messageElement = createMessage(
-        msg.username,
-        msg.text,
-        msg.timestamp,
-      );
-      messagesContainer.appendChild(messageElement);
-    });
-  });
 };
 
 export {app};
@@ -6949,17 +6935,29 @@ export const createMessages = (store: ChatStore): HTMLDivElement => {
   const messagesContainer = document.createElement('div');
   messagesContainer.id = 'messages';
 
-  const messageRows = store.getTable('messages');
-  const sortedIds = Object.keys(messageRows).sort(
-    (a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
-  );
+  const updateMessages = () => {
+    const messageRows = store.getTable('messages');
+    const sortedIds = Object.keys(messageRows).sort(
+      (a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
+    );
 
-  messagesContainer.innerHTML = '';
-  sortedIds.forEach((id) => {
-    const msg = messageRows[id];
-    const messageElement = createMessage(msg.username, msg.text, msg.timestamp);
-    messagesContainer.appendChild(messageElement);
-  });
+    messagesContainer.innerHTML = '';
+    sortedIds.forEach((id) => {
+      const msg = messageRows[id];
+      const messageElement = createMessage(
+        msg.username,
+        msg.text,
+        msg.timestamp,
+      );
+      messagesContainer.appendChild(messageElement);
+    });
+  };
+
+  // Initial render
+  updateMessages();
+
+  // Listen for changes
+  store.addTablesListener(updateMessages);
 
   return messagesContainer;
 };
@@ -7839,79 +7837,11 @@ npm run dev
 </svg>",
   "src/app.ts": "import {store} from './store';
 
-import {createButton} from './button';
-
-import {createBoard} from './board';
-
-import {createGameStatus} from './gameStatus';
-
-const WINNING_LINES = [
-  [0, 1, 2],
-  [3, 4, 5],
-  [6, 7, 8], // rows
-  [0, 3, 6],
-  [1, 4, 7],
-  [2, 5, 8], // columns
-  [0, 4, 8],
-  [2, 4, 6], // diagonals
-];
+import {createGame} from './game';
 
 const app = () => {
-  const checkGameState = () => {
-    const gameStatus = store.getValue('gameStatus');
-    if (gameStatus !== 'playing') return;
-
-    const board = store.getTable('board');
-
-    // Check for winner
-    for (const line of WINNING_LINES) {
-      const [a, b, c] = line;
-      const cellA = board[a]?.value;
-      const cellB = board[b]?.value;
-      const cellC = board[c]?.value;
-
-      if (cellA && cellA === cellB && cellA === cellC) {
-        store.setValue('gameStatus', 'won');
-        store.setValue('winner', cellA);
-        store.setValue('winningLine', line.join(','));
-        return;
-      }
-    }
-
-    // Check for draw
-    const filledCells = Object.values(board).filter(
-      (cell: any) => cell.value,
-    ).length;
-    if (filledCells === 9) {
-      store.setValue('gameStatus', 'draw');
-      return;
-    }
-
-    // Switch player after each move
-    const currentPlayer = store.getValue('currentPlayer');
-    store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
-  };
-
-  store.addTableListener('board', checkGameState, true);
-
-  const resetGame = () => {
-    store.delTable('board');
-    store.setValues({
-      currentPlayer: 'X',
-      gameStatus: 'playing',
-    });
-  };
-
   const appContainer = document.getElementById('app')!;
-
-  appContainer.appendChild(createGameStatus(store));
-  appContainer.appendChild(createBoard(store));
-
-  const buttonContainer = document.createElement('div');
-  buttonContainer.style.textAlign = 'center';
-  buttonContainer.style.marginTop = '2rem';
-  buttonContainer.appendChild(createButton('New Game', resetGame, 'primary'));
-  appContainer.appendChild(buttonContainer);
+  appContainer.appendChild(createGame(store));
 };
 
 export {app};
@@ -8012,6 +7942,85 @@ export const createButton = (
   }
   button.addEventListener('click', onClick);
   return button;
+};
+",
+  "src/game.ts": "import type {Store} from './store';
+
+import {createButton} from './button';
+
+import {createBoard} from './board';
+
+import {createGameStatus} from './gameStatus';
+
+const WINNING_LINES = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8], // rows
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8], // columns
+  [0, 4, 8],
+  [2, 4, 6], // diagonals
+];
+
+export const createGame = (store: Store): HTMLDivElement => {
+  const checkGameState = () => {
+    const gameStatus = store.getValue('gameStatus');
+    if (gameStatus !== 'playing') return;
+
+    const board = store.getTable('board');
+
+    // Check for winner
+    for (const line of WINNING_LINES) {
+      const [a, b, c] = line;
+      const cellA = board[a]?.value;
+      const cellB = board[b]?.value;
+      const cellC = board[c]?.value;
+
+      if (cellA && cellA === cellB && cellA === cellC) {
+        store.setValue('gameStatus', 'won');
+        store.setValue('winner', cellA);
+        store.setValue('winningLine', line.join(','));
+        return;
+      }
+    }
+
+    // Check for draw
+    const filledCells = Object.values(board).filter(
+      (cell: any) => cell.value,
+    ).length;
+    if (filledCells === 9) {
+      store.setValue('gameStatus', 'draw');
+      return;
+    }
+
+    // Switch player after each move
+    const currentPlayer = store.getValue('currentPlayer');
+    store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
+  };
+
+  store.addTableListener('board', checkGameState, true);
+
+  const resetGame = () => {
+    store.delTable('board');
+    store.setValues({
+      currentPlayer: 'X',
+      gameStatus: 'playing',
+    });
+  };
+
+  const gameContainer = document.createElement('div');
+
+  gameContainer.appendChild(createGameStatus(store));
+  gameContainer.appendChild(createBoard(store));
+
+  const buttonContainer = document.createElement('div');
+  buttonContainer.style.textAlign = 'center';
+  buttonContainer.style.marginTop = '2rem';
+  buttonContainer.appendChild(createButton('New Game', resetGame, 'primary'));
+  gameContainer.appendChild(buttonContainer);
+
+  return gameContainer;
 };
 ",
   "src/gameStatus.css": "#gameStatus {

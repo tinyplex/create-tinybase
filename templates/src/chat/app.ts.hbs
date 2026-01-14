@@ -19,9 +19,7 @@ const app = () => {
 const appContainer = document.getElementById('app')!;
 
 appContainer.appendChild(createUsernameInput(settingsStore, chatStore));
-
-const messagesContainer = createMessages(chatStore);
-appContainer.appendChild(messagesContainer);
+appContainer.appendChild(createMessages(chatStore));
 
 const messageInputContainer = createMessageInput(settingsStore, chatStore);
 appContainer.appendChild(messageInputContainer);
@@ -29,20 +27,6 @@ appContainer.appendChild(messageInputContainer);
 // Focus the input after it's in the DOM
 const messageInput = messageInputContainer.querySelector('input')!;
 messageInput.focus();
-
-chatStore.addTablesListener(() => {
-const messageRows = chatStore.getTable('messages');
-const sortedIds = Object.keys(messageRows).sort(
-(a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
-);
-
-messagesContainer.innerHTML = '';
-sortedIds.forEach((id) => {
-const msg = messageRows[id];
-const messageElement = createMessage(msg.username, msg.text, msg.timestamp);
-messagesContainer.appendChild(messageElement);
-});
-});
 };
 
 export {app};

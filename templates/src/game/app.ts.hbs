@@ -1,72 +1,11 @@
 {{includeFile template="src/game/store.ts.hbs" output="src/store.ts"}}
 import {store} from './store';
-{{includeFile template="src/shared/button.ts.hbs" output="src/button.{{ext}}"}}
-import {createButton} from './button';
-{{includeFile template="src/game/board.ts.hbs" output="src/board.{{ext}}"}}
-import {createBoard} from './board';
-{{includeFile template="src/game/gameStatus.ts.hbs" output="src/gameStatus.{{ext}}"}}
-import {createGameStatus} from './gameStatus';
-
-const WINNING_LINES = [
-[0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
-[0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
-[0, 4, 8], [2, 4, 6], // diagonals
-];
+{{includeFile template="src/game/game.ts.hbs" output="src/game.{{ext}}"}}
+import {createGame} from './game';
 
 const app = () => {
-const checkGameState = () => {
-const gameStatus = store.getValue('gameStatus');
-if (gameStatus !== 'playing') return;
-
-const board = store.getTable('board');
-
-// Check for winner
-for (const line of WINNING_LINES) {
-const [a, b, c] = line;
-const cellA = board[a]?.value;
-const cellB = board[b]?.value;
-const cellC = board[c]?.value;
-
-if (cellA && cellA === cellB && cellA === cellC) {
-store.setValue('gameStatus', 'won');
-store.setValue('winner', cellA);
-store.setValue('winningLine', line.join(','));
-return;
-}
-}
-
-// Check for draw
-const filledCells = Object.values(board).filter((cell: any) => cell.value).length;
-if (filledCells === 9) {
-store.setValue('gameStatus', 'draw');
-return;
-}
-
-// Switch player after each move
-const currentPlayer = store.getValue('currentPlayer');
-store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
-};
-
-store.addTableListener('board', checkGameState, true);
-
-const resetGame = () => {
-store.delTable('board');
-store.setValues({
-currentPlayer: 'X',
-gameStatus: 'playing',
-});
-};
-
 const appContainer = document.getElementById('app')!;
-
-appContainer.appendChild(createGameStatus(store));
-appContainer.appendChild(createBoard(store));
-
-const buttonContainer = document.createElement('div');
-buttonContainer.style.textAlign = 'center';
-buttonContainer.style.marginTop = '2rem';
-buttonContainer.appendChild(createButton('New Game', resetGame, 'primary'));
-appContainer.appendChild(buttonContainer);
+appContainer.appendChild(createGame(store));
 };
 
 export {app};
