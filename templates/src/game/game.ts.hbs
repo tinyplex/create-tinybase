@@ -1,4 +1,4 @@
-import type {Store} from './store';
+import type {GameStore} from './store';
 {{includeFile template="src/shared/button.ts.hbs" output="src/button.{{ext}}"}}
 import {createButton} from './button';
 {{includeFile template="src/game/board.ts.hbs" output="src/board.{{ext}}"}}
@@ -12,7 +12,7 @@ const WINNING_LINES = [
 [0, 4, 8], [2, 4, 6], // diagonals
 ];
 
-export const createGame = (store: Store): HTMLDivElement => {
+export const createGame = (store: GameStore): HTMLDivElement => {
 const checkGameState = () => {
 const gameStatus = store.getValue('gameStatus');
 if (gameStatus !== 'playing') return;

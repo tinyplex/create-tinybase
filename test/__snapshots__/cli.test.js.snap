@@ -4270,7 +4270,7 @@ import {Messages} from './Messages';
 
 import {MessageInput} from './MessageInput';
 
-export const App = () => {
+const App = () => {
   return (
     <StrictMode>
       <Provider>
@@ -4284,6 +4284,8 @@ export const App = () => {
     </StrictMode>
   );
 };
+
+export {App};
 ",
   "src/Button.tsx": "import './button.css';
 import {ReactNode} from 'react';
@@ -7861,10 +7863,11 @@ export {app};
 }
 ",
   "src/board.ts": "import './board.css';
+import type {GameStore} from './store';
 
 import {createSquare} from './square';
 
-export const createBoard = (store: any): HTMLDivElement => {
+export const createBoard = (store: GameStore): HTMLDivElement => {
   const board = document.createElement('div');
   board.id = 'board';
 
@@ -7944,7 +7947,7 @@ export const createButton = (
   return button;
 };
 ",
-  "src/game.ts": "import type {Store} from './store';
+  "src/game.ts": "import type {GameStore} from './store';
 
 import {createButton} from './button';
 
@@ -7963,7 +7966,7 @@ const WINNING_LINES = [
   [2, 4, 6], // diagonals
 ];
 
-export const createGame = (store: Store): HTMLDivElement => {
+export const createGame = (store: GameStore): HTMLDivElement => {
   const checkGameState = () => {
     const gameStatus = store.getValue('gameStatus');
     if (gameStatus !== 'playing') return;
@@ -8047,8 +8050,9 @@ export const createGame = (store: Store): HTMLDivElement => {
 }
 ",
   "src/gameStatus.ts": "import './gameStatus.css';
+import type {GameStore} from './store';
 
-export const createGameStatus = (store: any): HTMLDivElement => {
+export const createGameStatus = (store: GameStore): HTMLDivElement => {
   const status = document.createElement('div');
   status.id = 'gameStatus';
 
@@ -8140,7 +8144,7 @@ export const store = createMergeableStore(STORE_ID)
   .setValue('currentPlayer', 'X')
   .setValue('gameStatus', 'playing');
 
-export type Store = typeof store;
+export type GameStore = typeof store;
 ",
   "tsconfig.json": "{
   "compilerOptions": {
@@ -8499,7 +8503,7 @@ export const store = createMergeableStore(STORE_ID).setTable('todos', {
   '2': {text: 'Build an app', completed: false},
 });
 
-export type Store = typeof store;
+export type TodosStore = typeof store;
 ",
   "src/todoInput.css": "#todoInput {
   display: flex;
@@ -8512,13 +8516,13 @@ export type Store = typeof store;
 }
 ",
   "src/todoInput.ts": "import './todoInput.css';
-import {type Store} from './store';
+import {type TodosStore} from './store';
 
 import {createButton} from './button';
 
 import {createInput} from './input';
 
-export const createTodoInput = (store: Store): HTMLDivElement => {
+export const createTodoInput = (store: TodosStore): HTMLDivElement => {
   const container = document.createElement('div');
   container.id = 'todoInput';
 
@@ -8630,11 +8634,11 @@ export const createTodoItem = (
 }
 ",
   "src/todoList.ts": "import './todoList.css';
-import {type Store} from './store';
+import {type TodosStore} from './store';
 
 import {createTodoItem} from './todoItem';
 
-export const createTodoList = (store: Store): HTMLDivElement => {
+export const createTodoList = (store: TodosStore): HTMLDivElement => {
   const list = document.createElement('div');
   list.id = 'todoList';
 
