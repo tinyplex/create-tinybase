@@ -141,14 +141,17 @@ const config = {
     };
   },
 
-  createDirectories: async (targetDir: string, context: Record<string, unknown>) => {
+  createDirectories: async (
+    targetDir: string,
+    context: Record<string, unknown>,
+  ) => {
     const {mkdir} = await import('fs/promises');
     const {join} = await import('path');
     const server = context.server as boolean;
-    
+
     await mkdir(join(targetDir, 'client/src'), {recursive: true});
     await mkdir(join(targetDir, 'client/public'), {recursive: true});
-    
+
     if (server) {
       await mkdir(join(targetDir, 'server'), {recursive: true});
     }
@@ -168,7 +171,7 @@ const config = {
         prettier: true,
       },
     ];
-    
+
     if (server) {
       files.push({
         template: 'package.json.hbs',
@@ -176,7 +179,7 @@ const config = {
         prettier: true,
       });
     }
-    
+
     return files;
   },
 
@@ -205,7 +208,7 @@ const config = {
 
   onSuccess: (projectName: string) => {
     console.log(`Next steps:`);
-    console.log(`  cd ${projectName}`);
+    console.log(`  cd ${projectName}/client`);
     console.log(`  npm install`);
     console.log(`  npm run dev`);
   },

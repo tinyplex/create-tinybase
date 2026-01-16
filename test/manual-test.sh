@@ -179,20 +179,26 @@ done
 smart_install() {
   local name=$1
   local project_path="$TEST_DIR/$name"
+  local install_path="$project_path"
+  
+  # Check if package.json is in client/ subdirectory
+  if [ -f "$project_path/client/package.json" ]; then
+    install_path="$project_path/client"
+  fi
   
   # Check if we can skip install by comparing package.json
   if [ -f "$project_path/.package.json.cache" ] && [ -d "$project_path/node_modules" ]; then
-    if cmp -s "$project_path/package.json" "$project_path/.package.json.cache"; then
+    if cmp -s "$install_path/package.json" "$project_path/.package.json.cache"; then
       echo "  ⚡ Reusing node_modules for $name"
       return 0
     fi
   fi
   
   echo "Installing deps for $name..."
-  (cd "$project_path" && npm install > "/tmp/${name}-install.log" 2>&1)
+  (cd "$install_path" && npm install > "/tmp/${name}-install.log" 2>&1)
   
   # Cache the package.json
-  cp "$project_path/package.json" "$project_path/.package.json.cache"
+  cp "$install_path/package.json" "$project_path/.package.json.cache"
 }
 
 if [ "$SKIP_INSTALL" = false ]; then
@@ -229,7 +235,12 @@ PIDS=()
 for project in "${projects[@]}"; do
   IFS=':' read -r name _ _ _ port _ <<< "$project"
   echo "Starting $name on port $port..."
-  (cd "$name" && npm run dev -- --port "$port" --force > "/tmp/${name}.log" 2>&1) &
+  # Check if package.json is in client/ subdirectory
+  if [ -f "$name/client/package.json" ]; then
+    (cd "$name/client" && npm run dev -- --port "$port" --force > "/tmp/${name}.log" 2>&1) &
+  else
+    (cd "$name" && npm run dev -- --port "$port" --force > "/tmp/${name}.log" 2>&1) &
+  fi
   PIDS+=($!)
 done
 
