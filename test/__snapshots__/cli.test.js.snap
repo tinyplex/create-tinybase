@@ -5101,7 +5101,7 @@ export {App};
 import './brushSize.css';
 
 export const BrushSize = () => {
-  const size = (useValue('brushSize', STORE_ID) as number) ?? 5;
+  const size = useValue('brushSize', STORE_ID) ?? 5;
 
   const setSize = useSetValueCallback(
     'brushSize',
@@ -5157,10 +5157,7 @@ import './canvas.css';
 export const Canvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isDrawing = useRef(false);
-  const brush = useValues(SETTINGS_STORE_ID) as {
-    brushColor: string;
-    brushSize: number;
-  };
+  const brush = useValues(SETTINGS_STORE_ID);
   const strokes = useRowIds('strokes', CANVAS_STORE_ID);
   const strokesTable = useTable('strokes', CANVAS_STORE_ID);
 
@@ -5308,7 +5305,7 @@ export const ColorPicker = () => {
     '#7b1fa2',
     '#fff',
   ];
-  const currentColor = useValue('brushColor', STORE_ID) as string;
+  const currentColor = useValue('brushColor', STORE_ID);
 
   const setColor = useSetValueCallback(
     'brushColor',
@@ -5769,8 +5766,8 @@ import {useValue, STORE_ID} from './Store';
 import {Square} from './Square';
 
 export const Board = () => {
-  const gameStatus = useValue('gameStatus', STORE_ID) as string;
-  const winningLine = useValue('winningLine', STORE_ID) as string | undefined;
+  const gameStatus = useValue('gameStatus', STORE_ID);
+  const winningLine = useValue('winningLine', STORE_ID);
 
   const winningPositions = useMemo(() => {
     if (!winningLine) return new Set();
@@ -5905,9 +5902,9 @@ export const Game = () => {
 import {useValue, STORE_ID} from './Store';
 
 export const GameStatus = () => {
-  const gameStatus = useValue('gameStatus', STORE_ID) as string;
-  const currentPlayer = useValue('currentPlayer', STORE_ID) as string;
-  const winner = useValue('winner', STORE_ID) as string | undefined;
+  const gameStatus = useValue('gameStatus', STORE_ID);
+  const currentPlayer = useValue('currentPlayer', STORE_ID);
+  const winner = useValue('winner', STORE_ID);
 
   return (
     <div id="gameStatus">
@@ -5939,10 +5936,8 @@ export const Square = ({
   winning: boolean;
 }) => {
   const store = useStore(STORE_ID);
-  const value = useCell('board', position.toString(), 'value', STORE_ID) as
-    | string
-    | undefined;
-  const currentPlayer = useValue('currentPlayer', STORE_ID) as string;
+  const value = useCell('board', position.toString(), 'value', STORE_ID);
+  const currentPlayer = useValue('currentPlayer', STORE_ID);
 
   const isDisabled = disabled || !!value;
 
@@ -6565,10 +6560,7 @@ import {
 import {Button} from './Button';
 
 export const TodoItem = ({rowId}: {rowId: string}) => {
-  const todo = useRow('todos', rowId, STORE_ID) as {
-    text: string;
-    completed: boolean;
-  };
+  const todo = useRow('todos', rowId, STORE_ID);
   const setPartialRow = useSetPartialRowCallback(
     'todos',
     rowId,

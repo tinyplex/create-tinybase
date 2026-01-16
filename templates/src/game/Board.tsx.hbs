@@ -6,8 +6,8 @@ import {useValue, STORE_ID} from './Store';
 import {Square} from './Square';
 
 export const Board = () => {
-const gameStatus = useValue('gameStatus', STORE_ID) as string;
-const winningLine = useValue('winningLine', STORE_ID) as string | undefined;
+const gameStatus = useValue('gameStatus', STORE_ID);
+const winningLine = useValue('winningLine', STORE_ID);
 
 const winningPositions = useMemo(() => {
 if (!winningLine) return new Set();

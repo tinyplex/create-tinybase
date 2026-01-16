@@ -5,7 +5,7 @@ import {useDelRowCallback, useRow, useSetPartialRowCallback, STORE_ID} from './S
 import {Button} from './Button';
 
 export const TodoItem = ({rowId}: {rowId: string}) => {
-const todo = useRow('todos', rowId, STORE_ID) as {text: string; completed: boolean};
+const todo = useRow('todos', rowId, STORE_ID);
 const setPartialRow = useSetPartialRowCallback('todos', rowId, (e: React.ChangeEvent<HTMLInputElement>) => ({completed: e.target.checked}), [], STORE_ID);
   const delRow = useDelRowCallback('todos', rowId, STORE_ID);
 

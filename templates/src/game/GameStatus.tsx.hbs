@@ -3,9 +3,9 @@ import './gameStatus.css';
 import {useValue, STORE_ID} from './Store';
 
 export const GameStatus = () => {
-const gameStatus = useValue('gameStatus', STORE_ID) as string;
-const currentPlayer = useValue('currentPlayer', STORE_ID) as string;
-const winner = useValue('winner', STORE_ID) as string | undefined;
+const gameStatus = useValue('gameStatus', STORE_ID);
+const currentPlayer = useValue('currentPlayer', STORE_ID);
+const winner = useValue('winner', STORE_ID);
 
 return (
 <div id="gameStatus">

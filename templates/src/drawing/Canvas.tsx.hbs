@@ -7,7 +7,7 @@ import './canvas.css';
 export const Canvas = () => {
 const canvasRef = useRef<HTMLCanvasElement>(null);
   const isDrawing = useRef(false);
-  const brush = useValues(SETTINGS_STORE_ID) as {brushColor: string; brushSize: number};
+  const brush = useValues(SETTINGS_STORE_ID);
   const strokes = useRowIds('strokes', CANVAS_STORE_ID);
   const strokesTable = useTable('strokes', CANVAS_STORE_ID);
 

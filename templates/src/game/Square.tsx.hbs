@@ -4,8 +4,8 @@ import {useCell, useStore, useValue, STORE_ID} from './Store';
 
 export const Square = ({position, disabled, winning}: {position: number; disabled: boolean; winning: boolean}) => {
 const store = useStore(STORE_ID);
-const value = useCell('board', position.toString(), 'value', STORE_ID) as string | undefined;
-const currentPlayer = useValue('currentPlayer', STORE_ID) as string;
+const value = useCell('board', position.toString(), 'value', STORE_ID);
+const currentPlayer = useValue('currentPlayer', STORE_ID);
 
 const isDisabled = disabled || !!value;
 
