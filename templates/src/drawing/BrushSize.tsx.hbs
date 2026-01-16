@@ -1,15 +1,15 @@
 {{includeFile template="src/drawing/brushSize.css.hbs" output="src/brushSize.css"}}
-import {useValue, useSetValueCallback} from './SettingsStore';
+import {useValue, useSetValueCallback, STORE_ID} from './SettingsStore';
 import './brushSize.css';
 
 export const BrushSize = () => {
-const size = (useValue('brushSize', 'settings') as number) ?? 5;
+const size = (useValue('brushSize', STORE_ID) as number) ?? 5;
 
 const setSize = useSetValueCallback(
 'brushSize',
 (e: React.ChangeEvent<HTMLInputElement>) => parseInt(e.target.value),
   [],
-  'settings',
+  STORE_ID,
   );
 
   return (

@@ -1,11 +1,11 @@
 {{includeFile template="src/game/square.css.hbs" output="src/square.css"}}
 import './square.css';
-import {useCell, useStore, useValue} from './Store';
+import {useCell, useStore, useValue, STORE_ID} from './Store';
 
 export const Square = ({position, disabled, winning}: {position: number; disabled: boolean; winning: boolean}) => {
-const store = useStore('game');
-const value = useCell('board', position.toString(), 'value', 'game') as string | undefined;
-const currentPlayer = useValue('currentPlayer', 'game') as string;
+const store = useStore(STORE_ID);
+const value = useCell('board', position.toString(), 'value', STORE_ID) as string | undefined;
+const currentPlayer = useValue('currentPlayer', STORE_ID) as string;
 
 const isDisabled = disabled || !!value;
 

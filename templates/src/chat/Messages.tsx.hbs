@@ -1,13 +1,13 @@
 import {useMemo} from 'react';
-import {useRowIds, useStore} from './ChatStore';
+import {useRowIds, useStore, STORE_ID} from './ChatStore';
 {{includeFile template="src/chat/messages.css.hbs" output="src/messages.css"}}
 import './messages.css';
 {{includeFile template="src/chat/Message.tsx.hbs" output="src/Message.{{ext}}"}}
 import {Message} from './Message';
 
 export const Messages = () => {
-const store = useStore('chat');
-const messageIds = useRowIds('messages', 'chat');
+const store = useStore(STORE_ID);
+const messageIds = useRowIds('messages', STORE_ID);
 
 const sortedIds = useMemo(() => {
 return [...messageIds].sort((a, b) => {

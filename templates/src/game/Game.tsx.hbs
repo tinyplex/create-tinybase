@@ -13,7 +13,7 @@ const WINNING_LINES = [
 ];
 
 export const Game = () => {
-const store = useStore('game');
+const store = useStore(STORE_ID);
 
 useTableListener(
 'board',

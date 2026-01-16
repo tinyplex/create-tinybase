@@ -1,7 +1,7 @@
 {{includeFile template="src/chat/messageInput.css.hbs" output="src/messageInput.css"}}
 import {useState} from 'react';
-import {useAddRowCallback} from './ChatStore';
-import {useValue} from './SettingsStore';
+import {useAddRowCallback, STORE_ID as CHAT_STORE_ID} from './ChatStore';
+import {useValue, STORE_ID as SETTINGS_STORE_ID} from './SettingsStore';
 import './messageInput.css';
 {{includeFile template="src/shared/Button.tsx.hbs" output="src/Button.{{ext}}"}}
 import {Button} from './Button';
@@ -10,7 +10,7 @@ import {Input} from './Input';
 
 export const MessageInput = () => {
 const [message, setMessage] = useState('');
-const username = useValue('username', 'settings') || 'Anonymous';
+const username = useValue('username', SETTINGS_STORE_ID) || 'Anonymous';
 
 const handleSend = useAddRowCallback(
 'messages',
@@ -20,7 +20,7 @@ text: message,
 timestamp: Date.now(),
 }),
 [message, username],
-'chat',
+CHAT_STORE_ID,
 );
 
 const onSubmit = (e: React.FormEvent) => {

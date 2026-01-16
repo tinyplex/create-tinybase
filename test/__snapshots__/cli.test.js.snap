@@ -267,8 +267,8 @@ import {
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 import {useCreateSynchronizer} from 'tinybase/ui-react';
-const STORE_ID = 'chat';
 const SERVER = 'wss://vite.tinybase.org';
+const STORE_ID = 'chat';
 const ChatStore = () => {
   const store = useCreateStore(() =>
     createMergeableStore(STORE_ID).setTable('messages', {
@@ -291,7 +291,7 @@ const ChatStore = () => {
   });
   return null;
 };
-export {ChatStore, useAddRowCallback, useRow, useRowIds, useStore};
+export {ChatStore, STORE_ID, useAddRowCallback, useRow, useRowIds, useStore};
 ",
   "src/Input.jsx": "import './input.css';
 const Input = ({value, onChange, placeholder = '', autoFocus = false}) => (
@@ -321,14 +321,14 @@ const Message = ({rowId}) => {
 export {Message};
 ",
   "src/MessageInput.jsx": "import {useState} from 'react';
-import {useAddRowCallback} from './ChatStore';
-import {useValue} from './SettingsStore';
+import {useAddRowCallback, STORE_ID as CHAT_STORE_ID} from './ChatStore';
+import {useValue, STORE_ID as SETTINGS_STORE_ID} from './SettingsStore';
 import './messageInput.css';
 import {Button} from './Button';
 import {Input} from './Input';
 const MessageInput = () => {
   const [message, setMessage] = useState('');
-  const username = useValue('username', 'settings') || 'Anonymous';
+  const username = useValue('username', SETTINGS_STORE_ID) || 'Anonymous';
   const handleSend = useAddRowCallback(
     'messages',
     () => ({
@@ -337,7 +337,7 @@ const MessageInput = () => {
       timestamp: Date.now(),
     }),
     [message, username],
-    'chat',
+    CHAT_STORE_ID,
   );
   const onSubmit = (e) => {
     e.preventDefault();
@@ -363,12 +363,12 @@ const MessageInput = () => {
 export {MessageInput};
 ",
   "src/Messages.jsx": "import {useMemo} from 'react';
-import {useRowIds, useStore} from './ChatStore';
+import {useRowIds, useStore, STORE_ID} from './ChatStore';
 import './messages.css';
 import {Message} from './Message';
 const Messages = () => {
-  const store = useStore('chat');
-  const messageIds = useRowIds('messages', 'chat');
+  const store = useStore(STORE_ID);
+  const messageIds = useRowIds('messages', STORE_ID);
   const sortedIds = useMemo(() => {
     return [...messageIds].sort((a, b) => {
       const rowA = store.getRow('messages', a);
@@ -401,19 +401,14 @@ const SettingsStore = () => {
   useProvideStore(STORE_ID, store);
   return null;
 };
-export {SettingsStore, useSetValueCallback, useValue};
+export {STORE_ID, SettingsStore, useSetValueCallback, useValue};
 ",
-  "src/UsernameInput.jsx": "import {useValue, useSetValueCallback} from './SettingsStore';
+  "src/UsernameInput.jsx": "import {useValue, useSetValueCallback, STORE_ID} from './SettingsStore';
 import './usernameInput.css';
 import {Input} from './Input';
 const UsernameInput = () => {
-  const username = useValue('username', 'settings') || '';
-  const setUsername = useSetValueCallback(
-    'username',
-    (_e) => _e,
-    [],
-    'settings',
-  );
+  const username = useValue('username', STORE_ID) || '';
+  const setUsername = useSetValueCallback('username', (_e) => _e, [], STORE_ID);
   return (
     <div id="usernameInput">
       <label>Your name:</label>
@@ -791,15 +786,15 @@ const App = () => {
 };
 export {App};
 ",
-  "src/BrushSize.jsx": "import {useValue, useSetValueCallback} from './SettingsStore';
+  "src/BrushSize.jsx": "import {useValue, useSetValueCallback, STORE_ID} from './SettingsStore';
 import './brushSize.css';
 const BrushSize = () => {
-  const size = useValue('brushSize', 'settings') ?? 5;
+  const size = useValue('brushSize', STORE_ID) ?? 5;
   const setSize = useSetValueCallback(
     'brushSize',
     (e) => parseInt(e.target.value),
     [],
-    'settings',
+    STORE_ID,
   );
   return (
     <div id="brushSize">
@@ -824,15 +819,20 @@ const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
 export {Button};
 ",
   "src/Canvas.jsx": "import {useCallback, useEffect, useRef} from 'react';
-import {useAddRowCallback, useRowIds, useTable} from './CanvasStore';
-import {useValues} from './SettingsStore';
+import {
+  useAddRowCallback,
+  useRowIds,
+  useTable,
+  STORE_ID as CANVAS_STORE_ID,
+} from './CanvasStore';
+import {useValues, STORE_ID as SETTINGS_STORE_ID} from './SettingsStore';
 import './canvas.css';
 const Canvas = () => {
   const canvasRef = useRef(null);
   const isDrawing = useRef(false);
-  const brush = useValues('settings');
-  const strokes = useRowIds('strokes', 'canvas');
-  const strokesTable = useTable('strokes', 'canvas');
+  const brush = useValues(SETTINGS_STORE_ID);
+  const strokes = useRowIds('strokes', CANVAS_STORE_ID);
+  const strokesTable = useTable('strokes', CANVAS_STORE_ID);
   const addStroke = useAddRowCallback(
     'strokes',
     (e) => {
@@ -849,7 +849,7 @@ const Canvas = () => {
       };
     },
     [brush],
-    'canvas',
+    CANVAS_STORE_ID,
   );
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
@@ -915,8 +915,8 @@ import {
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 import {useCreateSynchronizer} from 'tinybase/ui-react';
-const STORE_ID = 'canvas';
 const SERVER = 'wss://vite.tinybase.org';
+const STORE_ID = 'canvas';
 const CanvasStore = () => {
   const store = useCreateStore(() =>
     createMergeableStore(STORE_ID).setTable('strokes', {}),
@@ -938,6 +938,7 @@ const CanvasStore = () => {
 };
 export {
   CanvasStore,
+  STORE_ID,
   useAddRowCallback,
   useDelTableCallback,
   useRow,
@@ -947,7 +948,7 @@ export {
 };
 ",
   "src/ColorPicker.jsx": "import './colorPicker.css';
-import {useValue, useSetValueCallback} from './SettingsStore';
+import {useValue, useSetValueCallback, STORE_ID} from './SettingsStore';
 const ColorPicker = () => {
   const colors = [
     '#d81b60',
@@ -957,12 +958,12 @@ const ColorPicker = () => {
     '#7b1fa2',
     '#fff',
   ];
-  const currentColor = useValue('brushColor', 'settings');
+  const currentColor = useValue('brushColor', STORE_ID);
   const setColor = useSetValueCallback(
     'brushColor',
     (color) => color,
     [],
-    'settings',
+    STORE_ID,
   );
   return (
     <div id="colorPicker">
@@ -980,12 +981,12 @@ const ColorPicker = () => {
 export {ColorPicker};
 ",
   "src/DrawingControls.jsx": "import './drawingControls.css';
-import {useDelTableCallback} from './CanvasStore';
+import {useDelTableCallback, STORE_ID} from './CanvasStore';
 import {Button} from './Button';
 import {ColorPicker} from './ColorPicker';
 import {BrushSize} from './BrushSize';
 const DrawingControls = () => {
-  const clearStrokes = useDelTableCallback('strokes', () => null, [], 'canvas');
+  const clearStrokes = useDelTableCallback('strokes', () => null, [], STORE_ID);
   return (
     <div id="drawingControls">
       <ColorPicker />
@@ -1014,7 +1015,7 @@ const SettingsStore = () => {
   useProvideStore(STORE_ID, store);
   return null;
 };
-export {SettingsStore, useSetValueCallback, useValue, useValues};
+export {STORE_ID, SettingsStore, useSetValueCallback, useValue, useValues};
 ",
   "src/brushSize.css": "#brushSize {
   display: flex;
@@ -1371,11 +1372,11 @@ export {App};
 ",
   "src/Board.jsx": "import './board.css';
 import {useMemo} from 'react';
-import {useValue} from './Store';
+import {useValue, STORE_ID} from './Store';
 import {Square} from './Square';
 const Board = () => {
-  const gameStatus = useValue('gameStatus', 'game');
-  const winningLine = useValue('winningLine', 'game');
+  const gameStatus = useValue('gameStatus', STORE_ID);
+  const winningLine = useValue('winningLine', STORE_ID);
   const winningPositions = useMemo(() => {
     if (!winningLine) return /* @__PURE__ */ new Set();
     return new Set(winningLine.split(',').map(Number));
@@ -1426,7 +1427,7 @@ const WINNING_LINES = [
   // diagonals
 ];
 const Game = () => {
-  const store = useStore('game');
+  const store = useStore(STORE_ID);
   useTableListener(
     'board',
     () => {
@@ -1480,11 +1481,11 @@ const Game = () => {
 export {Game};
 ",
   "src/GameStatus.jsx": "import './gameStatus.css';
-import {useValue} from './Store';
+import {useValue, STORE_ID} from './Store';
 const GameStatus = () => {
-  const gameStatus = useValue('gameStatus', 'game');
-  const currentPlayer = useValue('currentPlayer', 'game');
-  const winner = useValue('winner', 'game');
+  const gameStatus = useValue('gameStatus', STORE_ID);
+  const currentPlayer = useValue('currentPlayer', STORE_ID);
+  const winner = useValue('winner', STORE_ID);
   return (
     <div id="gameStatus">
       {gameStatus === 'playing' && (
@@ -1504,11 +1505,11 @@ const GameStatus = () => {
 export {GameStatus};
 ",
   "src/Square.jsx": "import './square.css';
-import {useCell, useStore, useValue} from './Store';
+import {useCell, useStore, useValue, STORE_ID} from './Store';
 const Square = ({position, disabled, winning}) => {
-  const store = useStore('game');
-  const value = useCell('board', position.toString(), 'value', 'game');
-  const currentPlayer = useValue('currentPlayer', 'game');
+  const store = useStore(STORE_ID);
+  const value = useCell('board', position.toString(), 'value', STORE_ID);
+  const currentPlayer = useValue('currentPlayer', STORE_ID);
   const isDisabled = disabled || !!value;
   const handleClick = () => {
     if (!isDisabled) {
@@ -1540,8 +1541,8 @@ import {
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 import {useCreateSynchronizer} from 'tinybase/ui-react';
-const STORE_ID = 'game';
 const SERVER = 'wss://vite.tinybase.org';
+const STORE_ID = 'game';
 const Store = () => {
   const store = useCreateStore(() =>
     createMergeableStore(STORE_ID)
@@ -1564,6 +1565,7 @@ const Store = () => {
   return null;
 };
 export {
+  STORE_ID,
   Store,
   useCell,
   useSetValuesCallback,
@@ -1974,8 +1976,8 @@ import {
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 import {useCreateSynchronizer} from 'tinybase/ui-react';
-const STORE_ID = 'todos';
 const SERVER = 'wss://vite.tinybase.org';
+const STORE_ID = 'todos';
 const Store = () => {
   const store = useCreateStore(() =>
     createMergeableStore(STORE_ID).setTable('todos', {
@@ -1999,6 +2001,7 @@ const Store = () => {
   return null;
 };
 export {
+  STORE_ID,
   Store,
   useAddRowCallback,
   useDelRowCallback,
@@ -2009,14 +2012,17 @@ export {
 ",
   "src/TodoInput.jsx": "import './todoInput.css';
 import {useState} from 'react';
-import {useAddRowCallback} from './Store';
+import {useAddRowCallback, STORE_ID} from './Store';
 import {Button} from './Button';
 import {Input} from './Input';
 const TodoInput = () => {
   const [text, setText] = useState('');
-  const addRow = useAddRowCallback('todos', () => ({text, completed: false}), [
-    text,
-  ]);
+  const addRow = useAddRowCallback(
+    'todos',
+    () => ({text, completed: false}),
+    [text],
+    STORE_ID,
+  );
   const handleSubmit = (e) => {
     e.preventDefault();
     if (text.trim()) {
@@ -2041,18 +2047,23 @@ const TodoInput = () => {
 export {TodoInput};
 ",
   "src/TodoItem.jsx": "import './todoItem.css';
-import {useDelRowCallback, useRow, useSetPartialRowCallback} from './Store';
+import {
+  useDelRowCallback,
+  useRow,
+  useSetPartialRowCallback,
+  STORE_ID,
+} from './Store';
 import {Button} from './Button';
 const TodoItem = ({rowId}) => {
-  const todo = useRow('todos', rowId, 'todos');
+  const todo = useRow('todos', rowId, STORE_ID);
   const setPartialRow = useSetPartialRowCallback(
     'todos',
     rowId,
     (e) => ({completed: e.target.checked}),
     [],
-    'todos',
+    STORE_ID,
   );
-  const delRow = useDelRowCallback('todos', rowId, 'todos');
+  const delRow = useDelRowCallback('todos', rowId, STORE_ID);
   return (
     <div className={\`todoItem\${todo.completed ? ' completed' : ''}\`}>
       <input
@@ -2069,10 +2080,10 @@ const TodoItem = ({rowId}) => {
 export {TodoItem};
 ",
   "src/TodoList.jsx": "import './todoList.css';
-import {useRowIds} from './Store';
+import {useRowIds, STORE_ID} from './Store';
 import {TodoItem} from './TodoItem';
 const TodoList = () => {
-  const todoIds = useRowIds('todos', 'todos');
+  const todoIds = useRowIds('todos', STORE_ID);
   return (
     <div id="todoList">
       {todoIds.map((id) => (
@@ -2488,8 +2499,8 @@ export {createButton};
   "src/chatStore.js": "import {createMergeableStore} from 'tinybase';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-const STORE_ID = 'chat';
 const SERVER = 'wss://vite.tinybase.org';
+const STORE_ID = 'chat';
 const chatStore = createMergeableStore(STORE_ID).setTable('messages', {
   1: {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 6e4},
   2: {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 3e4},
@@ -3098,8 +3109,8 @@ export {createCanvas};
   "src/canvasStore.js": "import {createMergeableStore} from 'tinybase';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-const STORE_ID = 'canvas';
 const SERVER = 'wss://vite.tinybase.org';
+const STORE_ID = 'canvas';
 const canvasStore = createMergeableStore(STORE_ID).setTable('strokes', {});
 const serverPathId = location.pathname;
 createWsSynchronizer(
@@ -3704,8 +3715,8 @@ export {createSquare};
   "src/store.js": "import {createMergeableStore} from 'tinybase';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-const STORE_ID = 'game';
 const SERVER = 'wss://vite.tinybase.org';
+const STORE_ID = 'game';
 const store = createMergeableStore(STORE_ID)
   .setValue('currentPlayer', 'X')
   .setValue('gameStatus', 'playing');
@@ -4039,8 +4050,8 @@ export {createInput};
   "src/store.js": "import {createMergeableStore} from 'tinybase';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-const STORE_ID = 'todos';
 const SERVER = 'wss://vite.tinybase.org';
+const STORE_ID = 'todos';
 const store = createMergeableStore(STORE_ID).setTable('todos', {
   1: {text: 'Learn TinyBase', completed: false},
   2: {text: 'Build an app', completed: false},
@@ -4491,8 +4502,9 @@ import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-clien
 import {useCreateSynchronizer} from 'tinybase/ui-react';
 import type {MergeableStore} from 'tinybase';
 
-const STORE_ID = 'chat';
 const SERVER = 'wss://vite.tinybase.org';
+
+export const STORE_ID = 'chat';
 
 export {useAddRowCallback, useRow, useRowIds, useStore};
 
@@ -4548,7 +4560,7 @@ export const Input = ({
   />
 );
 ",
-  "src/Message.tsx": "import {useRow} from './ChatStore';
+  "src/Message.tsx": "import {useRow, STORE_ID} from './ChatStore';
 
 import './message.css';
 
@@ -4570,8 +4582,8 @@ export const Message = ({rowId}: MessageProps) => {
 };
 ",
   "src/MessageInput.tsx": "import {useState} from 'react';
-import {useAddRowCallback} from './ChatStore';
-import {useValue} from './SettingsStore';
+import {useAddRowCallback, STORE_ID as CHAT_STORE_ID} from './ChatStore';
+import {useValue, STORE_ID as SETTINGS_STORE_ID} from './SettingsStore';
 import './messageInput.css';
 
 import {Button} from './Button';
@@ -4580,7 +4592,7 @@ import {Input} from './Input';
 
 export const MessageInput = () => {
   const [message, setMessage] = useState('');
-  const username = useValue('username', 'settings') || 'Anonymous';
+  const username = useValue('username', SETTINGS_STORE_ID) || 'Anonymous';
 
   const handleSend = useAddRowCallback(
     'messages',
@@ -4590,7 +4602,7 @@ export const MessageInput = () => {
       timestamp: Date.now(),
     }),
     [message, username],
-    'chat',
+    CHAT_STORE_ID,
   );
 
   const onSubmit = (e: React.FormEvent) => {
@@ -4617,15 +4629,15 @@ export const MessageInput = () => {
 };
 ",
   "src/Messages.tsx": "import {useMemo} from 'react';
-import {useRowIds, useStore} from './ChatStore';
+import {useRowIds, useStore, STORE_ID} from './ChatStore';
 
 import './messages.css';
 
 import {Message} from './Message';
 
 export const Messages = () => {
-  const store = useStore('chat');
-  const messageIds = useRowIds('messages', 'chat');
+  const store = useStore(STORE_ID);
+  const messageIds = useRowIds('messages', STORE_ID);
 
   const sortedIds = useMemo(() => {
     return [...messageIds].sort((a, b) => {
@@ -4652,7 +4664,7 @@ import {
   useSetValueCallback,
 } from 'tinybase/ui-react';
 
-const STORE_ID = 'settings';
+export const STORE_ID = 'settings';
 
 export {useValue, useSetValueCallback};
 
@@ -4666,19 +4678,14 @@ export const SettingsStore = () => {
   return null;
 };
 ",
-  "src/UsernameInput.tsx": "import {useValue, useSetValueCallback} from './SettingsStore';
+  "src/UsernameInput.tsx": "import {useValue, useSetValueCallback, STORE_ID} from './SettingsStore';
 import './usernameInput.css';
 
 import {Input} from './Input';
 
 export const UsernameInput = () => {
-  const username = useValue('username', 'settings') || '';
-  const setUsername = useSetValueCallback(
-    'username',
-    (_e) => _e,
-    [],
-    'settings',
-  );
+  const username = useValue('username', STORE_ID) || '';
+  const setUsername = useSetValueCallback('username', (_e) => _e, [], STORE_ID);
 
   return (
     <div id="usernameInput">
@@ -5090,17 +5097,17 @@ const App = () => {
 
 export {App};
 ",
-  "src/BrushSize.tsx": "import {useValue, useSetValueCallback} from './SettingsStore';
+  "src/BrushSize.tsx": "import {useValue, useSetValueCallback, STORE_ID} from './SettingsStore';
 import './brushSize.css';
 
 export const BrushSize = () => {
-  const size = (useValue('brushSize', 'settings') as number) ?? 5;
+  const size = (useValue('brushSize', STORE_ID) as number) ?? 5;
 
   const setSize = useSetValueCallback(
     'brushSize',
     (e: React.ChangeEvent<HTMLInputElement>) => parseInt(e.target.value),
     [],
-    'settings',
+    STORE_ID,
   );
 
   return (
@@ -5138,19 +5145,24 @@ export const Button = ({
 );
 ",
   "src/Canvas.tsx": "import {useCallback, useEffect, useRef} from 'react';
-import {useAddRowCallback, useRowIds, useTable} from './CanvasStore';
-import {useValues} from './SettingsStore';
+import {
+  useAddRowCallback,
+  useRowIds,
+  useTable,
+  STORE_ID as CANVAS_STORE_ID,
+} from './CanvasStore';
+import {useValues, STORE_ID as SETTINGS_STORE_ID} from './SettingsStore';
 import './canvas.css';
 
 export const Canvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isDrawing = useRef(false);
-  const brush = useValues('settings') as {
+  const brush = useValues(SETTINGS_STORE_ID) as {
     brushColor: string;
     brushSize: number;
   };
-  const strokes = useRowIds('strokes', 'canvas');
-  const strokesTable = useTable('strokes', 'canvas');
+  const strokes = useRowIds('strokes', CANVAS_STORE_ID);
+  const strokesTable = useTable('strokes', CANVAS_STORE_ID);
 
   const addStroke = useAddRowCallback(
     'strokes',
@@ -5170,7 +5182,7 @@ export const Canvas = () => {
       };
     },
     [brush],
-    'canvas',
+    CANVAS_STORE_ID,
   );
 
   const draw = useCallback(() => {
@@ -5246,8 +5258,9 @@ import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-clien
 import {useCreateSynchronizer} from 'tinybase/ui-react';
 import type {MergeableStore} from 'tinybase';
 
-const STORE_ID = 'canvas';
 const SERVER = 'wss://vite.tinybase.org';
+
+export const STORE_ID = 'canvas';
 
 export {
   useAddRowCallback,
@@ -5284,7 +5297,7 @@ export const CanvasStore = () => {
 };
 ",
   "src/ColorPicker.tsx": "import './colorPicker.css';
-import {useValue, useSetValueCallback} from './SettingsStore';
+import {useValue, useSetValueCallback, STORE_ID} from './SettingsStore';
 
 export const ColorPicker = () => {
   const colors = [
@@ -5295,13 +5308,13 @@ export const ColorPicker = () => {
     '#7b1fa2',
     '#fff',
   ];
-  const currentColor = useValue('brushColor', 'settings') as string;
+  const currentColor = useValue('brushColor', STORE_ID) as string;
 
   const setColor = useSetValueCallback(
     'brushColor',
     (color: string) => color,
     [],
-    'settings',
+    STORE_ID,
   );
 
   return (
@@ -5319,7 +5332,7 @@ export const ColorPicker = () => {
 };
 ",
   "src/DrawingControls.tsx": "import './drawingControls.css';
-import {useDelTableCallback} from './CanvasStore';
+import {useDelTableCallback, STORE_ID} from './CanvasStore';
 
 import {Button} from './Button';
 
@@ -5328,7 +5341,7 @@ import {ColorPicker} from './ColorPicker';
 import {BrushSize} from './BrushSize';
 
 export const DrawingControls = () => {
-  const clearStrokes = useDelTableCallback('strokes', () => null, [], 'canvas');
+  const clearStrokes = useDelTableCallback('strokes', () => null, [], STORE_ID);
 
   return (
     <div id="drawingControls">
@@ -5350,7 +5363,7 @@ import {
   useValues,
 } from 'tinybase/ui-react';
 
-const STORE_ID = 'settings';
+export const STORE_ID = 'settings';
 
 export {useValue, useSetValueCallback, useValues};
 
@@ -5751,13 +5764,13 @@ export {App};
 ",
   "src/Board.tsx": "import './board.css';
 import {useMemo} from 'react';
-import {useValue} from './Store';
+import {useValue, STORE_ID} from './Store';
 
 import {Square} from './Square';
 
 export const Board = () => {
-  const gameStatus = useValue('gameStatus', 'game') as string;
-  const winningLine = useValue('winningLine', 'game') as string | undefined;
+  const gameStatus = useValue('gameStatus', STORE_ID) as string;
+  const winningLine = useValue('winningLine', STORE_ID) as string | undefined;
 
   const winningPositions = useMemo(() => {
     if (!winningLine) return new Set();
@@ -5825,7 +5838,7 @@ const WINNING_LINES = [
 ];
 
 export const Game = () => {
-  const store = useStore('game');
+  const store = useStore(STORE_ID);
 
   useTableListener(
     'board',
@@ -5889,12 +5902,12 @@ export const Game = () => {
 };
 ",
   "src/GameStatus.tsx": "import './gameStatus.css';
-import {useValue} from './Store';
+import {useValue, STORE_ID} from './Store';
 
 export const GameStatus = () => {
-  const gameStatus = useValue('gameStatus', 'game') as string;
-  const currentPlayer = useValue('currentPlayer', 'game') as string;
-  const winner = useValue('winner', 'game') as string | undefined;
+  const gameStatus = useValue('gameStatus', STORE_ID) as string;
+  const currentPlayer = useValue('currentPlayer', STORE_ID) as string;
+  const winner = useValue('winner', STORE_ID) as string | undefined;
 
   return (
     <div id="gameStatus">
@@ -5914,7 +5927,7 @@ export const GameStatus = () => {
 };
 ",
   "src/Square.tsx": "import './square.css';
-import {useCell, useStore, useValue} from './Store';
+import {useCell, useStore, useValue, STORE_ID} from './Store';
 
 export const Square = ({
   position,
@@ -5925,11 +5938,11 @@ export const Square = ({
   disabled: boolean;
   winning: boolean;
 }) => {
-  const store = useStore('game');
-  const value = useCell('board', position.toString(), 'value', 'game') as
+  const store = useStore(STORE_ID);
+  const value = useCell('board', position.toString(), 'value', STORE_ID) as
     | string
     | undefined;
-  const currentPlayer = useValue('currentPlayer', 'game') as string;
+  const currentPlayer = useValue('currentPlayer', STORE_ID) as string;
 
   const isDisabled = disabled || !!value;
 
@@ -5965,8 +5978,9 @@ import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-clien
 import {useCreateSynchronizer} from 'tinybase/ui-react';
 import type {MergeableStore} from 'tinybase';
 
-const STORE_ID = 'game';
 const SERVER = 'wss://vite.tinybase.org';
+
+export const STORE_ID = 'game';
 
 export {useStore, useSetValuesCallback, useTableListener, useCell, useValue};
 
@@ -6459,8 +6473,9 @@ import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-clien
 import {useCreateSynchronizer} from 'tinybase/ui-react';
 import type {MergeableStore} from 'tinybase';
 
-const STORE_ID = 'todos';
 const SERVER = 'wss://vite.tinybase.org';
+
+export const STORE_ID = 'todos';
 
 export {
   useAddRowCallback,
@@ -6501,7 +6516,7 @@ export const Store = () => {
 ",
   "src/TodoInput.tsx": "import './todoInput.css';
 import {useState} from 'react';
-import {useAddRowCallback} from './Store';
+import {useAddRowCallback, STORE_ID} from './Store';
 
 import {Button} from './Button';
 
@@ -6509,9 +6524,12 @@ import {Input} from './Input';
 
 export const TodoInput = () => {
   const [text, setText] = useState('');
-  const addRow = useAddRowCallback('todos', () => ({text, completed: false}), [
-    text,
-  ]);
+  const addRow = useAddRowCallback(
+    'todos',
+    () => ({text, completed: false}),
+    [text],
+    STORE_ID,
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -6537,12 +6555,17 @@ export const TodoInput = () => {
 };
 ",
   "src/TodoItem.tsx": "import './todoItem.css';
-import {useDelRowCallback, useRow, useSetPartialRowCallback} from './Store';
+import {
+  useDelRowCallback,
+  useRow,
+  useSetPartialRowCallback,
+  STORE_ID,
+} from './Store';
 
 import {Button} from './Button';
 
 export const TodoItem = ({rowId}: {rowId: string}) => {
-  const todo = useRow('todos', rowId, 'todos') as {
+  const todo = useRow('todos', rowId, STORE_ID) as {
     text: string;
     completed: boolean;
   };
@@ -6551,9 +6574,9 @@ export const TodoItem = ({rowId}: {rowId: string}) => {
     rowId,
     (e: React.ChangeEvent<HTMLInputElement>) => ({completed: e.target.checked}),
     [],
-    'todos',
+    STORE_ID,
   );
-  const delRow = useDelRowCallback('todos', rowId, 'todos');
+  const delRow = useDelRowCallback('todos', rowId, STORE_ID);
 
   return (
     <div className={\`todoItem\${todo.completed ? ' completed' : ''}\`}>
@@ -6570,12 +6593,12 @@ export const TodoItem = ({rowId}: {rowId: string}) => {
 };
 ",
   "src/TodoList.tsx": "import './todoList.css';
-import {useRowIds} from './Store';
+import {useRowIds, STORE_ID} from './Store';
 
 import {TodoItem} from './TodoItem';
 
 export const TodoList = () => {
-  const todoIds = useRowIds('todos', 'todos');
+  const todoIds = useRowIds('todos', STORE_ID);
 
   return (
     <div id="todoList">
@@ -7038,8 +7061,9 @@ export const createButton = (
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 
-const STORE_ID = 'chat';
 const SERVER = 'wss://vite.tinybase.org';
+
+const STORE_ID = 'chat';
 
 export const chatStore = createMergeableStore(STORE_ID).setTable('messages', {
   '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
@@ -7762,8 +7786,9 @@ export const createCanvas = (
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 
-const STORE_ID = 'canvas';
 const SERVER = 'wss://vite.tinybase.org';
+
+const STORE_ID = 'canvas';
 
 export const canvasStore = createMergeableStore(STORE_ID).setTable(
   'strokes',
@@ -8463,8 +8488,9 @@ export const createSquare = (
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 
-const STORE_ID = 'game';
 const SERVER = 'wss://vite.tinybase.org';
+
+const STORE_ID = 'game';
 
 export const store = createMergeableStore(STORE_ID)
   .setValue('currentPlayer', 'X')
@@ -8844,8 +8870,9 @@ export const createInput = (
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 
-const STORE_ID = 'todos';
 const SERVER = 'wss://vite.tinybase.org';
+
+const STORE_ID = 'todos';
 
 export const store = createMergeableStore(STORE_ID).setTable('todos', {
   '1': {text: 'Learn TinyBase', completed: false},

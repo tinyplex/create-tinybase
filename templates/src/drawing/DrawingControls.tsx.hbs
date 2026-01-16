@@ -1,6 +1,6 @@
 {{includeFile template="src/drawing/drawingControls.css.hbs" output="src/drawingControls.css"}}
 import './drawingControls.css';
-import {useDelTableCallback} from './CanvasStore';
+import {useDelTableCallback, STORE_ID} from './CanvasStore';
 {{includeFile template="src/shared/Button.tsx.hbs" output="src/Button.{{ext}}"}}
 import {Button} from './Button';
 {{includeFile template="src/drawing/ColorPicker.tsx.hbs" output="src/ColorPicker.{{ext}}"}}
@@ -9,7 +9,7 @@ import {ColorPicker} from './ColorPicker';
 import {BrushSize} from './BrushSize';
 
 export const DrawingControls = () => {
-const clearStrokes = useDelTableCallback('strokes', () => null, [], 'canvas');
+const clearStrokes = useDelTableCallback('strokes', () => null, [], STORE_ID);
 
 return (
 <div id="drawingControls">

@@ -1,13 +1,13 @@
 {{includeFile template="src/todos/todoItem.css.hbs" output="src/todoItem.css"}}
 import './todoItem.css';
-import {useDelRowCallback, useRow, useSetPartialRowCallback} from './Store';
+import {useDelRowCallback, useRow, useSetPartialRowCallback, STORE_ID} from './Store';
 {{includeFile template="src/shared/Button.tsx.hbs" output="src/Button.{{ext}}"}}
 import {Button} from './Button';
 
 export const TodoItem = ({rowId}: {rowId: string}) => {
-const todo = useRow('todos', rowId, 'todos') as {text: string; completed: boolean};
-const setPartialRow = useSetPartialRowCallback('todos', rowId, (e: React.ChangeEvent<HTMLInputElement>) => ({completed: e.target.checked}), [], 'todos');
-  const delRow = useDelRowCallback('todos', rowId, 'todos');
+const todo = useRow('todos', rowId, STORE_ID) as {text: string; completed: boolean};
+const setPartialRow = useSetPartialRowCallback('todos', rowId, (e: React.ChangeEvent<HTMLInputElement>) => ({completed: e.target.checked}), [], STORE_ID);
+  const delRow = useDelRowCallback('todos', rowId, STORE_ID);
 
   return (
   <div className={`todoItem${todo.completed ? ' completed' : '' }`}>

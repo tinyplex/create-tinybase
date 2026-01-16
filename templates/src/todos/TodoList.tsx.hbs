@@ -1,11 +1,11 @@
 {{includeFile template="src/todos/todoList.css.hbs" output="src/todoList.css"}}
 import './todoList.css';
-import {useRowIds} from './Store';
+import {useRowIds, STORE_ID} from './Store';
 {{includeFile template="src/todos/TodoItem.tsx.hbs" output="src/TodoItem.{{ext}}"}}
 import {TodoItem} from './TodoItem';
 
 export const TodoList = () => {
-const todoIds = useRowIds('todos', 'todos');
+const todoIds = useRowIds('todos', STORE_ID);
 
 return (
 <div id="todoList">

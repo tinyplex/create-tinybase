@@ -1,13 +1,13 @@
 {{includeFile template="src/game/board.css.hbs" output="src/board.css"}}
 import './board.css';
 import {useMemo} from 'react';
-import {useValue} from './Store';
+import {useValue, STORE_ID} from './Store';
 {{includeFile template="src/game/Square.tsx.hbs" output="src/Square.{{ext}}"}}
 import {Square} from './Square';
 
 export const Board = () => {
-const gameStatus = useValue('gameStatus', 'game') as string;
-const winningLine = useValue('winningLine', 'game') as string | undefined;
+const gameStatus = useValue('gameStatus', STORE_ID) as string;
+const winningLine = useValue('winningLine', STORE_ID) as string | undefined;
 
 const winningPositions = useMemo(() => {
 if (!winningLine) return new Set();
