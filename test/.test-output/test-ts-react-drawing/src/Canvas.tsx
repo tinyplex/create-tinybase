@@ -1,0 +1,92 @@
+import {useCallback, useEffect, useRef} from 'react';
+import {useAddRowCallback, useRowIds, useTable} from './CanvasStore';
+import {useValues} from './SettingsStore';
+import './canvas.css';
+
+export const Canvas = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const isDrawing = useRef(false);
+  const brush = useValues('settings') as {
+    brushColor: string;
+    brushSize: number;
+  };
+  const strokes = useRowIds('strokes', 'canvas');
+  const strokesTable = useTable('strokes', 'canvas');
+
+  const addStroke = useAddRowCallback(
+    'strokes',
+    (e: MouseEvent | TouchEvent) => {
+      const canvas = canvasRef.current;
+      if (!canvas) return null;
+
+      const rect = canvas.getBoundingClientRect();
+      const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+      const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top,
+        color: brush.brushColor,
+        size: brush.brushSize,
+      };
+    },
+    [brush],
+    'canvas',
+  );
+
+  const draw = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    ctx.fillStyle = '#111';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    strokes.forEach((id) => {
+      const stroke = strokesTable[id] as any;
+      if (stroke) {
+        ctx.fillStyle = stroke.color;
+        ctx.beginPath();
+        ctx.arc(stroke.x, stroke.y, stroke.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    });
+  }, [strokes, strokesTable]);
+
+  useEffect(() => {
+    draw();
+  }, [draw]);
+
+  const handleStart = (e: React.MouseEvent | React.TouchEvent) => {
+    isDrawing.current = true;
+    addStroke(e.nativeEvent);
+  };
+
+  const handleMove = (e: React.MouseEvent | React.TouchEvent) => {
+    if (isDrawing.current) {
+      addStroke(e.nativeEvent);
+    }
+  };
+
+  const handleEnd = () => {
+    isDrawing.current = false;
+  };
+
+  return (
+    <canvas
+      ref={canvasRef}
+      width={600}
+      height={400}
+      id="drawingCanvas"
+      onMouseDown={handleStart}
+      onMouseMove={handleMove}
+      onMouseUp={handleEnd}
+      onMouseLeave={handleEnd}
+      onTouchStart={handleStart}
+      onTouchMove={handleMove}
+      onTouchEnd={handleEnd}
+    />
+  );
+};

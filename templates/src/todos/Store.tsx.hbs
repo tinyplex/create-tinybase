@@ -6,6 +6,14 @@
   import {createMergeableStore} from 'tinybase';
   import {useCreateStore, useProvideStore, useAddRowCallback, useDelRowCallback, useRow, useRowIds, useSetPartialRowCallback} from 'tinybase/ui-react';
 {{/if}}
+{{#if sync}}
+  import ReconnectingWebSocket from 'reconnecting-websocket';
+  import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+  import {useCreateSynchronizer} from 'tinybase/ui-react';
+  import type {MergeableStore} from 'tinybase';
+
+  const SERVER = 'wss://vite.tinybase.org';
+{{/if}}
 
 const STORE_ID = 'todos';
 
@@ -35,6 +43,24 @@ createMergeableStore(STORE_ID){{#if schemas}}
 );
 
 useProvideStore(STORE_ID, store);
+
+{{#if sync}}
+  useCreateSynchronizer(store, async (store: MergeableStore) => {
+  const serverPathId = location.pathname;
+  const synchronizer = await createWsSynchronizer(
+  store,
+  new ReconnectingWebSocket(SERVER + serverPathId),
+  );
+  await synchronizer.startSync();
+
+  // If the websocket reconnects in the future, do another explicit sync.
+  synchronizer.getWebSocket().addEventListener('open', () => {
+  synchronizer.load().then(() => synchronizer.save());
+  });
+
+  return synchronizer;
+  });
+{{/if}}
 
 return null;
 };

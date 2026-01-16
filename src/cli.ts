@@ -69,6 +69,12 @@ const config = {
     },
     {
       type: 'confirm' as const,
+      name: 'sync',
+      message: 'Enable synchronization?',
+      initial: true,
+    },
+    {
+      type: 'confirm' as const,
       name: 'prettier',
       message: 'Include Prettier?',
       initial: false,
@@ -90,6 +96,7 @@ const config = {
       prettier,
       eslint,
       schemas,
+      sync,
     } = answers;
     const typescript = language === 'typescript';
     const javascript = !typescript;
@@ -104,6 +111,7 @@ const config = {
       prettier,
       eslint,
       schemas: typescript && (schemas === true || schemas === 'true'),
+      sync: sync === true || sync === 'true',
       typescript,
       javascript,
       react,

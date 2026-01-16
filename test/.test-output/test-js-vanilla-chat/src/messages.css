@@ -1,0 +1,6 @@
+#messages {
+  overflow-y: auto;
+  padding: 1rem 0;
+  height: 400px;
+  margin-bottom: 1rem;
+}

@@ -1,0 +1,20 @@
+import './message.css';
+const createMessage = (username, text, timestamp) => {
+  const time = new Date(timestamp).toLocaleTimeString();
+  const messageDiv = document.createElement('div');
+  messageDiv.className = 'message';
+  const usernameSpan = document.createElement('span');
+  usernameSpan.className = 'username';
+  usernameSpan.textContent = `${username}:`;
+  const textSpan = document.createElement('span');
+  textSpan.className = 'text';
+  textSpan.textContent = text;
+  const timeSpan = document.createElement('span');
+  timeSpan.className = 'time';
+  timeSpan.textContent = time;
+  messageDiv.appendChild(usernameSpan);
+  messageDiv.appendChild(textSpan);
+  messageDiv.appendChild(timeSpan);
+  return messageDiv;
+};
+export {createMessage};

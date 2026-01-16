@@ -9,11 +9,7 @@ import {Input} from './Input';
 
 export const TodoInput = () => {
 const [text, setText] = useState('');
-{{#if schemas}}
-  const addRow = useAddRowCallback('todos', () => ({text, completed: false}), [text], 'todos');
-{{else}}
-  const addRow = useAddRowCallback('todos', () => ({text, completed: false}), [text]);
-{{/if}}
+const addRow = useAddRowCallback('todos', () => ({text, completed: false}), [text], 'todos');
 
 const handleSubmit = (e: React.FormEvent) => {
 e.preventDefault();

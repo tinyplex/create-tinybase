@@ -1,0 +1,61 @@
+import './canvas.css';
+const createCanvas = (settingsStore, canvasStore) => {
+  const canvas = document.createElement('canvas');
+  canvas.id = 'drawingCanvas';
+  canvas.width = 600;
+  canvas.height = 400;
+  const ctx = canvas.getContext('2d');
+  let isDrawing = false;
+  const draw = () => {
+    ctx.fillStyle = '#111';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const strokes = canvasStore.getTable('strokes');
+    Object.values(strokes).forEach((stroke) => {
+      ctx.fillStyle = stroke.color;
+      ctx.beginPath();
+      ctx.arc(stroke.x, stroke.y, stroke.size, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  };
+  const addStroke = (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    const brush = settingsStore.getValues();
+    canvasStore.addRow('strokes', {
+      x: clientX - rect.left,
+      y: clientY - rect.top,
+      color: brush.brushColor,
+      size: brush.brushSize,
+    });
+  };
+  canvas.addEventListener('mousedown', () => {
+    isDrawing = true;
+  });
+  canvas.addEventListener('mouseup', () => {
+    isDrawing = false;
+  });
+  canvas.addEventListener('mouseleave', () => {
+    isDrawing = false;
+  });
+  canvas.addEventListener('mousemove', (e) => {
+    if (isDrawing) addStroke(e);
+  });
+  canvas.addEventListener('touchstart', (e) => {
+    isDrawing = true;
+    e.preventDefault();
+  });
+  canvas.addEventListener('touchmove', (e) => {
+    if (isDrawing) {
+      addStroke(e);
+      e.preventDefault();
+    }
+  });
+  canvas.addEventListener('touchend', () => {
+    isDrawing = false;
+  });
+  canvasStore.addTablesListener(draw);
+  draw();
+  return canvas;
+};
+export {createCanvas};

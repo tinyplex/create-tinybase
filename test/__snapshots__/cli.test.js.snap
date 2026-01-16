@@ -206,7 +206,8 @@ npm run dev
   "dependencies": {
     "tinybase": "^7.3.1",
     "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "react-dom": "^19.2.3",
+    "reconnecting-websocket": "^4.4.0"
   }
 }
 ",
@@ -263,7 +264,11 @@ import {
   useRowIds,
   useStore,
 } from 'tinybase/ui-react';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+import {useCreateSynchronizer} from 'tinybase/ui-react';
 const STORE_ID = 'chat';
+const SERVER = 'wss://vite.tinybase.org';
 const ChatStore = () => {
   const store = useCreateStore(() =>
     createMergeableStore(STORE_ID).setTable('messages', {
@@ -272,6 +277,18 @@ const ChatStore = () => {
     }),
   );
   useProvideStore(STORE_ID, store);
+  useCreateSynchronizer(store, async (store2) => {
+    const serverPathId = location.pathname;
+    const synchronizer = await createWsSynchronizer(
+      store2,
+      new ReconnectingWebSocket(SERVER + serverPathId),
+    );
+    await synchronizer.startSync();
+    synchronizer.getWebSocket().addEventListener('open', () => {
+      synchronizer.load().then(() => synchronizer.save());
+    });
+    return synchronizer;
+  });
   return null;
 };
 export {ChatStore, useAddRowCallback, useRow, useRowIds, useStore};
@@ -436,11 +453,15 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/index.jsx": "import ReactDOM from 'react-dom/client';
+  "src/index.jsx": "import {getUniqueId} from 'tinybase';
+if (location.pathname === '/') {
+  location.assign('/' + getUniqueId());
+}
+import ReactDOM from 'react-dom/client';
 import {App} from './App';
-addEventListener('load', () =>
-  ReactDOM.createRoot(document.getElementById('app')).render(<App />),
-);
+addEventListener('load', () => {
+  ReactDOM.createRoot(document.getElementById('app')).render(<App />);
+});
 ",
   "src/input.css": "input[type='text'] {
   padding: 0.5rem 0.75rem;
@@ -735,7 +756,8 @@ npm run dev
   "dependencies": {
     "tinybase": "^7.3.1",
     "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "react-dom": "^19.2.3",
+    "reconnecting-websocket": "^4.4.0"
   }
 }
 ",
@@ -890,12 +912,28 @@ import {
   useStore,
   useTable,
 } from 'tinybase/ui-react';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+import {useCreateSynchronizer} from 'tinybase/ui-react';
 const STORE_ID = 'canvas';
+const SERVER = 'wss://vite.tinybase.org';
 const CanvasStore = () => {
   const store = useCreateStore(() =>
     createMergeableStore(STORE_ID).setTable('strokes', {}),
   );
   useProvideStore(STORE_ID, store);
+  useCreateSynchronizer(store, async (store2) => {
+    const serverPathId = location.pathname;
+    const synchronizer = await createWsSynchronizer(
+      store2,
+      new ReconnectingWebSocket(SERVER + serverPathId),
+    );
+    await synchronizer.startSync();
+    synchronizer.getWebSocket().addEventListener('open', () => {
+      synchronizer.load().then(() => synchronizer.save());
+    });
+    return synchronizer;
+  });
   return null;
 };
 export {
@@ -1070,11 +1108,15 @@ button.primary:hover {
   max-width: 600px;
 }
 ",
-  "src/index.jsx": "import ReactDOM from 'react-dom/client';
+  "src/index.jsx": "import {getUniqueId} from 'tinybase';
+if (location.pathname === '/') {
+  location.assign('/' + getUniqueId());
+}
+import ReactDOM from 'react-dom/client';
 import {App} from './App';
-addEventListener('load', () =>
-  ReactDOM.createRoot(document.getElementById('app')).render(<App />),
-);
+addEventListener('load', () => {
+  ReactDOM.createRoot(document.getElementById('app')).render(<App />);
+});
 ",
   "vite.config.js": "import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
@@ -1296,7 +1338,8 @@ npm run dev
   "dependencies": {
     "tinybase": "^7.3.1",
     "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "react-dom": "^19.2.3",
+    "reconnecting-websocket": "^4.4.0"
   }
 }
 ",
@@ -1494,7 +1537,11 @@ import {
   useCell,
   useValue,
 } from 'tinybase/ui-react';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+import {useCreateSynchronizer} from 'tinybase/ui-react';
 const STORE_ID = 'game';
+const SERVER = 'wss://vite.tinybase.org';
 const Store = () => {
   const store = useCreateStore(() =>
     createMergeableStore(STORE_ID)
@@ -1502,6 +1549,18 @@ const Store = () => {
       .setValue('gameStatus', 'playing'),
   );
   useProvideStore(STORE_ID, store);
+  useCreateSynchronizer(store, async (store2) => {
+    const serverPathId = location.pathname;
+    const synchronizer = await createWsSynchronizer(
+      store2,
+      new ReconnectingWebSocket(SERVER + serverPathId),
+    );
+    await synchronizer.startSync();
+    synchronizer.getWebSocket().addEventListener('open', () => {
+      synchronizer.load().then(() => synchronizer.save());
+    });
+    return synchronizer;
+  });
   return null;
 };
 export {
@@ -1576,11 +1635,15 @@ button.primary:hover {
   }
 }
 ",
-  "src/index.jsx": "import ReactDOM from 'react-dom/client';
+  "src/index.jsx": "import {getUniqueId} from 'tinybase';
+if (location.pathname === '/') {
+  location.assign('/' + getUniqueId());
+}
+import ReactDOM from 'react-dom/client';
 import {App} from './App';
-addEventListener('load', () =>
-  ReactDOM.createRoot(document.getElementById('app')).render(<App />),
-);
+addEventListener('load', () => {
+  ReactDOM.createRoot(document.getElementById('app')).render(<App />);
+});
 ",
   "src/square.css": ".square {
   width: 100px;
@@ -1841,7 +1904,8 @@ npm run dev
   "dependencies": {
     "tinybase": "^7.3.1",
     "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "react-dom": "^19.2.3",
+    "reconnecting-websocket": "^4.4.0"
   }
 }
 ",
@@ -1907,7 +1971,11 @@ import {
   useRowIds,
   useSetPartialRowCallback,
 } from 'tinybase/ui-react';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+import {useCreateSynchronizer} from 'tinybase/ui-react';
 const STORE_ID = 'todos';
+const SERVER = 'wss://vite.tinybase.org';
 const Store = () => {
   const store = useCreateStore(() =>
     createMergeableStore(STORE_ID).setTable('todos', {
@@ -1916,6 +1984,18 @@ const Store = () => {
     }),
   );
   useProvideStore(STORE_ID, store);
+  useCreateSynchronizer(store, async (store2) => {
+    const serverPathId = location.pathname;
+    const synchronizer = await createWsSynchronizer(
+      store2,
+      new ReconnectingWebSocket(SERVER + serverPathId),
+    );
+    await synchronizer.startSync();
+    synchronizer.getWebSocket().addEventListener('open', () => {
+      synchronizer.load().then(() => synchronizer.save());
+    });
+    return synchronizer;
+  });
   return null;
 };
 export {
@@ -2029,11 +2109,15 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/index.jsx": "import ReactDOM from 'react-dom/client';
+  "src/index.jsx": "import {getUniqueId} from 'tinybase';
+if (location.pathname === '/') {
+  location.assign('/' + getUniqueId());
+}
+import ReactDOM from 'react-dom/client';
 import {App} from './App';
-addEventListener('load', () =>
-  ReactDOM.createRoot(document.getElementById('app')).render(<App />),
-);
+addEventListener('load', () => {
+  ReactDOM.createRoot(document.getElementById('app')).render(<App />);
+});
 ",
   "src/input.css": "input[type='text'] {
   padding: 0.5rem 0.75rem;
@@ -2334,7 +2418,8 @@ npm run dev
     "vite": "^7.1.3"
   },
   "dependencies": {
-    "tinybase": "^7.3.1"
+    "tinybase": "^7.3.1",
+    "reconnecting-websocket": "^4.4.0"
   }
 }
 ",
@@ -2401,15 +2486,34 @@ const createButton = (text, onClick, variant = 'default') => {
 export {createButton};
 ",
   "src/chatStore.js": "import {createMergeableStore} from 'tinybase';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 const STORE_ID = 'chat';
+const SERVER = 'wss://vite.tinybase.org';
 const chatStore = createMergeableStore(STORE_ID).setTable('messages', {
   1: {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 6e4},
   2: {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 3e4},
 });
+const serverPathId = location.pathname;
+createWsSynchronizer(
+  chatStore,
+  new ReconnectingWebSocket(SERVER + serverPathId),
+).then(async (synchronizer) => {
+  await synchronizer.startSync();
+  synchronizer.getWebSocket().addEventListener('open', () => {
+    synchronizer.load().then(() => synchronizer.save());
+  });
+});
 export {chatStore};
 ",
-  "src/index.js": "import {app} from './app';
-addEventListener('load', app);
+  "src/index.js": "import {getUniqueId} from 'tinybase';
+if (location.pathname === '/') {
+  location.assign('/' + getUniqueId());
+}
+import {app} from './app';
+addEventListener('load', () => {
+  app();
+});
 ",
   "src/input.css": "input[type='text'] {
   padding: 0.5rem 0.75rem;
@@ -2810,7 +2914,8 @@ npm run dev
     "vite": "^7.1.3"
   },
   "dependencies": {
-    "tinybase": "^7.3.1"
+    "tinybase": "^7.3.1",
+    "reconnecting-websocket": "^4.4.0"
   }
 }
 ",
@@ -2991,8 +3096,21 @@ const createCanvas = (settingsStore, canvasStore) => {
 export {createCanvas};
 ",
   "src/canvasStore.js": "import {createMergeableStore} from 'tinybase';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 const STORE_ID = 'canvas';
+const SERVER = 'wss://vite.tinybase.org';
 const canvasStore = createMergeableStore(STORE_ID).setTable('strokes', {});
+const serverPathId = location.pathname;
+createWsSynchronizer(
+  canvasStore,
+  new ReconnectingWebSocket(SERVER + serverPathId),
+).then(async (synchronizer) => {
+  await synchronizer.startSync();
+  synchronizer.getWebSocket().addEventListener('open', () => {
+    synchronizer.load().then(() => synchronizer.save());
+  });
+});
 export {canvasStore};
 ",
   "src/colorPicker.css": "#colorPicker {
@@ -3084,8 +3202,14 @@ const createDrawingControls = (settingsStore, canvasStore) => {
 };
 export {createDrawingControls};
 ",
-  "src/index.js": "import {app} from './app';
-addEventListener('load', app);
+  "src/index.js": "import {getUniqueId} from 'tinybase';
+if (location.pathname === '/') {
+  location.assign('/' + getUniqueId());
+}
+import {app} from './app';
+addEventListener('load', () => {
+  app();
+});
 ",
   "src/settingsStore.js": "import {createStore} from 'tinybase';
 const STORE_ID = 'settings';
@@ -3300,7 +3424,8 @@ npm run dev
     "vite": "^7.1.3"
   },
   "dependencies": {
-    "tinybase": "^7.3.1"
+    "tinybase": "^7.3.1",
+    "reconnecting-websocket": "^4.4.0"
   }
 }
 ",
@@ -3517,8 +3642,14 @@ const createGameStatus = (store) => {
 };
 export {createGameStatus};
 ",
-  "src/index.js": "import {app} from './app';
-addEventListener('load', app);
+  "src/index.js": "import {getUniqueId} from 'tinybase';
+if (location.pathname === '/') {
+  location.assign('/' + getUniqueId());
+}
+import {app} from './app';
+addEventListener('load', () => {
+  app();
+});
 ",
   "src/square.css": ".square {
   width: 100px;
@@ -3571,10 +3702,23 @@ const createSquare = (position, value, onClick, disabled, winning) => {
 export {createSquare};
 ",
   "src/store.js": "import {createMergeableStore} from 'tinybase';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 const STORE_ID = 'game';
+const SERVER = 'wss://vite.tinybase.org';
 const store = createMergeableStore(STORE_ID)
   .setValue('currentPlayer', 'X')
   .setValue('gameStatus', 'playing');
+const serverPathId = location.pathname;
+createWsSynchronizer(
+  store,
+  new ReconnectingWebSocket(SERVER + serverPathId),
+).then(async (synchronizer) => {
+  await synchronizer.startSync();
+  synchronizer.getWebSocket().addEventListener('open', () => {
+    synchronizer.load().then(() => synchronizer.save());
+  });
+});
 export {store};
 ",
 }
@@ -3783,7 +3927,8 @@ npm run dev
     "vite": "^7.1.3"
   },
   "dependencies": {
-    "tinybase": "^7.3.1"
+    "tinybase": "^7.3.1",
+    "reconnecting-websocket": "^4.4.0"
   }
 }
 ",
@@ -3846,8 +3991,14 @@ const createButton = (text, onClick, variant = 'default') => {
 };
 export {createButton};
 ",
-  "src/index.js": "import {app} from './app';
-addEventListener('load', app);
+  "src/index.js": "import {getUniqueId} from 'tinybase';
+if (location.pathname === '/') {
+  location.assign('/' + getUniqueId());
+}
+import {app} from './app';
+addEventListener('load', () => {
+  app();
+});
 ",
   "src/input.css": "input[type='text'] {
   padding: 0.5rem 0.75rem;
@@ -3886,10 +4037,23 @@ const createInput = (placeholder = '', value = '', onInput) => {
 export {createInput};
 ",
   "src/store.js": "import {createMergeableStore} from 'tinybase';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 const STORE_ID = 'todos';
+const SERVER = 'wss://vite.tinybase.org';
 const store = createMergeableStore(STORE_ID).setTable('todos', {
   1: {text: 'Learn TinyBase', completed: false},
   2: {text: 'Build an app', completed: false},
+});
+const serverPathId = location.pathname;
+createWsSynchronizer(
+  store,
+  new ReconnectingWebSocket(SERVER + serverPathId),
+).then(async (synchronizer) => {
+  await synchronizer.startSync();
+  synchronizer.getWebSocket().addEventListener('open', () => {
+    synchronizer.load().then(() => synchronizer.save());
+  });
 });
 export {store};
 ",
@@ -4244,7 +4408,8 @@ npm run dev
   "dependencies": {
     "tinybase": "^7.3.1",
     "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "react-dom": "^19.2.3",
+    "reconnecting-websocket": "^4.4.0"
   }
 }
 ",
@@ -4321,8 +4486,13 @@ import {
   useRowIds,
   useStore,
 } from 'tinybase/ui-react';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+import {useCreateSynchronizer} from 'tinybase/ui-react';
+import type {MergeableStore} from 'tinybase';
 
 const STORE_ID = 'chat';
+const SERVER = 'wss://vite.tinybase.org';
 
 export {useAddRowCallback, useRow, useRowIds, useStore};
 
@@ -4335,6 +4505,21 @@ export const ChatStore = () => {
   );
 
   useProvideStore(STORE_ID, store);
+
+  useCreateSynchronizer(store, async (store: MergeableStore) => {
+    const serverPathId = location.pathname;
+    const synchronizer = await createWsSynchronizer(
+      store,
+      new ReconnectingWebSocket(SERVER + serverPathId),
+    );
+    await synchronizer.startSync();
+
+    synchronizer.getWebSocket().addEventListener('open', () => {
+      synchronizer.load().then(() => synchronizer.save());
+    });
+
+    return synchronizer;
+  });
 
   return null;
 };
@@ -4533,12 +4718,17 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/index.tsx": "import ReactDOM from 'react-dom/client';
+  "src/index.tsx": "import {getUniqueId} from 'tinybase';
+
+if (location.pathname === '/') {
+  location.assign('/' + getUniqueId());
+}
+import ReactDOM from 'react-dom/client';
 import {App} from './App';
 
-addEventListener('load', () =>
-  ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
-);
+addEventListener('load', () => {
+  ReactDOM.createRoot(document.getElementById('app')!).render(<App />);
+});
 ",
   "src/input.css": "input[type='text'] {
   padding: 0.5rem 0.75rem;
@@ -4859,7 +5049,8 @@ npm run dev
   "dependencies": {
     "tinybase": "^7.3.1",
     "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "react-dom": "^19.2.3",
+    "reconnecting-websocket": "^4.4.0"
   }
 }
 ",
@@ -5050,8 +5241,13 @@ import {
   useStore,
   useTable,
 } from 'tinybase/ui-react';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+import {useCreateSynchronizer} from 'tinybase/ui-react';
+import type {MergeableStore} from 'tinybase';
 
 const STORE_ID = 'canvas';
+const SERVER = 'wss://vite.tinybase.org';
 
 export {
   useAddRowCallback,
@@ -5068,6 +5264,21 @@ export const CanvasStore = () => {
   );
 
   useProvideStore(STORE_ID, store);
+
+  useCreateSynchronizer(store, async (store: MergeableStore) => {
+    const serverPathId = location.pathname;
+    const synchronizer = await createWsSynchronizer(
+      store,
+      new ReconnectingWebSocket(SERVER + serverPathId),
+    );
+    await synchronizer.startSync();
+
+    synchronizer.getWebSocket().addEventListener('open', () => {
+      synchronizer.load().then(() => synchronizer.save());
+    });
+
+    return synchronizer;
+  });
 
   return null;
 };
@@ -5245,12 +5456,17 @@ button.primary:hover {
   max-width: 600px;
 }
 ",
-  "src/index.tsx": "import ReactDOM from 'react-dom/client';
+  "src/index.tsx": "import {getUniqueId} from 'tinybase';
+
+if (location.pathname === '/') {
+  location.assign('/' + getUniqueId());
+}
+import ReactDOM from 'react-dom/client';
 import {App} from './App';
 
-addEventListener('load', () =>
-  ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
-);
+addEventListener('load', () => {
+  ReactDOM.createRoot(document.getElementById('app')!).render(<App />);
+});
 ",
   "tsconfig.json": "{
   "compilerOptions": {
@@ -5498,7 +5714,8 @@ npm run dev
   "dependencies": {
     "tinybase": "^7.3.1",
     "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "react-dom": "^19.2.3",
+    "reconnecting-websocket": "^4.4.0"
   }
 }
 ",
@@ -5743,8 +5960,13 @@ import {
   useCell,
   useValue,
 } from 'tinybase/ui-react';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+import {useCreateSynchronizer} from 'tinybase/ui-react';
+import type {MergeableStore} from 'tinybase';
 
 const STORE_ID = 'game';
+const SERVER = 'wss://vite.tinybase.org';
 
 export {useStore, useSetValuesCallback, useTableListener, useCell, useValue};
 
@@ -5756,6 +5978,21 @@ export const Store = () => {
   );
 
   useProvideStore(STORE_ID, store);
+
+  useCreateSynchronizer(store, async (store: MergeableStore) => {
+    const serverPathId = location.pathname;
+    const synchronizer = await createWsSynchronizer(
+      store,
+      new ReconnectingWebSocket(SERVER + serverPathId),
+    );
+    await synchronizer.startSync();
+
+    synchronizer.getWebSocket().addEventListener('open', () => {
+      synchronizer.load().then(() => synchronizer.save());
+    });
+
+    return synchronizer;
+  });
 
   return null;
 };
@@ -5823,12 +6060,17 @@ button.primary:hover {
   }
 }
 ",
-  "src/index.tsx": "import ReactDOM from 'react-dom/client';
+  "src/index.tsx": "import {getUniqueId} from 'tinybase';
+
+if (location.pathname === '/') {
+  location.assign('/' + getUniqueId());
+}
+import ReactDOM from 'react-dom/client';
 import {App} from './App';
 
-addEventListener('load', () =>
-  ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
-);
+addEventListener('load', () => {
+  ReactDOM.createRoot(document.getElementById('app')!).render(<App />);
+});
 ",
   "src/square.css": ".square {
   width: 100px;
@@ -6115,7 +6357,8 @@ npm run dev
   "dependencies": {
     "tinybase": "^7.3.1",
     "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "react-dom": "^19.2.3",
+    "reconnecting-websocket": "^4.4.0"
   }
 }
 ",
@@ -6211,8 +6454,13 @@ import {
   useRowIds,
   useSetPartialRowCallback,
 } from 'tinybase/ui-react';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+import {useCreateSynchronizer} from 'tinybase/ui-react';
+import type {MergeableStore} from 'tinybase';
 
 const STORE_ID = 'todos';
+const SERVER = 'wss://vite.tinybase.org';
 
 export {
   useAddRowCallback,
@@ -6231,6 +6479,22 @@ export const Store = () => {
   );
 
   useProvideStore(STORE_ID, store);
+
+  useCreateSynchronizer(store, async (store: MergeableStore) => {
+    const serverPathId = location.pathname;
+    const synchronizer = await createWsSynchronizer(
+      store,
+      new ReconnectingWebSocket(SERVER + serverPathId),
+    );
+    await synchronizer.startSync();
+
+    // If the websocket reconnects in the future, do another explicit sync.
+    synchronizer.getWebSocket().addEventListener('open', () => {
+      synchronizer.load().then(() => synchronizer.save());
+    });
+
+    return synchronizer;
+  });
 
   return null;
 };
@@ -6348,12 +6612,17 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/index.tsx": "import ReactDOM from 'react-dom/client';
+  "src/index.tsx": "import {getUniqueId} from 'tinybase';
+
+if (location.pathname === '/') {
+  location.assign('/' + getUniqueId());
+}
+import ReactDOM from 'react-dom/client';
 import {App} from './App';
 
-addEventListener('load', () =>
-  ReactDOM.createRoot(document.getElementById('app')!).render(<App />),
-);
+addEventListener('load', () => {
+  ReactDOM.createRoot(document.getElementById('app')!).render(<App />);
+});
 ",
   "src/input.css": "input[type='text'] {
   padding: 0.5rem 0.75rem;
@@ -6678,7 +6947,8 @@ npm run dev
     "@types/node": "^25.0.3"
   },
   "dependencies": {
-    "tinybase": "^7.3.1"
+    "tinybase": "^7.3.1",
+    "reconnecting-websocket": "^4.4.0"
   }
 }
 ",
@@ -6765,19 +7035,41 @@ export const createButton = (
 };
 ",
   "src/chatStore.ts": "import {createMergeableStore} from 'tinybase';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 
 const STORE_ID = 'chat';
+const SERVER = 'wss://vite.tinybase.org';
 
 export const chatStore = createMergeableStore(STORE_ID).setTable('messages', {
   '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
   '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
 });
 
+const serverPathId = location.pathname;
+createWsSynchronizer(
+  chatStore,
+  new ReconnectingWebSocket(SERVER + serverPathId),
+).then(async (synchronizer) => {
+  await synchronizer.startSync();
+
+  synchronizer.getWebSocket().addEventListener('open', () => {
+    synchronizer.load().then(() => synchronizer.save());
+  });
+});
+
 export type ChatStore = typeof chatStore;
 ",
-  "src/index.ts": "import {app} from './app';
+  "src/index.ts": "import {getUniqueId} from 'tinybase';
 
-addEventListener('load', app);
+if (location.pathname === '/') {
+  location.assign('/' + getUniqueId());
+}
+import {app} from './app';
+
+addEventListener('load', () => {
+  app();
+});
 ",
   "src/input.css": "input[type='text'] {
   padding: 0.5rem 0.75rem;
@@ -7251,7 +7543,8 @@ npm run dev
     "@types/node": "^25.0.3"
   },
   "dependencies": {
-    "tinybase": "^7.3.1"
+    "tinybase": "^7.3.1",
+    "reconnecting-websocket": "^4.4.0"
   }
 }
 ",
@@ -7466,13 +7759,28 @@ export const createCanvas = (
 };
 ",
   "src/canvasStore.ts": "import {createMergeableStore} from 'tinybase';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 
 const STORE_ID = 'canvas';
+const SERVER = 'wss://vite.tinybase.org';
 
 export const canvasStore = createMergeableStore(STORE_ID).setTable(
   'strokes',
   {},
 );
+
+const serverPathId = location.pathname;
+createWsSynchronizer(
+  canvasStore,
+  new ReconnectingWebSocket(SERVER + serverPathId),
+).then(async (synchronizer) => {
+  await synchronizer.startSync();
+
+  synchronizer.getWebSocket().addEventListener('open', () => {
+    synchronizer.load().then(() => synchronizer.save());
+  });
+});
 
 export type CanvasStore = typeof canvasStore;
 ",
@@ -7582,9 +7890,16 @@ export const createDrawingControls = (
   return controls;
 };
 ",
-  "src/index.ts": "import {app} from './app';
+  "src/index.ts": "import {getUniqueId} from 'tinybase';
 
-addEventListener('load', app);
+if (location.pathname === '/') {
+  location.assign('/' + getUniqueId());
+}
+import {app} from './app';
+
+addEventListener('load', () => {
+  app();
+});
 ",
   "src/settingsStore.ts": "import {createStore} from 'tinybase';
 
@@ -7825,7 +8140,8 @@ npm run dev
     "@types/node": "^25.0.3"
   },
   "dependencies": {
-    "tinybase": "^7.3.1"
+    "tinybase": "^7.3.1",
+    "reconnecting-websocket": "^4.4.0"
   }
 }
 ",
@@ -8076,9 +8392,16 @@ export const createGameStatus = (store: GameStore): HTMLDivElement => {
   return status;
 };
 ",
-  "src/index.ts": "import {app} from './app';
+  "src/index.ts": "import {getUniqueId} from 'tinybase';
 
-addEventListener('load', app);
+if (location.pathname === '/') {
+  location.assign('/' + getUniqueId());
+}
+import {app} from './app';
+
+addEventListener('load', () => {
+  app();
+});
 ",
   "src/square.css": ".square {
   width: 100px;
@@ -8137,12 +8460,27 @@ export const createSquare = (
 };
 ",
   "src/store.ts": "import {createMergeableStore} from 'tinybase';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 
 const STORE_ID = 'game';
+const SERVER = 'wss://vite.tinybase.org';
 
 export const store = createMergeableStore(STORE_ID)
   .setValue('currentPlayer', 'X')
   .setValue('gameStatus', 'playing');
+
+const serverPathId = location.pathname;
+createWsSynchronizer(
+  store,
+  new ReconnectingWebSocket(SERVER + serverPathId),
+).then(async (synchronizer) => {
+  await synchronizer.startSync();
+
+  synchronizer.getWebSocket().addEventListener('open', () => {
+    synchronizer.load().then(() => synchronizer.save());
+  });
+});
 
 export type GameStore = typeof store;
 ",
@@ -8375,7 +8713,8 @@ npm run dev
     "@types/node": "^25.0.3"
   },
   "dependencies": {
-    "tinybase": "^7.3.1"
+    "tinybase": "^7.3.1",
+    "reconnecting-websocket": "^4.4.0"
   }
 }
 ",
@@ -8450,9 +8789,16 @@ export const createButton = (
   return button;
 };
 ",
-  "src/index.ts": "import {app} from './app';
+  "src/index.ts": "import {getUniqueId} from 'tinybase';
 
-addEventListener('load', app);
+if (location.pathname === '/') {
+  location.assign('/' + getUniqueId());
+}
+import {app} from './app';
+
+addEventListener('load', () => {
+  app();
+});
 ",
   "src/input.css": "input[type='text'] {
   padding: 0.5rem 0.75rem;
@@ -8495,12 +8841,27 @@ export const createInput = (
 };
 ",
   "src/store.ts": "import {createMergeableStore} from 'tinybase';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 
 const STORE_ID = 'todos';
+const SERVER = 'wss://vite.tinybase.org';
 
 export const store = createMergeableStore(STORE_ID).setTable('todos', {
   '1': {text: 'Learn TinyBase', completed: false},
   '2': {text: 'Build an app', completed: false},
+});
+
+const serverPathId = location.pathname;
+createWsSynchronizer(
+  store,
+  new ReconnectingWebSocket(SERVER + serverPathId),
+).then(async (synchronizer) => {
+  await synchronizer.startSync();
+
+  synchronizer.getWebSocket().addEventListener('open', () => {
+    synchronizer.load().then(() => synchronizer.save());
+  });
 });
 
 export type TodosStore = typeof store;
