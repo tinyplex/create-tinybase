@@ -18,7 +18,7 @@ npm run dev
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
-  "index.html": "<!doctype html>
+  "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -191,7 +191,7 @@ npm run dev
   </body>
 </html>
 ",
-  "package.json": "{
+  "client/package.json": "{
   "name": "test-js-react-chat",
   "version": "1.0.0",
   "scripts": {
@@ -211,7 +211,7 @@ npm run dev
   }
 }
 ",
-  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
   <path stroke="#fff" stroke-width="80" fill="none"
     d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
   <path fill="#d81b60"
@@ -219,7 +219,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/App.jsx": "import {StrictMode} from 'react';
+  "client/src/App.jsx": "import {StrictMode} from 'react';
 import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {SettingsStore} from './SettingsStore';
@@ -243,7 +243,7 @@ const App = () => {
 };
 export {App};
 ",
-  "src/Button.jsx": "import './button.css';
+  "client/src/Button.jsx": "import './button.css';
 const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
   <button
     onClick={onClick}
@@ -255,7 +255,7 @@ const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
 );
 export {Button};
 ",
-  "src/ChatStore.jsx": "import {createMergeableStore} from 'tinybase';
+  "client/src/ChatStore.jsx": "import {createMergeableStore} from 'tinybase';
 import {
   useCreateStore,
   useProvideStore,
@@ -293,7 +293,7 @@ const ChatStore = () => {
 };
 export {ChatStore, STORE_ID, useAddRowCallback, useRow, useRowIds, useStore};
 ",
-  "src/Input.jsx": "import './input.css';
+  "client/src/Input.jsx": "import './input.css';
 const Input = ({value, onChange, placeholder = '', autoFocus = false}) => (
   <input
     type="text"
@@ -305,7 +305,7 @@ const Input = ({value, onChange, placeholder = '', autoFocus = false}) => (
 );
 export {Input};
 ",
-  "src/Message.jsx": "import {useRow} from './ChatStore';
+  "client/src/Message.jsx": "import {useRow} from './ChatStore';
 import './message.css';
 const Message = ({rowId}) => {
   const row = useRow('messages', rowId, 'chat');
@@ -320,7 +320,7 @@ const Message = ({rowId}) => {
 };
 export {Message};
 ",
-  "src/MessageInput.jsx": "import {useState} from 'react';
+  "client/src/MessageInput.jsx": "import {useState} from 'react';
 import {useAddRowCallback, STORE_ID as CHAT_STORE_ID} from './ChatStore';
 import {useValue, STORE_ID as SETTINGS_STORE_ID} from './SettingsStore';
 import './messageInput.css';
@@ -362,7 +362,7 @@ const MessageInput = () => {
 };
 export {MessageInput};
 ",
-  "src/Messages.jsx": "import {useMemo} from 'react';
+  "client/src/Messages.jsx": "import {useMemo} from 'react';
 import {useRowIds, useStore, STORE_ID} from './ChatStore';
 import './messages.css';
 import {Message} from './Message';
@@ -386,7 +386,7 @@ const Messages = () => {
 };
 export {Messages};
 ",
-  "src/SettingsStore.jsx": "import {createStore} from 'tinybase';
+  "client/src/SettingsStore.jsx": "import {createStore} from 'tinybase';
 import {
   useCreateStore,
   useProvideStore,
@@ -403,7 +403,7 @@ const SettingsStore = () => {
 };
 export {STORE_ID, SettingsStore, useSetValueCallback, useValue};
 ",
-  "src/UsernameInput.jsx": "import {useValue, useSetValueCallback, STORE_ID} from './SettingsStore';
+  "client/src/UsernameInput.jsx": "import {useValue, useSetValueCallback, STORE_ID} from './SettingsStore';
 import './usernameInput.css';
 import {Input} from './Input';
 const UsernameInput = () => {
@@ -422,7 +422,7 @@ const UsernameInput = () => {
 };
 export {UsernameInput};
 ",
-  "src/button.css": "button {
+  "client/src/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
   border-radius: 0.25rem;
@@ -448,7 +448,7 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/index.jsx": "import {getUniqueId} from 'tinybase';
+  "client/src/index.jsx": "import {getUniqueId} from 'tinybase';
 if (location.pathname === '/') {
   location.assign('/' + getUniqueId());
 }
@@ -458,7 +458,7 @@ addEventListener('load', () => {
   ReactDOM.createRoot(document.getElementById('app')).render(<App />);
 });
 ",
-  "src/input.css": "input[type='text'] {
+  "client/src/input.css": "input[type='text'] {
   padding: 0.5rem 0.75rem;
   background: var(--bg);
   border: 1px solid var(--border);
@@ -481,7 +481,7 @@ input[type='text']::placeholder {
   color: var(--fg2);
 }
 ",
-  "src/message.css": ".message {
+  "client/src/message.css": ".message {
   margin-bottom: 0.75rem;
   display: flex;
   flex-wrap: wrap;
@@ -502,21 +502,21 @@ input[type='text']::placeholder {
   color: #666;
 }
 ",
-  "src/messageInput.css": "#messageInput {
+  "client/src/messageInput.css": "#messageInput {
   display: flex;
   gap: 0.5rem;
   padding: 1rem;
   border-top: 1px solid var(--border);
 }
 ",
-  "src/messages.css": "#messages {
+  "client/src/messages.css": "#messages {
   overflow-y: auto;
   padding: 1rem 0;
   height: 400px;
   margin-bottom: 1rem;
 }
 ",
-  "src/usernameInput.css": "#usernameInput {
+  "client/src/usernameInput.css": "#usernameInput {
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
@@ -531,7 +531,7 @@ input[type='text']::placeholder {
   flex: 1;
 }
 ",
-  "vite.config.js": "import {defineConfig} from 'vite';
+  "client/vite.config.js": "import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
@@ -563,7 +563,7 @@ npm run dev
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
-  "index.html": "<!doctype html>
+  "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -736,7 +736,7 @@ npm run dev
   </body>
 </html>
 ",
-  "package.json": "{
+  "client/package.json": "{
   "name": "test-js-react-drawing",
   "version": "1.0.0",
   "scripts": {
@@ -756,7 +756,7 @@ npm run dev
   }
 }
 ",
-  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
   <path stroke="#fff" stroke-width="80" fill="none"
     d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
   <path fill="#d81b60"
@@ -764,7 +764,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/App.jsx": "import {StrictMode} from 'react';
+  "client/src/App.jsx": "import {StrictMode} from 'react';
 import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {SettingsStore} from './SettingsStore';
@@ -786,7 +786,7 @@ const App = () => {
 };
 export {App};
 ",
-  "src/BrushSize.jsx": "import {useValue, useSetValueCallback, STORE_ID} from './SettingsStore';
+  "client/src/BrushSize.jsx": "import {useValue, useSetValueCallback, STORE_ID} from './SettingsStore';
 import './brushSize.css';
 const BrushSize = () => {
   const size = useValue('brushSize', STORE_ID) ?? 5;
@@ -806,7 +806,7 @@ const BrushSize = () => {
 };
 export {BrushSize};
 ",
-  "src/Button.jsx": "import './button.css';
+  "client/src/Button.jsx": "import './button.css';
 const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
   <button
     onClick={onClick}
@@ -818,7 +818,7 @@ const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
 );
 export {Button};
 ",
-  "src/Canvas.jsx": "import {useCallback, useEffect, useRef} from 'react';
+  "client/src/Canvas.jsx": "import {useCallback, useEffect, useRef} from 'react';
 import {
   useAddRowCallback,
   useRowIds,
@@ -901,7 +901,7 @@ const Canvas = () => {
 };
 export {Canvas};
 ",
-  "src/CanvasStore.jsx": "import {createMergeableStore} from 'tinybase';
+  "client/src/CanvasStore.jsx": "import {createMergeableStore} from 'tinybase';
 import {
   useCreateStore,
   useProvideStore,
@@ -947,7 +947,7 @@ export {
   useTable,
 };
 ",
-  "src/ColorPicker.jsx": "import './colorPicker.css';
+  "client/src/ColorPicker.jsx": "import './colorPicker.css';
 import {useValue, useSetValueCallback, STORE_ID} from './SettingsStore';
 const ColorPicker = () => {
   const colors = [
@@ -980,7 +980,7 @@ const ColorPicker = () => {
 };
 export {ColorPicker};
 ",
-  "src/DrawingControls.jsx": "import './drawingControls.css';
+  "client/src/DrawingControls.jsx": "import './drawingControls.css';
 import {useDelTableCallback, STORE_ID} from './CanvasStore';
 import {Button} from './Button';
 import {ColorPicker} from './ColorPicker';
@@ -999,7 +999,7 @@ const DrawingControls = () => {
 };
 export {DrawingControls};
 ",
-  "src/SettingsStore.jsx": "import {createStore} from 'tinybase';
+  "client/src/SettingsStore.jsx": "import {createStore} from 'tinybase';
 import {
   useCreateStore,
   useProvideStore,
@@ -1017,7 +1017,7 @@ const SettingsStore = () => {
 };
 export {STORE_ID, SettingsStore, useSetValueCallback, useValue, useValues};
 ",
-  "src/brushSize.css": "#brushSize {
+  "client/src/brushSize.css": "#brushSize {
   display: flex;
   gap: 0.5rem;
   align-items: center;
@@ -1039,7 +1039,7 @@ export {STORE_ID, SettingsStore, useSetValueCallback, useValue, useValues};
   display: inline-block;
 }
 ",
-  "src/button.css": "button {
+  "client/src/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
   border-radius: 0.25rem;
@@ -1065,7 +1065,7 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/canvas.css": "#drawingCanvas {
+  "client/src/canvas.css": "#drawingCanvas {
   border: 1px solid var(--border);
   border-radius: 0.375rem;
   cursor: crosshair;
@@ -1074,7 +1074,7 @@ button.primary:hover {
   margin: 0 auto;
 }
 ",
-  "src/colorPicker.css": "#colorPicker {
+  "client/src/colorPicker.css": "#colorPicker {
   display: flex;
   gap: 0;
   align-items: center;
@@ -1096,7 +1096,7 @@ button.primary:hover {
   border-color: var(--accent);
 }
 ",
-  "src/drawingControls.css": "#drawingControls {
+  "client/src/drawingControls.css": "#drawingControls {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
@@ -1109,7 +1109,7 @@ button.primary:hover {
   max-width: 600px;
 }
 ",
-  "src/index.jsx": "import {getUniqueId} from 'tinybase';
+  "client/src/index.jsx": "import {getUniqueId} from 'tinybase';
 if (location.pathname === '/') {
   location.assign('/' + getUniqueId());
 }
@@ -1119,7 +1119,7 @@ addEventListener('load', () => {
   ReactDOM.createRoot(document.getElementById('app')).render(<App />);
 });
 ",
-  "vite.config.js": "import {defineConfig} from 'vite';
+  "client/vite.config.js": "import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
@@ -1151,7 +1151,7 @@ npm run dev
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
-  "index.html": "<!doctype html>
+  "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -1324,7 +1324,7 @@ npm run dev
   </body>
 </html>
 ",
-  "package.json": "{
+  "client/package.json": "{
   "name": "test-js-react-game",
   "version": "1.0.0",
   "scripts": {
@@ -1344,7 +1344,7 @@ npm run dev
   }
 }
 ",
-  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
   <path stroke="#fff" stroke-width="80" fill="none"
     d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
   <path fill="#d81b60"
@@ -1352,7 +1352,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/App.jsx": "import {StrictMode} from 'react';
+  "client/src/App.jsx": "import {StrictMode} from 'react';
 import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {Store} from './Store';
@@ -1370,7 +1370,7 @@ const App = () => {
 };
 export {App};
 ",
-  "src/Board.jsx": "import './board.css';
+  "client/src/Board.jsx": "import './board.css';
 import {useMemo} from 'react';
 import {useValue, STORE_ID} from './Store';
 import {Square} from './Square';
@@ -1397,7 +1397,7 @@ const Board = () => {
 };
 export {Board};
 ",
-  "src/Button.jsx": "import './button.css';
+  "client/src/Button.jsx": "import './button.css';
 const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
   <button
     onClick={onClick}
@@ -1409,7 +1409,7 @@ const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
 );
 export {Button};
 ",
-  "src/Game.jsx": "import {useStore, useSetValuesCallback, useTableListener} from './Store';
+  "client/src/Game.jsx": "import {useStore, useSetValuesCallback, useTableListener} from './Store';
 import {Button} from './Button';
 import {Board} from './Board';
 import {GameStatus} from './GameStatus';
@@ -1480,7 +1480,7 @@ const Game = () => {
 };
 export {Game};
 ",
-  "src/GameStatus.jsx": "import './gameStatus.css';
+  "client/src/GameStatus.jsx": "import './gameStatus.css';
 import {useValue, STORE_ID} from './Store';
 const GameStatus = () => {
   const gameStatus = useValue('gameStatus', STORE_ID);
@@ -1504,7 +1504,7 @@ const GameStatus = () => {
 };
 export {GameStatus};
 ",
-  "src/Square.jsx": "import './square.css';
+  "client/src/Square.jsx": "import './square.css';
 import {useCell, useStore, useValue, STORE_ID} from './Store';
 const Square = ({position, disabled, winning}) => {
   const store = useStore(STORE_ID);
@@ -1528,7 +1528,7 @@ const Square = ({position, disabled, winning}) => {
 };
 export {Square};
 ",
-  "src/Store.jsx": "import {createMergeableStore} from 'tinybase';
+  "client/src/Store.jsx": "import {createMergeableStore} from 'tinybase';
 import {
   useCreateStore,
   useProvideStore,
@@ -1574,7 +1574,7 @@ export {
   useValue,
 };
 ",
-  "src/board.css": "#board {
+  "client/src/board.css": "#board {
   display: grid;
   grid-template-columns: repeat(3, 100px);
   grid-template-rows: repeat(3, 100px);
@@ -1588,7 +1588,7 @@ export {
   padding: 1px;
 }
 ",
-  "src/button.css": "button {
+  "client/src/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
   border-radius: 0.25rem;
@@ -1614,7 +1614,7 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/gameStatus.css": "#gameStatus {
+  "client/src/gameStatus.css": "#gameStatus {
   text-align: center;
   font-size: 1.5rem;
   font-weight: 800;
@@ -1637,7 +1637,7 @@ button.primary:hover {
   }
 }
 ",
-  "src/index.jsx": "import {getUniqueId} from 'tinybase';
+  "client/src/index.jsx": "import {getUniqueId} from 'tinybase';
 if (location.pathname === '/') {
   location.assign('/' + getUniqueId());
 }
@@ -1647,7 +1647,7 @@ addEventListener('load', () => {
   ReactDOM.createRoot(document.getElementById('app')).render(<App />);
 });
 ",
-  "src/square.css": ".square {
+  "client/src/square.css": ".square {
   width: 100px;
   height: 100px;
   background: var(--bg2);
@@ -1686,7 +1686,7 @@ addEventListener('load', () => {
   color: var(--bg);
 }
 ",
-  "vite.config.js": "import {defineConfig} from 'vite';
+  "client/vite.config.js": "import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
@@ -1718,7 +1718,7 @@ npm run dev
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
-  "index.html": "<!doctype html>
+  "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -1891,7 +1891,7 @@ npm run dev
   </body>
 </html>
 ",
-  "package.json": "{
+  "client/package.json": "{
   "name": "test-js-react-todos",
   "version": "1.0.0",
   "scripts": {
@@ -1911,7 +1911,7 @@ npm run dev
   }
 }
 ",
-  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
   <path stroke="#fff" stroke-width="80" fill="none"
     d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
   <path fill="#d81b60"
@@ -1919,7 +1919,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/App.jsx": "import {StrictMode} from 'react';
+  "client/src/App.jsx": "import {StrictMode} from 'react';
 import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {Store} from './Store';
@@ -1939,7 +1939,7 @@ const App = () => {
 };
 export {App};
 ",
-  "src/Button.jsx": "import './button.css';
+  "client/src/Button.jsx": "import './button.css';
 const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
   <button
     onClick={onClick}
@@ -1951,7 +1951,7 @@ const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
 );
 export {Button};
 ",
-  "src/Input.jsx": "import './input.css';
+  "client/src/Input.jsx": "import './input.css';
 const Input = ({value, onChange, placeholder = '', autoFocus = false}) => (
   <input
     type="text"
@@ -1963,7 +1963,7 @@ const Input = ({value, onChange, placeholder = '', autoFocus = false}) => (
 );
 export {Input};
 ",
-  "src/Store.jsx": "import {createMergeableStore} from 'tinybase';
+  "client/src/Store.jsx": "import {createMergeableStore} from 'tinybase';
 import {
   useCreateStore,
   useProvideStore,
@@ -2010,7 +2010,7 @@ export {
   useSetPartialRowCallback,
 };
 ",
-  "src/TodoInput.jsx": "import './todoInput.css';
+  "client/src/TodoInput.jsx": "import './todoInput.css';
 import {useState} from 'react';
 import {useAddRowCallback, STORE_ID} from './Store';
 import {Button} from './Button';
@@ -2046,7 +2046,7 @@ const TodoInput = () => {
 };
 export {TodoInput};
 ",
-  "src/TodoItem.jsx": "import './todoItem.css';
+  "client/src/TodoItem.jsx": "import './todoItem.css';
 import {
   useDelRowCallback,
   useRow,
@@ -2079,7 +2079,7 @@ const TodoItem = ({rowId}) => {
 };
 export {TodoItem};
 ",
-  "src/TodoList.jsx": "import './todoList.css';
+  "client/src/TodoList.jsx": "import './todoList.css';
 import {useRowIds, STORE_ID} from './Store';
 import {TodoItem} from './TodoItem';
 const TodoList = () => {
@@ -2094,7 +2094,7 @@ const TodoList = () => {
 };
 export {TodoList};
 ",
-  "src/button.css": "button {
+  "client/src/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
   border-radius: 0.25rem;
@@ -2120,7 +2120,7 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/index.jsx": "import {getUniqueId} from 'tinybase';
+  "client/src/index.jsx": "import {getUniqueId} from 'tinybase';
 if (location.pathname === '/') {
   location.assign('/' + getUniqueId());
 }
@@ -2130,7 +2130,7 @@ addEventListener('load', () => {
   ReactDOM.createRoot(document.getElementById('app')).render(<App />);
 });
 ",
-  "src/input.css": "input[type='text'] {
+  "client/src/input.css": "input[type='text'] {
   padding: 0.5rem 0.75rem;
   background: var(--bg);
   border: 1px solid var(--border);
@@ -2153,7 +2153,7 @@ input[type='text']::placeholder {
   color: var(--fg2);
 }
 ",
-  "src/todoInput.css": "#todoInput {
+  "client/src/todoInput.css": "#todoInput {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
@@ -2163,7 +2163,7 @@ input[type='text']::placeholder {
   flex: 1;
 }
 ",
-  "src/todoItem.css": ".todoItem {
+  "client/src/todoItem.css": ".todoItem {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -2197,7 +2197,7 @@ input[type='text']::placeholder {
   flex-shrink: 0;
 }
 ",
-  "src/todoList.css": "#todoList {
+  "client/src/todoList.css": "#todoList {
   border: 1px solid var(--border);
   border-radius: 0.375rem;
   overflow: hidden;
@@ -2212,7 +2212,7 @@ input[type='text']::placeholder {
   color: var(--fg2);
 }
 ",
-  "vite.config.js": "import {defineConfig} from 'vite';
+  "client/vite.config.js": "import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
@@ -2244,7 +2244,7 @@ npm run dev
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
-  "index.html": "<!doctype html>
+  "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -2417,7 +2417,7 @@ npm run dev
   </body>
 </html>
 ",
-  "package.json": "{
+  "client/package.json": "{
   "name": "test-js-vanilla-chat",
   "version": "1.0.0",
   "scripts": {
@@ -2434,7 +2434,7 @@ npm run dev
   }
 }
 ",
-  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
   <path stroke="#fff" stroke-width="80" fill="none"
     d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
   <path fill="#d81b60"
@@ -2442,7 +2442,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/app.js": "import {settingsStore} from './settingsStore';
+  "client/src/app.js": "import {settingsStore} from './settingsStore';
 import {chatStore} from './chatStore';
 import {createMessages} from './messages';
 import {createUsernameInput} from './usernameInput';
@@ -2458,7 +2458,7 @@ const app = () => {
 };
 export {app};
 ",
-  "src/button.css": "button {
+  "client/src/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
   border-radius: 0.25rem;
@@ -2484,7 +2484,7 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/button.js": "import './button.css';
+  "client/src/button.js": "import './button.css';
 const createButton = (text, onClick, variant = 'default') => {
   const button = document.createElement('button');
   button.textContent = text;
@@ -2496,7 +2496,7 @@ const createButton = (text, onClick, variant = 'default') => {
 };
 export {createButton};
 ",
-  "src/chatStore.js": "import {createMergeableStore} from 'tinybase';
+  "client/src/chatStore.js": "import {createMergeableStore} from 'tinybase';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 const SERVER = 'wss://vite.tinybase.org';
@@ -2517,7 +2517,7 @@ createWsSynchronizer(
 });
 export {chatStore};
 ",
-  "src/index.js": "import {getUniqueId} from 'tinybase';
+  "client/src/index.js": "import {getUniqueId} from 'tinybase';
 if (location.pathname === '/') {
   location.assign('/' + getUniqueId());
 }
@@ -2526,7 +2526,7 @@ addEventListener('load', () => {
   app();
 });
 ",
-  "src/input.css": "input[type='text'] {
+  "client/src/input.css": "input[type='text'] {
   padding: 0.5rem 0.75rem;
   background: var(--bg);
   border: 1px solid var(--border);
@@ -2549,7 +2549,7 @@ input[type='text']::placeholder {
   color: var(--fg2);
 }
 ",
-  "src/input.js": "import './input.css';
+  "client/src/input.js": "import './input.css';
 const createInput = (placeholder = '', value = '', onInput) => {
   const input = document.createElement('input');
   input.type = 'text';
@@ -2562,7 +2562,7 @@ const createInput = (placeholder = '', value = '', onInput) => {
 };
 export {createInput};
 ",
-  "src/message.css": ".message {
+  "client/src/message.css": ".message {
   margin-bottom: 0.75rem;
   display: flex;
   flex-wrap: wrap;
@@ -2583,7 +2583,7 @@ export {createInput};
   color: #666;
 }
 ",
-  "src/message.js": "import './message.css';
+  "client/src/message.js": "import './message.css';
 const createMessage = (username, text, timestamp) => {
   const time = new Date(timestamp).toLocaleTimeString();
   const messageDiv = document.createElement('div');
@@ -2604,14 +2604,14 @@ const createMessage = (username, text, timestamp) => {
 };
 export {createMessage};
 ",
-  "src/messageInput.css": "#messageInput {
+  "client/src/messageInput.css": "#messageInput {
   display: flex;
   gap: 0.5rem;
   padding: 1rem;
   border-top: 1px solid var(--border);
 }
 ",
-  "src/messageInput.js": "import './messageInput.css';
+  "client/src/messageInput.js": "import './messageInput.css';
 import {createButton} from './button';
 import {createInput} from './input';
 const createMessageInput = (settingsStore, chatStore) => {
@@ -2642,14 +2642,14 @@ const createMessageInput = (settingsStore, chatStore) => {
 };
 export {createMessageInput};
 ",
-  "src/messages.css": "#messages {
+  "client/src/messages.css": "#messages {
   overflow-y: auto;
   padding: 1rem 0;
   height: 400px;
   margin-bottom: 1rem;
 }
 ",
-  "src/messages.js": "import './messages.css';
+  "client/src/messages.js": "import './messages.css';
 import {createMessage} from './message';
 const createMessages = (store) => {
   const messagesContainer = document.createElement('div');
@@ -2676,12 +2676,12 @@ const createMessages = (store) => {
 };
 export {createMessages};
 ",
-  "src/settingsStore.js": "import {createStore} from 'tinybase';
+  "client/src/settingsStore.js": "import {createStore} from 'tinybase';
 const STORE_ID = 'settings';
 const settingsStore = createStore().setValue('username', 'Carol');
 export {settingsStore};
 ",
-  "src/usernameInput.css": "#usernameInput {
+  "client/src/usernameInput.css": "#usernameInput {
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
@@ -2696,7 +2696,7 @@ export {settingsStore};
   flex: 1;
 }
 ",
-  "src/usernameInput.js": "import './usernameInput.css';
+  "client/src/usernameInput.js": "import './usernameInput.css';
 import {createInput} from './input';
 const createUsernameInput = (settingsStore, chatStore) => {
   const container = document.createElement('div');
@@ -2740,7 +2740,7 @@ npm run dev
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
-  "index.html": "<!doctype html>
+  "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -2913,7 +2913,7 @@ npm run dev
   </body>
 </html>
 ",
-  "package.json": "{
+  "client/package.json": "{
   "name": "test-js-vanilla-drawing",
   "version": "1.0.0",
   "scripts": {
@@ -2930,7 +2930,7 @@ npm run dev
   }
 }
 ",
-  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
   <path stroke="#fff" stroke-width="80" fill="none"
     d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
   <path fill="#d81b60"
@@ -2938,7 +2938,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/app.js": "import {settingsStore} from './settingsStore';
+  "client/src/app.js": "import {settingsStore} from './settingsStore';
 import {canvasStore} from './canvasStore';
 import {createDrawingControls} from './drawingControls';
 import {createCanvas} from './canvas';
@@ -2949,7 +2949,7 @@ const app = () => {
 };
 export {app};
 ",
-  "src/brushSize.css": "#brushSize {
+  "client/src/brushSize.css": "#brushSize {
   display: flex;
   gap: 0.5rem;
   align-items: center;
@@ -2971,7 +2971,7 @@ export {app};
   display: inline-block;
 }
 ",
-  "src/brushSize.js": "import './brushSize.css';
+  "client/src/brushSize.js": "import './brushSize.css';
 const createBrushSize = (store) => {
   const container = document.createElement('div');
   container.id = 'brushSize';
@@ -2997,7 +2997,7 @@ const createBrushSize = (store) => {
 };
 export {createBrushSize};
 ",
-  "src/button.css": "button {
+  "client/src/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
   border-radius: 0.25rem;
@@ -3023,7 +3023,7 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/button.js": "import './button.css';
+  "client/src/button.js": "import './button.css';
 const createButton = (text, onClick, variant = 'default') => {
   const button = document.createElement('button');
   button.textContent = text;
@@ -3035,7 +3035,7 @@ const createButton = (text, onClick, variant = 'default') => {
 };
 export {createButton};
 ",
-  "src/canvas.css": "#drawingCanvas {
+  "client/src/canvas.css": "#drawingCanvas {
   border: 1px solid var(--border);
   border-radius: 0.375rem;
   cursor: crosshair;
@@ -3044,7 +3044,7 @@ export {createButton};
   margin: 0 auto;
 }
 ",
-  "src/canvas.js": "import './canvas.css';
+  "client/src/canvas.js": "import './canvas.css';
 const createCanvas = (settingsStore, canvasStore) => {
   const canvas = document.createElement('canvas');
   canvas.id = 'drawingCanvas';
@@ -3106,7 +3106,7 @@ const createCanvas = (settingsStore, canvasStore) => {
 };
 export {createCanvas};
 ",
-  "src/canvasStore.js": "import {createMergeableStore} from 'tinybase';
+  "client/src/canvasStore.js": "import {createMergeableStore} from 'tinybase';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 const SERVER = 'wss://vite.tinybase.org';
@@ -3124,7 +3124,7 @@ createWsSynchronizer(
 });
 export {canvasStore};
 ",
-  "src/colorPicker.css": "#colorPicker {
+  "client/src/colorPicker.css": "#colorPicker {
   display: flex;
   gap: 0;
   align-items: center;
@@ -3146,7 +3146,7 @@ export {canvasStore};
   border-color: var(--accent);
 }
 ",
-  "src/colorPicker.js": "import './colorPicker.css';
+  "client/src/colorPicker.js": "import './colorPicker.css';
 const createColorPicker = (store) => {
   const colors = [
     '#d81b60',
@@ -3181,7 +3181,7 @@ const createColorPicker = (store) => {
 };
 export {createColorPicker};
 ",
-  "src/drawingControls.css": "#drawingControls {
+  "client/src/drawingControls.css": "#drawingControls {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
@@ -3194,7 +3194,7 @@ export {createColorPicker};
   max-width: 600px;
 }
 ",
-  "src/drawingControls.js": "import './drawingControls.css';
+  "client/src/drawingControls.js": "import './drawingControls.css';
 import {createButton} from './button';
 import {createColorPicker} from './colorPicker';
 import {createBrushSize} from './brushSize';
@@ -3213,7 +3213,7 @@ const createDrawingControls = (settingsStore, canvasStore) => {
 };
 export {createDrawingControls};
 ",
-  "src/index.js": "import {getUniqueId} from 'tinybase';
+  "client/src/index.js": "import {getUniqueId} from 'tinybase';
 if (location.pathname === '/') {
   location.assign('/' + getUniqueId());
 }
@@ -3222,7 +3222,7 @@ addEventListener('load', () => {
   app();
 });
 ",
-  "src/settingsStore.js": "import {createStore} from 'tinybase';
+  "client/src/settingsStore.js": "import {createStore} from 'tinybase';
 const STORE_ID = 'settings';
 const settingsStore = createStore()
   .setValue('brushColor', '#d81b60')
@@ -3250,7 +3250,7 @@ npm run dev
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
-  "index.html": "<!doctype html>
+  "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -3423,7 +3423,7 @@ npm run dev
   </body>
 </html>
 ",
-  "package.json": "{
+  "client/package.json": "{
   "name": "test-js-vanilla-game",
   "version": "1.0.0",
   "scripts": {
@@ -3440,7 +3440,7 @@ npm run dev
   }
 }
 ",
-  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
   <path stroke="#fff" stroke-width="80" fill="none"
     d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
   <path fill="#d81b60"
@@ -3448,7 +3448,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/app.js": "import {store} from './store';
+  "client/src/app.js": "import {store} from './store';
 import {createGame} from './game';
 const app = () => {
   const appContainer = document.getElementById('app');
@@ -3456,7 +3456,7 @@ const app = () => {
 };
 export {app};
 ",
-  "src/board.css": "#board {
+  "client/src/board.css": "#board {
   display: grid;
   grid-template-columns: repeat(3, 100px);
   grid-template-rows: repeat(3, 100px);
@@ -3470,7 +3470,7 @@ export {app};
   padding: 1px;
 }
 ",
-  "src/board.js": "import './board.css';
+  "client/src/board.js": "import './board.css';
 import {createSquare} from './square';
 const createBoard = (store) => {
   const board = document.createElement('div');
@@ -3507,7 +3507,7 @@ const createBoard = (store) => {
 };
 export {createBoard};
 ",
-  "src/button.css": "button {
+  "client/src/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
   border-radius: 0.25rem;
@@ -3533,7 +3533,7 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/button.js": "import './button.css';
+  "client/src/button.js": "import './button.css';
 const createButton = (text, onClick, variant = 'default') => {
   const button = document.createElement('button');
   button.textContent = text;
@@ -3545,7 +3545,7 @@ const createButton = (text, onClick, variant = 'default') => {
 };
 export {createButton};
 ",
-  "src/game.js": "import {createButton} from './button';
+  "client/src/game.js": "import {createButton} from './button';
 import {createBoard} from './board';
 import {createGameStatus} from './gameStatus';
 const WINNING_LINES = [
@@ -3608,7 +3608,7 @@ const createGame = (store) => {
 };
 export {createGame};
 ",
-  "src/gameStatus.css": "#gameStatus {
+  "client/src/gameStatus.css": "#gameStatus {
   text-align: center;
   font-size: 1.5rem;
   font-weight: 800;
@@ -3631,7 +3631,7 @@ export {createGame};
   }
 }
 ",
-  "src/gameStatus.js": "import './gameStatus.css';
+  "client/src/gameStatus.js": "import './gameStatus.css';
 const createGameStatus = (store) => {
   const status = document.createElement('div');
   status.id = 'gameStatus';
@@ -3653,7 +3653,7 @@ const createGameStatus = (store) => {
 };
 export {createGameStatus};
 ",
-  "src/index.js": "import {getUniqueId} from 'tinybase';
+  "client/src/index.js": "import {getUniqueId} from 'tinybase';
 if (location.pathname === '/') {
   location.assign('/' + getUniqueId());
 }
@@ -3662,7 +3662,7 @@ addEventListener('load', () => {
   app();
 });
 ",
-  "src/square.css": ".square {
+  "client/src/square.css": ".square {
   width: 100px;
   height: 100px;
   background: var(--bg2);
@@ -3701,7 +3701,7 @@ addEventListener('load', () => {
   color: var(--bg);
 }
 ",
-  "src/square.js": "import './square.css';
+  "client/src/square.js": "import './square.css';
 const createSquare = (position, value, onClick, disabled, winning) => {
   const square = document.createElement('button');
   square.className = \`square\${disabled ? ' disabled' : ''}\${winning ? ' winning' : ''}\`;
@@ -3712,7 +3712,7 @@ const createSquare = (position, value, onClick, disabled, winning) => {
 };
 export {createSquare};
 ",
-  "src/store.js": "import {createMergeableStore} from 'tinybase';
+  "client/src/store.js": "import {createMergeableStore} from 'tinybase';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 const SERVER = 'wss://vite.tinybase.org';
@@ -3753,7 +3753,7 @@ npm run dev
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
-  "index.html": "<!doctype html>
+  "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -3926,7 +3926,7 @@ npm run dev
   </body>
 </html>
 ",
-  "package.json": "{
+  "client/package.json": "{
   "name": "test-js-vanilla-todos",
   "version": "1.0.0",
   "scripts": {
@@ -3943,7 +3943,7 @@ npm run dev
   }
 }
 ",
-  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
   <path stroke="#fff" stroke-width="80" fill="none"
     d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
   <path fill="#d81b60"
@@ -3951,7 +3951,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/app.js": "import {store} from './store';
+  "client/src/app.js": "import {store} from './store';
 import {createTodoInput} from './todoInput';
 import {createTodoList} from './todoList';
 const app = () => {
@@ -3964,7 +3964,7 @@ const app = () => {
 };
 export {app};
 ",
-  "src/button.css": "button {
+  "client/src/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
   border-radius: 0.25rem;
@@ -3990,7 +3990,7 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/button.js": "import './button.css';
+  "client/src/button.js": "import './button.css';
 const createButton = (text, onClick, variant = 'default') => {
   const button = document.createElement('button');
   button.textContent = text;
@@ -4002,7 +4002,7 @@ const createButton = (text, onClick, variant = 'default') => {
 };
 export {createButton};
 ",
-  "src/index.js": "import {getUniqueId} from 'tinybase';
+  "client/src/index.js": "import {getUniqueId} from 'tinybase';
 if (location.pathname === '/') {
   location.assign('/' + getUniqueId());
 }
@@ -4011,7 +4011,7 @@ addEventListener('load', () => {
   app();
 });
 ",
-  "src/input.css": "input[type='text'] {
+  "client/src/input.css": "input[type='text'] {
   padding: 0.5rem 0.75rem;
   background: var(--bg);
   border: 1px solid var(--border);
@@ -4034,7 +4034,7 @@ input[type='text']::placeholder {
   color: var(--fg2);
 }
 ",
-  "src/input.js": "import './input.css';
+  "client/src/input.js": "import './input.css';
 const createInput = (placeholder = '', value = '', onInput) => {
   const input = document.createElement('input');
   input.type = 'text';
@@ -4047,7 +4047,7 @@ const createInput = (placeholder = '', value = '', onInput) => {
 };
 export {createInput};
 ",
-  "src/store.js": "import {createMergeableStore} from 'tinybase';
+  "client/src/store.js": "import {createMergeableStore} from 'tinybase';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 const SERVER = 'wss://vite.tinybase.org';
@@ -4068,7 +4068,7 @@ createWsSynchronizer(
 });
 export {store};
 ",
-  "src/todoInput.css": "#todoInput {
+  "client/src/todoInput.css": "#todoInput {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
@@ -4078,7 +4078,7 @@ export {store};
   flex: 1;
 }
 ",
-  "src/todoInput.js": "import './todoInput.css';
+  "client/src/todoInput.js": "import './todoInput.css';
 import {createButton} from './button';
 import {createInput} from './input';
 const createTodoInput = (store) => {
@@ -4105,7 +4105,7 @@ const createTodoInput = (store) => {
 };
 export {createTodoInput};
 ",
-  "src/todoItem.css": ".todoItem {
+  "client/src/todoItem.css": ".todoItem {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -4139,7 +4139,7 @@ export {createTodoInput};
   flex-shrink: 0;
 }
 ",
-  "src/todoItem.js": "import './todoItem.css';
+  "client/src/todoItem.js": "import './todoItem.css';
 import {createButton} from './button';
 const createTodoItem = (id, text, completed, onToggle, onDelete) => {
   const item = document.createElement('div');
@@ -4160,7 +4160,7 @@ const createTodoItem = (id, text, completed, onToggle, onDelete) => {
 };
 export {createTodoItem};
 ",
-  "src/todoList.css": "#todoList {
+  "client/src/todoList.css": "#todoList {
   border: 1px solid var(--border);
   border-radius: 0.375rem;
   overflow: hidden;
@@ -4175,7 +4175,7 @@ export {createTodoItem};
   color: var(--fg2);
 }
 ",
-  "src/todoList.js": "import './todoList.css';
+  "client/src/todoList.js": "import './todoList.css';
 import {createTodoItem} from './todoItem';
 const createTodoList = (store) => {
   const list = document.createElement('div');
@@ -4227,7 +4227,7 @@ npm run dev
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
-  "index.html": "<!doctype html>
+  "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -4400,7 +4400,7 @@ npm run dev
   </body>
 </html>
 ",
-  "package.json": "{
+  "client/package.json": "{
   "name": "test-ts-react-chat",
   "version": "1.0.0",
   "scripts": {
@@ -4424,7 +4424,7 @@ npm run dev
   }
 }
 ",
-  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
   <path stroke="#fff" stroke-width="80" fill="none"
     d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
   <path fill="#d81b60"
@@ -4432,7 +4432,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/App.tsx": "import {StrictMode} from 'react';
+  "client/src/App.tsx": "import {StrictMode} from 'react';
 import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 
@@ -4463,7 +4463,7 @@ const App = () => {
 
 export {App};
 ",
-  "src/Button.tsx": "import './button.css';
+  "client/src/Button.tsx": "import './button.css';
 import {ReactNode} from 'react';
 
 interface ButtonProps {
@@ -4488,7 +4488,7 @@ export const Button = ({
   </button>
 );
 ",
-  "src/ChatStore.tsx": "import {createMergeableStore} from 'tinybase';
+  "client/src/ChatStore.tsx": "import {createMergeableStore} from 'tinybase';
 import {
   useCreateStore,
   useProvideStore,
@@ -4536,7 +4536,7 @@ export const ChatStore = () => {
   return null;
 };
 ",
-  "src/Input.tsx": "import './input.css';
+  "client/src/Input.tsx": "import './input.css';
 
 interface InputProps {
   value: string;
@@ -4560,7 +4560,7 @@ export const Input = ({
   />
 );
 ",
-  "src/Message.tsx": "import {useRow, STORE_ID} from './ChatStore';
+  "client/src/Message.tsx": "import {useRow, STORE_ID} from './ChatStore';
 
 import './message.css';
 
@@ -4581,7 +4581,7 @@ export const Message = ({rowId}: MessageProps) => {
   );
 };
 ",
-  "src/MessageInput.tsx": "import {useState} from 'react';
+  "client/src/MessageInput.tsx": "import {useState} from 'react';
 import {useAddRowCallback, STORE_ID as CHAT_STORE_ID} from './ChatStore';
 import {useValue, STORE_ID as SETTINGS_STORE_ID} from './SettingsStore';
 import './messageInput.css';
@@ -4628,7 +4628,7 @@ export const MessageInput = () => {
   );
 };
 ",
-  "src/Messages.tsx": "import {useMemo} from 'react';
+  "client/src/Messages.tsx": "import {useMemo} from 'react';
 import {useRowIds, useStore, STORE_ID} from './ChatStore';
 
 import './messages.css';
@@ -4656,7 +4656,7 @@ export const Messages = () => {
   );
 };
 ",
-  "src/SettingsStore.tsx": "import {createStore} from 'tinybase';
+  "client/src/SettingsStore.tsx": "import {createStore} from 'tinybase';
 import {
   useCreateStore,
   useProvideStore,
@@ -4678,7 +4678,7 @@ export const SettingsStore = () => {
   return null;
 };
 ",
-  "src/UsernameInput.tsx": "import {useValue, useSetValueCallback, STORE_ID} from './SettingsStore';
+  "client/src/UsernameInput.tsx": "import {useValue, useSetValueCallback, STORE_ID} from './SettingsStore';
 import './usernameInput.css';
 
 import {Input} from './Input';
@@ -4699,7 +4699,7 @@ export const UsernameInput = () => {
   );
 };
 ",
-  "src/button.css": "button {
+  "client/src/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
   border-radius: 0.25rem;
@@ -4725,7 +4725,7 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/index.tsx": "import {getUniqueId} from 'tinybase';
+  "client/src/index.tsx": "import {getUniqueId} from 'tinybase';
 
 if (location.pathname === '/') {
   location.assign('/' + getUniqueId());
@@ -4737,7 +4737,7 @@ addEventListener('load', () => {
   ReactDOM.createRoot(document.getElementById('app')!).render(<App />);
 });
 ",
-  "src/input.css": "input[type='text'] {
+  "client/src/input.css": "input[type='text'] {
   padding: 0.5rem 0.75rem;
   background: var(--bg);
   border: 1px solid var(--border);
@@ -4760,7 +4760,7 @@ input[type='text']::placeholder {
   color: var(--fg2);
 }
 ",
-  "src/message.css": ".message {
+  "client/src/message.css": ".message {
   margin-bottom: 0.75rem;
   display: flex;
   flex-wrap: wrap;
@@ -4781,21 +4781,21 @@ input[type='text']::placeholder {
   color: #666;
 }
 ",
-  "src/messageInput.css": "#messageInput {
+  "client/src/messageInput.css": "#messageInput {
   display: flex;
   gap: 0.5rem;
   padding: 1rem;
   border-top: 1px solid var(--border);
 }
 ",
-  "src/messages.css": "#messages {
+  "client/src/messages.css": "#messages {
   overflow-y: auto;
   padding: 1rem 0;
   height: 400px;
   margin-bottom: 1rem;
 }
 ",
-  "src/usernameInput.css": "#usernameInput {
+  "client/src/usernameInput.css": "#usernameInput {
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
@@ -4810,7 +4810,7 @@ input[type='text']::placeholder {
   flex: 1;
 }
 ",
-  "tsconfig.json": "{
+  "client/tsconfig.json": "{
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -4832,7 +4832,7 @@ input[type='text']::placeholder {
   "include": ["src"]
 }
 ",
-  "vite.config.js": "import {defineConfig} from 'vite';
+  "client/vite.config.js": "import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
@@ -4864,7 +4864,7 @@ npm run dev
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
-  "index.html": "<!doctype html>
+  "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -5037,7 +5037,7 @@ npm run dev
   </body>
 </html>
 ",
-  "package.json": "{
+  "client/package.json": "{
   "name": "test-ts-react-drawing",
   "version": "1.0.0",
   "scripts": {
@@ -5061,7 +5061,7 @@ npm run dev
   }
 }
 ",
-  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
   <path stroke="#fff" stroke-width="80" fill="none"
     d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
   <path fill="#d81b60"
@@ -5069,7 +5069,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/App.tsx": "import {StrictMode} from 'react';
+  "client/src/App.tsx": "import {StrictMode} from 'react';
 import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 
@@ -5097,7 +5097,7 @@ const App = () => {
 
 export {App};
 ",
-  "src/BrushSize.tsx": "import {useValue, useSetValueCallback, STORE_ID} from './SettingsStore';
+  "client/src/BrushSize.tsx": "import {useValue, useSetValueCallback, STORE_ID} from './SettingsStore';
 import './brushSize.css';
 
 export const BrushSize = () => {
@@ -5119,7 +5119,7 @@ export const BrushSize = () => {
   );
 };
 ",
-  "src/Button.tsx": "import './button.css';
+  "client/src/Button.tsx": "import './button.css';
 import {ReactNode} from 'react';
 
 interface ButtonProps {
@@ -5144,7 +5144,7 @@ export const Button = ({
   </button>
 );
 ",
-  "src/Canvas.tsx": "import {useCallback, useEffect, useRef} from 'react';
+  "client/src/Canvas.tsx": "import {useCallback, useEffect, useRef} from 'react';
 import {
   useAddRowCallback,
   useRowIds,
@@ -5239,7 +5239,7 @@ export const Canvas = () => {
   );
 };
 ",
-  "src/CanvasStore.tsx": "import {createMergeableStore} from 'tinybase';
+  "client/src/CanvasStore.tsx": "import {createMergeableStore} from 'tinybase';
 import {
   useCreateStore,
   useProvideStore,
@@ -5293,7 +5293,7 @@ export const CanvasStore = () => {
   return null;
 };
 ",
-  "src/ColorPicker.tsx": "import './colorPicker.css';
+  "client/src/ColorPicker.tsx": "import './colorPicker.css';
 import {useValue, useSetValueCallback, STORE_ID} from './SettingsStore';
 
 export const ColorPicker = () => {
@@ -5328,7 +5328,7 @@ export const ColorPicker = () => {
   );
 };
 ",
-  "src/DrawingControls.tsx": "import './drawingControls.css';
+  "client/src/DrawingControls.tsx": "import './drawingControls.css';
 import {useDelTableCallback, STORE_ID} from './CanvasStore';
 
 import {Button} from './Button';
@@ -5351,7 +5351,7 @@ export const DrawingControls = () => {
   );
 };
 ",
-  "src/SettingsStore.tsx": "import {createStore} from 'tinybase';
+  "client/src/SettingsStore.tsx": "import {createStore} from 'tinybase';
 import {
   useCreateStore,
   useProvideStore,
@@ -5374,7 +5374,7 @@ export const SettingsStore = () => {
   return null;
 };
 ",
-  "src/brushSize.css": "#brushSize {
+  "client/src/brushSize.css": "#brushSize {
   display: flex;
   gap: 0.5rem;
   align-items: center;
@@ -5396,7 +5396,7 @@ export const SettingsStore = () => {
   display: inline-block;
 }
 ",
-  "src/button.css": "button {
+  "client/src/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
   border-radius: 0.25rem;
@@ -5422,7 +5422,7 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/canvas.css": "#drawingCanvas {
+  "client/src/canvas.css": "#drawingCanvas {
   border: 1px solid var(--border);
   border-radius: 0.375rem;
   cursor: crosshair;
@@ -5431,7 +5431,7 @@ button.primary:hover {
   margin: 0 auto;
 }
 ",
-  "src/colorPicker.css": "#colorPicker {
+  "client/src/colorPicker.css": "#colorPicker {
   display: flex;
   gap: 0;
   align-items: center;
@@ -5453,7 +5453,7 @@ button.primary:hover {
   border-color: var(--accent);
 }
 ",
-  "src/drawingControls.css": "#drawingControls {
+  "client/src/drawingControls.css": "#drawingControls {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
@@ -5466,7 +5466,7 @@ button.primary:hover {
   max-width: 600px;
 }
 ",
-  "src/index.tsx": "import {getUniqueId} from 'tinybase';
+  "client/src/index.tsx": "import {getUniqueId} from 'tinybase';
 
 if (location.pathname === '/') {
   location.assign('/' + getUniqueId());
@@ -5478,7 +5478,7 @@ addEventListener('load', () => {
   ReactDOM.createRoot(document.getElementById('app')!).render(<App />);
 });
 ",
-  "tsconfig.json": "{
+  "client/tsconfig.json": "{
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -5500,7 +5500,7 @@ addEventListener('load', () => {
   "include": ["src"]
 }
 ",
-  "vite.config.js": "import {defineConfig} from 'vite';
+  "client/vite.config.js": "import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
@@ -5532,7 +5532,7 @@ npm run dev
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
-  "index.html": "<!doctype html>
+  "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -5705,7 +5705,7 @@ npm run dev
   </body>
 </html>
 ",
-  "package.json": "{
+  "client/package.json": "{
   "name": "test-ts-react-game",
   "version": "1.0.0",
   "scripts": {
@@ -5729,7 +5729,7 @@ npm run dev
   }
 }
 ",
-  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
   <path stroke="#fff" stroke-width="80" fill="none"
     d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
   <path fill="#d81b60"
@@ -5737,7 +5737,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/App.tsx": "import {StrictMode} from 'react';
+  "client/src/App.tsx": "import {StrictMode} from 'react';
 import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 
@@ -5759,7 +5759,7 @@ const App = () => {
 
 export {App};
 ",
-  "src/Board.tsx": "import './board.css';
+  "client/src/Board.tsx": "import './board.css';
 import {useMemo} from 'react';
 import {useValue, STORE_ID} from './Store';
 
@@ -5790,7 +5790,7 @@ export const Board = () => {
   );
 };
 ",
-  "src/Button.tsx": "import './button.css';
+  "client/src/Button.tsx": "import './button.css';
 import {ReactNode} from 'react';
 
 interface ButtonProps {
@@ -5815,7 +5815,7 @@ export const Button = ({
   </button>
 );
 ",
-  "src/Game.tsx": "import {useStore, useSetValuesCallback, useTableListener} from './Store';
+  "client/src/Game.tsx": "import {useStore, useSetValuesCallback, useTableListener} from './Store';
 
 import {Button} from './Button';
 
@@ -5898,7 +5898,7 @@ export const Game = () => {
   );
 };
 ",
-  "src/GameStatus.tsx": "import './gameStatus.css';
+  "client/src/GameStatus.tsx": "import './gameStatus.css';
 import {useValue, STORE_ID} from './Store';
 
 export const GameStatus = () => {
@@ -5923,7 +5923,7 @@ export const GameStatus = () => {
   );
 };
 ",
-  "src/Square.tsx": "import './square.css';
+  "client/src/Square.tsx": "import './square.css';
 import {useCell, useStore, useValue, STORE_ID} from './Store';
 
 export const Square = ({
@@ -5958,7 +5958,7 @@ export const Square = ({
   );
 };
 ",
-  "src/Store.tsx": "import {createMergeableStore} from 'tinybase';
+  "client/src/Store.tsx": "import {createMergeableStore} from 'tinybase';
 import {
   useCreateStore,
   useProvideStore,
@@ -6006,7 +6006,7 @@ export const Store = () => {
   return null;
 };
 ",
-  "src/board.css": "#board {
+  "client/src/board.css": "#board {
   display: grid;
   grid-template-columns: repeat(3, 100px);
   grid-template-rows: repeat(3, 100px);
@@ -6020,7 +6020,7 @@ export const Store = () => {
   padding: 1px;
 }
 ",
-  "src/button.css": "button {
+  "client/src/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
   border-radius: 0.25rem;
@@ -6046,7 +6046,7 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/gameStatus.css": "#gameStatus {
+  "client/src/gameStatus.css": "#gameStatus {
   text-align: center;
   font-size: 1.5rem;
   font-weight: 800;
@@ -6069,7 +6069,7 @@ button.primary:hover {
   }
 }
 ",
-  "src/index.tsx": "import {getUniqueId} from 'tinybase';
+  "client/src/index.tsx": "import {getUniqueId} from 'tinybase';
 
 if (location.pathname === '/') {
   location.assign('/' + getUniqueId());
@@ -6081,7 +6081,7 @@ addEventListener('load', () => {
   ReactDOM.createRoot(document.getElementById('app')!).render(<App />);
 });
 ",
-  "src/square.css": ".square {
+  "client/src/square.css": ".square {
   width: 100px;
   height: 100px;
   background: var(--bg2);
@@ -6120,7 +6120,7 @@ addEventListener('load', () => {
   color: var(--bg);
 }
 ",
-  "tsconfig.json": "{
+  "client/tsconfig.json": "{
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -6142,7 +6142,7 @@ addEventListener('load', () => {
   "include": ["src"]
 }
 ",
-  "vite.config.js": "import {defineConfig} from 'vite';
+  "client/vite.config.js": "import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
@@ -6174,7 +6174,7 @@ npm run dev
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
-  "index.html": "<!doctype html>
+  "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -6347,7 +6347,7 @@ npm run dev
   </body>
 </html>
 ",
-  "package.json": "{
+  "client/package.json": "{
   "name": "test-ts-react-todos",
   "version": "1.0.0",
   "scripts": {
@@ -6371,7 +6371,7 @@ npm run dev
   }
 }
 ",
-  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
   <path stroke="#fff" stroke-width="80" fill="none"
     d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
   <path fill="#d81b60"
@@ -6379,7 +6379,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/App.tsx": "import {StrictMode} from 'react';
+  "client/src/App.tsx": "import {StrictMode} from 'react';
 import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 
@@ -6404,7 +6404,7 @@ const App = () => {
 
 export {App};
 ",
-  "src/Button.tsx": "import './button.css';
+  "client/src/Button.tsx": "import './button.css';
 import {ReactNode} from 'react';
 
 interface ButtonProps {
@@ -6429,7 +6429,7 @@ export const Button = ({
   </button>
 );
 ",
-  "src/Input.tsx": "import './input.css';
+  "client/src/Input.tsx": "import './input.css';
 
 interface InputProps {
   value: string;
@@ -6453,7 +6453,7 @@ export const Input = ({
   />
 );
 ",
-  "src/Store.tsx": "import {createMergeableStore} from 'tinybase';
+  "client/src/Store.tsx": "import {createMergeableStore} from 'tinybase';
 import {
   useCreateStore,
   useProvideStore,
@@ -6509,7 +6509,7 @@ export const Store = () => {
   return null;
 };
 ",
-  "src/TodoInput.tsx": "import './todoInput.css';
+  "client/src/TodoInput.tsx": "import './todoInput.css';
 import {useState} from 'react';
 import {useAddRowCallback, STORE_ID} from './Store';
 
@@ -6549,7 +6549,7 @@ export const TodoInput = () => {
   );
 };
 ",
-  "src/TodoItem.tsx": "import './todoItem.css';
+  "client/src/TodoItem.tsx": "import './todoItem.css';
 import {
   useDelRowCallback,
   useRow,
@@ -6584,7 +6584,7 @@ export const TodoItem = ({rowId}: {rowId: string}) => {
   );
 };
 ",
-  "src/TodoList.tsx": "import './todoList.css';
+  "client/src/TodoList.tsx": "import './todoList.css';
 import {useRowIds, STORE_ID} from './Store';
 
 import {TodoItem} from './TodoItem';
@@ -6601,7 +6601,7 @@ export const TodoList = () => {
   );
 };
 ",
-  "src/button.css": "button {
+  "client/src/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
   border-radius: 0.25rem;
@@ -6627,7 +6627,7 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/index.tsx": "import {getUniqueId} from 'tinybase';
+  "client/src/index.tsx": "import {getUniqueId} from 'tinybase';
 
 if (location.pathname === '/') {
   location.assign('/' + getUniqueId());
@@ -6639,7 +6639,7 @@ addEventListener('load', () => {
   ReactDOM.createRoot(document.getElementById('app')!).render(<App />);
 });
 ",
-  "src/input.css": "input[type='text'] {
+  "client/src/input.css": "input[type='text'] {
   padding: 0.5rem 0.75rem;
   background: var(--bg);
   border: 1px solid var(--border);
@@ -6662,7 +6662,7 @@ input[type='text']::placeholder {
   color: var(--fg2);
 }
 ",
-  "src/todoInput.css": "#todoInput {
+  "client/src/todoInput.css": "#todoInput {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
@@ -6672,7 +6672,7 @@ input[type='text']::placeholder {
   flex: 1;
 }
 ",
-  "src/todoItem.css": ".todoItem {
+  "client/src/todoItem.css": ".todoItem {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -6706,7 +6706,7 @@ input[type='text']::placeholder {
   flex-shrink: 0;
 }
 ",
-  "src/todoList.css": "#todoList {
+  "client/src/todoList.css": "#todoList {
   border: 1px solid var(--border);
   border-radius: 0.375rem;
   overflow: hidden;
@@ -6721,7 +6721,7 @@ input[type='text']::placeholder {
   color: var(--fg2);
 }
 ",
-  "tsconfig.json": "{
+  "client/tsconfig.json": "{
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -6743,7 +6743,7 @@ input[type='text']::placeholder {
   "include": ["src"]
 }
 ",
-  "vite.config.js": "import {defineConfig} from 'vite';
+  "client/vite.config.js": "import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
@@ -6775,7 +6775,7 @@ npm run dev
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
-  "index.html": "<!doctype html>
+  "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -6948,7 +6948,7 @@ npm run dev
   </body>
 </html>
 ",
-  "package.json": "{
+  "client/package.json": "{
   "name": "test-ts-vanilla-chat",
   "version": "1.0.0",
   "scripts": {
@@ -6967,7 +6967,7 @@ npm run dev
   }
 }
 ",
-  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
   <path stroke="#fff" stroke-width="80" fill="none"
     d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
   <path fill="#d81b60"
@@ -6975,7 +6975,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/app.ts": "import {settingsStore} from './settingsStore';
+  "client/src/app.ts": "import {settingsStore} from './settingsStore';
 
 import {chatStore} from './chatStore';
 
@@ -7007,7 +7007,7 @@ const app = () => {
 
 export {app};
 ",
-  "src/button.css": "button {
+  "client/src/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
   border-radius: 0.25rem;
@@ -7033,7 +7033,7 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/button.ts": "import './button.css';
+  "client/src/button.ts": "import './button.css';
 
 export const createButton = (
   text: string,
@@ -7049,7 +7049,7 @@ export const createButton = (
   return button;
 };
 ",
-  "src/chatStore.ts": "import {createMergeableStore} from 'tinybase';
+  "client/src/chatStore.ts": "import {createMergeableStore} from 'tinybase';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 
@@ -7076,7 +7076,7 @@ createWsSynchronizer(
 
 export type ChatStore = typeof chatStore;
 ",
-  "src/index.ts": "import {getUniqueId} from 'tinybase';
+  "client/src/index.ts": "import {getUniqueId} from 'tinybase';
 
 if (location.pathname === '/') {
   location.assign('/' + getUniqueId());
@@ -7087,7 +7087,7 @@ addEventListener('load', () => {
   app();
 });
 ",
-  "src/input.css": "input[type='text'] {
+  "client/src/input.css": "input[type='text'] {
   padding: 0.5rem 0.75rem;
   background: var(--bg);
   border: 1px solid var(--border);
@@ -7110,7 +7110,7 @@ input[type='text']::placeholder {
   color: var(--fg2);
 }
 ",
-  "src/input.ts": "import './input.css';
+  "client/src/input.ts": "import './input.css';
 
 export const createInput = (
   placeholder: string = '',
@@ -7127,7 +7127,7 @@ export const createInput = (
   return input;
 };
 ",
-  "src/message.css": ".message {
+  "client/src/message.css": ".message {
   margin-bottom: 0.75rem;
   display: flex;
   flex-wrap: wrap;
@@ -7148,7 +7148,7 @@ export const createInput = (
   color: #666;
 }
 ",
-  "src/message.ts": "import './message.css';
+  "client/src/message.ts": "import './message.css';
 
 export const createMessage = (
   username: string,
@@ -7179,14 +7179,14 @@ export const createMessage = (
   return messageDiv;
 };
 ",
-  "src/messageInput.css": "#messageInput {
+  "client/src/messageInput.css": "#messageInput {
   display: flex;
   gap: 0.5rem;
   padding: 1rem;
   border-top: 1px solid var(--border);
 }
 ",
-  "src/messageInput.ts": "import './messageInput.css';
+  "client/src/messageInput.ts": "import './messageInput.css';
 import {type SettingsStore} from './settingsStore';
 import {type ChatStore} from './chatStore';
 
@@ -7229,14 +7229,14 @@ export const createMessageInput = (
   return messageInputContainer;
 };
 ",
-  "src/messages.css": "#messages {
+  "client/src/messages.css": "#messages {
   overflow-y: auto;
   padding: 1rem 0;
   height: 400px;
   margin-bottom: 1rem;
 }
 ",
-  "src/messages.ts": "import './messages.css';
+  "client/src/messages.ts": "import './messages.css';
 import {type ChatStore} from './chatStore';
 
 import {createMessage} from './message';
@@ -7272,7 +7272,7 @@ export const createMessages = (store: ChatStore): HTMLDivElement => {
   return messagesContainer;
 };
 ",
-  "src/settingsStore.ts": "import {createStore} from 'tinybase';
+  "client/src/settingsStore.ts": "import {createStore} from 'tinybase';
 
 const STORE_ID = 'settings';
 
@@ -7280,7 +7280,7 @@ export const settingsStore = createStore().setValue('username', 'Carol');
 
 export type SettingsStore = typeof settingsStore;
 ",
-  "src/usernameInput.css": "#usernameInput {
+  "client/src/usernameInput.css": "#usernameInput {
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
@@ -7295,7 +7295,7 @@ export type SettingsStore = typeof settingsStore;
   flex: 1;
 }
 ",
-  "src/usernameInput.ts": "import './usernameInput.css';
+  "client/src/usernameInput.ts": "import './usernameInput.css';
 import {type SettingsStore} from './settingsStore';
 import {type ChatStore} from './chatStore';
 
@@ -7330,7 +7330,7 @@ export const createUsernameInput = (
   return container;
 };
 ",
-  "tsconfig.json": "{
+  "client/tsconfig.json": "{
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -7372,7 +7372,7 @@ npm run dev
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
-  "index.html": "<!doctype html>
+  "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -7545,7 +7545,7 @@ npm run dev
   </body>
 </html>
 ",
-  "package.json": "{
+  "client/package.json": "{
   "name": "test-ts-vanilla-drawing",
   "version": "1.0.0",
   "scripts": {
@@ -7564,7 +7564,7 @@ npm run dev
   }
 }
 ",
-  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
   <path stroke="#fff" stroke-width="80" fill="none"
     d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
   <path fill="#d81b60"
@@ -7572,7 +7572,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/app.ts": "import {settingsStore} from './settingsStore';
+  "client/src/app.ts": "import {settingsStore} from './settingsStore';
 
 import {canvasStore} from './canvasStore';
 
@@ -7589,7 +7589,7 @@ const app = () => {
 
 export {app};
 ",
-  "src/brushSize.css": "#brushSize {
+  "client/src/brushSize.css": "#brushSize {
   display: flex;
   gap: 0.5rem;
   align-items: center;
@@ -7611,7 +7611,7 @@ export {app};
   display: inline-block;
 }
 ",
-  "src/brushSize.ts": "import './brushSize.css';
+  "client/src/brushSize.ts": "import './brushSize.css';
 import type {Store as SettingsStore} from './settingsStore';
 
 export const createBrushSize = (store: SettingsStore): HTMLDivElement => {
@@ -7644,7 +7644,7 @@ export const createBrushSize = (store: SettingsStore): HTMLDivElement => {
   return container;
 };
 ",
-  "src/button.css": "button {
+  "client/src/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
   border-radius: 0.25rem;
@@ -7670,7 +7670,7 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/button.ts": "import './button.css';
+  "client/src/button.ts": "import './button.css';
 
 export const createButton = (
   text: string,
@@ -7686,7 +7686,7 @@ export const createButton = (
   return button;
 };
 ",
-  "src/canvas.css": "#drawingCanvas {
+  "client/src/canvas.css": "#drawingCanvas {
   border: 1px solid var(--border);
   border-radius: 0.375rem;
   cursor: crosshair;
@@ -7695,7 +7695,7 @@ export const createButton = (
   margin: 0 auto;
 }
 ",
-  "src/canvas.ts": "import './canvas.css';
+  "client/src/canvas.ts": "import './canvas.css';
 import type {Store as SettingsStore} from './settingsStore';
 import type {Store as CanvasStore} from './canvasStore';
 
@@ -7774,7 +7774,7 @@ export const createCanvas = (
   return canvas;
 };
 ",
-  "src/canvasStore.ts": "import {createMergeableStore} from 'tinybase';
+  "client/src/canvasStore.ts": "import {createMergeableStore} from 'tinybase';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 
@@ -7801,7 +7801,7 @@ createWsSynchronizer(
 
 export type CanvasStore = typeof canvasStore;
 ",
-  "src/colorPicker.css": "#colorPicker {
+  "client/src/colorPicker.css": "#colorPicker {
   display: flex;
   gap: 0;
   align-items: center;
@@ -7823,7 +7823,7 @@ export type CanvasStore = typeof canvasStore;
   border-color: var(--accent);
 }
 ",
-  "src/colorPicker.ts": "import './colorPicker.css';
+  "client/src/colorPicker.ts": "import './colorPicker.css';
 import type {Store as SettingsStore} from './settingsStore';
 
 export const createColorPicker = (store: SettingsStore): HTMLDivElement => {
@@ -7864,7 +7864,7 @@ export const createColorPicker = (store: SettingsStore): HTMLDivElement => {
   return container;
 };
 ",
-  "src/drawingControls.css": "#drawingControls {
+  "client/src/drawingControls.css": "#drawingControls {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
@@ -7877,7 +7877,7 @@ export const createColorPicker = (store: SettingsStore): HTMLDivElement => {
   max-width: 600px;
 }
 ",
-  "src/drawingControls.ts": "import './drawingControls.css';
+  "client/src/drawingControls.ts": "import './drawingControls.css';
 import type {Store as SettingsStore} from './settingsStore';
 import type {Store as CanvasStore} from './canvasStore';
 
@@ -7907,7 +7907,7 @@ export const createDrawingControls = (
   return controls;
 };
 ",
-  "src/index.ts": "import {getUniqueId} from 'tinybase';
+  "client/src/index.ts": "import {getUniqueId} from 'tinybase';
 
 if (location.pathname === '/') {
   location.assign('/' + getUniqueId());
@@ -7918,7 +7918,7 @@ addEventListener('load', () => {
   app();
 });
 ",
-  "src/settingsStore.ts": "import {createStore} from 'tinybase';
+  "client/src/settingsStore.ts": "import {createStore} from 'tinybase';
 
 const STORE_ID = 'settings';
 
@@ -7928,7 +7928,7 @@ export const settingsStore = createStore()
 
 export type SettingsStore = typeof settingsStore;
 ",
-  "tsconfig.json": "{
+  "client/tsconfig.json": "{
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -7970,7 +7970,7 @@ npm run dev
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
-  "index.html": "<!doctype html>
+  "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -8143,7 +8143,7 @@ npm run dev
   </body>
 </html>
 ",
-  "package.json": "{
+  "client/package.json": "{
   "name": "test-ts-vanilla-game",
   "version": "1.0.0",
   "scripts": {
@@ -8162,7 +8162,7 @@ npm run dev
   }
 }
 ",
-  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
   <path stroke="#fff" stroke-width="80" fill="none"
     d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
   <path fill="#d81b60"
@@ -8170,7 +8170,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/app.ts": "import {store} from './store';
+  "client/src/app.ts": "import {store} from './store';
 
 import {createGame} from './game';
 
@@ -8181,7 +8181,7 @@ const app = () => {
 
 export {app};
 ",
-  "src/board.css": "#board {
+  "client/src/board.css": "#board {
   display: grid;
   grid-template-columns: repeat(3, 100px);
   grid-template-rows: repeat(3, 100px);
@@ -8195,7 +8195,7 @@ export {app};
   padding: 1px;
 }
 ",
-  "src/board.ts": "import './board.css';
+  "client/src/board.ts": "import './board.css';
 import type {GameStore} from './store';
 
 import {createSquare} from './square';
@@ -8238,7 +8238,7 @@ export const createBoard = (store: GameStore): HTMLDivElement => {
   return board;
 };
 ",
-  "src/button.css": "button {
+  "client/src/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
   border-radius: 0.25rem;
@@ -8264,7 +8264,7 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/button.ts": "import './button.css';
+  "client/src/button.ts": "import './button.css';
 
 export const createButton = (
   text: string,
@@ -8280,7 +8280,7 @@ export const createButton = (
   return button;
 };
 ",
-  "src/game.ts": "import type {GameStore} from './store';
+  "client/src/game.ts": "import type {GameStore} from './store';
 
 import {createButton} from './button';
 
@@ -8359,7 +8359,7 @@ export const createGame = (store: GameStore): HTMLDivElement => {
   return gameContainer;
 };
 ",
-  "src/gameStatus.css": "#gameStatus {
+  "client/src/gameStatus.css": "#gameStatus {
   text-align: center;
   font-size: 1.5rem;
   font-weight: 800;
@@ -8382,7 +8382,7 @@ export const createGame = (store: GameStore): HTMLDivElement => {
   }
 }
 ",
-  "src/gameStatus.ts": "import './gameStatus.css';
+  "client/src/gameStatus.ts": "import './gameStatus.css';
 import type {GameStore} from './store';
 
 export const createGameStatus = (store: GameStore): HTMLDivElement => {
@@ -8409,7 +8409,7 @@ export const createGameStatus = (store: GameStore): HTMLDivElement => {
   return status;
 };
 ",
-  "src/index.ts": "import {getUniqueId} from 'tinybase';
+  "client/src/index.ts": "import {getUniqueId} from 'tinybase';
 
 if (location.pathname === '/') {
   location.assign('/' + getUniqueId());
@@ -8420,7 +8420,7 @@ addEventListener('load', () => {
   app();
 });
 ",
-  "src/square.css": ".square {
+  "client/src/square.css": ".square {
   width: 100px;
   height: 100px;
   background: var(--bg2);
@@ -8459,7 +8459,7 @@ addEventListener('load', () => {
   color: var(--bg);
 }
 ",
-  "src/square.ts": "import './square.css';
+  "client/src/square.ts": "import './square.css';
 
 export const createSquare = (
   position: number,
@@ -8476,7 +8476,7 @@ export const createSquare = (
   return square;
 };
 ",
-  "src/store.ts": "import {createMergeableStore} from 'tinybase';
+  "client/src/store.ts": "import {createMergeableStore} from 'tinybase';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 
@@ -8502,7 +8502,7 @@ createWsSynchronizer(
 
 export type GameStore = typeof store;
 ",
-  "tsconfig.json": "{
+  "client/tsconfig.json": "{
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -8544,7 +8544,7 @@ npm run dev
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
-  "index.html": "<!doctype html>
+  "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -8717,7 +8717,7 @@ npm run dev
   </body>
 </html>
 ",
-  "package.json": "{
+  "client/package.json": "{
   "name": "test-ts-vanilla-todos",
   "version": "1.0.0",
   "scripts": {
@@ -8736,7 +8736,7 @@ npm run dev
   }
 }
 ",
-  "public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
   <path stroke="#fff" stroke-width="80" fill="none"
     d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
   <path fill="#d81b60"
@@ -8744,7 +8744,7 @@ npm run dev
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "src/app.ts": "import {store} from './store';
+  "client/src/app.ts": "import {store} from './store';
 
 import {createTodoInput} from './todoInput';
 
@@ -8765,7 +8765,7 @@ const app = () => {
 
 export {app};
 ",
-  "src/button.css": "button {
+  "client/src/button.css": "button {
   padding: 0.5rem 1rem;
   border: 1px solid #666;
   border-radius: 0.25rem;
@@ -8791,7 +8791,7 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "src/button.ts": "import './button.css';
+  "client/src/button.ts": "import './button.css';
 
 export const createButton = (
   text: string,
@@ -8807,7 +8807,7 @@ export const createButton = (
   return button;
 };
 ",
-  "src/index.ts": "import {getUniqueId} from 'tinybase';
+  "client/src/index.ts": "import {getUniqueId} from 'tinybase';
 
 if (location.pathname === '/') {
   location.assign('/' + getUniqueId());
@@ -8818,7 +8818,7 @@ addEventListener('load', () => {
   app();
 });
 ",
-  "src/input.css": "input[type='text'] {
+  "client/src/input.css": "input[type='text'] {
   padding: 0.5rem 0.75rem;
   background: var(--bg);
   border: 1px solid var(--border);
@@ -8841,7 +8841,7 @@ input[type='text']::placeholder {
   color: var(--fg2);
 }
 ",
-  "src/input.ts": "import './input.css';
+  "client/src/input.ts": "import './input.css';
 
 export const createInput = (
   placeholder: string = '',
@@ -8858,7 +8858,7 @@ export const createInput = (
   return input;
 };
 ",
-  "src/store.ts": "import {createMergeableStore} from 'tinybase';
+  "client/src/store.ts": "import {createMergeableStore} from 'tinybase';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 
@@ -8885,7 +8885,7 @@ createWsSynchronizer(
 
 export type TodosStore = typeof store;
 ",
-  "src/todoInput.css": "#todoInput {
+  "client/src/todoInput.css": "#todoInput {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
@@ -8895,7 +8895,7 @@ export type TodosStore = typeof store;
   flex: 1;
 }
 ",
-  "src/todoInput.ts": "import './todoInput.css';
+  "client/src/todoInput.ts": "import './todoInput.css';
 import {type TodosStore} from './store';
 
 import {createButton} from './button';
@@ -8931,7 +8931,7 @@ export const createTodoInput = (store: TodosStore): HTMLDivElement => {
   return container;
 };
 ",
-  "src/todoItem.css": ".todoItem {
+  "client/src/todoItem.css": ".todoItem {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -8965,7 +8965,7 @@ export const createTodoInput = (store: TodosStore): HTMLDivElement => {
   flex-shrink: 0;
 }
 ",
-  "src/todoItem.ts": "import './todoItem.css';
+  "client/src/todoItem.ts": "import './todoItem.css';
 
 import {createButton} from './button';
 
@@ -8998,7 +8998,7 @@ export const createTodoItem = (
   return item;
 };
 ",
-  "src/todoList.css": "#todoList {
+  "client/src/todoList.css": "#todoList {
   border: 1px solid var(--border);
   border-radius: 0.375rem;
   overflow: hidden;
@@ -9013,7 +9013,7 @@ export const createTodoItem = (
   color: var(--fg2);
 }
 ",
-  "src/todoList.ts": "import './todoList.css';
+  "client/src/todoList.ts": "import './todoList.css';
 import {type TodosStore} from './store';
 
 import {createTodoItem} from './todoItem';
@@ -9050,7 +9050,7 @@ export const createTodoList = (store: TodosStore): HTMLDivElement => {
   return list;
 };
 ",
-  "tsconfig.json": "{
+  "client/tsconfig.json": "{
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,

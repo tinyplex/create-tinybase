@@ -1,0 +1,21 @@
+{{includeFile template="client/src/game/gameStatus.css.hbs" output="client/src/gameStatus.css"}}
+import './gameStatus.css';
+import {useValue, STORE_ID} from './Store';
+
+export const GameStatus = () => {
+const gameStatus = useValue('gameStatus', STORE_ID);
+const currentPlayer = useValue('currentPlayer', STORE_ID);
+const winner = useValue('winner', STORE_ID);
+
+return (
+<div id="gameStatus">
+  {gameStatus === 'playing' && (
+  <>Player <span className="player">{currentPlayer}</span>'s turn</>
+  )}
+  {gameStatus === 'won' && (
+  <>Player <span className="winner">{winner}</span> wins!</>
+  )}
+  {gameStatus === 'draw' && <>It's a draw!</>}
+</div>
+);
+};

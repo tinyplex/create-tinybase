@@ -1,0 +1,23 @@
+{{includeFile template="client/src/game/square.css.hbs" output="client/src/square.css"}}
+import './square.css';
+import {useCell, useStore, useValue, STORE_ID} from './Store';
+
+export const Square = ({position, disabled, winning}: {position: number; disabled: boolean; winning: boolean}) => {
+const store = useStore(STORE_ID);
+const value = useCell('board', position.toString(), 'value', STORE_ID);
+const currentPlayer = useValue('currentPlayer', STORE_ID);
+
+const isDisabled = disabled || !!value;
+
+const handleClick = () => {
+if (!isDisabled) {
+store.setCell('board', position.toString(), 'value', currentPlayer);
+}
+};
+
+return (
+<button className={`square${isDisabled ? ' disabled' : '' }${winning ? ' winning' : '' }`} onClick={handleClick} disabled={isDisabled}>
+  {value || ''}
+</button>
+);
+};

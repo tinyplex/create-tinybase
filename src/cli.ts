@@ -74,6 +74,24 @@ const config = {
       initial: true,
     },
     {
+      type: (prev: unknown, answers: Record<string, unknown>) =>
+        answers.sync ? ('confirm' as const) : null,
+      name: 'server',
+      message: 'Add code for server?',
+      initial: false,
+    },
+    {
+      type: (prev: unknown, answers: Record<string, unknown>) =>
+        answers.server ? ('select' as const) : null,
+      name: 'serverType',
+      message: 'Server type:',
+      choices: [
+        {title: 'Node', value: 'node'},
+        {title: 'Durable Objects', value: 'durable-objects'},
+      ],
+      initial: 0,
+    },
+    {
       type: 'confirm' as const,
       name: 'prettier',
       message: 'Include Prettier?',
@@ -97,6 +115,8 @@ const config = {
       eslint,
       schemas,
       sync,
+      server,
+      serverType,
     } = answers;
     const typescript = language === 'typescript';
     const javascript = !typescript;
@@ -112,6 +132,8 @@ const config = {
       eslint,
       schemas: typescript && (schemas === true || schemas === 'true'),
       sync: sync === true || sync === 'true',
+      server: server === true || server === 'true',
+      serverType: serverType || 'node',
       typescript,
       javascript,
       react,
@@ -119,26 +141,43 @@ const config = {
     };
   },
 
-  createDirectories: async (targetDir: string) => {
+  createDirectories: async (targetDir: string, context: Record<string, unknown>) => {
     const {mkdir} = await import('fs/promises');
     const {join} = await import('path');
-    await mkdir(join(targetDir, 'src'), {recursive: true});
-    await mkdir(join(targetDir, 'public'), {recursive: true});
+    const server = context.server as boolean;
+    
+    await mkdir(join(targetDir, 'client/src'), {recursive: true});
+    await mkdir(join(targetDir, 'client/public'), {recursive: true});
+    
+    if (server) {
+      await mkdir(join(targetDir, 'server'), {recursive: true});
+    }
   },
 
-  getFiles: () => {
-    return [
-      {
-        template: 'package.json.hbs',
-        output: 'package.json',
-        prettier: true,
-      },
+  getFiles: (context: TemplateContext) => {
+    const server = context.server as boolean;
+    const files = [
       {
         template: 'README.md.hbs',
         output: 'README.md',
         prettier: true,
       },
+      {
+        template: 'client/package.json.hbs',
+        output: 'client/package.json',
+        prettier: true,
+      },
     ];
+    
+    if (server) {
+      files.push({
+        template: 'package.json.hbs',
+        output: 'package.json',
+        prettier: true,
+      });
+    }
+    
+    return files;
   },
 
   processIncludedFile: (file: FileConfig, context: TemplateContext) => {

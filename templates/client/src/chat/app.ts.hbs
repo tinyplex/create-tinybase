@@ -1,0 +1,32 @@
+{{includeFile template="client/src/chat/settingsStore.ts.hbs" output="client/src/settingsStore.ts"}}
+import {settingsStore} from './settingsStore';
+{{includeFile template="client/src/chat/chatStore.ts.hbs" output="client/src/chatStore.ts"}}
+import {chatStore} from './chatStore';
+{{includeFile template="client/src/shared/button.ts.hbs" output="client/src/button.{{ext}}"}}
+import {createButton} from './button';
+{{includeFile template="client/src/shared/input.ts.hbs" output="client/src/input.{{ext}}"}}
+import {createInput} from './input';
+{{includeFile template="client/src/chat/message.ts.hbs" output="client/src/message.{{ext}}"}}
+import {createMessage} from './message';
+{{includeFile template="client/src/chat/messages.ts.hbs" output="client/src/messages.{{ext}}"}}
+import {createMessages} from './messages';
+{{includeFile template="client/src/chat/usernameInput.ts.hbs" output="client/src/usernameInput.{{ext}}"}}
+import {createUsernameInput} from './usernameInput';
+{{includeFile template="client/src/chat/messageInput.ts.hbs" output="client/src/messageInput.{{ext}}"}}
+import {createMessageInput} from './messageInput';
+
+const app = () => {
+const appContainer = document.getElementById('app')!;
+
+appContainer.appendChild(createUsernameInput(settingsStore, chatStore));
+appContainer.appendChild(createMessages(chatStore));
+
+const messageInputContainer = createMessageInput(settingsStore, chatStore);
+appContainer.appendChild(messageInputContainer);
+
+// Focus the input after it's in the DOM
+const messageInput = messageInputContainer.querySelector('input')!;
+messageInput.focus();
+};
+
+export {app};

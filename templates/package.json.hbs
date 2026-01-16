@@ -1,76 +1,32 @@
+{{includeFile template="README.md.hbs" output="README.md"}}
+{{#if server}}
 {
 "name": "{{projectName}}",
 "version": "1.0.0",
+"private": true,
 "scripts": {
 {{#list}}
-  {{includeFile template="index.html.hbs" output="index.html"}}
-  "dev": "vite"
-  {{#if typescript}}
-    "build": "tsc && vite build"
-  {{else}}
-    "build": "vite build"
-  {{/if}}
-  "preview": "vite preview"
-  {{#if prettier}}
-    "format": "prettier --write ."
-    "format:check": "prettier --check ."
-  {{/if}}
-  {{#if eslint}}
-    "lint": "eslint ."
-  {{/if}}
+  "dev": "concurrently \"npm run dev -w client\" \"npm run dev -w server\""
+  "dev:client": "npm run dev -w client"
+  "dev:server": "npm run dev -w server"
+  "build": "npm run build -w client"
+  "preview": "npm run preview -w client"
 {{/list}}
 },
+"workspaces": ["client", "server"],
 "devDependencies": {
 {{#list}}
-  "vite": "^7.1.3"
-  {{#if typescript}}
-    "typescript": "^5.9.3"
-    "@types/node": "^25.0.3"
-    {{#if react}}
-      "@types/react": "^19.2.7"
-      "@types/react-dom": "^19.2.3"
-    {{/if}}
-  {{/if}}
-  {{#if react}}
-    "@vitejs/plugin-react": "^4.3.4"
-  {{/if}}
-  {{#if prettier}}
-    "prettier": "^3.7.4"
-  {{/if}}
-  {{#if eslint}}
-    "eslint": "^9.39.2"
-    {{#if typescript}}
-      "typescript-eslint": "^8.51.0"
-    {{/if}}
-    {{#if react}}
-      "eslint-plugin-react": "7.37.5"
-      "eslint-plugin-react-hooks": "^7.0.1"
-    {{/if}}
-  {{/if}}
-{{/list}}
-},
-"dependencies": {
-{{#list}}
-  "tinybase": "^7.3.1"
-  {{#if react}}
-    "react": "^19.2.3"
-    "react-dom": "^19.2.3"
-  {{/if}}
-  {{#if sync}}
-    "reconnecting-websocket": "^4.4.0"
-  {{/if}}
+  "concurrently": "^9.1.2"
 {{/list}}
 }
 }
+{{#if (eq serverType "node")}}
+  {{includeFile template="server/package-node.json.hbs" output="server/package.json"}}
+{{else}}
+  {{includeFile template="server/package-durable-objects.json.hbs" output="server/package.json"}}
+{{/if}}
+{{/if}}
 {{#if prettier}}
-  {{includeFile template=".prettierrc.hbs" output=".prettierrc"}}
+  {{includeFile template="client/.prettierrc.hbs" output=".prettierrc"}}
 {{/if}}
-{{#if eslint}}
-  {{includeFile template="eslint.config.js.hbs" output="eslint.config.js"}}
-{{/if}}
-{{#if react}}
-  {{includeFile template="vite.config.js.hbs" output="vite.config.js"}}
-{{/if}}
-{{#if typescript}}
-  {{includeFile template="tsconfig.json.hbs" output="tsconfig.json"}}
-{{/if}}
+{{includeFile template="client/package.json.hbs" output="client/package.json"}}

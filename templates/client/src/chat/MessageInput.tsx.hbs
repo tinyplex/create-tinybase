@@ -1,0 +1,40 @@
+{{includeFile template="client/src/chat/messageInput.css.hbs" output="client/src/messageInput.css"}}
+import {useState} from 'react';
+import {useAddRowCallback, STORE_ID as CHAT_STORE_ID} from './ChatStore';
+import {useValue, STORE_ID as SETTINGS_STORE_ID} from './SettingsStore';
+import './messageInput.css';
+{{includeFile template="client/src/shared/Button.tsx.hbs" output="client/src/Button.{{ext}}"}}
+import {Button} from './Button';
+{{includeFile template="client/src/shared/Input.tsx.hbs" output="client/src/Input.{{ext}}"}}
+import {Input} from './Input';
+
+export const MessageInput = () => {
+const [message, setMessage] = useState('');
+const username = useValue('username', SETTINGS_STORE_ID) || 'Anonymous';
+
+const handleSend = useAddRowCallback(
+'messages',
+() => ({
+username,
+text: message,
+timestamp: Date.now(),
+}),
+[message, username],
+CHAT_STORE_ID,
+);
+
+const onSubmit = (e: React.FormEvent) => {
+e.preventDefault();
+if (message.trim()) {
+handleSend();
+setMessage('');
+}
+};
+
+return (
+<form onSubmit={onSubmit} id="messageInput">
+  <Input value={message} onChange={setMessage} placeholder="Type a message..." autoFocus />
+  <Button type="submit" variant="primary">Send</Button>
+</form>
+);
+};

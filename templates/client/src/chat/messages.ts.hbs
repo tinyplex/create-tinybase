@@ -1,0 +1,32 @@
+{{includeFile template="client/src/chat/messages.css.hbs" output="client/src/messages.css"}}
+import './messages.css';
+import {type ChatStore} from './chatStore';
+{{includeFile template="client/src/chat/message.ts.hbs" output="client/src/message.{{ext}}"}}
+import {createMessage} from './message';
+
+export const createMessages = (store: ChatStore): HTMLDivElement => {
+const messagesContainer = document.createElement('div');
+messagesContainer.id = 'messages';
+
+const updateMessages = () => {
+const messageRows = store.getTable('messages');
+const sortedIds = Object.keys(messageRows).sort(
+(a, b) => messageRows[a].timestamp - messageRows[b].timestamp,
+);
+
+messagesContainer.innerHTML = '';
+sortedIds.forEach((id) => {
+const msg = messageRows[id];
+const messageElement = createMessage(msg.username, msg.text, msg.timestamp);
+messagesContainer.appendChild(messageElement);
+});
+};
+
+// Initial render
+updateMessages();
+
+// Listen for changes
+store.addTablesListener(updateMessages);
+
+return messagesContainer;
+};

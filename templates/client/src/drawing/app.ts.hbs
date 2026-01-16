@@ -1,0 +1,17 @@
+{{includeFile template="client/src/drawing/settingsStore.ts.hbs" output="client/src/settingsStore.ts"}}
+import {settingsStore} from './settingsStore';
+{{includeFile template="client/src/drawing/canvasStore.ts.hbs" output="client/src/canvasStore.ts"}}
+import {canvasStore} from './canvasStore';
+{{includeFile template="client/src/drawing/drawingControls.ts.hbs" output="client/src/drawingControls.{{ext}}"}}
+import {createDrawingControls} from './drawingControls';
+{{includeFile template="client/src/drawing/canvas.ts.hbs" output="client/src/canvas.{{ext}}"}}
+import {createCanvas} from './canvas';
+
+const app = () => {
+const appContainer = document.getElementById('app')!;
+
+appContainer.appendChild(createDrawingControls(settingsStore, canvasStore));
+appContainer.appendChild(createCanvas(settingsStore, canvasStore));
+};
+
+export {app};

@@ -1,0 +1,8 @@
+import {createWsServer} from 'tinybase/synchronizers/synchronizer-ws-server';
+import {WebSocketServer} from 'ws';
+
+const PORT = 8043;
+
+const wsServer = createWsServer(new WebSocketServer({port: PORT}));
+
+console.log(`WebSocket server running on ws://localhost:${PORT}`);

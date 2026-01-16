@@ -1,0 +1,27 @@
+{{includeFile template="client/src/todos/todoItem.css.hbs" output="client/src/todoItem.css"}}
+import './todoItem.css';
+{{includeFile template="client/src/shared/button.ts.hbs" output="client/src/button.{{ext}}"}}
+import {createButton} from './button';
+
+export const createTodoItem = (id: string, text: string, completed: boolean, onToggle: () => void, onDelete: () => void): HTMLDivElement => {
+const item = document.createElement('div');
+item.className = `todoItem${completed ? ' completed' : ''}`;
+
+const checkbox = document.createElement('input');
+checkbox.type = 'checkbox';
+checkbox.checked = completed;
+checkbox.id = `todo-${id}`;
+checkbox.addEventListener('change', onToggle);
+
+const label = document.createElement('label');
+label.textContent = text;
+label.htmlFor = `todo-${id}`;
+
+const deleteBtn = createButton('Delete', onDelete);
+
+item.appendChild(checkbox);
+item.appendChild(label);
+item.appendChild(deleteBtn);
+
+return item;
+};

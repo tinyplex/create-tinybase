@@ -216,7 +216,7 @@ describe('create-tinybase', () => {
       }, 10000);
 
       it('should have correct package.json', async () => {
-        const pkgPath = join(projectPath, 'package.json');
+        const pkgPath = join(projectPath, 'client', 'package.json');
         const pkg = JSON.parse(await readFile(pkgPath, 'utf-8'));
 
         expect(pkg.name).toBe(projectName);
@@ -233,26 +233,26 @@ describe('create-tinybase', () => {
       it('should have correct file structure', async () => {
         const files = await getFileList(projectPath);
 
-        expect(files).toContain('package.json');
-        expect(files).toContain('index.html');
+        expect(files).toContain('client/package.json');
+        expect(files).toContain('client/index.html');
         expect(files).toContain('README.md');
 
-        const srcFiles = files.filter((f) => f.startsWith('src/'));
+        const srcFiles = files.filter((f) => f.startsWith('client/src/'));
         expect(srcFiles.length).toBeGreaterThan(0);
 
         if (combo.language === 'typescript') {
-          expect(files).toContain('tsconfig.json');
+          expect(files).toContain('client/tsconfig.json');
         }
 
         if (combo.framework === 'react') {
-          expect(files).toContain('vite.config.js');
+          expect(files).toContain('client/vite.config.js');
         }
       });
 
       it('should have valid source files', async () => {
         const files = await getFileList(projectPath);
         const srcFiles = files.filter(
-          (f) => f.startsWith('src/') && !f.endsWith('.css'),
+          (f) => f.startsWith('client/src/') && !f.endsWith('.css'),
         );
 
         expect(srcFiles.length).toBeGreaterThan(0);
@@ -297,12 +297,12 @@ describe('create-tinybase', () => {
       );
       const files = await getFileList(projectPath);
 
-      expect(files).toContain('.prettierrc');
-      expect(files).toContain('eslint.config.js');
-      expect(files).toContain('package.json');
+      expect(files).toContain('client/.prettierrc');
+      expect(files).toContain('client/eslint.config.js');
+      expect(files).toContain('client/package.json');
 
       const pkg = JSON.parse(
-        await readFile(join(projectPath, 'package.json'), 'utf-8'),
+        await readFile(join(projectPath, 'client', 'package.json'), 'utf-8'),
       );
       expect(pkg.devDependencies).toHaveProperty('prettier');
       expect(pkg.devDependencies).toHaveProperty('eslint');
@@ -312,7 +312,7 @@ describe('create-tinybase', () => {
       expect(pkg.scripts).toHaveProperty('lint');
 
       const eslintConfig = await readFile(
-        join(projectPath, 'eslint.config.js'),
+        join(projectPath, 'client', 'eslint.config.js'),
         'utf-8',
       );
       expect(eslintConfig).toContain(

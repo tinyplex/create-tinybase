@@ -1,0 +1,76 @@
+{
+"name": "{{projectName}}{{#if server}}-client{{/if}}",
+"version": "1.0.0",
+"scripts": {
+{{#list}}
+  {{includeFile template="client/index.html.hbs" output="client/index.html"}}
+  "dev": "vite"
+  {{#if typescript}}
+    "build": "tsc && vite build"
+  {{else}}
+    "build": "vite build"
+  {{/if}}
+  "preview": "vite preview"
+  {{#if prettier}}
+    "format": "prettier --write ."
+    "format:check": "prettier --check ."
+  {{/if}}
+  {{#if eslint}}
+    "lint": "eslint ."
+  {{/if}}
+{{/list}}
+},
+"devDependencies": {
+{{#list}}
+  "vite": "^7.1.3"
+  {{#if typescript}}
+    "typescript": "^5.9.3"
+    "@types/node": "^25.0.3"
+    {{#if react}}
+      "@types/react": "^19.2.7"
+      "@types/react-dom": "^19.2.3"
+    {{/if}}
+  {{/if}}
+  {{#if react}}
+    "@vitejs/plugin-react": "^4.3.4"
+  {{/if}}
+  {{#if prettier}}
+    "prettier": "^3.7.4"
+  {{/if}}
+  {{#if eslint}}
+    "eslint": "^9.39.2"
+    {{#if typescript}}
+      "typescript-eslint": "^8.51.0"
+    {{/if}}
+    {{#if react}}
+      "eslint-plugin-react": "7.37.5"
+      "eslint-plugin-react-hooks": "^7.0.1"
+    {{/if}}
+  {{/if}}
+{{/list}}
+},
+"dependencies": {
+{{#list}}
+  "tinybase": "^7.3.1"
+  {{#if react}}
+    "react": "^19.2.3"
+    "react-dom": "^19.2.3"
+  {{/if}}
+  {{#if sync}}
+    "reconnecting-websocket": "^4.4.0"
+  {{/if}}
+{{/list}}
+}
+}
+{{#if prettier}}
+  {{includeFile template="client/.prettierrc.hbs" output="client/.prettierrc"}}
+{{/if}}
+{{#if eslint}}
+  {{includeFile template="client/eslint.config.js.hbs" output="client/eslint.config.js"}}
+{{/if}}
+{{#if react}}
+  {{includeFile template="client/vite.config.js.hbs" output="client/vite.config.js"}}
+{{/if}}
+{{#if typescript}}
+  {{includeFile template="client/tsconfig.json.hbs" output="client/tsconfig.json"}}
+{{/if}}

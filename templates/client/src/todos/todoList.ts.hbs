@@ -1,0 +1,37 @@
+{{includeFile template="client/src/todos/todoList.css.hbs" output="client/src/todoList.css"}}
+import './todoList.css';
+import {type TodosStore} from './store';
+{{includeFile template="client/src/todos/todoItem.ts.hbs" output="client/src/todoItem.{{ext}}"}}
+import {createTodoItem} from './todoItem';
+
+export const createTodoList = (store: TodosStore): HTMLDivElement => {
+const list = document.createElement('div');
+list.id = 'todoList';
+
+const render = () => {
+const todos = store.getTable('todos');
+const todoIds = Object.keys(todos);
+
+list.innerHTML = '';
+todoIds.forEach((id) => {
+const todo = todos[id];
+const item = createTodoItem(
+id,
+todo.text,
+todo.completed,
+() => {
+store.setPartialRow('todos', id, {completed: !todo.completed});
+},
+() => {
+store.delRow('todos', id);
+}
+);
+list.appendChild(item);
+});
+};
+
+store.addTablesListener(render);
+render();
+
+return list;
+};
