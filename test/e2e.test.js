@@ -181,11 +181,14 @@ async function runCLI(projectName, language, framework, appType = 'todos') {
 }
 
 async function npmInstall(projectPath, force = false) {
+  // npm install needs to run in the client directory
+  const clientPath = join(projectPath, 'client');
+
   // Check if we can skip npm install by reusing existing node_modules
   if (!force) {
-    const nodeModulesPath = join(projectPath, 'node_modules');
-    const packageJsonPath = join(projectPath, 'package.json');
-    const cachedPackageJsonPath = join(projectPath, '.package.json.cache');
+    const nodeModulesPath = join(clientPath, 'node_modules');
+    const packageJsonPath = join(clientPath, 'package.json');
+    const cachedPackageJsonPath = join(clientPath, '.package.json.cache');
 
     if (existsSync(nodeModulesPath) && existsSync(cachedPackageJsonPath)) {
       try {
@@ -196,7 +199,7 @@ async function npmInstall(projectPath, force = false) {
         );
 
         if (currentPackageJson === cachedPackageJson) {
-          console.log(`  ⚡ Reusing node_modules for ${projectPath}`);
+          console.log(`  ⚡ Reusing node_modules for ${clientPath}`);
           return {output: 'Reused existing node_modules', errorOutput: ''};
         }
       } catch (err) {
@@ -207,7 +210,7 @@ async function npmInstall(projectPath, force = false) {
 
   return new Promise((resolve, reject) => {
     const npm = spawn('npm', ['install'], {
-      cwd: projectPath,
+      cwd: clientPath,
       stdio: 'pipe',
     });
 
@@ -232,11 +235,8 @@ async function npmInstall(projectPath, force = false) {
       } else {
         // Cache the package.json for future comparisons
         try {
-          const packageJsonPath = join(projectPath, 'package.json');
-          const cachedPackageJsonPath = join(
-            projectPath,
-            '.package.json.cache',
-          );
+          const packageJsonPath = join(clientPath, 'package.json');
+          const cachedPackageJsonPath = join(clientPath, '.package.json.cache');
           await cp(packageJsonPath, cachedPackageJsonPath);
         } catch (err) {
           // Ignore caching errors
@@ -250,9 +250,12 @@ async function npmInstall(projectPath, force = false) {
 }
 
 async function startDevServer(projectPath, port) {
+  // Dev server needs to run in the client directory
+  const clientPath = join(projectPath, 'client');
+
   return new Promise((resolve, reject) => {
     const dev = spawn('npm', ['run', 'dev', '--', '--port', port.toString()], {
-      cwd: projectPath,
+      cwd: clientPath,
       stdio: 'pipe',
       env: {...process.env, PORT: port.toString()},
     });
@@ -383,12 +386,13 @@ describe('e2e tests', {concurrent: false}, () => {
       async () => {
         const projectName = `test-${combo.name}`;
         const projectPath = join(TEST_DIR, projectName);
+        const clientPath = join(projectPath, 'client');
         const port = BASE_PORT + index;
 
         // Preserve node_modules if it exists
         const nodeModulesBackup = join(TEST_DIR, `${projectName}-node_modules`);
-        const nodeModulesPath = join(projectPath, 'node_modules');
-        const cacheFile = join(projectPath, '.package.json.cache');
+        const nodeModulesPath = join(clientPath, 'node_modules');
+        const cacheFile = join(clientPath, '.package.json.cache');
 
         if (existsSync(projectPath) && !process.env.CLEAN_E2E) {
           if (existsSync(nodeModulesPath)) {
