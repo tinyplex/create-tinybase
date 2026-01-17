@@ -3,13 +3,13 @@
 {{else}}
   import {createMergeableStore} from 'tinybase';
 {{/if}}
+import {getUniqueId} from 'tinybase';
 
 const STORE_ID = 'canvas';
 
 {{#if schemas}}
   const TABLES_SCHEMA = {
   strokes: {
-  points: {type: 'string'},
   color: {type: 'string'},
   size: {type: 'number'},
   },

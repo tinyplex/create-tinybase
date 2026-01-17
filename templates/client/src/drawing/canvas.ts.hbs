@@ -1,5 +1,6 @@
 {{includeFile template="client/src/drawing/canvas.css.hbs" output="client/src/canvas.css"}}
 import './canvas.css';
+import {getUniqueId} from 'tinybase';
 import type {Store as SettingsStore} from './settingsStore';
 import type {Store as CanvasStore} from './canvasStore';
 
@@ -11,56 +12,96 @@ canvas.height = 400;
 
 const ctx = canvas.getContext('2d')!;
 let isDrawing = false;
+let currentStrokeId: string | null = null;
+let pointIndex = 0;
 
 const draw = () => {
 ctx.fillStyle = '#111';
 ctx.fillRect(0, 0, canvas!.width, canvas!.height);
 
 const strokes = canvasStore.getTable('strokes');
-Object.values(strokes).forEach((stroke: any) => {
-ctx.fillStyle = stroke.color;
+Object.entries(strokes).forEach(([id, stroke]: [string, any]) => {
+const points: Array<{x: number; y: number}> = [];
+let i = 0;
+while (stroke[`x${i}`] !== undefined && stroke[`y${i}`] !== undefined) {
+points.push({x: stroke[`x${i}`], y: stroke[`y${i}`]});
+i++;
+}
+if (points.length > 0) {
+ctx.strokeStyle = stroke.color;
+ctx.lineWidth = stroke.size * 2;
+ctx.lineCap = 'round';
+ctx.lineJoin = 'round';
 ctx.beginPath();
-ctx.arc(stroke.x, stroke.y, stroke.size, 0, Math.PI * 2);
-ctx.fill();
+ctx.moveTo(points[0].x, points[0].y);
+for (let i = 1; i < points.length; i++) {
+ctx.lineTo(points[i].x, points[i].y);
+}
+ctx.stroke();
+}
 });
 };
 
-const addStroke = (e: MouseEvent | TouchEvent) => {
+const addPoint = (e: MouseEvent | TouchEvent) => {
+if (!currentStrokeId) return;
+
 const rect = canvas!.getBoundingClientRect();
 const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
 const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
-const brush = settingsStore.getValues() as any;
 
-canvasStore.addRow('strokes', {
-x: clientX - rect.left,
-y: clientY - rect.top,
+canvasStore.setCell('strokes', currentStrokeId, `x${pointIndex}`, clientX - rect.left);
+canvasStore.setCell('strokes', currentStrokeId, `y${pointIndex}`, clientY - rect.top);
+pointIndex++;
+};
+
+const startStroke = (e: MouseEvent | TouchEvent) => {
+const brush = settingsStore.getValues() as any;
+currentStrokeId = getUniqueId();
+pointIndex = 0;
+
+canvasStore.setRow('strokes', currentStrokeId, {
 color: brush.brushColor,
 size: brush.brushSize,
 });
+
+addPoint(e);
 };
 
-canvas.addEventListener('mousedown', () => { isDrawing = true; });
-canvas.addEventListener('mouseup', () => { isDrawing = false; });
-canvas.addEventListener('mouseleave', () => { isDrawing = false; });
+canvas.addEventListener('mousedown', (e) => {
+isDrawing = true;
+startStroke(e);
+});
+
+canvas.addEventListener('mouseup', () => {
+isDrawing = false;
+currentStrokeId = null;
+});
+
+canvas.addEventListener('mouseleave', () => {
+isDrawing = false;
+currentStrokeId = null;
+});
 
 canvas.addEventListener('mousemove', (e) => {
-if (isDrawing) addStroke(e);
+if (isDrawing) addPoint(e);
 });
 
 canvas.addEventListener('touchstart', (e) => {
 isDrawing = true;
+startStroke(e);
 e.preventDefault();
 });
 
 canvas.addEventListener('touchmove', (e) => {
 if (isDrawing) {
-addStroke(e);
+addPoint(e);
 e.preventDefault();
 }
 });
 
 canvas.addEventListener('touchend', () => {
 isDrawing = false;
+currentStrokeId = null;
 });
 
 canvasStore.addTablesListener(draw);

@@ -6,13 +6,13 @@
   import {createMergeableStore} from 'tinybase';
   import {useCreateStore, useProvideStore, useAddRowCallback, useDelTableCallback, useRow, useRowIds, useStore, useTable} from 'tinybase/ui-react';
 {{/if}}
+import {getUniqueId} from 'tinybase';
 
 export const STORE_ID = 'canvas';
 
 {{#if schemas}}
   const TABLES_SCHEMA = {
   strokes: {
-  points: {type: 'string'},
   color: {type: 'string'},
   size: {type: 'number'},
   },
