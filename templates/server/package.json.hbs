@@ -1,0 +1,51 @@
+{
+"name": "{{projectName}}-server",
+"version": "1.0.0",
+"type": "module",
+"main": "index.ts",
+"scripts": {
+{{#list}}
+  {{#if (eq serverType "node")}}
+    {{includeFile template="server/index-node.ts.hbs" output="server/index.ts"}}
+    "dev": "tsx watch index.ts"
+    "start": "node index.js"
+  {{else}}
+    {{includeFile template="server/index-do.ts.hbs" output="server/index.ts"}}
+    {{includeFile template="server/wrangler.toml.hbs" output="server/wrangler.toml"}}
+    {{#if typescript}}
+      {{includeFile template="server/tsconfig.json.hbs" output="server/tsconfig.json"}}
+    {{/if}}
+    "deploy": "wrangler deploy"
+    "dev": "wrangler dev"
+    "start": "wrangler dev"
+  {{/if}}
+{{/list}}
+},
+"dependencies": {
+{{#list}}
+  "tinybase": "^7.3.1"
+  {{#if (eq serverType "node")}}
+    "ws": "^8.18.3"
+  {{/if}}
+{{/list}}
+},
+"devDependencies": {
+{{#list}}
+  {{#if (eq serverType "node")}}
+    "@types/ws": "^8.18.1"
+  {{else}}
+    "@cloudflare/workers-types": "^4.20250828.1"
+  {{/if}}
+  {{#if typescript}}
+    "typescript": "^5.9.3"
+    {{#if (eq serverType "node")}}
+      "tsx": "^4.19.3"
+    {{/if}}
+  {{/if}}
+  {{#if (eq serverType "durable-objects")}}
+    "wrangler": "^4.33.1"
+  {{/if}}
+{{/list}}
+}
+}
+}
