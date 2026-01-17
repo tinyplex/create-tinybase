@@ -3,12 +3,6 @@
 {{else}}
   import {createMergeableStore} from 'tinybase';
 {{/if}}
-{{#if sync}}
-  import ReconnectingWebSocket from 'reconnecting-websocket';
-  import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-
-  const SERVER = 'wss://vite.tinybase.org';
-{{/if}}
 
 const STORE_ID = 'canvas';
 
@@ -27,6 +21,11 @@ export const canvasStore = createMergeableStore(STORE_ID){{#if schemas}}
 .setTable('strokes', {});
 
 {{#if sync}}
+  {{includeFile template="client/src/shared/config.ts.hbs" output="client/src/config.ts"}}
+  {{addImport "import {SERVER} from './config';"}}
+  {{addImport "import ReconnectingWebSocket from 'reconnecting-websocket';"}}
+  {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';"}}
+
   const serverPathId = location.pathname;
   createWsSynchronizer(
   canvasStore,

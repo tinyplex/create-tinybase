@@ -1,12 +1,15 @@
 import {StrictMode} from 'react';
+
 {{#if schemas}}
   import {Provider} from 'tinybase/ui-react/with-schemas';
 {{else}}
   import {Provider} from 'tinybase/ui-react';
 {{/if}}
 import {Inspector} from 'tinybase/ui-react-inspector';
+
 {{includeFile template="client/src/game/Store.tsx.hbs" output="client/src/Store.{{ext}}"}}
 import {Store} from './Store';
+
 {{includeFile template="client/src/game/Game.tsx.hbs" output="client/src/Game.{{ext}}"}}
 import {Game} from './Game';
 

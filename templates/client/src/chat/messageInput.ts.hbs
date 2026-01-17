@@ -2,8 +2,10 @@
 import './messageInput.css';
 import {type SettingsStore} from './settingsStore';
 import {type ChatStore} from './chatStore';
+
 {{includeFile template="client/src/shared/button.ts.hbs" output="client/src/button.{{ext}}"}}
 import {createButton} from './button';
+
 {{includeFile template="client/src/shared/input.ts.hbs" output="client/src/input.{{ext}}"}}
 import {createInput} from './input';
 

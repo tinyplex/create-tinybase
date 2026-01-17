@@ -1,6 +1,7 @@
 {{includeFile template="client/src/chat/messages.css.hbs" output="client/src/messages.css"}}
 import './messages.css';
 import {type ChatStore} from './chatStore';
+
 {{includeFile template="client/src/chat/message.ts.hbs" output="client/src/message.{{ext}}"}}
 import {createMessage} from './message';
 

@@ -6,14 +6,6 @@
   import {createMergeableStore} from 'tinybase';
   import {useCreateStore, useProvideStore, useAddRowCallback, useDelRowCallback, useRow, useRowIds, useSetPartialRowCallback} from 'tinybase/ui-react';
 {{/if}}
-{{#if sync}}
-  import ReconnectingWebSocket from 'reconnecting-websocket';
-  import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-  import {useCreateSynchronizer} from 'tinybase/ui-react';
-  import type {MergeableStore} from 'tinybase';
-
-  const SERVER = 'wss://vite.tinybase.org';
-{{/if}}
 
 export const STORE_ID = 'todos';
 
@@ -45,6 +37,13 @@ createMergeableStore(STORE_ID){{#if schemas}}
 useProvideStore(STORE_ID, store);
 
 {{#if sync}}
+  {{includeFile template="client/src/shared/config.ts.hbs" output="client/src/config.ts"}}
+  {{addImport "import {SERVER} from './config';"}}
+  {{addImport "import ReconnectingWebSocket from 'reconnecting-websocket';"}}
+  {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';"}}
+  {{addImport "import {useCreateSynchronizer} from 'tinybase/ui-react';"}}
+  {{addImport "import type {MergeableStore} from 'tinybase';"}}
+
   useCreateSynchronizer(store, async (store: MergeableStore) => {
   const serverPathId = location.pathname;
   const synchronizer = await createWsSynchronizer(

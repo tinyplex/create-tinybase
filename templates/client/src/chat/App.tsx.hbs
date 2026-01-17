@@ -1,18 +1,24 @@
 import {StrictMode} from 'react';
+
 {{#if schemas}}
   import {Provider} from 'tinybase/ui-react/with-schemas';
 {{else}}
   import {Provider} from 'tinybase/ui-react';
 {{/if}}
 import {Inspector} from 'tinybase/ui-react-inspector';
+
 {{includeFile template="client/src/chat/SettingsStore.tsx.hbs" output="client/src/SettingsStore.{{ext}}"}}
 import {SettingsStore} from './SettingsStore';
+
 {{includeFile template="client/src/chat/ChatStore.tsx.hbs" output="client/src/ChatStore.{{ext}}"}}
 import {ChatStore} from './ChatStore';
+
 {{includeFile template="client/src/chat/UsernameInput.tsx.hbs" output="client/src/UsernameInput.{{ext}}"}}
 import {UsernameInput} from './UsernameInput';
+
 {{includeFile template="client/src/chat/Messages.tsx.hbs" output="client/src/Messages.{{ext}}"}}
 import {Messages} from './Messages';
+
 {{includeFile template="client/src/chat/MessageInput.tsx.hbs" output="client/src/MessageInput.{{ext}}"}}
 import {MessageInput} from './MessageInput';
 

@@ -2,10 +2,13 @@
 import './drawingControls.css';
 import type {Store as SettingsStore} from './settingsStore';
 import type {Store as CanvasStore} from './canvasStore';
+
 {{includeFile template="client/src/shared/button.ts.hbs" output="client/src/button.{{ext}}"}}
 import {createButton} from './button';
+
 {{includeFile template="client/src/drawing/colorPicker.ts.hbs" output="client/src/colorPicker.{{ext}}"}}
 import {createColorPicker} from './colorPicker';
+
 {{includeFile template="client/src/drawing/brushSize.ts.hbs" output="client/src/brushSize.{{ext}}"}}
 import {createBrushSize} from './brushSize';
 

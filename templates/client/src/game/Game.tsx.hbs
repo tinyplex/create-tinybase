@@ -1,8 +1,11 @@
 import {useStore, useSetValuesCallback, useTableListener} from './Store';
+
 {{includeFile template="client/src/shared/Button.tsx.hbs" output="client/src/Button.{{ext}}"}}
 import {Button} from './Button';
+
 {{includeFile template="client/src/game/Board.tsx.hbs" output="client/src/Board.{{ext}}"}}
 import {Board} from './Board';
+
 {{includeFile template="client/src/game/GameStatus.tsx.hbs" output="client/src/GameStatus.{{ext}}"}}
 import {GameStatus} from './GameStatus';
 

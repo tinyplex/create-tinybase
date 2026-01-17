@@ -1,16 +1,21 @@
 import {StrictMode} from 'react';
+
 {{#if schemas}}
   import {Provider} from 'tinybase/ui-react/with-schemas';
 {{else}}
   import {Provider} from 'tinybase/ui-react';
 {{/if}}
 import {Inspector} from 'tinybase/ui-react-inspector';
+
 {{includeFile template="client/src/drawing/SettingsStore.tsx.hbs" output="client/src/SettingsStore.{{ext}}"}}
 import {SettingsStore} from './SettingsStore';
+
 {{includeFile template="client/src/drawing/CanvasStore.tsx.hbs" output="client/src/CanvasStore.{{ext}}"}}
 import {CanvasStore} from './CanvasStore';
+
 {{includeFile template="client/src/drawing/DrawingControls.tsx.hbs" output="client/src/DrawingControls.{{ext}}"}}
 import {DrawingControls} from './DrawingControls';
+
 {{includeFile template="client/src/drawing/Canvas.tsx.hbs" output="client/src/Canvas.{{ext}}"}}
 import {Canvas} from './Canvas';
 

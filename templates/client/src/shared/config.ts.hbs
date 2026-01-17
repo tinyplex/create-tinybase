@@ -1,0 +1,9 @@
+{{#if server}}
+  {{#if (eq serverType "node")}}
+    export const SERVER = 'ws://localhost:8043';
+  {{else}}
+    export const SERVER = 'ws://localhost:8787';
+  {{/if}}
+{{else}}
+  export const SERVER = 'wss://vite.tinybase.org';
+{{/if}}

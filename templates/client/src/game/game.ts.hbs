@@ -1,8 +1,11 @@
 import type {GameStore} from './store';
+
 {{includeFile template="client/src/shared/button.ts.hbs" output="client/src/button.{{ext}}"}}
 import {createButton} from './button';
+
 {{includeFile template="client/src/game/board.ts.hbs" output="client/src/board.{{ext}}"}}
 import {createBoard} from './board';
+
 {{includeFile template="client/src/game/gameStatus.ts.hbs" output="client/src/gameStatus.{{ext}}"}}
 import {createGameStatus} from './gameStatus';
 

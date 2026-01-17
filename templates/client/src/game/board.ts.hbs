@@ -1,6 +1,7 @@
 {{includeFile template="client/src/game/board.css.hbs" output="client/src/board.css"}}
 import './board.css';
 import type {GameStore} from './store';
+
 {{includeFile template="client/src/game/square.ts.hbs" output="client/src/square.{{ext}}"}}
 import {createSquare} from './square';
 
