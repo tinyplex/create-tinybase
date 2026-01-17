@@ -22,90 +22,82 @@ ctx.fillRect(0, 0, canvas!.width, canvas!.height);
 const strokes = canvasStore.getTable('strokes');
 Object.entries(strokes).forEach(([id, stroke]: [string, any]) => {
 const points: Array<{x: number; y: number}> = [];
-let i = 0;
-while (stroke[`x${i}`] !== undefined && stroke[`y${i}`] !== undefined) {
-points.push({x: stroke[`x${i}`], y: stroke[`y${i}`]});
-i++;
-}
-if (points.length > 0) {
-ctx.strokeStyle = stroke.color;
-ctx.lineWidth = stroke.size * 2;
-ctx.lineCap = 'round';
-ctx.lineJoin = 'round';
-ctx.beginPath();
-ctx.moveTo(points[0].x, points[0].y);
-for (let i = 1; i < points.length; i++) {
-ctx.lineTo(points[i].x, points[i].y);
-}
-ctx.stroke();
-}
-});
-};
+  let i = 0;
+  while (stroke[`x${i}`] !== undefined && stroke[`y${i}`] !== undefined) {
+  points.push({x: stroke[`x${i}`], y: stroke[`y${i}`]});
+  i++;
+  }
+  if (points.length > 0) {
+  ctx.strokeStyle = stroke.color;
+  ctx.lineWidth = stroke.size * 2;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+  for (let i = 1; i < points.length; i++) { ctx.lineTo(points[i].x, points[i].y); } ctx.stroke(); } }); }; const addPoint=(e: MouseEvent | TouchEvent)=> {
+    if (!currentStrokeId) return;
 
-const addPoint = (e: MouseEvent | TouchEvent) => {
-if (!currentStrokeId) return;
+    const rect = canvas!.getBoundingClientRect();
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
 
-const rect = canvas!.getBoundingClientRect();
-const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    canvasStore.setCell('strokes', currentStrokeId, `x${pointIndex}`, clientX - rect.left);
+    canvasStore.setCell('strokes', currentStrokeId, `y${pointIndex}`, clientY - rect.top);
+    pointIndex++;
+    };
 
-canvasStore.setCell('strokes', currentStrokeId, `x${pointIndex}`, clientX - rect.left);
-canvasStore.setCell('strokes', currentStrokeId, `y${pointIndex}`, clientY - rect.top);
-pointIndex++;
-};
+    const startStroke = (e: MouseEvent | TouchEvent) => {
+    const brush = settingsStore.getValues() as any;
+    currentStrokeId = getUniqueId();
+    pointIndex = 0;
 
-const startStroke = (e: MouseEvent | TouchEvent) => {
-const brush = settingsStore.getValues() as any;
-currentStrokeId = getUniqueId();
-pointIndex = 0;
+    canvasStore.setRow('strokes', currentStrokeId, {
+    color: brush.brushColor,
+    size: brush.brushSize,
+    });
 
-canvasStore.setRow('strokes', currentStrokeId, {
-color: brush.brushColor,
-size: brush.brushSize,
-});
+    addPoint(e);
+    };
 
-addPoint(e);
-};
+    canvas.addEventListener('mousedown', (e) => {
+    isDrawing = true;
+    startStroke(e);
+    });
 
-canvas.addEventListener('mousedown', (e) => {
-isDrawing = true;
-startStroke(e);
-});
+    canvas.addEventListener('mouseup', () => {
+    isDrawing = false;
+    currentStrokeId = null;
+    });
 
-canvas.addEventListener('mouseup', () => {
-isDrawing = false;
-currentStrokeId = null;
-});
+    canvas.addEventListener('mouseleave', () => {
+    isDrawing = false;
+    currentStrokeId = null;
+    });
 
-canvas.addEventListener('mouseleave', () => {
-isDrawing = false;
-currentStrokeId = null;
-});
+    canvas.addEventListener('mousemove', (e) => {
+    if (isDrawing) addPoint(e);
+    });
 
-canvas.addEventListener('mousemove', (e) => {
-if (isDrawing) addPoint(e);
-});
+    canvas.addEventListener('touchstart', (e) => {
+    isDrawing = true;
+    startStroke(e);
+    e.preventDefault();
+    });
 
-canvas.addEventListener('touchstart', (e) => {
-isDrawing = true;
-startStroke(e);
-e.preventDefault();
-});
+    canvas.addEventListener('touchmove', (e) => {
+    if (isDrawing) {
+    addPoint(e);
+    e.preventDefault();
+    }
+    });
 
-canvas.addEventListener('touchmove', (e) => {
-if (isDrawing) {
-addPoint(e);
-e.preventDefault();
-}
-});
+    canvas.addEventListener('touchend', () => {
+    isDrawing = false;
+    currentStrokeId = null;
+    });
 
-canvas.addEventListener('touchend', () => {
-isDrawing = false;
-currentStrokeId = null;
-});
+    canvasStore.addTablesListener(draw);
+    draw();
 
-canvasStore.addTablesListener(draw);
-draw();
-
-return canvas;
-};
+    return canvas;
+    };

@@ -6,15 +6,15 @@ import {getUniqueId} from 'tinybase';
 import './canvas.css';
 
 export const Canvas = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+const canvasRef = useRef<HTMLCanvasElement>(null);
   const isDrawing = useRef(false);
   const currentStrokeId = useRef<string | null>(null);
-  const pointIndex = useRef(0);
-  const brush = useValues(SETTINGS_STORE_ID);
-  const strokes = useTable('strokes', CANVAS_STORE_ID);
-  const store = useStore(CANVAS_STORE_ID);
+    const pointIndex = useRef(0);
+    const brush = useValues(SETTINGS_STORE_ID);
+    const strokes = useTable('strokes', CANVAS_STORE_ID);
+    const store = useStore(CANVAS_STORE_ID);
 
-  const draw = useCallback(() => {
+    const draw = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -25,96 +25,76 @@ export const Canvas = () => {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     Object.entries(strokes).forEach(([id, stroke]) => {
-      if (stroke) {
-        const points: Array<{x: number; y: number}> = [];
-        let i = 0;
-        while (stroke[`x${i}`] !== undefined && stroke[`y${i}`] !== undefined) {
-          points.push({x: stroke[`x${i}`] as number, y: stroke[`y${i}`] as number});
-          i++;
-        }
-        if (points.length > 0) {
-          ctx.strokeStyle = stroke.color as string;
-          ctx.lineWidth = (stroke.size as number) * 2;
-          ctx.lineCap = 'round';
-          ctx.lineJoin = 'round';
-          ctx.beginPath();
-          ctx.moveTo(points[0].x, points[0].y);
-          for (let i = 1; i < points.length; i++) {
-            ctx.lineTo(points[i].x, points[i].y);
-          }
-          ctx.stroke();
-        }
+    if (stroke) {
+    const points: Array<{x: number; y: number}> = [];
+      let i = 0;
+      while (stroke[`x${i}`] !== undefined && stroke[`y${i}`] !== undefined) {
+      points.push({x: stroke[`x${i}`] as number, y: stroke[`y${i}`] as number});
+      i++;
       }
-    });
-  }, [strokes]);
+      if (points.length > 0) {
+      ctx.strokeStyle = stroke.color as string;
+      ctx.lineWidth = (stroke.size as number) * 2;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, points[0].y);
+      for (let i = 1; i < points.length; i++) { ctx.lineTo(points[i].x, points[i].y); } ctx.stroke(); } } }); }, [strokes]); useEffect(()=> {
+        draw();
+        }, [draw]);
 
-  useEffect(() => {
-    draw();
-  }, [draw]);
+        const getPoint = (e: MouseEvent | TouchEvent) => {
+        const canvas = canvasRef.current;
+        if (!canvas) return null;
 
-  const getPoint = (e: MouseEvent | TouchEvent) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return null;
+        const rect = canvas.getBoundingClientRect();
+        const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+        const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
 
-    const rect = canvas.getBoundingClientRect();
-    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+        return {
+        x: clientX - rect.left,
+        y: clientY - rect.top,
+        };
+        };
 
-    return {
-      x: clientX - rect.left,
-      y: clientY - rect.top,
-    };
-  };
+        const handleStart = (e: React.MouseEvent | React.TouchEvent) => {
+        isDrawing.current = true;
+        pointIndex.current = 0;
+        currentStrokeId.current = getUniqueId();
 
-  const handleStart = (e: React.MouseEvent | React.TouchEvent) => {
-    isDrawing.current = true;
-    pointIndex.current = 0;
-    currentStrokeId.current = getUniqueId();
-    
-    store.setRow('strokes', currentStrokeId.current, {
-      color: brush.brushColor,
-      size: brush.brushSize,
-    });
+        store.setRow('strokes', currentStrokeId.current, {
+        color: brush.brushColor,
+        size: brush.brushSize,
+        });
 
-    const point = getPoint(e.nativeEvent);
-    if (point) {
-      store.setCell('strokes', currentStrokeId.current, 'x0', point.x);
-      store.setCell('strokes', currentStrokeId.current, 'y0', point.y);
-      pointIndex.current = 1;
-    }
-  };
+        const point = getPoint(e.nativeEvent);
+        if (point) {
+        store.setCell('strokes', currentStrokeId.current, 'x0', point.x);
+        store.setCell('strokes', currentStrokeId.current, 'y0', point.y);
+        pointIndex.current = 1;
+        }
+        };
 
-  const handleMove = (e: React.MouseEvent | React.TouchEvent) => {
-    if (isDrawing.current && currentStrokeId.current) {
-      const point = getPoint(e.nativeEvent);
-      if (point) {
+        const handleMove = (e: React.MouseEvent | React.TouchEvent) => {
+        if (isDrawing.current && currentStrokeId.current) {
+        const point = getPoint(e.nativeEvent);
+        if (point) {
         const idx = pointIndex.current;
         store.setCell('strokes', currentStrokeId.current, `x${idx}`, point.x);
         store.setCell('strokes', currentStrokeId.current, `y${idx}`, point.y);
         pointIndex.current++;
-      }
-    }
-  };
+        }
+        }
+        };
 
-  const handleEnd = () => {
-    isDrawing.current = false;
-    currentStrokeId.current = null;
-    pointIndex.current = 0;
-  };
+        const handleEnd = () => {
+        isDrawing.current = false;
+        currentStrokeId.current = null;
+        pointIndex.current = 0;
+        };
 
-  return (
-    <canvas
-      ref={canvasRef}
-      width={600}
-      height={400}
-      id="drawingCanvas"
-      onMouseDown={handleStart}
-      onMouseMove={handleMove}
-      onMouseUp={handleEnd}
-      onMouseLeave={handleEnd}
-      onTouchStart={handleStart}
-      onTouchMove={handleMove}
-      onTouchEnd={handleEnd}
-    />
-  );
-};
+        return (
+        <canvas ref={canvasRef} width={600} height={400} id="drawingCanvas" onMouseDown={handleStart} onMouseMove={handleMove} onMouseUp={handleEnd} onMouseLeave={handleEnd} onTouchStart={handleStart} onTouchMove={handleMove}
+          onTouchEnd={handleEnd} />
+        );
+        };
