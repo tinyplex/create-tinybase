@@ -17,10 +17,15 @@ const STORE_ID = 'todos';
 {{/if}}
 export const store = createMergeableStore(STORE_ID){{#if schemas}}
   .setTablesSchema(TODOS_SCHEMA){{/if}}
-.setTable('todos', {
+.setDefaultContent([
+{
+todos: {
 '1': {text: 'Learn TinyBase', completed: false},
 '2': {text: 'Build an app', completed: false},
-});
+},
+},
+{},
+]);
 
 {{#if sync}}
   {{includeFile template="client/src/shared/config.ts.hbs" output="client/src/config.ts"}}

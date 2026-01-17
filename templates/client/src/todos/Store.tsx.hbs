@@ -28,10 +28,15 @@ export const Store = () => {
 const store = useCreateStore(() =>
 createMergeableStore(STORE_ID){{#if schemas}}
   .setTablesSchema(TODOS_SCHEMA){{/if}}
-.setTable('todos', {
+.setDefaultContent([
+{
+todos: {
 '1': {text: 'Learn TinyBase', completed: false},
 '2': {text: 'Build an app', completed: false},
-}),
+},
+},
+{},
+]),
 );
 
 useProvideStore(STORE_ID, store);

@@ -29,10 +29,15 @@ export const ChatStore = () => {
 const store = useCreateStore(() =>
 createMergeableStore(STORE_ID){{#if schemas}}
   .setTablesSchema(TABLES_SCHEMA){{/if}}
-.setTable('messages', {
+.setDefaultContent([
+{
+messages: {
 '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
 '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
-}),
+},
+},
+{},
+]),
 );
 
 useProvideStore(STORE_ID, store);

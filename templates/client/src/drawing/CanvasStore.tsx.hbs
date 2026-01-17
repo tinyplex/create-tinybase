@@ -29,7 +29,7 @@ export const CanvasStore = () => {
 const store = useCreateStore(() =>
 createMergeableStore(STORE_ID){{#if schemas}}
   .setTablesSchema(TABLES_SCHEMA){{/if}}
-.setTable('strokes', {}),
+.setDefaultContent([{strokes: {}}, {}]),
 );
 
 useProvideStore(STORE_ID, store);
