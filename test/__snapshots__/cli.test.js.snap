@@ -9,6 +9,7 @@ A TinyBase app built with JavaScript and React.
 ## Getting Started
 
 \`\`\`bash
+cd client
 npm install
 npm run dev
 \`\`\`
@@ -255,7 +256,11 @@ const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
 );
 export {Button};
 ",
-  "client/src/ChatStore.jsx": "import {createMergeableStore} from 'tinybase';
+  "client/src/ChatStore.jsx": "import {SERVER} from './config';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+import {useCreateSynchronizer} from 'tinybase/ui-react';
+import {createMergeableStore} from 'tinybase';
 import {
   useCreateStore,
   useProvideStore,
@@ -264,17 +269,18 @@ import {
   useRowIds,
   useStore,
 } from 'tinybase/ui-react';
-import ReconnectingWebSocket from 'reconnecting-websocket';
-import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-import {useCreateSynchronizer} from 'tinybase/ui-react';
-const SERVER = 'wss://vite.tinybase.org';
 const STORE_ID = 'chat';
 const ChatStore = () => {
   const store = useCreateStore(() =>
-    createMergeableStore(STORE_ID).setTable('messages', {
-      1: {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 6e4},
-      2: {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 3e4},
-    }),
+    createMergeableStore(STORE_ID).setDefaultContent([
+      {
+        messages: {
+          1: {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 6e4},
+          2: {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 3e4},
+        },
+      },
+      {},
+    ]),
   );
   useProvideStore(STORE_ID, store);
   useCreateSynchronizer(store, async (store2) => {
@@ -448,6 +454,9 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
+  "client/src/config.js": "const SERVER = 'wss://vite.tinybase.org';
+export {SERVER};
+",
   "client/src/index.jsx": "import {getUniqueId} from 'tinybase';
 if (location.pathname === '/') {
   location.assign('/' + getUniqueId());
@@ -554,6 +563,7 @@ A TinyBase app built with JavaScript and React.
 ## Getting Started
 
 \`\`\`bash
+cd client
 npm install
 npm run dev
 \`\`\`
@@ -819,38 +829,18 @@ const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
 export {Button};
 ",
   "client/src/Canvas.jsx": "import {useCallback, useEffect, useRef} from 'react';
-import {
-  useAddRowCallback,
-  useRowIds,
-  useTable,
-  STORE_ID as CANVAS_STORE_ID,
-} from './CanvasStore';
+import {useTable, useStore, STORE_ID as CANVAS_STORE_ID} from './CanvasStore';
 import {useValues, STORE_ID as SETTINGS_STORE_ID} from './SettingsStore';
+import {getUniqueId} from 'tinybase';
 import './canvas.css';
 const Canvas = () => {
   const canvasRef = useRef(null);
   const isDrawing = useRef(false);
+  const currentStrokeId = useRef(null);
+  const pointIndex = useRef(0);
   const brush = useValues(SETTINGS_STORE_ID);
-  const strokes = useRowIds('strokes', CANVAS_STORE_ID);
-  const strokesTable = useTable('strokes', CANVAS_STORE_ID);
-  const addStroke = useAddRowCallback(
-    'strokes',
-    (e) => {
-      const canvas = canvasRef.current;
-      if (!canvas) return null;
-      const rect = canvas.getBoundingClientRect();
-      const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-      const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
-      return {
-        x: clientX - rect.left,
-        y: clientY - rect.top,
-        color: brush.brushColor,
-        size: brush.brushSize,
-      };
-    },
-    [brush],
-    CANVAS_STORE_ID,
-  );
+  const strokes = useTable('strokes', CANVAS_STORE_ID);
+  const store = useStore(CANVAS_STORE_ID);
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -858,30 +848,73 @@ const Canvas = () => {
     if (!ctx) return;
     ctx.fillStyle = '#111';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    strokes.forEach((id) => {
-      const stroke = strokesTable[id];
+    Object.entries(strokes).forEach(([id, stroke]) => {
       if (stroke) {
-        ctx.fillStyle = stroke.color;
-        ctx.beginPath();
-        ctx.arc(stroke.x, stroke.y, stroke.size, 0, Math.PI * 2);
-        ctx.fill();
+        const points = [];
+        let i = 0;
+        while (stroke[\`x\${i}\`] !== void 0 && stroke[\`y\${i}\`] !== void 0) {
+          points.push({x: stroke[\`x\${i}\`], y: stroke[\`y\${i}\`]});
+          i++;
+        }
+        if (points.length > 0) {
+          ctx.strokeStyle = stroke.color;
+          ctx.lineWidth = stroke.size * 2;
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+          ctx.beginPath();
+          ctx.moveTo(points[0].x, points[0].y);
+          for (let i2 = 1; i2 < points.length; i2++) {
+            ctx.lineTo(points[i2].x, points[i2].y);
+          }
+          ctx.stroke();
+        }
       }
     });
-  }, [strokes, strokesTable]);
+  }, [strokes]);
   useEffect(() => {
     draw();
   }, [draw]);
+  const getPoint = (e) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return null;
+    const rect = canvas.getBoundingClientRect();
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    return {
+      x: clientX - rect.left,
+      y: clientY - rect.top,
+    };
+  };
   const handleStart = (e) => {
     isDrawing.current = true;
-    addStroke(e.nativeEvent);
+    pointIndex.current = 0;
+    currentStrokeId.current = getUniqueId();
+    store.setRow('strokes', currentStrokeId.current, {
+      color: brush.brushColor,
+      size: brush.brushSize,
+    });
+    const point = getPoint(e.nativeEvent);
+    if (point) {
+      store.setCell('strokes', currentStrokeId.current, 'x0', point.x);
+      store.setCell('strokes', currentStrokeId.current, 'y0', point.y);
+      pointIndex.current = 1;
+    }
   };
   const handleMove = (e) => {
-    if (isDrawing.current) {
-      addStroke(e.nativeEvent);
+    if (isDrawing.current && currentStrokeId.current) {
+      const point = getPoint(e.nativeEvent);
+      if (point) {
+        const idx = pointIndex.current;
+        store.setCell('strokes', currentStrokeId.current, \`x\${idx}\`, point.x);
+        store.setCell('strokes', currentStrokeId.current, \`y\${idx}\`, point.y);
+        pointIndex.current++;
+      }
     }
   };
   const handleEnd = () => {
     isDrawing.current = false;
+    currentStrokeId.current = null;
+    pointIndex.current = 0;
   };
   return (
     <canvas
@@ -901,7 +934,11 @@ const Canvas = () => {
 };
 export {Canvas};
 ",
-  "client/src/CanvasStore.jsx": "import {createMergeableStore} from 'tinybase';
+  "client/src/CanvasStore.jsx": "import {SERVER} from './config';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+import {useCreateSynchronizer} from 'tinybase/ui-react';
+import {createMergeableStore} from 'tinybase';
 import {
   useCreateStore,
   useProvideStore,
@@ -912,14 +949,10 @@ import {
   useStore,
   useTable,
 } from 'tinybase/ui-react';
-import ReconnectingWebSocket from 'reconnecting-websocket';
-import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-import {useCreateSynchronizer} from 'tinybase/ui-react';
-const SERVER = 'wss://vite.tinybase.org';
 const STORE_ID = 'canvas';
 const CanvasStore = () => {
   const store = useCreateStore(() =>
-    createMergeableStore(STORE_ID).setTable('strokes', {}),
+    createMergeableStore(STORE_ID).setDefaultContent([{strokes: {}}, {}]),
   );
   useProvideStore(STORE_ID, store);
   useCreateSynchronizer(store, async (store2) => {
@@ -1096,6 +1129,9 @@ button.primary:hover {
   border-color: var(--accent);
 }
 ",
+  "client/src/config.js": "const SERVER = 'wss://vite.tinybase.org';
+export {SERVER};
+",
   "client/src/drawingControls.css": "#drawingControls {
   display: flex;
   flex-wrap: wrap;
@@ -1142,6 +1178,7 @@ A TinyBase app built with JavaScript and React.
 ## Getting Started
 
 \`\`\`bash
+cd client
 npm install
 npm run dev
 \`\`\`
@@ -1409,7 +1446,12 @@ const Button = ({children, onClick, variant = 'default', type = 'button'}) => (
 );
 export {Button};
 ",
-  "client/src/Game.jsx": "import {useStore, useSetValuesCallback, useTableListener} from './Store';
+  "client/src/Game.jsx": "import {
+  useStore,
+  useSetValuesCallback,
+  useTableListener,
+  STORE_ID,
+} from './Store';
 import {Button} from './Button';
 import {Board} from './Board';
 import {GameStatus} from './GameStatus';
@@ -1458,6 +1500,7 @@ const Game = () => {
     },
     [],
     true,
+    STORE_ID,
   );
   const resetGame = useSetValuesCallback(() => {
     store.delTable('board');
@@ -1528,7 +1571,11 @@ const Square = ({position, disabled, winning}) => {
 };
 export {Square};
 ",
-  "client/src/Store.jsx": "import {createMergeableStore} from 'tinybase';
+  "client/src/Store.jsx": "import {SERVER} from './config';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+import {useCreateSynchronizer} from 'tinybase/ui-react';
+import {createMergeableStore} from 'tinybase';
 import {
   useCreateStore,
   useProvideStore,
@@ -1538,16 +1585,16 @@ import {
   useCell,
   useValue,
 } from 'tinybase/ui-react';
-import ReconnectingWebSocket from 'reconnecting-websocket';
-import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-import {useCreateSynchronizer} from 'tinybase/ui-react';
-const SERVER = 'wss://vite.tinybase.org';
 const STORE_ID = 'game';
 const Store = () => {
   const store = useCreateStore(() =>
-    createMergeableStore(STORE_ID)
-      .setValue('currentPlayer', 'X')
-      .setValue('gameStatus', 'playing'),
+    createMergeableStore(STORE_ID).setDefaultContent([
+      {},
+      {
+        currentPlayer: 'X',
+        gameStatus: 'playing',
+      },
+    ]),
   );
   useProvideStore(STORE_ID, store);
   useCreateSynchronizer(store, async (store2) => {
@@ -1613,6 +1660,9 @@ button.primary {
 button.primary:hover {
   background: #c2185b;
 }
+",
+  "client/src/config.js": "const SERVER = 'wss://vite.tinybase.org';
+export {SERVER};
 ",
   "client/src/gameStatus.css": "#gameStatus {
   text-align: center;
@@ -1709,6 +1759,7 @@ A TinyBase app built with JavaScript and React.
 ## Getting Started
 
 \`\`\`bash
+cd client
 npm install
 npm run dev
 \`\`\`
@@ -1963,7 +2014,11 @@ const Input = ({value, onChange, placeholder = '', autoFocus = false}) => (
 );
 export {Input};
 ",
-  "client/src/Store.jsx": "import {createMergeableStore} from 'tinybase';
+  "client/src/Store.jsx": "import {SERVER} from './config';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+import {useCreateSynchronizer} from 'tinybase/ui-react';
+import {createMergeableStore} from 'tinybase';
 import {
   useCreateStore,
   useProvideStore,
@@ -1973,17 +2028,18 @@ import {
   useRowIds,
   useSetPartialRowCallback,
 } from 'tinybase/ui-react';
-import ReconnectingWebSocket from 'reconnecting-websocket';
-import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-import {useCreateSynchronizer} from 'tinybase/ui-react';
-const SERVER = 'wss://vite.tinybase.org';
 const STORE_ID = 'todos';
 const Store = () => {
   const store = useCreateStore(() =>
-    createMergeableStore(STORE_ID).setTable('todos', {
-      1: {text: 'Learn TinyBase', completed: false},
-      2: {text: 'Build an app', completed: false},
-    }),
+    createMergeableStore(STORE_ID).setDefaultContent([
+      {
+        todos: {
+          1: {text: 'Learn TinyBase', completed: false},
+          2: {text: 'Build an app', completed: false},
+        },
+      },
+      {},
+    ]),
   );
   useProvideStore(STORE_ID, store);
   useCreateSynchronizer(store, async (store2) => {
@@ -2120,6 +2176,9 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
+  "client/src/config.js": "const SERVER = 'wss://vite.tinybase.org';
+export {SERVER};
+",
   "client/src/index.jsx": "import {getUniqueId} from 'tinybase';
 if (location.pathname === '/') {
   location.assign('/' + getUniqueId());
@@ -2235,6 +2294,7 @@ A TinyBase app built with JavaScript and Vanilla JS.
 ## Getting Started
 
 \`\`\`bash
+cd client
 npm install
 npm run dev
 \`\`\`
@@ -2496,15 +2556,20 @@ const createButton = (text, onClick, variant = 'default') => {
 };
 export {createButton};
 ",
-  "client/src/chatStore.js": "import {createMergeableStore} from 'tinybase';
+  "client/src/chatStore.js": "import {SERVER} from './config';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-const SERVER = 'wss://vite.tinybase.org';
+import {createMergeableStore} from 'tinybase';
 const STORE_ID = 'chat';
-const chatStore = createMergeableStore(STORE_ID).setTable('messages', {
-  1: {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 6e4},
-  2: {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 3e4},
-});
+const chatStore = createMergeableStore(STORE_ID).setDefaultContent([
+  {
+    messages: {
+      1: {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 6e4},
+      2: {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 3e4},
+    },
+  },
+  {},
+]);
 const serverPathId = location.pathname;
 createWsSynchronizer(
   chatStore,
@@ -2516,6 +2581,9 @@ createWsSynchronizer(
   });
 });
 export {chatStore};
+",
+  "client/src/config.js": "const SERVER = 'wss://vite.tinybase.org';
+export {SERVER};
 ",
   "client/src/index.js": "import {getUniqueId} from 'tinybase';
 if (location.pathname === '/') {
@@ -2731,6 +2799,7 @@ A TinyBase app built with JavaScript and Vanilla JS.
 ## Getting Started
 
 \`\`\`bash
+cd client
 npm install
 npm run dev
 \`\`\`
@@ -3045,6 +3114,7 @@ export {createButton};
 }
 ",
   "client/src/canvas.js": "import './canvas.css';
+import {getUniqueId} from 'tinybase';
 const createCanvas = (settingsStore, canvasStore) => {
   const canvas = document.createElement('canvas');
   canvas.id = 'drawingCanvas';
@@ -3052,53 +3122,91 @@ const createCanvas = (settingsStore, canvasStore) => {
   canvas.height = 400;
   const ctx = canvas.getContext('2d');
   let isDrawing = false;
+  let currentStrokeId = null;
+  let pointIndex = 0;
   const draw = () => {
     ctx.fillStyle = '#111';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     const strokes = canvasStore.getTable('strokes');
-    Object.values(strokes).forEach((stroke) => {
-      ctx.fillStyle = stroke.color;
-      ctx.beginPath();
-      ctx.arc(stroke.x, stroke.y, stroke.size, 0, Math.PI * 2);
-      ctx.fill();
+    Object.entries(strokes).forEach(([id, stroke]) => {
+      const points = [];
+      let i = 0;
+      while (stroke[\`x\${i}\`] !== void 0 && stroke[\`y\${i}\`] !== void 0) {
+        points.push({x: stroke[\`x\${i}\`], y: stroke[\`y\${i}\`]});
+        i++;
+      }
+      if (points.length > 0) {
+        ctx.strokeStyle = stroke.color;
+        ctx.lineWidth = stroke.size * 2;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y);
+        for (let i2 = 1; i2 < points.length; i2++) {
+          ctx.lineTo(points[i2].x, points[i2].y);
+        }
+        ctx.stroke();
+      }
     });
   };
-  const addStroke = (e) => {
+  const addPoint = (e) => {
+    if (!currentStrokeId) return;
     const rect = canvas.getBoundingClientRect();
     const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
     const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    canvasStore.setCell(
+      'strokes',
+      currentStrokeId,
+      \`x\${pointIndex}\`,
+      clientX - rect.left,
+    );
+    canvasStore.setCell(
+      'strokes',
+      currentStrokeId,
+      \`y\${pointIndex}\`,
+      clientY - rect.top,
+    );
+    pointIndex++;
+  };
+  const startStroke = (e) => {
     const brush = settingsStore.getValues();
-    canvasStore.addRow('strokes', {
-      x: clientX - rect.left,
-      y: clientY - rect.top,
+    currentStrokeId = getUniqueId();
+    pointIndex = 0;
+    canvasStore.setRow('strokes', currentStrokeId, {
       color: brush.brushColor,
       size: brush.brushSize,
     });
+    addPoint(e);
   };
-  canvas.addEventListener('mousedown', () => {
+  canvas.addEventListener('mousedown', (e) => {
     isDrawing = true;
+    startStroke(e);
   });
   canvas.addEventListener('mouseup', () => {
     isDrawing = false;
+    currentStrokeId = null;
   });
   canvas.addEventListener('mouseleave', () => {
     isDrawing = false;
+    currentStrokeId = null;
   });
   canvas.addEventListener('mousemove', (e) => {
-    if (isDrawing) addStroke(e);
+    if (isDrawing) addPoint(e);
   });
   canvas.addEventListener('touchstart', (e) => {
     isDrawing = true;
+    startStroke(e);
     e.preventDefault();
   });
   canvas.addEventListener('touchmove', (e) => {
     if (isDrawing) {
-      addStroke(e);
+      addPoint(e);
       e.preventDefault();
     }
   });
   canvas.addEventListener('touchend', () => {
     isDrawing = false;
+    currentStrokeId = null;
   });
   canvasStore.addTablesListener(draw);
   draw();
@@ -3106,12 +3214,15 @@ const createCanvas = (settingsStore, canvasStore) => {
 };
 export {createCanvas};
 ",
-  "client/src/canvasStore.js": "import {createMergeableStore} from 'tinybase';
+  "client/src/canvasStore.js": "import {SERVER} from './config';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-const SERVER = 'wss://vite.tinybase.org';
+import {createMergeableStore} from 'tinybase';
 const STORE_ID = 'canvas';
-const canvasStore = createMergeableStore(STORE_ID).setTable('strokes', {});
+const canvasStore = createMergeableStore(STORE_ID).setDefaultContent([
+  {strokes: {}},
+  {},
+]);
 const serverPathId = location.pathname;
 createWsSynchronizer(
   canvasStore,
@@ -3181,6 +3292,9 @@ const createColorPicker = (store) => {
 };
 export {createColorPicker};
 ",
+  "client/src/config.js": "const SERVER = 'wss://vite.tinybase.org';
+export {SERVER};
+",
   "client/src/drawingControls.css": "#drawingControls {
   display: flex;
   flex-wrap: wrap;
@@ -3241,6 +3355,7 @@ A TinyBase app built with JavaScript and Vanilla JS.
 ## Getting Started
 
 \`\`\`bash
+cd client
 npm install
 npm run dev
 \`\`\`
@@ -3545,6 +3660,9 @@ const createButton = (text, onClick, variant = 'default') => {
 };
 export {createButton};
 ",
+  "client/src/config.js": "const SERVER = 'wss://vite.tinybase.org';
+export {SERVER};
+",
   "client/src/game.js": "import {createButton} from './button';
 import {createBoard} from './board';
 import {createGameStatus} from './gameStatus';
@@ -3712,14 +3830,18 @@ const createSquare = (position, value, onClick, disabled, winning) => {
 };
 export {createSquare};
 ",
-  "client/src/store.js": "import {createMergeableStore} from 'tinybase';
+  "client/src/store.js": "import {SERVER} from './config';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-const SERVER = 'wss://vite.tinybase.org';
+import {createMergeableStore} from 'tinybase';
 const STORE_ID = 'game';
-const store = createMergeableStore(STORE_ID)
-  .setValue('currentPlayer', 'X')
-  .setValue('gameStatus', 'playing');
+const store = createMergeableStore(STORE_ID).setDefaultContent([
+  {},
+  {
+    currentPlayer: 'X',
+    gameStatus: 'playing',
+  },
+]);
 const serverPathId = location.pathname;
 createWsSynchronizer(
   store,
@@ -3744,6 +3866,7 @@ A TinyBase app built with JavaScript and Vanilla JS.
 ## Getting Started
 
 \`\`\`bash
+cd client
 npm install
 npm run dev
 \`\`\`
@@ -4002,6 +4125,9 @@ const createButton = (text, onClick, variant = 'default') => {
 };
 export {createButton};
 ",
+  "client/src/config.js": "const SERVER = 'wss://vite.tinybase.org';
+export {SERVER};
+",
   "client/src/index.js": "import {getUniqueId} from 'tinybase';
 if (location.pathname === '/') {
   location.assign('/' + getUniqueId());
@@ -4047,15 +4173,20 @@ const createInput = (placeholder = '', value = '', onInput) => {
 };
 export {createInput};
 ",
-  "client/src/store.js": "import {createMergeableStore} from 'tinybase';
+  "client/src/store.js": "import {SERVER} from './config';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-const SERVER = 'wss://vite.tinybase.org';
+import {createMergeableStore} from 'tinybase';
 const STORE_ID = 'todos';
-const store = createMergeableStore(STORE_ID).setTable('todos', {
-  1: {text: 'Learn TinyBase', completed: false},
-  2: {text: 'Build an app', completed: false},
-});
+const store = createMergeableStore(STORE_ID).setDefaultContent([
+  {
+    todos: {
+      1: {text: 'Learn TinyBase', completed: false},
+      2: {text: 'Build an app', completed: false},
+    },
+  },
+  {},
+]);
 const serverPathId = location.pathname;
 createWsSynchronizer(
   store,
@@ -4218,6 +4349,7 @@ A TinyBase app built with TypeScript and React.
 ## Getting Started
 
 \`\`\`bash
+cd client
 npm install
 npm run dev
 \`\`\`
@@ -4433,6 +4565,7 @@ npm run dev
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "client/src/App.tsx": "import {StrictMode} from 'react';
+
 import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 
@@ -4488,7 +4621,13 @@ export const Button = ({
   </button>
 );
 ",
-  "client/src/ChatStore.tsx": "import {createMergeableStore} from 'tinybase';
+  "client/src/ChatStore.tsx": "import {SERVER} from './config';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+import {useCreateSynchronizer} from 'tinybase/ui-react';
+import type {MergeableStore} from 'tinybase';
+
+import {createMergeableStore} from 'tinybase';
 import {
   useCreateStore,
   useProvideStore,
@@ -4497,12 +4636,6 @@ import {
   useRowIds,
   useStore,
 } from 'tinybase/ui-react';
-import ReconnectingWebSocket from 'reconnecting-websocket';
-import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-import {useCreateSynchronizer} from 'tinybase/ui-react';
-import type {MergeableStore} from 'tinybase';
-
-const SERVER = 'wss://vite.tinybase.org';
 
 export const STORE_ID = 'chat';
 
@@ -4510,10 +4643,23 @@ export {useAddRowCallback, useRow, useRowIds, useStore};
 
 export const ChatStore = () => {
   const store = useCreateStore(() =>
-    createMergeableStore(STORE_ID).setTable('messages', {
-      '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
-      '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
-    }),
+    createMergeableStore(STORE_ID).setDefaultContent([
+      {
+        messages: {
+          '1': {
+            username: 'Alice',
+            text: 'Hello!',
+            timestamp: Date.now() - 60000,
+          },
+          '2': {
+            username: 'Bob',
+            text: 'Hi there!',
+            timestamp: Date.now() - 30000,
+          },
+        },
+      },
+      {},
+    ]),
   );
 
   useProvideStore(STORE_ID, store);
@@ -4725,6 +4871,8 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
+  "client/src/config.ts": "export const SERVER = 'wss://vite.tinybase.org';
+",
   "client/src/index.tsx": "import {getUniqueId} from 'tinybase';
 
 if (location.pathname === '/') {
@@ -4855,6 +5003,7 @@ A TinyBase app built with TypeScript and React.
 ## Getting Started
 
 \`\`\`bash
+cd client
 npm install
 npm run dev
 \`\`\`
@@ -5070,6 +5219,7 @@ npm run dev
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "client/src/App.tsx": "import {StrictMode} from 'react';
+
 import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 
@@ -5145,42 +5295,19 @@ export const Button = ({
 );
 ",
   "client/src/Canvas.tsx": "import {useCallback, useEffect, useRef} from 'react';
-import {
-  useAddRowCallback,
-  useRowIds,
-  useTable,
-  STORE_ID as CANVAS_STORE_ID,
-} from './CanvasStore';
+import {useTable, useStore, STORE_ID as CANVAS_STORE_ID} from './CanvasStore';
 import {useValues, STORE_ID as SETTINGS_STORE_ID} from './SettingsStore';
+import {getUniqueId} from 'tinybase';
 import './canvas.css';
 
 export const Canvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isDrawing = useRef(false);
+  const currentStrokeId = useRef<string | null>(null);
+  const pointIndex = useRef(0);
   const brush = useValues(SETTINGS_STORE_ID);
-  const strokes = useRowIds('strokes', CANVAS_STORE_ID);
-  const strokesTable = useTable('strokes', CANVAS_STORE_ID);
-
-  const addStroke = useAddRowCallback(
-    'strokes',
-    (e: MouseEvent | TouchEvent) => {
-      const canvas = canvasRef.current;
-      if (!canvas) return null;
-
-      const rect = canvas.getBoundingClientRect();
-      const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-      const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
-
-      return {
-        x: clientX - rect.left,
-        y: clientY - rect.top,
-        color: brush.brushColor,
-        size: brush.brushSize,
-      };
-    },
-    [brush],
-    CANVAS_STORE_ID,
-  );
+  const strokes = useTable('strokes', CANVAS_STORE_ID);
+  const store = useStore(CANVAS_STORE_ID);
 
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
@@ -5192,34 +5319,84 @@ export const Canvas = () => {
     ctx.fillStyle = '#111';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    strokes.forEach((id) => {
-      const stroke = strokesTable[id] as any;
+    Object.entries(strokes).forEach(([id, stroke]) => {
       if (stroke) {
-        ctx.fillStyle = stroke.color;
-        ctx.beginPath();
-        ctx.arc(stroke.x, stroke.y, stroke.size, 0, Math.PI * 2);
-        ctx.fill();
+        const points: Array<{x: number; y: number}> = [];
+        let i = 0;
+        while (stroke[\`x\${i}\`] !== undefined && stroke[\`y\${i}\`] !== undefined) {
+          points.push({
+            x: stroke[\`x\${i}\`] as number,
+            y: stroke[\`y\${i}\`] as number,
+          });
+          i++;
+        }
+        if (points.length > 0) {
+          ctx.strokeStyle = stroke.color as string;
+          ctx.lineWidth = (stroke.size as number) * 2;
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+          ctx.beginPath();
+          ctx.moveTo(points[0].x, points[0].y);
+          for (let i = 1; i < points.length; i++) {
+            ctx.lineTo(points[i].x, points[i].y);
+          }
+          ctx.stroke();
+        }
       }
     });
-  }, [strokes, strokesTable]);
-
+  }, [strokes]);
   useEffect(() => {
     draw();
   }, [draw]);
 
+  const getPoint = (e: MouseEvent | TouchEvent) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return null;
+
+    const rect = canvas.getBoundingClientRect();
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+
+    return {
+      x: clientX - rect.left,
+      y: clientY - rect.top,
+    };
+  };
+
   const handleStart = (e: React.MouseEvent | React.TouchEvent) => {
     isDrawing.current = true;
-    addStroke(e.nativeEvent);
+    pointIndex.current = 0;
+    currentStrokeId.current = getUniqueId();
+
+    store.setRow('strokes', currentStrokeId.current, {
+      color: brush.brushColor,
+      size: brush.brushSize,
+    });
+
+    const point = getPoint(e.nativeEvent);
+    if (point) {
+      store.setCell('strokes', currentStrokeId.current, 'x0', point.x);
+      store.setCell('strokes', currentStrokeId.current, 'y0', point.y);
+      pointIndex.current = 1;
+    }
   };
 
   const handleMove = (e: React.MouseEvent | React.TouchEvent) => {
-    if (isDrawing.current) {
-      addStroke(e.nativeEvent);
+    if (isDrawing.current && currentStrokeId.current) {
+      const point = getPoint(e.nativeEvent);
+      if (point) {
+        const idx = pointIndex.current;
+        store.setCell('strokes', currentStrokeId.current, \`x\${idx}\`, point.x);
+        store.setCell('strokes', currentStrokeId.current, \`y\${idx}\`, point.y);
+        pointIndex.current++;
+      }
     }
   };
 
   const handleEnd = () => {
     isDrawing.current = false;
+    currentStrokeId.current = null;
+    pointIndex.current = 0;
   };
 
   return (
@@ -5239,7 +5416,13 @@ export const Canvas = () => {
   );
 };
 ",
-  "client/src/CanvasStore.tsx": "import {createMergeableStore} from 'tinybase';
+  "client/src/CanvasStore.tsx": "import {SERVER} from './config';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+import {useCreateSynchronizer} from 'tinybase/ui-react';
+import type {MergeableStore} from 'tinybase';
+
+import {createMergeableStore} from 'tinybase';
 import {
   useCreateStore,
   useProvideStore,
@@ -5250,12 +5433,7 @@ import {
   useStore,
   useTable,
 } from 'tinybase/ui-react';
-import ReconnectingWebSocket from 'reconnecting-websocket';
-import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-import {useCreateSynchronizer} from 'tinybase/ui-react';
-import type {MergeableStore} from 'tinybase';
-
-const SERVER = 'wss://vite.tinybase.org';
+import {getUniqueId} from 'tinybase';
 
 export const STORE_ID = 'canvas';
 
@@ -5270,7 +5448,7 @@ export {
 
 export const CanvasStore = () => {
   const store = useCreateStore(() =>
-    createMergeableStore(STORE_ID).setTable('strokes', {}),
+    createMergeableStore(STORE_ID).setDefaultContent([{strokes: {}}, {}]),
   );
 
   useProvideStore(STORE_ID, store);
@@ -5453,6 +5631,8 @@ button.primary:hover {
   border-color: var(--accent);
 }
 ",
+  "client/src/config.ts": "export const SERVER = 'wss://vite.tinybase.org';
+",
   "client/src/drawingControls.css": "#drawingControls {
   display: flex;
   flex-wrap: wrap;
@@ -5523,6 +5703,7 @@ A TinyBase app built with TypeScript and React.
 ## Getting Started
 
 \`\`\`bash
+cd client
 npm install
 npm run dev
 \`\`\`
@@ -5738,6 +5919,7 @@ npm run dev
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "client/src/App.tsx": "import {StrictMode} from 'react';
+
 import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 
@@ -5815,7 +5997,12 @@ export const Button = ({
   </button>
 );
 ",
-  "client/src/Game.tsx": "import {useStore, useSetValuesCallback, useTableListener} from './Store';
+  "client/src/Game.tsx": "import {
+  useStore,
+  useSetValuesCallback,
+  useTableListener,
+  STORE_ID,
+} from './Store';
 
 import {Button} from './Button';
 
@@ -5875,14 +6062,12 @@ export const Game = () => {
     },
     [],
     true,
+    STORE_ID,
   );
 
   const resetGame = useSetValuesCallback(() => {
     store.delTable('board');
-    return {
-      currentPlayer: 'X',
-      gameStatus: 'playing',
-    };
+    return {currentPlayer: 'X', gameStatus: 'playing'};
   }, []);
 
   return (
@@ -5958,7 +6143,13 @@ export const Square = ({
   );
 };
 ",
-  "client/src/Store.tsx": "import {createMergeableStore} from 'tinybase';
+  "client/src/Store.tsx": "import {SERVER} from './config';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+import {useCreateSynchronizer} from 'tinybase/ui-react';
+import type {MergeableStore} from 'tinybase';
+
+import {createMergeableStore} from 'tinybase';
 import {
   useCreateStore,
   useProvideStore,
@@ -5968,12 +6159,6 @@ import {
   useCell,
   useValue,
 } from 'tinybase/ui-react';
-import ReconnectingWebSocket from 'reconnecting-websocket';
-import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-import {useCreateSynchronizer} from 'tinybase/ui-react';
-import type {MergeableStore} from 'tinybase';
-
-const SERVER = 'wss://vite.tinybase.org';
 
 export const STORE_ID = 'game';
 
@@ -5981,9 +6166,13 @@ export {useStore, useSetValuesCallback, useTableListener, useCell, useValue};
 
 export const Store = () => {
   const store = useCreateStore(() =>
-    createMergeableStore(STORE_ID)
-      .setValue('currentPlayer', 'X')
-      .setValue('gameStatus', 'playing'),
+    createMergeableStore(STORE_ID).setDefaultContent([
+      {},
+      {
+        currentPlayer: 'X',
+        gameStatus: 'playing',
+      },
+    ]),
   );
 
   useProvideStore(STORE_ID, store);
@@ -6045,6 +6234,8 @@ button.primary {
 button.primary:hover {
   background: #c2185b;
 }
+",
+  "client/src/config.ts": "export const SERVER = 'wss://vite.tinybase.org';
 ",
   "client/src/gameStatus.css": "#gameStatus {
   text-align: center;
@@ -6165,6 +6356,7 @@ A TinyBase app built with TypeScript and React.
 ## Getting Started
 
 \`\`\`bash
+cd client
 npm install
 npm run dev
 \`\`\`
@@ -6380,6 +6572,7 @@ npm run dev
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "client/src/App.tsx": "import {StrictMode} from 'react';
+
 import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 
@@ -6453,7 +6646,13 @@ export const Input = ({
   />
 );
 ",
-  "client/src/Store.tsx": "import {createMergeableStore} from 'tinybase';
+  "client/src/Store.tsx": "import {SERVER} from './config';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+import {useCreateSynchronizer} from 'tinybase/ui-react';
+import type {MergeableStore} from 'tinybase';
+
+import {createMergeableStore} from 'tinybase';
 import {
   useCreateStore,
   useProvideStore,
@@ -6463,12 +6662,6 @@ import {
   useRowIds,
   useSetPartialRowCallback,
 } from 'tinybase/ui-react';
-import ReconnectingWebSocket from 'reconnecting-websocket';
-import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-import {useCreateSynchronizer} from 'tinybase/ui-react';
-import type {MergeableStore} from 'tinybase';
-
-const SERVER = 'wss://vite.tinybase.org';
 
 export const STORE_ID = 'todos';
 
@@ -6482,10 +6675,15 @@ export {
 
 export const Store = () => {
   const store = useCreateStore(() =>
-    createMergeableStore(STORE_ID).setTable('todos', {
-      '1': {text: 'Learn TinyBase', completed: false},
-      '2': {text: 'Build an app', completed: false},
-    }),
+    createMergeableStore(STORE_ID).setDefaultContent([
+      {
+        todos: {
+          '1': {text: 'Learn TinyBase', completed: false},
+          '2': {text: 'Build an app', completed: false},
+        },
+      },
+      {},
+    ]),
   );
 
   useProvideStore(STORE_ID, store);
@@ -6627,6 +6825,8 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
+  "client/src/config.ts": "export const SERVER = 'wss://vite.tinybase.org';
+",
   "client/src/index.tsx": "import {getUniqueId} from 'tinybase';
 
 if (location.pathname === '/') {
@@ -6766,6 +6966,7 @@ A TinyBase app built with TypeScript and Vanilla JS.
 ## Getting Started
 
 \`\`\`bash
+cd client
 npm install
 npm run dev
 \`\`\`
@@ -7049,18 +7250,23 @@ export const createButton = (
   return button;
 };
 ",
-  "client/src/chatStore.ts": "import {createMergeableStore} from 'tinybase';
+  "client/src/chatStore.ts": "import {SERVER} from './config';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 
-const SERVER = 'wss://vite.tinybase.org';
+import {createMergeableStore} from 'tinybase';
 
 const STORE_ID = 'chat';
 
-export const chatStore = createMergeableStore(STORE_ID).setTable('messages', {
-  '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
-  '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
-});
+export const chatStore = createMergeableStore(STORE_ID).setDefaultContent([
+  {
+    messages: {
+      '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
+      '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
+    },
+  },
+  {},
+]);
 
 const serverPathId = location.pathname;
 createWsSynchronizer(
@@ -7075,6 +7281,8 @@ createWsSynchronizer(
 });
 
 export type ChatStore = typeof chatStore;
+",
+  "client/src/config.ts": "export const SERVER = 'wss://vite.tinybase.org';
 ",
   "client/src/index.ts": "import {getUniqueId} from 'tinybase';
 
@@ -7363,6 +7571,7 @@ A TinyBase app built with TypeScript and Vanilla JS.
 ## Getting Started
 
 \`\`\`bash
+cd client
 npm install
 npm run dev
 \`\`\`
@@ -7696,6 +7905,7 @@ export const createButton = (
 }
 ",
   "client/src/canvas.ts": "import './canvas.css';
+import {getUniqueId} from 'tinybase';
 import type {Store as SettingsStore} from './settingsStore';
 import type {Store as CanvasStore} from './canvasStore';
 
@@ -7710,62 +7920,105 @@ export const createCanvas = (
 
   const ctx = canvas.getContext('2d')!;
   let isDrawing = false;
+  let currentStrokeId: string | null = null;
+  let pointIndex = 0;
 
   const draw = () => {
     ctx.fillStyle = '#111';
     ctx.fillRect(0, 0, canvas!.width, canvas!.height);
 
     const strokes = canvasStore.getTable('strokes');
-    Object.values(strokes).forEach((stroke: any) => {
-      ctx.fillStyle = stroke.color;
-      ctx.beginPath();
-      ctx.arc(stroke.x, stroke.y, stroke.size, 0, Math.PI * 2);
-      ctx.fill();
+    Object.entries(strokes).forEach(([id, stroke]: [string, any]) => {
+      const points: Array<{x: number; y: number}> = [];
+      let i = 0;
+      while (stroke[\`x\${i}\`] !== undefined && stroke[\`y\${i}\`] !== undefined) {
+        points.push({x: stroke[\`x\${i}\`], y: stroke[\`y\${i}\`]});
+        i++;
+      }
+      if (points.length > 0) {
+        ctx.strokeStyle = stroke.color;
+        ctx.lineWidth = stroke.size * 2;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y);
+        for (let i = 1; i < points.length; i++) {
+          ctx.lineTo(points[i].x, points[i].y);
+        }
+        ctx.stroke();
+      }
     });
   };
+  const addPoint = (e: MouseEvent | TouchEvent) => {
+    if (!currentStrokeId) return;
 
-  const addStroke = (e: MouseEvent | TouchEvent) => {
     const rect = canvas!.getBoundingClientRect();
     const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
     const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
-    const brush = settingsStore.getValues() as any;
 
-    canvasStore.addRow('strokes', {
-      x: clientX - rect.left,
-      y: clientY - rect.top,
+    canvasStore.setCell(
+      'strokes',
+      currentStrokeId,
+      \`x\${pointIndex}\`,
+      clientX - rect.left,
+    );
+    canvasStore.setCell(
+      'strokes',
+      currentStrokeId,
+      \`y\${pointIndex}\`,
+      clientY - rect.top,
+    );
+    pointIndex++;
+  };
+
+  const startStroke = (e: MouseEvent | TouchEvent) => {
+    const brush = settingsStore.getValues() as any;
+    currentStrokeId = getUniqueId();
+    pointIndex = 0;
+
+    canvasStore.setRow('strokes', currentStrokeId, {
       color: brush.brushColor,
       size: brush.brushSize,
     });
+
+    addPoint(e);
   };
 
-  canvas.addEventListener('mousedown', () => {
+  canvas.addEventListener('mousedown', (e) => {
     isDrawing = true;
+    startStroke(e);
   });
+
   canvas.addEventListener('mouseup', () => {
     isDrawing = false;
+    currentStrokeId = null;
   });
+
   canvas.addEventListener('mouseleave', () => {
     isDrawing = false;
+    currentStrokeId = null;
   });
 
   canvas.addEventListener('mousemove', (e) => {
-    if (isDrawing) addStroke(e);
+    if (isDrawing) addPoint(e);
   });
 
   canvas.addEventListener('touchstart', (e) => {
     isDrawing = true;
+    startStroke(e);
     e.preventDefault();
   });
 
   canvas.addEventListener('touchmove', (e) => {
     if (isDrawing) {
-      addStroke(e);
+      addPoint(e);
       e.preventDefault();
     }
   });
 
   canvas.addEventListener('touchend', () => {
     isDrawing = false;
+    currentStrokeId = null;
   });
 
   canvasStore.addTablesListener(draw);
@@ -7774,18 +8027,19 @@ export const createCanvas = (
   return canvas;
 };
 ",
-  "client/src/canvasStore.ts": "import {createMergeableStore} from 'tinybase';
+  "client/src/canvasStore.ts": "import {SERVER} from './config';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 
-const SERVER = 'wss://vite.tinybase.org';
+import {createMergeableStore} from 'tinybase';
+import {getUniqueId} from 'tinybase';
 
 const STORE_ID = 'canvas';
 
-export const canvasStore = createMergeableStore(STORE_ID).setTable(
-  'strokes',
+export const canvasStore = createMergeableStore(STORE_ID).setDefaultContent([
+  {strokes: {}},
   {},
-);
+]);
 
 const serverPathId = location.pathname;
 createWsSynchronizer(
@@ -7863,6 +8117,8 @@ export const createColorPicker = (store: SettingsStore): HTMLDivElement => {
 
   return container;
 };
+",
+  "client/src/config.ts": "export const SERVER = 'wss://vite.tinybase.org';
 ",
   "client/src/drawingControls.css": "#drawingControls {
   display: flex;
@@ -7961,6 +8217,7 @@ A TinyBase app built with TypeScript and Vanilla JS.
 ## Getting Started
 
 \`\`\`bash
+cd client
 npm install
 npm run dev
 \`\`\`
@@ -8280,6 +8537,8 @@ export const createButton = (
   return button;
 };
 ",
+  "client/src/config.ts": "export const SERVER = 'wss://vite.tinybase.org';
+",
   "client/src/game.ts": "import type {GameStore} from './store';
 
 import {createButton} from './button';
@@ -8476,17 +8735,21 @@ export const createSquare = (
   return square;
 };
 ",
-  "client/src/store.ts": "import {createMergeableStore} from 'tinybase';
+  "client/src/store.ts": "import {SERVER} from './config';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 
-const SERVER = 'wss://vite.tinybase.org';
+import {createMergeableStore} from 'tinybase';
 
 const STORE_ID = 'game';
 
-export const store = createMergeableStore(STORE_ID)
-  .setValue('currentPlayer', 'X')
-  .setValue('gameStatus', 'playing');
+export const store = createMergeableStore(STORE_ID).setDefaultContent([
+  {},
+  {
+    currentPlayer: 'X',
+    gameStatus: 'playing',
+  },
+]);
 
 const serverPathId = location.pathname;
 createWsSynchronizer(
@@ -8535,6 +8798,7 @@ A TinyBase app built with TypeScript and Vanilla JS.
 ## Getting Started
 
 \`\`\`bash
+cd client
 npm install
 npm run dev
 \`\`\`
@@ -8807,6 +9071,8 @@ export const createButton = (
   return button;
 };
 ",
+  "client/src/config.ts": "export const SERVER = 'wss://vite.tinybase.org';
+",
   "client/src/index.ts": "import {getUniqueId} from 'tinybase';
 
 if (location.pathname === '/') {
@@ -8858,18 +9124,23 @@ export const createInput = (
   return input;
 };
 ",
-  "client/src/store.ts": "import {createMergeableStore} from 'tinybase';
+  "client/src/store.ts": "import {SERVER} from './config';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 
-const SERVER = 'wss://vite.tinybase.org';
+import {createMergeableStore} from 'tinybase';
 
 const STORE_ID = 'todos';
 
-export const store = createMergeableStore(STORE_ID).setTable('todos', {
-  '1': {text: 'Learn TinyBase', completed: false},
-  '2': {text: 'Build an app', completed: false},
-});
+export const store = createMergeableStore(STORE_ID).setDefaultContent([
+  {
+    todos: {
+      '1': {text: 'Learn TinyBase', completed: false},
+      '2': {text: 'Build an app', completed: false},
+    },
+  },
+  {},
+]);
 
 const serverPathId = location.pathname;
 createWsSynchronizer(
