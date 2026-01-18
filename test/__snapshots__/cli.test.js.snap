@@ -1341,7 +1341,7 @@ npm run dev
     <div id="appContainer">
       <div id="topBar">
         <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-        <div id="topBarTitle">TinyBase Demo</div>
+        <div id="topBarTitle">TinyBase Game</div>
         <div id="topBarInfo">
           <div id="infoIcon">
             i
@@ -1922,7 +1922,7 @@ npm run dev
     <div id="appContainer">
       <div id="topBar">
         <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-        <div id="topBarTitle">TinyBase Demo</div>
+        <div id="topBarTitle">TinyBase Todos</div>
         <div id="topBarInfo">
           <div id="infoIcon">
             i
@@ -3518,7 +3518,7 @@ npm run dev
     <div id="appContainer">
       <div id="topBar">
         <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-        <div id="topBarTitle">TinyBase Demo</div>
+        <div id="topBarTitle">TinyBase Game</div>
         <div id="topBarInfo">
           <div id="infoIcon">
             i
@@ -4029,7 +4029,7 @@ npm run dev
     <div id="appContainer">
       <div id="topBar">
         <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-        <div id="topBarTitle">TinyBase Demo</div>
+        <div id="topBarTitle">TinyBase Todos</div>
         <div id="topBarInfo">
           <div id="infoIcon">
             i
@@ -5866,7 +5866,7 @@ npm run dev
     <div id="appContainer">
       <div id="topBar">
         <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-        <div id="topBarTitle">TinyBase Demo</div>
+        <div id="topBarTitle">TinyBase Game</div>
         <div id="topBarInfo">
           <div id="infoIcon">
             i
@@ -6519,7 +6519,7 @@ npm run dev
     <div id="appContainer">
       <div id="topBar">
         <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-        <div id="topBarTitle">TinyBase Demo</div>
+        <div id="topBarTitle">TinyBase Todos</div>
         <div id="topBarInfo">
           <div id="infoIcon">
             i
@@ -8380,7 +8380,7 @@ npm run dev
     <div id="appContainer">
       <div id="topBar">
         <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-        <div id="topBarTitle">TinyBase Demo</div>
+        <div id="topBarTitle">TinyBase Game</div>
         <div id="topBarInfo">
           <div id="infoIcon">
             i
@@ -8961,7 +8961,7 @@ npm run dev
     <div id="appContainer">
       <div id="topBar">
         <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-        <div id="topBarTitle">TinyBase Demo</div>
+        <div id="topBarTitle">TinyBase Todos</div>
         <div id="topBarInfo">
           <div id="infoIcon">
             i
