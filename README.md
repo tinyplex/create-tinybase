@@ -1,12 +1,19 @@
 # create-tinybase
 
-A CLI tool to scaffold a new TinyBase application with full synchronization and local-first capabilities.
+A CLI tool to scaffold a new TinyBase application with full synchronization and
+local-first capabilities.
+
+Build a todo list, a drawing app, a chat app, or a tic-tac-toe game using
+TypeScript or JavaScript, with React or Vanilla JS - in just a matter of
+seconds.
 
 ## Usage
 
 ```bash
-npm init tinybase
+npm create tinybase@latest
 ```
+
+(PNPM, Yarn, and Bun should also work!)
 
 This will prompt you with questions to configure your new TinyBase app:
 
@@ -28,7 +35,10 @@ npm install
 npm run dev
 ```
 
-If you included server code:
+Your app will be available at `http://localhost:5173`, or whichever port Vite
+specifies in the console.
+
+If you included server code, start the server in a separate terminal:
 
 ```bash
 # In a separate terminal
@@ -37,19 +47,51 @@ npm install
 npm run dev
 ```
 
-Your app will be available at `http://localhost:5173`
+You can also concurrently run both client and server using `npm run dev` in the
+parent directory.
 
-## Features
+Your app should look something like this:
 
-- ⚡ **Fast Setup** - Get started in seconds with Vite
-- 🔄 **Real-time Sync** - Built-in synchronization support
-- 🎨 **Four Demo Apps** - Learn from complete examples
-- 📦 **Zero Config** - Works out of the box
-- 🔧 **Fully Customizable** - Modify templates to your needs
-- 🌐 **Local-First** - Offline-capable by default
-- 🔐 **Type-Safe** - Optional TypeScript schemas
+### Todo App
 
-## Configuration Guide
+![Todo App](screenshots/todos.png)
+
+- Task list with add/complete/delete
+- Single store for todos
+- Demonstrates basic CRUD operations
+- Perfect starter example
+
+### Chat App
+
+![Chat App](screenshots/chat.png)
+
+- Multi-user messaging interface
+- Dual stores: settings + messages
+- Username configuration
+- Real-time message sync
+
+### Drawing App
+
+![Drawing App](screenshots/drawing.png)
+
+- Collaborative drawing canvas
+- Brush size and color controls
+- Dual stores: settings + canvas
+- Optimized point-based stroke storage
+
+### Tic-tac-toe Game
+
+![Tic-tac-toe Game](screenshots/game.png)
+
+- Two-player game board
+- Win/draw detection
+- Turn management
+- Game state synchronization
+
+## Configuration Options
+
+During the prompts, you can customize various aspects of your TinyBase app. Here
+are the details of what each option entails:
 
 ### Language Choice
 
@@ -84,41 +126,10 @@ Your app will be available at `http://localhost:5173`
 
 ### App Types
 
-#### Todo App
-
-![Todo App](screenshots/todos.png)
-
-- Task list with add/complete/delete
-- Single store for todos
-- Demonstrates basic CRUD operations
-- Perfect starter example
-
-#### Chat App
-
-![Chat App](screenshots/chat.png)
-
-- Multi-user messaging interface
-- Dual stores: settings + messages
-- Username configuration
-- Real-time message sync
-
-#### Drawing App
-
-![Drawing App](screenshots/drawing.png)
-
-- Collaborative drawing canvas
-- Brush size and color controls
-- Dual stores: settings + canvas
-- Optimized point-based stroke storage
-
-#### Tic-tac-toe Game
-
-![Tic-tac-toe Game](screenshots/game.png)
-
-- Two-player game board
-- Win/draw detection
-- Turn management
-- Game state synchronization
+- **Todo App** - Simple task management with add, edit, delete features
+- **Chat App** - Real-time messaging between multiple clients
+- **Drawing App** - Collaborative canvas with basic drawing tools
+- **Tic-Tac-Toe Game** - Two-player game with real-time updates
 
 ### Store Schemas (TypeScript Only)
 
@@ -199,7 +210,7 @@ All apps are created with a monorepo structure:
 
 ```
 my-tinybase-app/
-├── package.json          # Root package (manages workspaces)
+├── package.json         # Root package (manages workspaces)
 ├── README.md            # Getting started guide
 ├── client/              # Client application
 │   ├── package.json     # Client dependencies
@@ -224,4 +235,6 @@ my-tinybase-app/
 
 ## License
 
-MIT License - see [LICENSE](https://github.com/tinyplex/tinybase/blob/main/LICENSE) file for details.
+MIT License - see
+[LICENSE](https://github.com/tinyplex/tinybase/blob/main/LICENSE) file for
+details.

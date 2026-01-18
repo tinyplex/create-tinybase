@@ -1,10 +1,10 @@
 {
   "name": "create-tinybase",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "author": "jamesgpearce",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tinyplex/tinybase.git"
+    "url": "git+https://github.com/tinyplex/create-tinybase.git"
   },
   "license": "MIT",
   "homepage": "https://tinybase.org",

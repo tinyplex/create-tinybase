@@ -20,13 +20,16 @@ await writeFile('dist/cli.js', '#!/usr/bin/env node\n' + cleanedCode);
 await chmod('dist/cli.js', 0o755);
 
 await cp('templates', 'dist/templates', {recursive: true});
+await cp('screenshots', 'dist/screenshots', {recursive: true});
+await cp('README.md', 'dist/README.md');
+await cp('LICENSE', 'dist/LICENSE');
 
 const pkg = JSON.parse(await readFile('package.json', 'utf-8'));
 delete pkg.devDependencies;
 delete pkg.scripts;
 delete pkg.private;
 pkg.bin['create-tinybase'] = 'cli.js';
-pkg.files = ['cli.js', 'templates'];
+pkg.files = ['cli.js', 'templates', 'screenshots', 'README.md', 'LICENSE'];
 await writeFile('dist/package.json', JSON.stringify(pkg, null, 2));
 
 console.log('✅ Built and minified CLI');
