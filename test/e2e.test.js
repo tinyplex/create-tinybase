@@ -283,6 +283,20 @@ async function checkPageLoads(port, framework, appType) {
       expect(hasReactRoot).toBe(true);
     }
 
+    // Take screenshot for README (only for React versions to have consistent styling)
+    if (framework === 'react') {
+      const screenshotPath = join(
+        __dirname,
+        '..',
+        'screenshots',
+        `${appType}.png`,
+      );
+      await page.screenshot({
+        path: screenshotPath,
+        fullPage: false,
+      });
+    }
+
     // App-specific functionality tests
     if (appType === 'todos') {
       // Add a todo

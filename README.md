@@ -84,28 +84,36 @@ Your app will be available at `http://localhost:5173`
 
 ### App Types
 
-**Todo App**
+#### Todo App
+
+![Todo App](screenshots/todos.png)
 
 - Task list with add/complete/delete
 - Single store for todos
 - Demonstrates basic CRUD operations
 - Perfect starter example
 
-**Chat App**
+#### Chat App
+
+![Chat App](screenshots/chat.png)
 
 - Multi-user messaging interface
 - Dual stores: settings + messages
 - Username configuration
 - Real-time message sync
 
-**Drawing App**
+#### Drawing App
+
+![Drawing App](screenshots/drawing.png)
 
 - Collaborative drawing canvas
 - Brush size and color controls
 - Dual stores: settings + canvas
 - Optimized point-based stroke storage
 
-**Tic-tac-toe Game**
+#### Tic-tac-toe Game
+
+![Tic-tac-toe Game](screenshots/game.png)
 
 - Two-player game board
 - Win/draw detection
