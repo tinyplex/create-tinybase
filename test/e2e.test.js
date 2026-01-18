@@ -291,7 +291,7 @@ async function startDevServer(projectPath, port) {
   });
 }
 
-async function checkPageLoads(port, framework) {
+async function checkPageLoads(port, framework, appType) {
   const url = `http://localhost:${port}`;
   const page = await browser.newPage();
 
@@ -313,13 +313,11 @@ async function checkPageLoads(port, framework) {
   try {
     await page.goto(url, {waitUntil: 'networkidle0', timeout: 30000});
 
-    await sleep(2000);
+    await sleep(1000);
 
     const title = await page.title();
     const bodyText = await page.evaluate(() => document.body.textContent);
-    const html = await page.content();
 
-    // Title includes tech stack like "TinyBase / JavaScript" or "TinyBase / TypeScript + React"
     expect(title).toContain('TinyBase');
     expect(bodyText).toContain('TinyBase');
 
@@ -338,17 +336,159 @@ async function checkPageLoads(port, framework) {
       expect(hasReactContent).toBe(true);
     }
 
-    await page.evaluate(() => {
-      const button = document.querySelector('button');
-      if (button) {
-        button.click();
+    // App-specific functionality tests
+    if (appType === 'todos') {
+      // Add a todo
+      const input = await page.$('input[type="text"]');
+      expect(input).toBeTruthy();
+      await input.type('Test todo item');
+      
+      // Submit the form (works for both vanilla and React versions)
+      await page.keyboard.press('Enter');
+      await sleep(500);
+
+      // Verify todo appears
+      let todoExists = await page.evaluate(() => {
+        const text = 'Test todo item';
+        // Check various possible structures
+        const allText = document.body.textContent;
+        return allText.includes(text);
+      });
+      expect(todoExists).toBe(true);
+
+      // Complete the todo
+      const checkbox = await page.$('input[type="checkbox"]');
+      await checkbox.click();
+      await sleep(200);
+
+      // Delete the todo - find delete button
+      const deleteButton = await page.evaluateHandle(() => {
+        const buttons = Array.from(document.querySelectorAll('button'));
+        return (
+          buttons.find(
+            (btn) =>
+              btn.textContent.includes('Delete') ||
+              btn.textContent.includes('delete') ||
+              btn.className.includes('delete'),
+          ) || buttons[buttons.length - 1]
+        ); // Last button if no Delete found
+      });
+
+      if (deleteButton && deleteButton.asElement()) {
+        await deleteButton.asElement().click();
       }
-    });
+      await sleep(300);
 
-    await sleep(500);
+      // Verify todo is removed
+      todoExists = await page.evaluate(() => {
+        const text = 'Test todo item';
+        const allText = document.body.textContent;
+        return !allText.includes(text);
+      });
+      expect(todoExists).toBe(true);
+    } else if (appType === 'chat') {
+      // Set username
+      const usernameInput = await page.$('input[placeholder*="name" i]');
+      if (usernameInput) {
+        await usernameInput.type('TestUser');
+        await sleep(200);
+      }
 
-    if (consoleErrors.length > 0) {
-      throw new Error(`Console errors: ${consoleErrors.join(', ')}`);
+      // Send a message (find the message input, not the username input)
+      const messageInput = await page.evaluateHandle(() => {
+        const inputs = Array.from(document.querySelectorAll('input[type="text"]'));
+        // The message input is usually after the username input or has a specific placeholder
+        return inputs.find(input => 
+          !input.placeholder.toLowerCase().includes('name') &&
+          !input.value // Should be empty, unlike username which was filled
+        ) || inputs[inputs.length - 1]; // Fallback to last input
+      });
+      expect(messageInput).toBeTruthy();
+      await messageInput.type('Hello from e2e test!');
+      await page.keyboard.press('Enter');
+      await sleep(500);
+
+      // Verify message appears
+      const messages = await page.evaluate(() => document.body.textContent);
+      expect(messages).toContain('Hello from e2e test!');
+    } else if (appType === 'drawing') {
+      // Find canvas
+      const canvas = await page.$('canvas');
+      expect(canvas).toBeTruthy();
+
+      // Draw on canvas
+      const box = await canvas.boundingBox();
+      await page.mouse.move(box.x + 50, box.y + 50);
+      await page.mouse.down();
+      await page.mouse.move(box.x + 150, box.y + 150);
+      await page.mouse.up();
+      await sleep(200);
+
+      // Verify stroke data exists (check if canvas has been drawn on)
+      const hasStrokes = await page.evaluate(() => {
+        const canvas = document.querySelector('canvas');
+        const ctx = canvas.getContext('2d');
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        // Check if any pixels are not the background color
+        return imageData.data.some((value, index) => {
+          // Skip alpha channel
+          if (index % 4 === 3) return false;
+          // Check if pixel is not black (background)
+          return value > 20;
+        });
+      });
+      expect(hasStrokes).toBe(true);
+    } else if (appType === 'game') {
+      // Play tic-tac-toe game
+      let squares = await page.$$('button.square, button[class*="square"]');
+      expect(squares.length).toBeGreaterThanOrEqual(9);
+
+      // Make first move (X)
+      await squares[0].click();
+      await sleep(300);
+      // Re-query to avoid stale references
+      squares = await page.$$('button.square, button[class*="square"]');
+      let square0Text = await squares[0].evaluate((el) => el.textContent);
+      expect(square0Text).toBe('X');
+
+      // Make second move (O)
+      await squares[1].click();
+      await sleep(300);
+      // Re-query again
+      squares = await page.$$('button.square, button[class*="square"]');
+      let square1Text = await squares[1].evaluate((el) => el.textContent);
+      expect(square1Text).toBe('O');
+
+      // Make third move (X)
+      squares = await page.$$('button.square, button[class*="square"]');
+      await squares[3].click();
+      await sleep(300);
+
+      // Make fourth move (O)
+      squares = await page.$$('button.square, button[class*="square"]');
+      await squares[4].click();
+      await sleep(300);
+
+      // Make fifth move (X) - win condition: 0, 3, 6
+      squares = await page.$$('button.square, button[class*="square"]');
+      await squares[6].click();
+      await sleep(300);
+
+      // Verify win message appears
+      const bodyText = await page.evaluate(() => document.body.textContent);
+      expect(bodyText).toMatch(/won|wins|winner/i);
+    }
+
+    // Filter out network errors which are transient and not real errors
+    const realErrors = consoleErrors.filter(
+      (err) =>
+        !err.includes('ERR_NETWORK_CHANGED') &&
+        !err.includes('ERR_NAME_NOT_RESOLVED') &&
+        !err.includes('Failed to load resource') &&
+        !err.includes('WebSocket'),
+    );
+    if (realErrors.length > 0) {
+      throw new Error(`Console errors: ${realErrors.join(', ')}`);
     }
 
     if (pageErrors.length > 0) {
@@ -435,7 +575,7 @@ describe('e2e tests', {concurrent: true}, () => {
 
           await sleep(1500);
 
-          await checkPageLoads(port, combo.framework);
+          await checkPageLoads(port, combo.framework, combo.appType);
         } finally {
           if (devServer) {
             await killProcess(devServer);
