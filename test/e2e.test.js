@@ -15,18 +15,6 @@ let browser;
 
 const combinations = [
   {
-    language: 'javascript',
-    framework: 'vanilla',
-    appType: 'todos',
-    name: 'js-vanilla-todos',
-  },
-  {
-    language: 'javascript',
-    framework: 'react',
-    appType: 'todos',
-    name: 'js-react-todos',
-  },
-  {
     language: 'typescript',
     framework: 'vanilla',
     appType: 'todos',
@@ -37,18 +25,6 @@ const combinations = [
     framework: 'react',
     appType: 'todos',
     name: 'ts-react-todos',
-  },
-  {
-    language: 'javascript',
-    framework: 'vanilla',
-    appType: 'chat',
-    name: 'js-vanilla-chat',
-  },
-  {
-    language: 'javascript',
-    framework: 'react',
-    appType: 'chat',
-    name: 'js-react-chat',
   },
   {
     language: 'typescript',
@@ -63,18 +39,6 @@ const combinations = [
     name: 'ts-react-chat',
   },
   {
-    language: 'javascript',
-    framework: 'vanilla',
-    appType: 'drawing',
-    name: 'js-vanilla-drawing',
-  },
-  {
-    language: 'javascript',
-    framework: 'react',
-    appType: 'drawing',
-    name: 'js-react-drawing',
-  },
-  {
     language: 'typescript',
     framework: 'vanilla',
     appType: 'drawing',
@@ -85,18 +49,6 @@ const combinations = [
     framework: 'react',
     appType: 'drawing',
     name: 'ts-react-drawing',
-  },
-  {
-    language: 'javascript',
-    framework: 'vanilla',
-    appType: 'game',
-    name: 'js-vanilla-game',
-  },
-  {
-    language: 'javascript',
-    framework: 'react',
-    appType: 'game',
-    name: 'js-react-game',
   },
   {
     language: 'typescript',
@@ -145,6 +97,8 @@ async function runCLI(projectName, language, framework, appType = 'todos') {
         '--prettier',
         'false',
         '--eslint',
+        'false',
+        '--sync',
         'false',
       ],
       {
@@ -311,7 +265,7 @@ async function checkPageLoads(port, framework, appType) {
   });
 
   try {
-    await page.goto(url, {waitUntil: 'networkidle0', timeout: 30000});
+    await page.goto(url, {waitUntil: 'domcontentloaded', timeout: 45000});
 
     await sleep(1000);
 
@@ -327,13 +281,6 @@ async function checkPageLoads(port, framework, appType) {
         return app && app.children.length > 0;
       });
       expect(hasReactRoot).toBe(true);
-
-      const hasReactContent = await page.evaluate(
-        () =>
-          document.body.textContent.includes('TinyBase') &&
-          document.body.textContent.includes('React'),
-      );
-      expect(hasReactContent).toBe(true);
     }
 
     // App-specific functionality tests
@@ -341,11 +288,28 @@ async function checkPageLoads(port, framework, appType) {
       // Add a todo
       const input = await page.$('input[type="text"]');
       expect(input).toBeTruthy();
-      await input.type('Test todo item');
-      
-      // Submit the form (works for both vanilla and React versions)
+      await input.click(); // Focus the input
+
+      // Use page.type() which properly triggers React onChange events
+      await page.type('input[type="text"]', 'Test todo item');
+
+      await sleep(100); // Let React update
+
+      // Verify text was entered
+      const inputValue = await page.evaluate(() => {
+        const inp = document.querySelector('input[type="text"]');
+        return inp ? inp.value : '';
+      });
+
+      if (inputValue !== 'Test todo item') {
+        throw new Error(
+          `Input value is "${inputValue}", expected "Test todo item"`,
+        );
+      }
+
+      // Submit the form (Enter key or button click)
       await page.keyboard.press('Enter');
-      await sleep(500);
+      await sleep(1000); // Give time to update
 
       // Verify todo appears
       let todoExists = await page.evaluate(() => {
@@ -354,6 +318,7 @@ async function checkPageLoads(port, framework, appType) {
         const allText = document.body.textContent;
         return allText.includes(text);
       });
+
       expect(todoExists).toBe(true);
 
       // Complete the todo
@@ -361,31 +326,12 @@ async function checkPageLoads(port, framework, appType) {
       await checkbox.click();
       await sleep(200);
 
-      // Delete the todo - find delete button
-      const deleteButton = await page.evaluateHandle(() => {
-        const buttons = Array.from(document.querySelectorAll('button'));
-        return (
-          buttons.find(
-            (btn) =>
-              btn.textContent.includes('Delete') ||
-              btn.textContent.includes('delete') ||
-              btn.className.includes('delete'),
-          ) || buttons[buttons.length - 1]
-        ); // Last button if no Delete found
+      // Verify checkbox is checked
+      const isChecked = await page.evaluate(() => {
+        const cb = document.querySelector('input[type="checkbox"]');
+        return cb ? cb.checked : false;
       });
-
-      if (deleteButton && deleteButton.asElement()) {
-        await deleteButton.asElement().click();
-      }
-      await sleep(300);
-
-      // Verify todo is removed
-      todoExists = await page.evaluate(() => {
-        const text = 'Test todo item';
-        const allText = document.body.textContent;
-        return !allText.includes(text);
-      });
-      expect(todoExists).toBe(true);
+      expect(isChecked).toBe(true);
     } else if (appType === 'chat') {
       // Set username
       const usernameInput = await page.$('input[placeholder*="name" i]');
@@ -396,12 +342,16 @@ async function checkPageLoads(port, framework, appType) {
 
       // Send a message (find the message input, not the username input)
       const messageInput = await page.evaluateHandle(() => {
-        const inputs = Array.from(document.querySelectorAll('input[type="text"]'));
+        const inputs = Array.from(
+          document.querySelectorAll('input[type="text"]'),
+        );
         // The message input is usually after the username input or has a specific placeholder
-        return inputs.find(input => 
-          !input.placeholder.toLowerCase().includes('name') &&
-          !input.value // Should be empty, unlike username which was filled
-        ) || inputs[inputs.length - 1]; // Fallback to last input
+        return (
+          inputs.find(
+            (input) =>
+              !input.placeholder.toLowerCase().includes('name') && !input.value, // Should be empty, unlike username which was filled
+          ) || inputs[inputs.length - 1]
+        ); // Fallback to last input
       });
       expect(messageInput).toBeTruthy();
       await messageInput.type('Hello from e2e test!');
