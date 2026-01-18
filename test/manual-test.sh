@@ -134,7 +134,15 @@ else
     IFS=':' read -r name _ _ _ _ _ <<< "$project"
     project_path="$TEST_DIR/$name"
     if [ -d "$project_path" ]; then
-      if [ -d "$project_path/node_modules" ]; then
+      # Check for client/node_modules (new structure)
+      if [ -d "$project_path/client/node_modules" ]; then
+        echo "  Backing up node_modules for $name..."
+        mv "$project_path/client/node_modules" "$TEST_DIR/.${name}-node_modules" 2>/dev/null || true
+        if [ -f "$project_path/client/.package.json.cache" ]; then
+          mv "$project_path/client/.package.json.cache" "$TEST_DIR/.${name}-cache" 2>/dev/null || true
+        fi
+      # Fallback to root node_modules (old structure)
+      elif [ -d "$project_path/node_modules" ]; then
         echo "  Backing up node_modules for $name..."
         mv "$project_path/node_modules" "$TEST_DIR/.${name}-node_modules" 2>/dev/null || true
         if [ -f "$project_path/.package.json.cache" ]; then
@@ -167,10 +175,19 @@ for project in "${projects[@]}"; do
   backup_path="$TEST_DIR/.${name}-node_modules"
   if [ -d "$backup_path" ]; then
     echo "  Restoring node_modules for $name..."
-    mv "$backup_path" "$name/node_modules"
-    cache_path="$TEST_DIR/.${name}-cache"
-    if [ -f "$cache_path" ]; then
-      mv "$cache_path" "$name/.package.json.cache"
+    # Check if we have a client/ subdirectory
+    if [ -d "$name/client" ]; then
+      mv "$backup_path" "$name/client/node_modules"
+      cache_path="$TEST_DIR/.${name}-cache"
+      if [ -f "$cache_path" ]; then
+        mv "$cache_path" "$name/client/.package.json.cache"
+      fi
+    else
+      mv "$backup_path" "$name/node_modules"
+      cache_path="$TEST_DIR/.${name}-cache"
+      if [ -f "$cache_path" ]; then
+        mv "$cache_path" "$name/.package.json.cache"
+      fi
     fi
   fi
 done
@@ -187,8 +204,8 @@ smart_install() {
   fi
   
   # Check if we can skip install by comparing package.json
-  if [ -f "$project_path/.package.json.cache" ] && [ -d "$project_path/node_modules" ]; then
-    if cmp -s "$install_path/package.json" "$project_path/.package.json.cache"; then
+  if [ -f "$install_path/.package.json.cache" ] && [ -d "$install_path/node_modules" ]; then
+    if cmp -s "$install_path/package.json" "$install_path/.package.json.cache"; then
       echo "  ⚡ Reusing node_modules for $name"
       return 0
     fi
@@ -198,7 +215,7 @@ smart_install() {
   (cd "$install_path" && npm install > "/tmp/${name}-install.log" 2>&1)
   
   # Cache the package.json
-  cp "$install_path/package.json" "$project_path/.package.json.cache"
+  cp "$install_path/package.json" "$install_path/.package.json.cache"
 }
 
 if [ "$SKIP_INSTALL" = false ]; then

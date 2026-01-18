@@ -271,7 +271,7 @@ async function startDevServer(projectPath, port) {
       ) {
         if (!isReady) {
           isReady = true;
-          setTimeout(() => resolve(dev), 2000);
+          setTimeout(() => resolve(dev), 500);
         }
       }
     };
@@ -378,7 +378,7 @@ function killProcess(proc) {
   });
 }
 
-describe('e2e tests', {concurrent: false}, () => {
+describe('e2e tests', {concurrent: true}, () => {
   combinations.forEach((combo, index) => {
     it(
       `should create and run ${combo.name} app`,
@@ -414,6 +414,10 @@ describe('e2e tests', {concurrent: false}, () => {
 
         // Restore node_modules if we backed it up
         if (existsSync(nodeModulesBackup)) {
+          // Ensure client directory exists
+          const {mkdir} = await import('fs/promises');
+          await mkdir(clientPath, {recursive: true});
+
           await cp(nodeModulesBackup, nodeModulesPath, {recursive: true});
           await rm(nodeModulesBackup, {recursive: true});
           const cachedFile = join(TEST_DIR, `${projectName}.cache`);
@@ -429,7 +433,7 @@ describe('e2e tests', {concurrent: false}, () => {
         try {
           devServer = await startDevServer(projectPath, port);
 
-          await sleep(5000);
+          await sleep(1500);
 
           await checkPageLoads(port, combo.framework);
         } finally {
