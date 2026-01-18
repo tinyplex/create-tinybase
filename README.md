@@ -217,5 +217,3 @@ my-tinybase-app/
 ## License
 
 MIT License - see [LICENSE](https://github.com/tinyplex/tinybase/blob/main/LICENSE) file for details.
-
-This project is part of the TinyBase ecosystem, created by James Pearce.
