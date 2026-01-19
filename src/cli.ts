@@ -1,7 +1,12 @@
 #!/usr/bin/env node
 import {existsSync} from 'fs';
 import {dirname, join} from 'path';
-import {createCLI, type FileConfig, type TemplateContext} from 'tinycreate';
+import {
+  createCLI,
+  detectPackageManager,
+  type FileConfig,
+  type TemplateContext,
+} from 'tinycreate';
 import {fileURLToPath} from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -95,13 +100,20 @@ const config = {
       type: 'confirm' as const,
       name: 'prettier',
       message: 'Include Prettier?',
-      initial: false,
+      initial: true,
     },
     {
       type: 'confirm' as const,
       name: 'eslint',
       message: 'Include ESLint?',
-      initial: false,
+      initial: true,
+    },
+    {
+      type: (prev: unknown, answers: Record<string, unknown>) =>
+        !answers.server ? ('confirm' as const) : null,
+      name: 'installAndRun',
+      message: 'Install dependencies and start dev server?',
+      initial: true,
     },
   ],
 
@@ -117,6 +129,7 @@ const config = {
       sync,
       server,
       serverType,
+      installAndRun,
     } = answers;
     const typescript = language === 'typescript';
     const javascript = !typescript;
@@ -134,6 +147,7 @@ const config = {
       sync: sync === true || sync === 'true',
       server: server === true || server === 'true',
       serverType: serverType || 'node',
+      installAndRun: installAndRun === true || installAndRun === 'true',
       typescript,
       javascript,
       react,
@@ -157,31 +171,13 @@ const config = {
     }
   },
 
-  getFiles: (context: TemplateContext) => {
-    const server = context.server as boolean;
-    const files = [
-      {
-        template: 'README.md.hbs',
-        output: 'README.md',
-        prettier: true,
-      },
-      {
-        template: 'client/package.json.hbs',
-        output: 'client/package.json',
-        prettier: true,
-      },
-    ];
-
-    if (server) {
-      files.push({
-        template: 'package.json.hbs',
-        output: 'package.json',
-        prettier: true,
-      });
-    }
-
-    return files;
-  },
+  getFiles: () => [
+    {
+      template: 'README.md.hbs',
+      output: 'README.md',
+      prettier: true,
+    },
+  ],
 
   processIncludedFile: (file: FileConfig, context: TemplateContext) => {
     const {javascript} = context;
@@ -206,11 +202,25 @@ const config = {
   installCommand: '{pm} install',
   devCommand: '{pm} run dev',
 
-  onSuccess: (projectName: string) => {
+  onSuccess: (projectName: string, context: Record<string, unknown>) => {
+    const server = context.server as boolean;
+    const pm = detectPackageManager();
+
     console.log(`Next steps:`);
+    console.log();
+
+    if (server) {
+      console.log('To run the server:');
+      console.log(`  cd ${projectName}/server`);
+      console.log(`  ${pm} install`);
+      console.log(`  ${pm} run dev`);
+      console.log();
+    }
+
+    console.log('To run the client:');
     console.log(`  cd ${projectName}/client`);
-    console.log(`  npm install`);
-    console.log(`  npm run dev`);
+    console.log(`  ${pm} install`);
+    console.log(`  ${pm} run dev`);
   },
 };
 

@@ -47,9 +47,6 @@ npm install
 npm run dev
 ```
 
-You can also concurrently run both client and server using `npm run dev` in the
-parent directory.
-
 Your app should look something like this:
 
 ### Todo App

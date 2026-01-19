@@ -4,15 +4,36 @@ exports[`create-tinybase > js-react-chat > should match snapshot 1`] = `
 {
   "README.md": "# test-js-react-chat
 
-A TinyBase app built with JavaScript and React.
+A TinyBase app built with JavaScript
+and React.
 
 ## Getting Started
+
+Alongside this file, you will see a directory called \`client\` (and optionally
+one called \`server\` if you included server code).
+
+To start the web client with Vite, run the following commands:
 
 \`\`\`bash
 cd client
 npm install
 npm run dev
 \`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+If you included server code, start the server in a separate terminal, ideally
+before starting the client:
+
+\`\`\`bash
+# In a separate terminal
+cd server
+npm install
+npm run dev
+\`\`\`
+
+After that, start hacking!
 
 ## Learn More
 
@@ -558,15 +579,36 @@ exports[`create-tinybase > js-react-drawing > should match snapshot 1`] = `
 {
   "README.md": "# test-js-react-drawing
 
-A TinyBase app built with JavaScript and React.
+A TinyBase app built with JavaScript
+and React.
 
 ## Getting Started
+
+Alongside this file, you will see a directory called \`client\` (and optionally
+one called \`server\` if you included server code).
+
+To start the web client with Vite, run the following commands:
 
 \`\`\`bash
 cd client
 npm install
 npm run dev
 \`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+If you included server code, start the server in a separate terminal, ideally
+before starting the client:
+
+\`\`\`bash
+# In a separate terminal
+cd server
+npm install
+npm run dev
+\`\`\`
+
+After that, start hacking!
 
 ## Learn More
 
@@ -1173,15 +1215,36 @@ exports[`create-tinybase > js-react-game > should match snapshot 1`] = `
 {
   "README.md": "# test-js-react-game
 
-A TinyBase app built with JavaScript and React.
+A TinyBase app built with JavaScript
+and React.
 
 ## Getting Started
+
+Alongside this file, you will see a directory called \`client\` (and optionally
+one called \`server\` if you included server code).
+
+To start the web client with Vite, run the following commands:
 
 \`\`\`bash
 cd client
 npm install
 npm run dev
 \`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+If you included server code, start the server in a separate terminal, ideally
+before starting the client:
+
+\`\`\`bash
+# In a separate terminal
+cd server
+npm install
+npm run dev
+\`\`\`
+
+After that, start hacking!
 
 ## Learn More
 
@@ -1754,15 +1817,36 @@ exports[`create-tinybase > js-react-todos > should match snapshot 1`] = `
 {
   "README.md": "# test-js-react-todos
 
-A TinyBase app built with JavaScript and React.
+A TinyBase app built with JavaScript
+and React.
 
 ## Getting Started
+
+Alongside this file, you will see a directory called \`client\` (and optionally
+one called \`server\` if you included server code).
+
+To start the web client with Vite, run the following commands:
 
 \`\`\`bash
 cd client
 npm install
 npm run dev
 \`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+If you included server code, start the server in a separate terminal, ideally
+before starting the client:
+
+\`\`\`bash
+# In a separate terminal
+cd server
+npm install
+npm run dev
+\`\`\`
+
+After that, start hacking!
 
 ## Learn More
 
@@ -2289,15 +2373,36 @@ exports[`create-tinybase > js-vanilla-chat > should match snapshot 1`] = `
 {
   "README.md": "# test-js-vanilla-chat
 
-A TinyBase app built with JavaScript and Vanilla JS.
+A TinyBase app built with JavaScript
+and Vanilla JS.
 
 ## Getting Started
+
+Alongside this file, you will see a directory called \`client\` (and optionally
+one called \`server\` if you included server code).
+
+To start the web client with Vite, run the following commands:
 
 \`\`\`bash
 cd client
 npm install
 npm run dev
 \`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+If you included server code, start the server in a separate terminal, ideally
+before starting the client:
+
+\`\`\`bash
+# In a separate terminal
+cd server
+npm install
+npm run dev
+\`\`\`
+
+After that, start hacking!
 
 ## Learn More
 
@@ -2794,15 +2899,36 @@ exports[`create-tinybase > js-vanilla-drawing > should match snapshot 1`] = `
 {
   "README.md": "# test-js-vanilla-drawing
 
-A TinyBase app built with JavaScript and Vanilla JS.
+A TinyBase app built with JavaScript
+and Vanilla JS.
 
 ## Getting Started
+
+Alongside this file, you will see a directory called \`client\` (and optionally
+one called \`server\` if you included server code).
+
+To start the web client with Vite, run the following commands:
 
 \`\`\`bash
 cd client
 npm install
 npm run dev
 \`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+If you included server code, start the server in a separate terminal, ideally
+before starting the client:
+
+\`\`\`bash
+# In a separate terminal
+cd server
+npm install
+npm run dev
+\`\`\`
+
+After that, start hacking!
 
 ## Learn More
 
@@ -3350,15 +3476,36 @@ exports[`create-tinybase > js-vanilla-game > should match snapshot 1`] = `
 {
   "README.md": "# test-js-vanilla-game
 
-A TinyBase app built with JavaScript and Vanilla JS.
+A TinyBase app built with JavaScript
+and Vanilla JS.
 
 ## Getting Started
+
+Alongside this file, you will see a directory called \`client\` (and optionally
+one called \`server\` if you included server code).
+
+To start the web client with Vite, run the following commands:
 
 \`\`\`bash
 cd client
 npm install
 npm run dev
 \`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+If you included server code, start the server in a separate terminal, ideally
+before starting the client:
+
+\`\`\`bash
+# In a separate terminal
+cd server
+npm install
+npm run dev
+\`\`\`
+
+After that, start hacking!
 
 ## Learn More
 
@@ -3861,15 +4008,36 @@ exports[`create-tinybase > js-vanilla-todos > should match snapshot 1`] = `
 {
   "README.md": "# test-js-vanilla-todos
 
-A TinyBase app built with JavaScript and Vanilla JS.
+A TinyBase app built with JavaScript
+and Vanilla JS.
 
 ## Getting Started
+
+Alongside this file, you will see a directory called \`client\` (and optionally
+one called \`server\` if you included server code).
+
+To start the web client with Vite, run the following commands:
 
 \`\`\`bash
 cd client
 npm install
 npm run dev
 \`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+If you included server code, start the server in a separate terminal, ideally
+before starting the client:
+
+\`\`\`bash
+# In a separate terminal
+cd server
+npm install
+npm run dev
+\`\`\`
+
+After that, start hacking!
 
 ## Learn More
 
@@ -4344,15 +4512,36 @@ exports[`create-tinybase > ts-react-chat > should match snapshot 1`] = `
 {
   "README.md": "# test-ts-react-chat
 
-A TinyBase app built with TypeScript and React.
+A TinyBase app built with TypeScript
+and React.
 
 ## Getting Started
+
+Alongside this file, you will see a directory called \`client\` (and optionally
+one called \`server\` if you included server code).
+
+To start the web client with Vite, run the following commands:
 
 \`\`\`bash
 cd client
 npm install
 npm run dev
 \`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+If you included server code, start the server in a separate terminal, ideally
+before starting the client:
+
+\`\`\`bash
+# In a separate terminal
+cd server
+npm install
+npm run dev
+\`\`\`
+
+After that, start hacking!
 
 ## Learn More
 
@@ -4998,15 +5187,36 @@ exports[`create-tinybase > ts-react-drawing > should match snapshot 1`] = `
 {
   "README.md": "# test-ts-react-drawing
 
-A TinyBase app built with TypeScript and React.
+A TinyBase app built with TypeScript
+and React.
 
 ## Getting Started
+
+Alongside this file, you will see a directory called \`client\` (and optionally
+one called \`server\` if you included server code).
+
+To start the web client with Vite, run the following commands:
 
 \`\`\`bash
 cd client
 npm install
 npm run dev
 \`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+If you included server code, start the server in a separate terminal, ideally
+before starting the client:
+
+\`\`\`bash
+# In a separate terminal
+cd server
+npm install
+npm run dev
+\`\`\`
+
+After that, start hacking!
 
 ## Learn More
 
@@ -5698,15 +5908,36 @@ exports[`create-tinybase > ts-react-game > should match snapshot 1`] = `
 {
   "README.md": "# test-ts-react-game
 
-A TinyBase app built with TypeScript and React.
+A TinyBase app built with TypeScript
+and React.
 
 ## Getting Started
+
+Alongside this file, you will see a directory called \`client\` (and optionally
+one called \`server\` if you included server code).
+
+To start the web client with Vite, run the following commands:
 
 \`\`\`bash
 cd client
 npm install
 npm run dev
 \`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+If you included server code, start the server in a separate terminal, ideally
+before starting the client:
+
+\`\`\`bash
+# In a separate terminal
+cd server
+npm install
+npm run dev
+\`\`\`
+
+After that, start hacking!
 
 ## Learn More
 
@@ -6351,15 +6582,36 @@ exports[`create-tinybase > ts-react-todos > should match snapshot 1`] = `
 {
   "README.md": "# test-ts-react-todos
 
-A TinyBase app built with TypeScript and React.
+A TinyBase app built with TypeScript
+and React.
 
 ## Getting Started
+
+Alongside this file, you will see a directory called \`client\` (and optionally
+one called \`server\` if you included server code).
+
+To start the web client with Vite, run the following commands:
 
 \`\`\`bash
 cd client
 npm install
 npm run dev
 \`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+If you included server code, start the server in a separate terminal, ideally
+before starting the client:
+
+\`\`\`bash
+# In a separate terminal
+cd server
+npm install
+npm run dev
+\`\`\`
+
+After that, start hacking!
 
 ## Learn More
 
@@ -6961,15 +7213,36 @@ exports[`create-tinybase > ts-vanilla-chat > should match snapshot 1`] = `
 {
   "README.md": "# test-ts-vanilla-chat
 
-A TinyBase app built with TypeScript and Vanilla JS.
+A TinyBase app built with TypeScript
+and Vanilla JS.
 
 ## Getting Started
+
+Alongside this file, you will see a directory called \`client\` (and optionally
+one called \`server\` if you included server code).
+
+To start the web client with Vite, run the following commands:
 
 \`\`\`bash
 cd client
 npm install
 npm run dev
 \`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+If you included server code, start the server in a separate terminal, ideally
+before starting the client:
+
+\`\`\`bash
+# In a separate terminal
+cd server
+npm install
+npm run dev
+\`\`\`
+
+After that, start hacking!
 
 ## Learn More
 
@@ -7566,15 +7839,36 @@ exports[`create-tinybase > ts-vanilla-drawing > should match snapshot 1`] = `
 {
   "README.md": "# test-ts-vanilla-drawing
 
-A TinyBase app built with TypeScript and Vanilla JS.
+A TinyBase app built with TypeScript
+and Vanilla JS.
 
 ## Getting Started
+
+Alongside this file, you will see a directory called \`client\` (and optionally
+one called \`server\` if you included server code).
+
+To start the web client with Vite, run the following commands:
 
 \`\`\`bash
 cd client
 npm install
 npm run dev
 \`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+If you included server code, start the server in a separate terminal, ideally
+before starting the client:
+
+\`\`\`bash
+# In a separate terminal
+cd server
+npm install
+npm run dev
+\`\`\`
+
+After that, start hacking!
 
 ## Learn More
 
@@ -8212,15 +8506,36 @@ exports[`create-tinybase > ts-vanilla-game > should match snapshot 1`] = `
 {
   "README.md": "# test-ts-vanilla-game
 
-A TinyBase app built with TypeScript and Vanilla JS.
+A TinyBase app built with TypeScript
+and Vanilla JS.
 
 ## Getting Started
+
+Alongside this file, you will see a directory called \`client\` (and optionally
+one called \`server\` if you included server code).
+
+To start the web client with Vite, run the following commands:
 
 \`\`\`bash
 cd client
 npm install
 npm run dev
 \`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+If you included server code, start the server in a separate terminal, ideally
+before starting the client:
+
+\`\`\`bash
+# In a separate terminal
+cd server
+npm install
+npm run dev
+\`\`\`
+
+After that, start hacking!
 
 ## Learn More
 
@@ -8793,15 +9108,36 @@ exports[`create-tinybase > ts-vanilla-todos > should match snapshot 1`] = `
 {
   "README.md": "# test-ts-vanilla-todos
 
-A TinyBase app built with TypeScript and Vanilla JS.
+A TinyBase app built with TypeScript
+and Vanilla JS.
 
 ## Getting Started
+
+Alongside this file, you will see a directory called \`client\` (and optionally
+one called \`server\` if you included server code).
+
+To start the web client with Vite, run the following commands:
 
 \`\`\`bash
 cd client
 npm install
 npm run dev
 \`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+If you included server code, start the server in a separate terminal, ideally
+before starting the client:
+
+\`\`\`bash
+# In a separate terminal
+cd server
+npm install
+npm run dev
+\`\`\`
+
+After that, start hacking!
 
 ## Learn More
 

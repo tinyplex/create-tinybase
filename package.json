@@ -1,6 +1,6 @@
 {
   "name": "create-tinybase",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "author": "jamesgpearce",
   "repository": {
     "type": "git",
@@ -34,7 +34,7 @@
     "prePublishPackage": "npm run ts && npm run prettier && npm run lint && npm run test && npm run test:e2e"
   },
   "dependencies": {
-    "tinycreate": "^1.0.0"
+    "tinycreate": "^1.0.2"
   },
   "engines": {
     "node": ">=18.0.0"

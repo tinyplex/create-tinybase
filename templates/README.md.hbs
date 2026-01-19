@@ -1,14 +1,40 @@
+{{includeFile template="client/package.json.hbs" output="client/package.json"}}
+{{#if server}}
+  {{includeFile template="server/package.json.hbs" output="server/package.json"}}
+{{/if}}
+
 # {{projectName}}
 
-A TinyBase app built with {{#if typescript}}TypeScript{{else}}JavaScript{{/if}} and {{#if react}}React{{else}}Vanilla JS{{/if}}.
+A TinyBase app built with {{#if typescript}}TypeScript{{else}}JavaScript{{/if}}
+and {{#if react}}React{{else}}Vanilla JS{{/if}}.
 
 ## Getting Started
+
+Alongside this file, you will see a directory called `client` (and optionally
+one called `server` if you included server code).
+
+To start the web client with Vite, run the following commands:
 
 ```bash
 cd client
 npm install
 npm run dev
 ```
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+`http://localhost:5173`, or whichever port Vite specifies in the console.
+
+If you included server code, start the server in a separate terminal, ideally
+before starting the client:
+
+```bash
+# In a separate terminal
+cd server
+npm install
+npm run dev
+```
+
+After that, start hacking!
 
 ## Learn More
 
