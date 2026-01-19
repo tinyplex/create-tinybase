@@ -1,23 +1,21 @@
 {{#if sync}}
-  import {getUniqueId} from 'tinybase';
-
+  {{addImport "import {getUniqueId} from 'tinybase';"}}
   if (location.pathname === '/') {
   location.assign('/' + getUniqueId());
   }
 {{/if}}
-{{#if react}}
-  import ReactDOM from 'react-dom/client';
-  import {App} from './App';
-  {{includeFile template="client/src/{{appType}}/App.tsx.hbs" output="client/src/App.{{ext}}"}}
 
+{{#if react}}
+  {{addImport "import ReactDOM from 'react-dom/client';"}}
+  {{addImport "import {App} from './App';"}}
+  {{includeFile template="client/src/{{appType}}/App.tsx.hbs" output="client/src/App.{{ext}}"}}
   addEventListener('load', () => {
   ReactDOM.createRoot(document.getElementById('app')!).render(
   <App />);
   });
 {{else}}
-  import {app} from './app';
+  {{addImport "import {app} from './app';"}}
   {{includeFile template="client/src/{{appType}}/app.ts.hbs" output="client/src/app.{{ext}}"}}
-
   addEventListener('load', () => {
   app();
   });

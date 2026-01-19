@@ -1,13 +1,13 @@
 {{includeFile template="client/src/chat/messageInput.css.hbs" output="client/src/messageInput.css"}}
-import './messageInput.css';
-import {type SettingsStore} from './settingsStore';
-import {type ChatStore} from './chatStore';
+{{addImport "import './messageInput.css';"}}
+{{addImport "import {type SettingsStore} from './settingsStore';"}}
+{{addImport "import {type ChatStore} from './chatStore';"}}
 
 {{includeFile template="client/src/shared/button.ts.hbs" output="client/src/button.{{ext}}"}}
-import {createButton} from './button';
+{{addImport "import {createButton} from './button';"}}
 
 {{includeFile template="client/src/shared/input.ts.hbs" output="client/src/input.{{ext}}"}}
-import {createInput} from './input';
+{{addImport "import {createInput} from './input';"}}
 
 export const createMessageInput = (settingsStore: SettingsStore, chatStore: ChatStore): HTMLDivElement => {
 const messageInputContainer = document.createElement('div');

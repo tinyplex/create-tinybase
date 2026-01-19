@@ -1,8 +1,8 @@
 {{includeFile template="client/src/drawing/canvas.css.hbs" output="client/src/canvas.css"}}
-import './canvas.css';
-import {getUniqueId} from 'tinybase';
-import type {Store as SettingsStore} from './settingsStore';
-import type {Store as CanvasStore} from './canvasStore';
+{{addImport "import './canvas.css';"}}
+{{addImport "import {getUniqueId} from 'tinybase';"}}
+{{addImport "import type {Store as SettingsStore} from './settingsStore';"}}
+{{addImport "import type {Store as CanvasStore} from './canvasStore';"}}
 
 export const createCanvas = (settingsStore: SettingsStore, canvasStore: CanvasStore): HTMLCanvasElement => {
 const canvas = document.createElement('canvas');

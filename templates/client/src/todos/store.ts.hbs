@@ -1,20 +1,17 @@
-{{#if schemas}}
-  import {createMergeableStore} from 'tinybase/with-schemas';
-{{else}}
-  import {createMergeableStore} from 'tinybase';
-{{/if}}
-
 const STORE_ID = 'todos';
 
 {{#if schemas}}
+  {{addImport "import {createMergeableStore} from 'tinybase/with-schemas';"}}
   const TODOS_SCHEMA = {
   todos: {
   text: {type: 'string'},
   completed: {type: 'boolean'},
   },
   } as const;
-
+{{else}}
+  {{addImport "import {createMergeableStore} from 'tinybase';"}}
 {{/if}}
+
 export const store = createMergeableStore(STORE_ID){{#if schemas}}
   .setTablesSchema(TODOS_SCHEMA){{/if}}
 .setDefaultContent([

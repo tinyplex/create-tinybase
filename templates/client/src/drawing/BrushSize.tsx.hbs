@@ -1,6 +1,6 @@
 {{includeFile template="client/src/drawing/brushSize.css.hbs" output="client/src/brushSize.css"}}
-import {useValue, useSetValueCallback, STORE_ID} from './SettingsStore';
-import './brushSize.css';
+{{addImport "import {useValue, useSetValueCallback, STORE_ID} from './SettingsStore';"}}
+{{addImport "import './brushSize.css';"}}
 
 export const BrushSize = () => {
 const size = useValue('brushSize', STORE_ID) ?? 5;

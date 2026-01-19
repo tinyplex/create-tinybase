@@ -1,12 +1,10 @@
 {{includeFile template="client/src/todos/todoInput.css.hbs" output="client/src/todoInput.css"}}
-import './todoInput.css';
-import {type TodosStore} from './store';
-
+{{addImport "import './todoInput.css';"}}
+{{addImport "import {type TodosStore} from './store';"}}
 {{includeFile template="client/src/shared/button.ts.hbs" output="client/src/button.{{ext}}"}}
-import {createButton} from './button';
-
+{{addImport "import {createButton} from './button';"}}
 {{includeFile template="client/src/shared/input.ts.hbs" output="client/src/input.{{ext}}"}}
-import {createInput} from './input';
+{{addImport "import {createInput} from './input';"}}
 
 export const createTodoInput = (store: TodosStore): HTMLDivElement => {
 const container = document.createElement('div');

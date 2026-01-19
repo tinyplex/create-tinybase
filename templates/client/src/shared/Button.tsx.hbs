@@ -1,6 +1,6 @@
 {{includeFile template="client/src/shared/button.css.hbs" output="client/src/button.css"}}
-import './button.css';
-import {ReactNode} from 'react';
+{{addImport "import './button.css';"}}
+{{addImport "import {ReactNode} from 'react';"}}
 
 interface ButtonProps {
 children: ReactNode;

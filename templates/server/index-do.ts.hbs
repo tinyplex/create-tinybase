@@ -1,8 +1,5 @@
-import {Id, IdAddedOrRemoved} from 'tinybase';
-import {
-getWsServerDurableObjectFetch,
-WsServerDurableObject,
-} from 'tinybase/synchronizers/synchronizer-ws-server-durable-object';
+{{addImport "import {Id, IdAddedOrRemoved} from 'tinybase';"}}
+{{addImport "import {\n  getWsServerDurableObjectFetch,\n  WsServerDurableObject,\n} from 'tinybase/synchronizers/synchronizer-ws-server-durable-object';"}}
 
 export class TinyBaseDurableObject extends WsServerDurableObject {
 onPathId(pathId: Id, addedOrRemoved: IdAddedOrRemoved) {

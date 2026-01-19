@@ -201,6 +201,7 @@ const config = {
 
   installCommand: '{pm} install',
   devCommand: '{pm} run dev',
+  workingDirectory: 'client',
 
   onSuccess: (projectName: string, context: Record<string, unknown>) => {
     const server = context.server as boolean;

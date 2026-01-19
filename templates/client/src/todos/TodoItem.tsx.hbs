@@ -1,9 +1,8 @@
 {{includeFile template="client/src/todos/todoItem.css.hbs" output="client/src/todoItem.css"}}
-import './todoItem.css';
-import {useDelRowCallback, useRow, useSetPartialRowCallback, STORE_ID} from './Store';
-
+{{addImport "import './todoItem.css';"}}
+{{addImport "import {useDelRowCallback, useRow, useSetPartialRowCallback, STORE_ID} from './Store';"}}
 {{includeFile template="client/src/shared/Button.tsx.hbs" output="client/src/Button.{{ext}}"}}
-import {Button} from './Button';
+{{addImport "import {Button} from './Button';"}}
 
 export const TodoItem = ({rowId}: {rowId: string}) => {
 const todo = useRow('todos', rowId, STORE_ID);

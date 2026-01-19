@@ -1,6 +1,6 @@
 {{includeFile template="client/src/drawing/colorPicker.css.hbs" output="client/src/colorPicker.css"}}
-import './colorPicker.css';
-import {useValue, useSetValueCallback, STORE_ID} from './SettingsStore';
+{{addImport "import './colorPicker.css';"}}
+{{addImport "import {useValue, useSetValueCallback, STORE_ID} from './SettingsStore';"}}
 
 export const ColorPicker = () => {
 const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];

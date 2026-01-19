@@ -1,10 +1,10 @@
 {{includeFile template="client/src/game/board.css.hbs" output="client/src/board.css"}}
-import './board.css';
-import {useMemo} from 'react';
-import {useValue, STORE_ID} from './Store';
+{{addImport "import './board.css';"}}
+{{addImport "import {useMemo} from 'react';"}}
+{{addImport "import {useValue, STORE_ID} from './Store';"}}
 
 {{includeFile template="client/src/game/Square.tsx.hbs" output="client/src/Square.{{ext}}"}}
-import {Square} from './Square';
+{{addImport "import {Square} from './Square';"}}
 
 export const Board = () => {
 const gameStatus = useValue('gameStatus', STORE_ID);

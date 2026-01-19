@@ -3,7 +3,7 @@
 {{else}}
   import {createMergeableStore} from 'tinybase';
 {{/if}}
-import {getUniqueId} from 'tinybase';
+{{addImport "import {getUniqueId} from 'tinybase';"}}
 
 const STORE_ID = 'canvas';
 

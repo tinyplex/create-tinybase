@@ -1,6 +1,6 @@
 {{includeFile template="client/src/game/gameStatus.css.hbs" output="client/src/gameStatus.css"}}
-import './gameStatus.css';
-import type {GameStore} from './store';
+{{addImport "import './gameStatus.css';"}}
+{{addImport "import type {GameStore} from './store';"}}
 
 export const createGameStatus = (store: GameStore): HTMLDivElement => {
 const status = document.createElement('div');

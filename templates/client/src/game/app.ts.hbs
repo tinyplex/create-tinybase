@@ -1,8 +1,8 @@
 {{includeFile template="client/src/game/store.ts.hbs" output="client/src/store.ts"}}
-import {store} from './store';
+{{addImport "import {store} from './store';"}}
 
 {{includeFile template="client/src/game/game.ts.hbs" output="client/src/game.{{ext}}"}}
-import {createGame} from './game';
+{{addImport "import {createGame} from './game';"}}
 
 const app = () => {
 const appContainer = document.getElementById('app')!;

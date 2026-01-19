@@ -1,5 +1,5 @@
 {{includeFile template="client/src/game/square.css.hbs" output="client/src/square.css"}}
-import './square.css';
+{{addImport "import './square.css';"}}
 
 export const createSquare = (position: number, value: string | undefined, onClick: () => void, disabled: boolean, winning: boolean): HTMLButtonElement => {
 const square = document.createElement('button');

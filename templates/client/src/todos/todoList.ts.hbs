@@ -1,9 +1,8 @@
 {{includeFile template="client/src/todos/todoList.css.hbs" output="client/src/todoList.css"}}
-import './todoList.css';
-import {type TodosStore} from './store';
-
+{{addImport "import './todoList.css';"}}
+{{addImport "import {type TodosStore} from './store';"}}
 {{includeFile template="client/src/todos/todoItem.ts.hbs" output="client/src/todoItem.{{ext}}"}}
-import {createTodoItem} from './todoItem';
+{{addImport "import {createTodoItem} from './todoItem';"}}
 
 export const createTodoList = (store: TodosStore): HTMLDivElement => {
 const list = document.createElement('div');

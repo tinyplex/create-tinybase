@@ -1,9 +1,8 @@
 {{includeFile template="client/src/todos/todoList.css.hbs" output="client/src/todoList.css"}}
-import './todoList.css';
-import {useRowIds, STORE_ID} from './Store';
-
+{{addImport "import './todoList.css';"}}
+{{addImport "import {useRowIds, STORE_ID} from './Store';"}}
 {{includeFile template="client/src/todos/TodoItem.tsx.hbs" output="client/src/TodoItem.{{ext}}"}}
-import {TodoItem} from './TodoItem';
+{{addImport "import {TodoItem} from './TodoItem';"}}
 
 export const TodoList = () => {
 const todoIds = useRowIds('todos', STORE_ID);

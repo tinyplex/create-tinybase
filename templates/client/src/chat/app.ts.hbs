@@ -1,26 +1,26 @@
 {{includeFile template="client/src/chat/settingsStore.ts.hbs" output="client/src/settingsStore.ts"}}
-import {settingsStore} from './settingsStore';
+{{addImport "import {settingsStore} from './settingsStore';"}}
 
 {{includeFile template="client/src/chat/chatStore.ts.hbs" output="client/src/chatStore.ts"}}
-import {chatStore} from './chatStore';
+{{addImport "import {chatStore} from './chatStore';"}}
 
 {{includeFile template="client/src/shared/button.ts.hbs" output="client/src/button.{{ext}}"}}
-import {createButton} from './button';
+{{addImport "import {createButton} from './button';"}}
 
 {{includeFile template="client/src/shared/input.ts.hbs" output="client/src/input.{{ext}}"}}
-import {createInput} from './input';
+{{addImport "import {createInput} from './input';"}}
 
 {{includeFile template="client/src/chat/message.ts.hbs" output="client/src/message.{{ext}}"}}
-import {createMessage} from './message';
+{{addImport "import {createMessage} from './message';"}}
 
 {{includeFile template="client/src/chat/messages.ts.hbs" output="client/src/messages.{{ext}}"}}
-import {createMessages} from './messages';
+{{addImport "import {createMessages} from './messages';"}}
 
 {{includeFile template="client/src/chat/usernameInput.ts.hbs" output="client/src/usernameInput.{{ext}}"}}
-import {createUsernameInput} from './usernameInput';
+{{addImport "import {createUsernameInput} from './usernameInput';"}}
 
 {{includeFile template="client/src/chat/messageInput.ts.hbs" output="client/src/messageInput.{{ext}}"}}
-import {createMessageInput} from './messageInput';
+{{addImport "import {createMessageInput} from './messageInput';"}}
 
 const app = () => {
 const appContainer = document.getElementById('app')!;

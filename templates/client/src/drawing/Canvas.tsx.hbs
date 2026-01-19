@@ -1,9 +1,9 @@
 {{includeFile template="client/src/drawing/canvas.css.hbs" output="client/src/canvas.css"}}
-import {useCallback, useEffect, useRef} from 'react';
-import {useTable, useStore, STORE_ID as CANVAS_STORE_ID} from './CanvasStore';
-import {useValues, STORE_ID as SETTINGS_STORE_ID} from './SettingsStore';
-import {getUniqueId} from 'tinybase';
-import './canvas.css';
+{{addImport "import {useCallback, useEffect, useRef} from 'react';"}}
+{{addImport "import {useTable, useStore, STORE_ID as CANVAS_STORE_ID} from './CanvasStore';"}}
+{{addImport "import {useValues, STORE_ID as SETTINGS_STORE_ID} from './SettingsStore';"}}
+{{addImport "import {getUniqueId} from 'tinybase';"}}
+{{addImport "import './canvas.css';"}}
 
 export const Canvas = () => {
 const canvasRef = useRef<HTMLCanvasElement>(null);

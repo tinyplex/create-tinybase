@@ -1,5 +1,5 @@
 {{includeFile template="client/src/shared/input.css.hbs" output="client/src/input.css"}}
-import './input.css';
+{{addImport "import './input.css';"}}
 
 export const createInput = (
 placeholder: string = '',

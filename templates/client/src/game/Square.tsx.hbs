@@ -1,6 +1,6 @@
 {{includeFile template="client/src/game/square.css.hbs" output="client/src/square.css"}}
-import './square.css';
-import {useCell, useStore, useValue, STORE_ID} from './Store';
+{{addImport "import './square.css';"}}
+{{addImport "import {useCell, useStore, useValue, STORE_ID} from './Store';"}}
 
 export const Square = ({position, disabled, winning}: {position: number; disabled: boolean; winning: boolean}) => {
 const store = useStore(STORE_ID);

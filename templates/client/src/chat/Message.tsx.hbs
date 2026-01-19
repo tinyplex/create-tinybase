@@ -1,7 +1,7 @@
-import {useRow, STORE_ID} from './ChatStore';
+{{addImport "import {useRow, STORE_ID} from './ChatStore';"}}
 
 {{includeFile template="client/src/chat/message.css.hbs" output="client/src/message.css"}}
-import './message.css';
+{{addImport "import './message.css';"}}
 
 interface MessageProps {
 rowId: string;
