@@ -1,10 +1,10 @@
 {{#if schemas}}
-  import {createMergeableStore} from 'tinybase/with-schemas';
-  import * as UiReact from 'tinybase/ui-react/with-schemas';
-  import {type NoValuesSchema} from 'tinybase/with-schemas';
+  {{addImport "import {createMergeableStore} from 'tinybase/with-schemas';"}}
+  {{addImport "import * as UiReact from 'tinybase/ui-react/with-schemas';"}}
+  {{addImport "import {type NoValuesSchema} from 'tinybase/with-schemas';"}}
 {{else}}
-  import {createMergeableStore} from 'tinybase';
-  import {useCreateStore, useProvideStore, useAddRowCallback, useDelTableCallback, useRow, useRowIds, useStore, useTable} from 'tinybase/ui-react';
+  {{addImport "import {createMergeableStore} from 'tinybase';"}}
+  {{addImport "import {useCreateStore, useProvideStore, useAddRowCallback, useDelTableCallback, useRow, useRowIds, useStore, useTable} from 'tinybase/ui-react';"}}
 {{/if}}
 {{addImport "import {getUniqueId} from 'tinybase';"}}
 

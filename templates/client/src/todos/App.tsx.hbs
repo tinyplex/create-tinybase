@@ -1,8 +1,8 @@
 {{addImport "import {StrictMode} from 'react';"}}
 {{#if schemas}}
-  import {Provider} from 'tinybase/ui-react/with-schemas';
+  {{addImport "import {Provider} from 'tinybase/ui-react/with-schemas';"}}
 {{else}}
-  import {Provider} from 'tinybase/ui-react';
+  {{addImport "import {Provider} from 'tinybase/ui-react';"}}
 {{/if}}
 {{addImport "import {Inspector} from 'tinybase/ui-react-inspector';"}}
 {{includeFile template="client/src/todos/Store.tsx.hbs" output="client/src/Store.{{ext}}"}}

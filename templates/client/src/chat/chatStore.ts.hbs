@@ -1,7 +1,7 @@
 {{#if schemas}}
-  import {createMergeableStore} from 'tinybase/with-schemas';
+  {{addImport "import {createMergeableStore} from 'tinybase/with-schemas';"}}
 {{else}}
-  import {createMergeableStore} from 'tinybase';
+  {{addImport "import {createMergeableStore} from 'tinybase';"}}
 {{/if}}
 
 {{#if schemas}}

@@ -1,10 +1,10 @@
 {{#if schemas}}
-  import {createStore} from 'tinybase/with-schemas';
-  import * as UiReact from 'tinybase/ui-react/with-schemas';
-  import {type NoTablesSchema} from 'tinybase/with-schemas';
+  {{addImport "import {createStore} from 'tinybase/with-schemas';"}}
+  {{addImport "import * as UiReact from 'tinybase/ui-react/with-schemas';"}}
+  {{addImport "import {type NoTablesSchema} from 'tinybase/with-schemas';"}}
 {{else}}
-  import {createStore} from 'tinybase';
-  import {useCreateStore, useProvideStore, useValue, useSetValueCallback, useValues} from 'tinybase/ui-react';
+  {{addImport "import {createStore} from 'tinybase';"}}
+  {{addImport "import {useCreateStore, useProvideStore, useValue, useSetValueCallback, useValues} from 'tinybase/ui-react';"}}
 {{/if}}
 
 export const STORE_ID = 'settings';
