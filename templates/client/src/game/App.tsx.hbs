@@ -13,7 +13,7 @@
 {{includeFile template="client/src/game/Game.tsx.hbs" output="client/src/Game.{{ext}}"}}
 {{addImport "import {Game} from './Game';"}}
 
-const App = () => {
+export const App = () => {
 return (
 <StrictMode>
   <Provider>
@@ -24,5 +24,3 @@ return (
 </StrictMode>
 );
 };
-
-export {App};

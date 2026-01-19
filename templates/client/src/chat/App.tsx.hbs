@@ -22,7 +22,7 @@
 {{includeFile template="client/src/chat/MessageInput.tsx.hbs" output="client/src/MessageInput.{{ext}}"}}
 {{addImport "import {MessageInput} from './MessageInput';"}}
 
-const App = () => {
+export const App = () => {
 return (
 <StrictMode>
   <Provider>
@@ -36,5 +36,3 @@ return (
 </StrictMode>
 );
 };
-
-export {App};

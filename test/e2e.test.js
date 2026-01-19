@@ -113,7 +113,6 @@ const combinations = [
 ];
 
 beforeAll(async () => {
-  // Only clean tmp if CLEAN_E2E env var is set
   if (process.env.CLEAN_E2E) {
     await rm(TEST_DIR, {recursive: true, force: true});
   }
@@ -183,10 +182,8 @@ async function runCLI(projectName, language, framework, appType = 'todos') {
 }
 
 async function npmInstall(projectPath, force = false) {
-  // npm install needs to run in the client directory
   const clientPath = join(projectPath, 'client');
 
-  // Check if we can skip npm install by reusing existing node_modules
   if (!force) {
     const nodeModulesPath = join(clientPath, 'node_modules');
     const packageJsonPath = join(clientPath, 'package.json');
@@ -204,9 +201,7 @@ async function npmInstall(projectPath, force = false) {
           console.log(`  ⚡ Reusing node_modules for ${clientPath}`);
           return {output: 'Reused existing node_modules', errorOutput: ''};
         }
-      } catch (err) {
-        // If comparison fails, proceed with install
-      }
+      } catch (err) {}
     }
   }
 
@@ -235,14 +230,11 @@ async function npmInstall(projectPath, force = false) {
           ),
         );
       } else {
-        // Cache the package.json for future comparisons
         try {
           const packageJsonPath = join(clientPath, 'package.json');
           const cachedPackageJsonPath = join(clientPath, '.package.json.cache');
           await cp(packageJsonPath, cachedPackageJsonPath);
-        } catch (err) {
-          // Ignore caching errors
-        }
+        } catch (err) {}
         resolve({output, errorOutput});
       }
     });
@@ -252,7 +244,6 @@ async function npmInstall(projectPath, force = false) {
 }
 
 async function startDevServer(projectPath, port) {
-  // Dev server needs to run in the client directory
   const clientPath = join(projectPath, 'client');
 
   return new Promise((resolve, reject) => {
@@ -331,7 +322,6 @@ async function checkPageLoads(port, framework, appType) {
       expect(hasReactRoot).toBe(true);
     }
 
-    // Take screenshot for README (only for React versions to have consistent styling)
     if (framework === 'react') {
       const screenshotPath = join(
         __dirname,
@@ -345,19 +335,13 @@ async function checkPageLoads(port, framework, appType) {
       });
     }
 
-    // App-specific functionality tests
     if (appType === 'todos') {
-      // Add a todo
       const input = await page.$('input[type="text"]');
       expect(input).toBeTruthy();
-      await input.click(); // Focus the input
-
-      // Use page.type() which properly triggers React onChange events
+      await input.click();
       await page.type('input[type="text"]', 'Test todo item');
 
-      await sleep(100); // Let React update
-
-      // Verify text was entered
+      await sleep(100);
       const inputValue = await page.evaluate(() => {
         const inp = document.querySelector('input[type="text"]');
         return inp ? inp.value : '';
@@ -369,66 +353,54 @@ async function checkPageLoads(port, framework, appType) {
         );
       }
 
-      // Submit the form (Enter key or button click)
       await page.keyboard.press('Enter');
-      await sleep(1000); // Give time to update
-
-      // Verify todo appears
+      await sleep(1000);
       let todoExists = await page.evaluate(() => {
         const text = 'Test todo item';
-        // Check various possible structures
         const allText = document.body.textContent;
         return allText.includes(text);
       });
 
       expect(todoExists).toBe(true);
 
-      // Complete the todo
       const checkbox = await page.$('input[type="checkbox"]');
       await checkbox.click();
       await sleep(200);
 
-      // Verify checkbox is checked
       const isChecked = await page.evaluate(() => {
         const cb = document.querySelector('input[type="checkbox"]');
         return cb ? cb.checked : false;
       });
       expect(isChecked).toBe(true);
     } else if (appType === 'chat') {
-      // Set username
       const usernameInput = await page.$('input[placeholder*="name" i]');
       if (usernameInput) {
         await usernameInput.type('TestUser');
         await sleep(200);
       }
 
-      // Send a message (find the message input, not the username input)
       const messageInput = await page.evaluateHandle(() => {
         const inputs = Array.from(
           document.querySelectorAll('input[type="text"]'),
         );
-        // The message input is usually after the username input or has a specific placeholder
         return (
           inputs.find(
             (input) =>
-              !input.placeholder.toLowerCase().includes('name') && !input.value, // Should be empty, unlike username which was filled
+              !input.placeholder.toLowerCase().includes('name') && !input.value,
           ) || inputs[inputs.length - 1]
-        ); // Fallback to last input
+        );
       });
       expect(messageInput).toBeTruthy();
       await messageInput.type('Hello from e2e test!');
       await page.keyboard.press('Enter');
       await sleep(500);
 
-      // Verify message appears
       const messages = await page.evaluate(() => document.body.textContent);
       expect(messages).toContain('Hello from e2e test!');
     } else if (appType === 'drawing') {
-      // Find canvas
       const canvas = await page.$('canvas');
       expect(canvas).toBeTruthy();
 
-      // Draw on canvas
       const box = await canvas.boundingBox();
       await page.mouse.move(box.x + 50, box.y + 50);
       await page.mouse.down();
@@ -436,62 +408,48 @@ async function checkPageLoads(port, framework, appType) {
       await page.mouse.up();
       await sleep(200);
 
-      // Verify stroke data exists (check if canvas has been drawn on)
       const hasStrokes = await page.evaluate(() => {
         const canvas = document.querySelector('canvas');
         const ctx = canvas.getContext('2d');
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        // Check if any pixels are not the background color
         return imageData.data.some((value, index) => {
-          // Skip alpha channel
           if (index % 4 === 3) return false;
-          // Check if pixel is not black (background)
           return value > 20;
         });
       });
       expect(hasStrokes).toBe(true);
     } else if (appType === 'game') {
-      // Play tic-tac-toe game
       let squares = await page.$$('button.square, button[class*="square"]');
       expect(squares.length).toBeGreaterThanOrEqual(9);
 
-      // Make first move (X)
       await squares[0].click();
       await sleep(300);
-      // Re-query to avoid stale references
       squares = await page.$$('button.square, button[class*="square"]');
       let square0Text = await squares[0].evaluate((el) => el.textContent);
       expect(square0Text).toBe('X');
 
-      // Make second move (O)
       await squares[1].click();
       await sleep(300);
-      // Re-query again
       squares = await page.$$('button.square, button[class*="square"]');
       let square1Text = await squares[1].evaluate((el) => el.textContent);
       expect(square1Text).toBe('O');
 
-      // Make third move (X)
       squares = await page.$$('button.square, button[class*="square"]');
       await squares[3].click();
       await sleep(300);
 
-      // Make fourth move (O)
       squares = await page.$$('button.square, button[class*="square"]');
       await squares[4].click();
       await sleep(300);
 
-      // Make fifth move (X) - win condition: 0, 3, 6
       squares = await page.$$('button.square, button[class*="square"]');
       await squares[6].click();
       await sleep(300);
 
-      // Verify win message appears
       const bodyText = await page.evaluate(() => document.body.textContent);
       expect(bodyText).toMatch(/won|wins|winner/i);
     }
 
-    // Filter out network errors which are transient and not real errors
     const realErrors = consoleErrors.filter(
       (err) =>
         !err.includes('ERR_NETWORK_CHANGED') &&
@@ -541,7 +499,6 @@ describe('e2e tests', {concurrent: true}, () => {
         const clientPath = join(projectPath, 'client');
         const port = BASE_PORT + index;
 
-        // Preserve node_modules if it exists
         const nodeModulesBackup = join(TEST_DIR, `${projectName}-node_modules`);
         const nodeModulesPath = join(clientPath, 'node_modules');
         const cacheFile = join(clientPath, '.package.json.cache');
@@ -553,7 +510,6 @@ describe('e2e tests', {concurrent: true}, () => {
           if (existsSync(cacheFile)) {
             await cp(cacheFile, join(TEST_DIR, `${projectName}.cache`));
           }
-          // Remove the project directory after backing up
           await rm(projectPath, {recursive: true});
         }
 
@@ -564,9 +520,7 @@ describe('e2e tests', {concurrent: true}, () => {
           combo.appType,
         );
 
-        // Restore node_modules if we backed it up
         if (existsSync(nodeModulesBackup)) {
-          // Ensure client directory exists
           const {mkdir} = await import('fs/promises');
           await mkdir(clientPath, {recursive: true});
 

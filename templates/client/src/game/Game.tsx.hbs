@@ -10,9 +10,9 @@
 {{addImport "import {GameStatus} from './GameStatus';"}}
 
 const WINNING_LINES = [
-[0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
-[0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
-[0, 4, 8], [2, 4, 6], // diagonals
+[0, 1, 2], [3, 4, 5], [6, 7, 8],
+[0, 3, 6], [1, 4, 7], [2, 5, 8],
+[0, 4, 8], [2, 4, 6],
 ];
 
 export const Game = () => {
@@ -26,7 +26,6 @@ if (gameStatus !== 'playing') return;
 
 const board = store.getTable('board');
 
-// Check for winner
 for (const line of WINNING_LINES) {
 const [a, b, c] = line;
 const cellA = board[a]?.value;
@@ -41,14 +40,12 @@ return;
 }
 }
 
-// Check for draw
 const filledCells = Object.values(board).filter((cell: any) => cell.value).length;
 if (filledCells === 9) {
 store.setValue('gameStatus', 'draw');
 return;
 }
 
-// Switch player after each move
 const currentPlayer = store.getValue('currentPlayer');
 store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
 },

@@ -182,10 +182,8 @@ const config = {
   processIncludedFile: (file: FileConfig, context: TemplateContext) => {
     const {javascript} = context;
 
-    // Apply smart defaults based on file extension
     const prettier =
       file.prettier ?? /\.(js|jsx|ts|tsx|css|json|html|md)$/.test(file.output);
-    // Transpile if the template is TypeScript but we're generating JavaScript
     const transpile =
       file.transpile ??
       (/\.(ts|tsx)\.hbs$/.test(file.template) && javascript === true);

@@ -41,8 +41,8 @@ This document defines the consistent patterns and conventions used across all Ti
 ### React Components
 
 ```typescript
-// Define component
-const App = () => {
+// Define and export component
+export const App = () => {
   return (
     <StrictMode>
       <Provider>
@@ -51,9 +51,6 @@ const App = () => {
     </StrictMode>
   );
 };
-
-// Export at end of file
-export {App};
 ```
 
 ### Vanilla Functions
@@ -82,7 +79,7 @@ export /* re-export hooks */ {};
 
 export const Store = () => {
   const store = useCreateStore(() =>
-    createMergeableStore(STORE_ID).setTable('todos', {
+    createMergeableStore().setTable('todos', {
       /* ... */
     }),
   );
@@ -114,7 +111,7 @@ const STORE_ID = 'chat'; // or 'canvas'
 
 export const ChatStore = () => {
   const store = useCreateStore(() =>
-    createMergeableStore(STORE_ID).setTable('messages', {}),
+    createMergeableStore().setTable('messages', {}),
   );
 
   useProvideStore(STORE_ID, store);
@@ -132,7 +129,7 @@ import {createMergeableStore} from 'tinybase';
 
 const STORE_ID = 'todos'; // or 'game'
 
-export const store = createMergeableStore(STORE_ID).setTable('todos', {
+export const store = createMergeableStore().setTable('todos', {
   /* ... */
 });
 
@@ -152,10 +149,7 @@ export type SettingsStore = typeof settingsStore;
 // chatStore.ts or canvasStore.ts
 const STORE_ID = 'chat'; // or 'canvas'
 
-export const chatStore = createMergeableStore(STORE_ID).setTable(
-  'messages',
-  {},
-);
+export const chatStore = createMergeableStore().setTable('messages', {});
 
 export type ChatStore = typeof chatStore; // or CanvasStore
 ```
@@ -284,7 +278,7 @@ Both React and vanilla support schema typing via conditionals:
   import {createMergeableStore} from 'tinybase';
 {{/if}}
 
-export const store = createMergeableStore(STORE_ID){{#if schemas}}
+export const store = createMergeableStore(){{#if schemas}}
   .setTablesSchema(SCHEMA){{/if}};
 ```
 

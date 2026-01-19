@@ -23,10 +23,8 @@ messagesContainer.appendChild(messageElement);
 });
 };
 
-// Initial render
 updateMessages();
 
-// Listen for changes
 store.addTablesListener(updateMessages);
 
 return messagesContainer;

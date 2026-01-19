@@ -4,9 +4,7 @@
 {{includeFile template="client/src/game/game.ts.hbs" output="client/src/game.{{ext}}"}}
 {{addImport "import {createGame} from './game';"}}
 
-const app = () => {
+export const app = () => {
 const appContainer = document.getElementById('app')!;
 appContainer.appendChild(createGame(store));
 };
-
-export {app};

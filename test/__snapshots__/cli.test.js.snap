@@ -231,6 +231,7 @@ After that, start hacking!
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "client/src/App.jsx": "import {StrictMode} from 'react';
+import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {SettingsStore} from './SettingsStore';
 import {ChatStore} from './ChatStore';
@@ -238,9 +239,7 @@ import {UsernameInput} from './UsernameInput';
 import {Messages} from './Messages';
 import {MessageInput} from './MessageInput';
 
-import {Provider} from 'tinybase/ui-react';
-
-const App = () => {
+export const App = () => {
   return (
     <StrictMode>
       <Provider>
@@ -254,8 +253,6 @@ const App = () => {
     </StrictMode>
   );
 };
-
-export {App};
 ",
   "client/src/Button.jsx": "import './button.css';
 import {ReactNode} from 'react';
@@ -275,11 +272,7 @@ export const Button = ({
   </button>
 );
 ",
-  "client/src/ChatStore.jsx": "import {SERVER} from './config';
-import ReconnectingWebSocket from 'reconnecting-websocket';
-import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-import {useCreateSynchronizer} from 'tinybase/ui-react';
-import {createMergeableStore} from 'tinybase';
+  "client/src/ChatStore.jsx": "import {createMergeableStore} from 'tinybase';
 import {
   useCreateStore,
   useProvideStore,
@@ -288,14 +281,17 @@ import {
   useRowIds,
   useStore,
 } from 'tinybase/ui-react';
-
+import {SERVER} from './config';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+import {useCreateSynchronizer} from 'tinybase/ui-react';
 export const STORE_ID = 'chat';
 
 export {useAddRowCallback, useRow, useRowIds, useStore};
 
 export const ChatStore = () => {
   const store = useCreateStore(() =>
-    createMergeableStore(STORE_ID).setDefaultContent([
+    createMergeableStore().setDefaultContent([
       {
         messages: {
           1: {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
@@ -834,15 +830,14 @@ After that, start hacking!
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "client/src/App.jsx": "import {StrictMode} from 'react';
+import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {SettingsStore} from './SettingsStore';
 import {CanvasStore} from './CanvasStore';
 import {DrawingControls} from './DrawingControls';
 import {Canvas} from './Canvas';
 
-import {Provider} from 'tinybase/ui-react';
-
-const App = () => {
+export const App = () => {
   return (
     <StrictMode>
       <Provider>
@@ -855,8 +850,6 @@ const App = () => {
     </StrictMode>
   );
 };
-
-export {App};
 ",
   "client/src/BrushSize.jsx": "import {useValue, useSetValueCallback, STORE_ID} from './SettingsStore';
 import './brushSize.css';
@@ -1017,12 +1010,7 @@ export const Canvas = () => {
   );
 };
 ",
-  "client/src/CanvasStore.jsx": "import {getUniqueId} from 'tinybase';
-import {SERVER} from './config';
-import ReconnectingWebSocket from 'reconnecting-websocket';
-import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-import {useCreateSynchronizer} from 'tinybase/ui-react';
-import {createMergeableStore} from 'tinybase';
+  "client/src/CanvasStore.jsx": "import {createMergeableStore} from 'tinybase';
 import {
   useCreateStore,
   useProvideStore,
@@ -1033,7 +1021,11 @@ import {
   useStore,
   useTable,
 } from 'tinybase/ui-react';
-
+import {getUniqueId} from 'tinybase';
+import {SERVER} from './config';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+import {useCreateSynchronizer} from 'tinybase/ui-react';
 export const STORE_ID = 'canvas';
 
 export {
@@ -1047,7 +1039,7 @@ export {
 
 export const CanvasStore = () => {
   const store = useCreateStore(() =>
-    createMergeableStore(STORE_ID).setDefaultContent([{strokes: {}}, {}]),
+    createMergeableStore().setDefaultContent([{strokes: {}}, {}]),
   );
 
   useProvideStore(STORE_ID, store);
@@ -1499,13 +1491,12 @@ After that, start hacking!
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "client/src/App.jsx": "import {StrictMode} from 'react';
+import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {Store} from './Store';
 import {Game} from './Game';
 
-import {Provider} from 'tinybase/ui-react';
-
-const App = () => {
+export const App = () => {
   return (
     <StrictMode>
       <Provider>
@@ -1516,8 +1507,6 @@ const App = () => {
     </StrictMode>
   );
 };
-
-export {App};
 ",
   "client/src/Board.jsx": "import './board.css';
 import {useMemo} from 'react';
@@ -1580,12 +1569,12 @@ import {GameStatus} from './GameStatus';
 const WINNING_LINES = [
   [0, 1, 2],
   [3, 4, 5],
-  [6, 7, 8], // rows
+  [6, 7, 8],
   [0, 3, 6],
   [1, 4, 7],
-  [2, 5, 8], // columns
+  [2, 5, 8],
   [0, 4, 8],
-  [2, 4, 6], // diagonals
+  [2, 4, 6],
 ];
 
 export const Game = () => {
@@ -1599,7 +1588,6 @@ export const Game = () => {
 
       const board = store.getTable('board');
 
-      // Check for winner
       for (const line of WINNING_LINES) {
         const [a, b, c] = line;
         const cellA = board[a]?.value;
@@ -1614,7 +1602,6 @@ export const Game = () => {
         }
       }
 
-      // Check for draw
       const filledCells = Object.values(board).filter(
         (cell) => cell.value,
       ).length;
@@ -1623,7 +1610,6 @@ export const Game = () => {
         return;
       }
 
-      // Switch player after each move
       const currentPlayer = store.getValue('currentPlayer');
       store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
     },
@@ -1702,11 +1688,7 @@ export const Square = ({position, disabled, winning}) => {
   );
 };
 ",
-  "client/src/Store.jsx": "import {SERVER} from './config';
-import ReconnectingWebSocket from 'reconnecting-websocket';
-import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-import {useCreateSynchronizer} from 'tinybase/ui-react';
-import {createMergeableStore} from 'tinybase';
+  "client/src/Store.jsx": "import {createMergeableStore} from 'tinybase';
 import {
   useCreateStore,
   useProvideStore,
@@ -1716,14 +1698,17 @@ import {
   useCell,
   useValue,
 } from 'tinybase/ui-react';
-
+import {SERVER} from './config';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+import {useCreateSynchronizer} from 'tinybase/ui-react';
 export const STORE_ID = 'game';
 
 export {useStore, useSetValuesCallback, useTableListener, useCell, useValue};
 
 export const Store = () => {
   const store = useCreateStore(() =>
-    createMergeableStore(STORE_ID).setDefaultContent([
+    createMergeableStore().setDefaultContent([
       {},
       {
         currentPlayer: 'X',
@@ -2113,14 +2098,13 @@ After that, start hacking!
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "client/src/App.jsx": "import {StrictMode} from 'react';
+import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {Store} from './Store';
 import {TodoInput} from './TodoInput';
 import {TodoList} from './TodoList';
 
-import {Provider} from 'tinybase/ui-react';
-
-const App = () => {
+export const App = () => {
   return (
     <StrictMode>
       <Provider>
@@ -2132,8 +2116,6 @@ const App = () => {
     </StrictMode>
   );
 };
-
-export {App};
 ",
   "client/src/Button.jsx": "import './button.css';
 import {ReactNode} from 'react';
@@ -2196,7 +2178,7 @@ export const STORE_ID = 'todos';
 
 export const Store = () => {
   const store = useCreateMergeableStore(() =>
-    createMergeableStore(STORE_ID).setDefaultContent([
+    createMergeableStore().setDefaultContent([
       {
         todos: {
           1: {text: 'Learn TinyBase', completed: false},
@@ -2217,7 +2199,6 @@ export const Store = () => {
     );
     await synchronizer.startSync();
 
-    // If the websocket reconnects in the future, do another explicit sync.
     synchronizer.getWebSocket().addEventListener('open', () => {
       synchronizer.load().then(() => synchronizer.save());
     });
@@ -2688,7 +2669,7 @@ import {createMessages} from './messages';
 import {createUsernameInput} from './usernameInput';
 import {createMessageInput} from './messageInput';
 
-const app = () => {
+export const app = () => {
   const appContainer = document.getElementById('app');
 
   appContainer.appendChild(createUsernameInput(settingsStore, chatStore));
@@ -2697,12 +2678,9 @@ const app = () => {
   const messageInputContainer = createMessageInput(settingsStore, chatStore);
   appContainer.appendChild(messageInputContainer);
 
-  // Focus the input after it's in the DOM
   const messageInput = messageInputContainer.querySelector('input');
   messageInput.focus();
 };
-
-export {app};
 ",
   "client/src/button.css": "button {
   padding: 0.5rem 1rem;
@@ -2742,15 +2720,12 @@ export const createButton = (text, onClick, variant = 'default') => {
   return button;
 };
 ",
-  "client/src/chatStore.js": "import {SERVER} from './config';
+  "client/src/chatStore.js": "import {createMergeableStore} from 'tinybase';
+import {SERVER} from './config';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 
-import {createMergeableStore} from 'tinybase';
-
-const STORE_ID = 'chat';
-
-export const chatStore = createMergeableStore(STORE_ID).setDefaultContent([
+export const chatStore = createMergeableStore().setDefaultContent([
   {
     messages: {
       1: {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
@@ -2947,18 +2922,14 @@ export const createMessages = (store) => {
     });
   };
 
-  // Initial render
   updateMessages();
 
-  // Listen for changes
   store.addTablesListener(updateMessages);
 
   return messagesContainer;
 };
 ",
   "client/src/settingsStore.js": "import {createStore} from 'tinybase';
-
-const STORE_ID = 'settings';
 
 export const settingsStore = createStore().setValue('username', 'Carol');
 ",
@@ -3243,14 +3214,12 @@ import {canvasStore} from './canvasStore';
 import {createDrawingControls} from './drawingControls';
 import {createCanvas} from './canvas';
 
-const app = () => {
+export const app = () => {
   const appContainer = document.getElementById('app');
 
   appContainer.appendChild(createDrawingControls(settingsStore, canvasStore));
   appContainer.appendChild(createCanvas(settingsStore, canvasStore));
 };
-
-export {app};
 ",
   "client/src/brushSize.css": "#brushSize {
   display: flex;
@@ -3469,16 +3438,13 @@ export const createCanvas = (settingsStore, canvasStore) => {
   return canvas;
 };
 ",
-  "client/src/canvasStore.js": "import {getUniqueId} from 'tinybase';
+  "client/src/canvasStore.js": "import {createMergeableStore} from 'tinybase';
+import {getUniqueId} from 'tinybase';
 import {SERVER} from './config';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 
-import {createMergeableStore} from 'tinybase';
-
-const STORE_ID = 'canvas';
-
-export const canvasStore = createMergeableStore(STORE_ID).setDefaultContent([
+export const canvasStore = createMergeableStore().setDefaultContent([
   {strokes: {}},
   {},
 ]);
@@ -3605,8 +3571,6 @@ addEventListener('load', () => {
 });
 ",
   "client/src/settingsStore.js": "import {createStore} from 'tinybase';
-
-const STORE_ID = 'settings';
 
 export const settingsStore = createStore()
   .setValue('brushColor', '#d81b60')
@@ -3845,12 +3809,10 @@ After that, start hacking!
   "client/src/app.js": "import {store} from './store';
 import {createGame} from './game';
 
-const app = () => {
+export const app = () => {
   const appContainer = document.getElementById('app');
   appContainer.appendChild(createGame(store));
 };
-
-export {app};
 ",
   "client/src/board.css": "#board {
   display: grid;
@@ -3954,12 +3916,12 @@ import {createGameStatus} from './gameStatus';
 const WINNING_LINES = [
   [0, 1, 2],
   [3, 4, 5],
-  [6, 7, 8], // rows
+  [6, 7, 8],
   [0, 3, 6],
   [1, 4, 7],
-  [2, 5, 8], // columns
+  [2, 5, 8],
   [0, 4, 8],
-  [2, 4, 6], // diagonals
+  [2, 4, 6],
 ];
 
 export const createGame = (store) => {
@@ -3969,7 +3931,6 @@ export const createGame = (store) => {
 
     const board = store.getTable('board');
 
-    // Check for winner
     for (const line of WINNING_LINES) {
       const [a, b, c] = line;
       const cellA = board[a]?.value;
@@ -3984,7 +3945,6 @@ export const createGame = (store) => {
       }
     }
 
-    // Check for draw
     const filledCells = Object.values(board).filter(
       (cell) => cell.value,
     ).length;
@@ -3993,7 +3953,6 @@ export const createGame = (store) => {
       return;
     }
 
-    // Switch player after each move
     const currentPlayer = store.getValue('currentPlayer');
     store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
   };
@@ -4131,15 +4090,12 @@ export const createSquare = (position, value, onClick, disabled, winning) => {
   return square;
 };
 ",
-  "client/src/store.js": "import {SERVER} from './config';
+  "client/src/store.js": "import {createMergeableStore} from 'tinybase';
+import {SERVER} from './config';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 
-import {createMergeableStore} from 'tinybase';
-
-const STORE_ID = 'game';
-
-export const store = createMergeableStore(STORE_ID).setDefaultContent([
+export const store = createMergeableStore().setDefaultContent([
   {},
   {
     currentPlayer: 'X',
@@ -4393,20 +4349,17 @@ After that, start hacking!
 import {createTodoInput} from './todoInput';
 import {createTodoList} from './todoList';
 
-const app = () => {
+export const app = () => {
   const appContainer = document.getElementById('app');
 
   const todoInputContainer = createTodoInput(store);
   appContainer.appendChild(todoInputContainer);
 
-  // Focus the input after it's in the DOM
   const input = todoInputContainer.querySelector('input');
   input.focus();
 
   appContainer.appendChild(createTodoList(store));
 };
-
-export {app};
 ",
   "client/src/button.css": "button {
   padding: 0.5rem 1rem;
@@ -4500,9 +4453,7 @@ import {SERVER} from './config';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 
-const STORE_ID = 'todos';
-
-export const store = createMergeableStore(STORE_ID).setDefaultContent([
+export const store = createMergeableStore().setDefaultContent([
   {
     todos: {
       1: {text: 'Learn TinyBase', completed: false},
@@ -4917,6 +4868,7 @@ After that, start hacking!
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "client/src/App.tsx": "import {StrictMode} from 'react';
+import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {SettingsStore} from './SettingsStore';
 import {ChatStore} from './ChatStore';
@@ -4924,9 +4876,7 @@ import {UsernameInput} from './UsernameInput';
 import {Messages} from './Messages';
 import {MessageInput} from './MessageInput';
 
-import {Provider} from 'tinybase/ui-react';
-
-const App = () => {
+export const App = () => {
   return (
     <StrictMode>
       <Provider>
@@ -4940,8 +4890,6 @@ const App = () => {
     </StrictMode>
   );
 };
-
-export {App};
 ",
   "client/src/Button.tsx": "import './button.css';
 import {ReactNode} from 'react';
@@ -4968,13 +4916,7 @@ export const Button = ({
   </button>
 );
 ",
-  "client/src/ChatStore.tsx": "import {SERVER} from './config';
-import ReconnectingWebSocket from 'reconnecting-websocket';
-import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-import {useCreateSynchronizer} from 'tinybase/ui-react';
-import type {MergeableStore} from 'tinybase';
-
-import {createMergeableStore} from 'tinybase';
+  "client/src/ChatStore.tsx": "import {createMergeableStore} from 'tinybase';
 import {
   useCreateStore,
   useProvideStore,
@@ -4983,6 +4925,11 @@ import {
   useRowIds,
   useStore,
 } from 'tinybase/ui-react';
+import {SERVER} from './config';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+import {useCreateSynchronizer} from 'tinybase/ui-react';
+import type {MergeableStore} from 'tinybase';
 
 export const STORE_ID = 'chat';
 
@@ -4990,7 +4937,7 @@ export {useAddRowCallback, useRow, useRowIds, useStore};
 
 export const ChatStore = () => {
   const store = useCreateStore(() =>
-    createMergeableStore(STORE_ID).setDefaultContent([
+    createMergeableStore().setDefaultContent([
       {
         messages: {
           '1': {
@@ -5299,6 +5246,14 @@ input[type='text']::placeholder {
   flex: 1;
 }
 ",
+  "client/src/vite-env.d.ts": "///
+<reference types="vite/client" />;
+
+declare module '*.css' {
+  const content: string;
+  export default content;
+}
+",
   "client/tsconfig.json": "{
   "compilerOptions": {
     "target": "ES2020",
@@ -5570,15 +5525,14 @@ After that, start hacking!
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "client/src/App.tsx": "import {StrictMode} from 'react';
+import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {SettingsStore} from './SettingsStore';
 import {CanvasStore} from './CanvasStore';
 import {DrawingControls} from './DrawingControls';
 import {Canvas} from './Canvas';
 
-import {Provider} from 'tinybase/ui-react';
-
-const App = () => {
+export const App = () => {
   return (
     <StrictMode>
       <Provider>
@@ -5591,8 +5545,6 @@ const App = () => {
     </StrictMode>
   );
 };
-
-export {App};
 ",
   "client/src/BrushSize.tsx": "import {useValue, useSetValueCallback, STORE_ID} from './SettingsStore';
 import './brushSize.css';
@@ -5763,14 +5715,7 @@ export const Canvas = () => {
   );
 };
 ",
-  "client/src/CanvasStore.tsx": "import {getUniqueId} from 'tinybase';
-import {SERVER} from './config';
-import ReconnectingWebSocket from 'reconnecting-websocket';
-import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-import {useCreateSynchronizer} from 'tinybase/ui-react';
-import type {MergeableStore} from 'tinybase';
-
-import {createMergeableStore} from 'tinybase';
+  "client/src/CanvasStore.tsx": "import {createMergeableStore} from 'tinybase';
 import {
   useCreateStore,
   useProvideStore,
@@ -5781,6 +5726,12 @@ import {
   useStore,
   useTable,
 } from 'tinybase/ui-react';
+import {getUniqueId} from 'tinybase';
+import {SERVER} from './config';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+import {useCreateSynchronizer} from 'tinybase/ui-react';
+import type {MergeableStore} from 'tinybase';
 
 export const STORE_ID = 'canvas';
 
@@ -5795,7 +5746,7 @@ export {
 
 export const CanvasStore = () => {
   const store = useCreateStore(() =>
-    createMergeableStore(STORE_ID).setDefaultContent([{strokes: {}}, {}]),
+    createMergeableStore().setDefaultContent([{strokes: {}}, {}]),
   );
 
   useProvideStore(STORE_ID, store);
@@ -6001,6 +5952,14 @@ if (location.pathname === '/') {
 addEventListener('load', () => {
   ReactDOM.createRoot(document.getElementById('app')!).render(<App />);
 });
+",
+  "client/src/vite-env.d.ts": "///
+<reference types="vite/client" />;
+
+declare module '*.css' {
+  const content: string;
+  export default content;
+}
 ",
   "client/tsconfig.json": "{
   "compilerOptions": {
@@ -6273,13 +6232,12 @@ After that, start hacking!
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "client/src/App.tsx": "import {StrictMode} from 'react';
+import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {Store} from './Store';
 import {Game} from './Game';
 
-import {Provider} from 'tinybase/ui-react';
-
-const App = () => {
+export const App = () => {
   return (
     <StrictMode>
       <Provider>
@@ -6290,8 +6248,6 @@ const App = () => {
     </StrictMode>
   );
 };
-
-export {App};
 ",
   "client/src/Board.tsx": "import './board.css';
 import {useMemo} from 'react';
@@ -6361,12 +6317,12 @@ import {GameStatus} from './GameStatus';
 const WINNING_LINES = [
   [0, 1, 2],
   [3, 4, 5],
-  [6, 7, 8], // rows
+  [6, 7, 8],
   [0, 3, 6],
   [1, 4, 7],
-  [2, 5, 8], // columns
+  [2, 5, 8],
   [0, 4, 8],
-  [2, 4, 6], // diagonals
+  [2, 4, 6],
 ];
 
 export const Game = () => {
@@ -6380,7 +6336,6 @@ export const Game = () => {
 
       const board = store.getTable('board');
 
-      // Check for winner
       for (const line of WINNING_LINES) {
         const [a, b, c] = line;
         const cellA = board[a]?.value;
@@ -6395,7 +6350,6 @@ export const Game = () => {
         }
       }
 
-      // Check for draw
       const filledCells = Object.values(board).filter(
         (cell: any) => cell.value,
       ).length;
@@ -6404,7 +6358,6 @@ export const Game = () => {
         return;
       }
 
-      // Switch player after each move
       const currentPlayer = store.getValue('currentPlayer');
       store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
     },
@@ -6491,13 +6444,7 @@ export const Square = ({
   );
 };
 ",
-  "client/src/Store.tsx": "import {SERVER} from './config';
-import ReconnectingWebSocket from 'reconnecting-websocket';
-import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-import {useCreateSynchronizer} from 'tinybase/ui-react';
-import type {MergeableStore} from 'tinybase';
-
-import {createMergeableStore} from 'tinybase';
+  "client/src/Store.tsx": "import {createMergeableStore} from 'tinybase';
 import {
   useCreateStore,
   useProvideStore,
@@ -6507,6 +6454,11 @@ import {
   useCell,
   useValue,
 } from 'tinybase/ui-react';
+import {SERVER} from './config';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+import {useCreateSynchronizer} from 'tinybase/ui-react';
+import type {MergeableStore} from 'tinybase';
 
 export const STORE_ID = 'game';
 
@@ -6514,7 +6466,7 @@ export {useStore, useSetValuesCallback, useTableListener, useCell, useValue};
 
 export const Store = () => {
   const store = useCreateStore(() =>
-    createMergeableStore(STORE_ID).setDefaultContent([
+    createMergeableStore().setDefaultContent([
       {},
       {
         currentPlayer: 'X',
@@ -6657,6 +6609,14 @@ addEventListener('load', () => {
 .square.winning {
   background: var(--accent);
   color: var(--bg);
+}
+",
+  "client/src/vite-env.d.ts": "///
+<reference types="vite/client" />;
+
+declare module '*.css' {
+  const content: string;
+  export default content;
 }
 ",
   "client/tsconfig.json": "{
@@ -6930,14 +6890,13 @@ After that, start hacking!
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
   "client/src/App.tsx": "import {StrictMode} from 'react';
+import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {Store} from './Store';
 import {TodoInput} from './TodoInput';
 import {TodoList} from './TodoList';
 
-import {Provider} from 'tinybase/ui-react';
-
-const App = () => {
+export const App = () => {
   return (
     <StrictMode>
       <Provider>
@@ -6949,8 +6908,6 @@ const App = () => {
     </StrictMode>
   );
 };
-
-export {App};
 ",
   "client/src/Button.tsx": "import './button.css';
 import {ReactNode} from 'react';
@@ -7029,7 +6986,7 @@ export const STORE_ID = 'todos';
 
 export const Store = () => {
   const store = useCreateMergeableStore(() =>
-    createMergeableStore(STORE_ID).setDefaultContent([
+    createMergeableStore().setDefaultContent([
       {
         todos: {
           '1': {text: 'Learn TinyBase', completed: false},
@@ -7050,7 +7007,6 @@ export const Store = () => {
     );
     await synchronizer.startSync();
 
-    // If the websocket reconnects in the future, do another explicit sync.
     synchronizer.getWebSocket().addEventListener('open', () => {
       synchronizer.load().then(() => synchronizer.save());
     });
@@ -7269,6 +7225,14 @@ input[type='text']::placeholder {
   padding: 2rem;
   text-align: center;
   color: var(--fg2);
+}
+",
+  "client/src/vite-env.d.ts": "///
+<reference types="vite/client" />;
+
+declare module '*.css' {
+  const content: string;
+  export default content;
 }
 ",
   "client/tsconfig.json": "{
@@ -7545,7 +7509,7 @@ import {createMessages} from './messages';
 import {createUsernameInput} from './usernameInput';
 import {createMessageInput} from './messageInput';
 
-const app = () => {
+export const app = () => {
   const appContainer = document.getElementById('app')!;
 
   appContainer.appendChild(createUsernameInput(settingsStore, chatStore));
@@ -7554,12 +7518,9 @@ const app = () => {
   const messageInputContainer = createMessageInput(settingsStore, chatStore);
   appContainer.appendChild(messageInputContainer);
 
-  // Focus the input after it's in the DOM
   const messageInput = messageInputContainer.querySelector('input')!;
   messageInput.focus();
 };
-
-export {app};
 ",
   "client/src/button.css": "button {
   padding: 0.5rem 1rem;
@@ -7603,15 +7564,12 @@ export const createButton = (
   return button;
 };
 ",
-  "client/src/chatStore.ts": "import {SERVER} from './config';
+  "client/src/chatStore.ts": "import {createMergeableStore} from 'tinybase';
+import {SERVER} from './config';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 
-import {createMergeableStore} from 'tinybase';
-
-const STORE_ID = 'chat';
-
-export const chatStore = createMergeableStore(STORE_ID).setDefaultContent([
+export const chatStore = createMergeableStore().setDefaultContent([
   {
     messages: {
       '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
@@ -7821,18 +7779,14 @@ export const createMessages = (store: ChatStore): HTMLDivElement => {
     });
   };
 
-  // Initial render
   updateMessages();
 
-  // Listen for changes
   store.addTablesListener(updateMessages);
 
   return messagesContainer;
 };
 ",
   "client/src/settingsStore.ts": "import {createStore} from 'tinybase';
-
-const STORE_ID = 'settings';
 
 export const settingsStore = createStore().setValue('username', 'Carol');
 
@@ -7886,6 +7840,14 @@ export const createUsernameInput = (
 
   return container;
 };
+",
+  "client/src/vite-env.d.ts": "///
+<reference types="vite/client" />;
+
+declare module '*.css' {
+  const content: string;
+  export default content;
+}
 ",
   "client/tsconfig.json": "{
   "compilerOptions": {
@@ -8145,14 +8107,12 @@ import {canvasStore} from './canvasStore';
 import {createDrawingControls} from './drawingControls';
 import {createCanvas} from './canvas';
 
-const app = () => {
+export const app = () => {
   const appContainer = document.getElementById('app')!;
 
   appContainer.appendChild(createDrawingControls(settingsStore, canvasStore));
   appContainer.appendChild(createCanvas(settingsStore, canvasStore));
 };
-
-export {app};
 ",
   "client/src/brushSize.css": "#brushSize {
   display: flex;
@@ -8383,16 +8343,13 @@ export const createCanvas = (
   return canvas;
 };
 ",
-  "client/src/canvasStore.ts": "import {getUniqueId} from 'tinybase';
+  "client/src/canvasStore.ts": "import {createMergeableStore} from 'tinybase';
+import {getUniqueId} from 'tinybase';
 import {SERVER} from './config';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 
-import {createMergeableStore} from 'tinybase';
-
-const STORE_ID = 'canvas';
-
-export const canvasStore = createMergeableStore(STORE_ID).setDefaultContent([
+export const canvasStore = createMergeableStore().setDefaultContent([
   {strokes: {}},
   {},
 ]);
@@ -8529,13 +8486,19 @@ addEventListener('load', () => {
 ",
   "client/src/settingsStore.ts": "import {createStore} from 'tinybase';
 
-const STORE_ID = 'settings';
-
 export const settingsStore = createStore()
   .setValue('brushColor', '#d81b60')
   .setValue('brushSize', 5);
 
 export type SettingsStore = typeof settingsStore;
+",
+  "client/src/vite-env.d.ts": "///
+<reference types="vite/client" />;
+
+declare module '*.css' {
+  const content: string;
+  export default content;
+}
 ",
   "client/tsconfig.json": "{
   "compilerOptions": {
@@ -8793,12 +8756,10 @@ After that, start hacking!
   "client/src/app.ts": "import {store} from './store';
 import {createGame} from './game';
 
-const app = () => {
+export const app = () => {
   const appContainer = document.getElementById('app')!;
   appContainer.appendChild(createGame(store));
 };
-
-export {app};
 ",
   "client/src/board.css": "#board {
   display: grid;
@@ -8908,12 +8869,12 @@ import {createGameStatus} from './gameStatus';
 const WINNING_LINES = [
   [0, 1, 2],
   [3, 4, 5],
-  [6, 7, 8], // rows
+  [6, 7, 8],
   [0, 3, 6],
   [1, 4, 7],
-  [2, 5, 8], // columns
+  [2, 5, 8],
   [0, 4, 8],
-  [2, 4, 6], // diagonals
+  [2, 4, 6],
 ];
 
 export const createGame = (store: GameStore): HTMLDivElement => {
@@ -8923,7 +8884,6 @@ export const createGame = (store: GameStore): HTMLDivElement => {
 
     const board = store.getTable('board');
 
-    // Check for winner
     for (const line of WINNING_LINES) {
       const [a, b, c] = line;
       const cellA = board[a]?.value;
@@ -8938,7 +8898,6 @@ export const createGame = (store: GameStore): HTMLDivElement => {
       }
     }
 
-    // Check for draw
     const filledCells = Object.values(board).filter(
       (cell: any) => cell.value,
     ).length;
@@ -8947,7 +8906,6 @@ export const createGame = (store: GameStore): HTMLDivElement => {
       return;
     }
 
-    // Switch player after each move
     const currentPlayer = store.getValue('currentPlayer');
     store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
   };
@@ -9093,15 +9051,12 @@ export const createSquare = (
   return square;
 };
 ",
-  "client/src/store.ts": "import {SERVER} from './config';
+  "client/src/store.ts": "import {createMergeableStore} from 'tinybase';
+import {SERVER} from './config';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 
-import {createMergeableStore} from 'tinybase';
-
-const STORE_ID = 'game';
-
-export const store = createMergeableStore(STORE_ID).setDefaultContent([
+export const store = createMergeableStore().setDefaultContent([
   {},
   {
     currentPlayer: 'X',
@@ -9122,6 +9077,14 @@ createWsSynchronizer(
 });
 
 export type GameStore = typeof store;
+",
+  "client/src/vite-env.d.ts": "///
+<reference types="vite/client" />;
+
+declare module '*.css' {
+  const content: string;
+  export default content;
+}
 ",
   "client/tsconfig.json": "{
   "compilerOptions": {
@@ -9380,20 +9343,17 @@ After that, start hacking!
 import {createTodoInput} from './todoInput';
 import {createTodoList} from './todoList';
 
-const app = () => {
+export const app = () => {
   const appContainer = document.getElementById('app')!;
 
   const todoInputContainer = createTodoInput(store);
   appContainer.appendChild(todoInputContainer);
 
-  // Focus the input after it's in the DOM
   const input = todoInputContainer.querySelector('input')!;
   input.focus();
 
   appContainer.appendChild(createTodoList(store));
 };
-
-export {app};
 ",
   "client/src/button.css": "button {
   padding: 0.5rem 1rem;
@@ -9495,9 +9455,7 @@ import {SERVER} from './config';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 
-const STORE_ID = 'todos';
-
-export const store = createMergeableStore(STORE_ID).setDefaultContent([
+export const store = createMergeableStore().setDefaultContent([
   {
     todos: {
       '1': {text: 'Learn TinyBase', completed: false},
@@ -9681,6 +9639,14 @@ export const createTodoList = (store: TodosStore): HTMLDivElement => {
 
   return list;
 };
+",
+  "client/src/vite-env.d.ts": "///
+<reference types="vite/client" />;
+
+declare module '*.css' {
+  const content: string;
+  export default content;
+}
 ",
   "client/tsconfig.json": "{
   "compilerOptions": {

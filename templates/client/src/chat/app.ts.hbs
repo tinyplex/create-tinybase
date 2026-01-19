@@ -22,7 +22,7 @@
 {{includeFile template="client/src/chat/messageInput.ts.hbs" output="client/src/messageInput.{{ext}}"}}
 {{addImport "import {createMessageInput} from './messageInput';"}}
 
-const app = () => {
+export const app = () => {
 const appContainer = document.getElementById('app')!;
 
 appContainer.appendChild(createUsernameInput(settingsStore, chatStore));
@@ -31,9 +31,6 @@ appContainer.appendChild(createMessages(chatStore));
 const messageInputContainer = createMessageInput(settingsStore, chatStore);
 appContainer.appendChild(messageInputContainer);
 
-// Focus the input after it's in the DOM
 const messageInput = messageInputContainer.querySelector('input')!;
 messageInput.focus();
 };
-
-export {app};
