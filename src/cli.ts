@@ -30,6 +30,18 @@ const config = {
     },
     {
       type: 'select' as const,
+      name: 'appType',
+      message: 'App type:',
+      choices: [
+        {title: 'Todo app', value: 'todos'},
+        {title: 'Chat app', value: 'chat'},
+        {title: 'Drawing app', value: 'drawing'},
+        {title: 'Tic-tac-toe game', value: 'game'},
+      ],
+      initial: 0,
+    },
+    {
+      type: 'select' as const,
       name: 'language',
       message: 'Language:',
       choices: [
@@ -45,18 +57,6 @@ const config = {
       choices: [
         {title: 'React', value: 'react'},
         {title: 'Vanilla', value: 'vanilla'},
-      ],
-      initial: 0,
-    },
-    {
-      type: 'select' as const,
-      name: 'appType',
-      message: 'App type:',
-      choices: [
-        {title: 'Todo app', value: 'todos'},
-        {title: 'Chat app', value: 'chat'},
-        {title: 'Drawing app', value: 'drawing'},
-        {title: 'Tic-tac-toe game', value: 'game'},
       ],
       initial: 0,
     },
