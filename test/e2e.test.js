@@ -110,6 +110,62 @@ const combinations = [
     appType: 'game',
     name: 'ts-react-game',
   },
+  {
+    language: 'typescript',
+    framework: 'vanilla',
+    appType: 'todos',
+    name: 'ts-vanilla-todos-schemas',
+    schemas: true,
+  },
+  {
+    language: 'typescript',
+    framework: 'react',
+    appType: 'todos',
+    name: 'ts-react-todos-schemas',
+    schemas: true,
+  },
+  {
+    language: 'typescript',
+    framework: 'vanilla',
+    appType: 'chat',
+    name: 'ts-vanilla-chat-schemas',
+    schemas: true,
+  },
+  {
+    language: 'typescript',
+    framework: 'react',
+    appType: 'chat',
+    name: 'ts-react-chat-schemas',
+    schemas: true,
+  },
+  {
+    language: 'typescript',
+    framework: 'vanilla',
+    appType: 'drawing',
+    name: 'ts-vanilla-drawing-schemas',
+    schemas: true,
+  },
+  {
+    language: 'typescript',
+    framework: 'react',
+    appType: 'drawing',
+    name: 'ts-react-drawing-schemas',
+    schemas: true,
+  },
+  {
+    language: 'typescript',
+    framework: 'vanilla',
+    appType: 'game',
+    name: 'ts-vanilla-game-schemas',
+    schemas: true,
+  },
+  {
+    language: 'typescript',
+    framework: 'react',
+    appType: 'game',
+    name: 'ts-react-game-schemas',
+    schemas: true,
+  },
 ];
 
 beforeAll(async () => {
@@ -126,29 +182,32 @@ afterAll(async () => {
   }
 });
 
-async function runCLI(projectName, language, framework, appType = 'todos') {
+async function runCLI(projectName, language, framework, appType = 'todos', schemas = false) {
   return new Promise((resolve, reject) => {
-    const cli = spawn(
-      'node',
-      [
-        join(__dirname, '..', 'dist', 'cli.js'),
-        '--non-interactive',
-        '--projectName',
-        projectName,
-        '--language',
-        language,
-        '--framework',
-        framework,
-        '--appType',
-        appType,
-        '--prettier',
-        'false',
-        '--eslint',
-        'false',
-        '--sync',
-        'false',
-      ],
-      {
+    const args = [
+      join(__dirname, '..', 'dist', 'cli.js'),
+      '--non-interactive',
+      '--projectName',
+      projectName,
+      '--language',
+      language,
+      '--framework',
+      framework,
+      '--appType',
+      appType,
+      '--prettier',
+      'false',
+      '--eslint',
+      'false',
+      '--sync',
+      'false',
+    ];
+    
+    if (schemas) {
+      args.push('--schemas', 'true');
+    }
+    
+    const cli = spawn('node', args, {
         cwd: TEST_DIR,
         stdio: 'pipe',
       },
@@ -518,6 +577,7 @@ describe('e2e tests', {concurrent: true}, () => {
           combo.language,
           combo.framework,
           combo.appType,
+          combo.schemas,
         );
 
         if (existsSync(nodeModulesBackup)) {
