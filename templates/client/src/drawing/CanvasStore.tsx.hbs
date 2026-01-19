@@ -27,7 +27,7 @@ export {useAddRowCallback, useDelTableCallback, useRow, useRowIds, useStore, use
 
 export const CanvasStore = () => {
 const store = useCreateStore(() =>
-createMergeableStore(STORE_ID){{#if schemas}}
+createMergeableStore(){{#if schemas}}
   .setTablesSchema(TABLES_SCHEMA){{/if}}
 .setDefaultContent([{strokes: {}}, {}]),
 );

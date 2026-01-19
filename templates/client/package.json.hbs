@@ -73,4 +73,5 @@
 {{/if}}
 {{#if typescript}}
   {{includeFile template="client/tsconfig.json.hbs" output="client/tsconfig.json"}}
+  {{includeFile template="client/vite-env.d.ts.hbs" output="client/src/vite-env.d.ts"}}
 {{/if}}

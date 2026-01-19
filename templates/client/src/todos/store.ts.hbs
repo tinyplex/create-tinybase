@@ -1,5 +1,3 @@
-const STORE_ID = 'todos';
-
 {{#if schemas}}
   {{addImport "import {createMergeableStore} from 'tinybase/with-schemas';"}}
   const TODOS_SCHEMA = {
@@ -12,7 +10,7 @@ const STORE_ID = 'todos';
   {{addImport "import {createMergeableStore} from 'tinybase';"}}
 {{/if}}
 
-export const store = createMergeableStore(STORE_ID){{#if schemas}}
+export const store = createMergeableStore(){{#if schemas}}
   .setTablesSchema(TODOS_SCHEMA){{/if}}
 .setDefaultContent([
 {

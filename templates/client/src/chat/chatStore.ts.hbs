@@ -4,8 +4,6 @@
   import {createMergeableStore} from 'tinybase';
 {{/if}}
 
-const STORE_ID = 'chat';
-
 {{#if schemas}}
   const TABLES_SCHEMA = {
   messages: {
@@ -16,7 +14,7 @@ const STORE_ID = 'chat';
   } as const;
 
 {{/if}}
-export const chatStore = createMergeableStore(STORE_ID){{#if schemas}}
+export const chatStore = createMergeableStore(){{#if schemas}}
   .setTablesSchema(TABLES_SCHEMA){{/if}}
 .setDefaultContent([
 {

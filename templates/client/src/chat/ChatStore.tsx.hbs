@@ -27,7 +27,7 @@ export {useAddRowCallback, useRow, useRowIds, useStore};
 
 export const ChatStore = () => {
 const store = useCreateStore(() =>
-createMergeableStore(STORE_ID){{#if schemas}}
+createMergeableStore(){{#if schemas}}
   .setTablesSchema(TABLES_SCHEMA){{/if}}
 .setDefaultContent([
 {

@@ -4,8 +4,6 @@
   import {createMergeableStore} from 'tinybase';
 {{/if}}
 
-const STORE_ID = 'game';
-
 {{#if schemas}}
   const VALUES_SCHEMA = {
   currentPlayer: {type: 'string'},
@@ -15,7 +13,7 @@ const STORE_ID = 'game';
   } as const;
 
 {{/if}}
-export const store = createMergeableStore(STORE_ID){{#if schemas}}
+export const store = createMergeableStore(){{#if schemas}}
   .setValuesSchema(VALUES_SCHEMA){{/if}}
 .setDefaultContent([
 {},

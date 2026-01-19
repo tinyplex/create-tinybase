@@ -24,7 +24,7 @@ export const STORE_ID = 'todos';
 
 export const Store = () => {
 const store = useCreateMergeableStore(() =>
-createMergeableStore(STORE_ID){{#if schemas}}
+createMergeableStore(){{#if schemas}}
   .setTablesSchema(TODOS_SCHEMA){{/if}}
 .setDefaultContent([
 {

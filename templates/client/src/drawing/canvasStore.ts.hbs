@@ -5,8 +5,6 @@
 {{/if}}
 {{addImport "import {getUniqueId} from 'tinybase';"}}
 
-const STORE_ID = 'canvas';
-
 {{#if schemas}}
   const TABLES_SCHEMA = {
   strokes: {
@@ -16,7 +14,7 @@ const STORE_ID = 'canvas';
   } as const;
 
 {{/if}}
-export const canvasStore = createMergeableStore(STORE_ID){{#if schemas}}
+export const canvasStore = createMergeableStore(){{#if schemas}}
   .setTablesSchema(TABLES_SCHEMA){{/if}}
 .setDefaultContent([{strokes: {}}, {}]);
 
