@@ -901,7 +901,6 @@ export const Canvas = () => {
   const canvasRef = useRef(null);
   const isDrawing = useRef(false);
   const currentStrokeId = useRef(null);
-  const pointIndex = useRef(0);
   const brush = useValues(SETTINGS_STORE_ID);
   const strokes = useTable('strokes', CANVAS_STORE_ID);
   const store = useStore(CANVAS_STORE_ID);
@@ -917,22 +916,17 @@ export const Canvas = () => {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     Object.entries(strokes).forEach(([id, stroke]) => {
-      if (stroke) {
-        const points = [];
-        let i = 0;
-        while (stroke[\`x\${i}\`] !== undefined && stroke[\`y\${i}\`] !== undefined) {
-          points.push({x: stroke[\`x\${i}\`], y: stroke[\`y\${i}\`]});
-          i++;
-        }
-        if (points.length > 0) {
+      if (stroke && stroke.points) {
+        const coords = JSON.parse(stroke.points);
+        if (coords.length >= 2) {
           ctx.strokeStyle = stroke.color;
           ctx.lineWidth = stroke.size * 2;
           ctx.lineCap = 'round';
           ctx.lineJoin = 'round';
           ctx.beginPath();
-          ctx.moveTo(points[0].x, points[0].y);
-          for (let i = 1; i < points.length; i++) {
-            ctx.lineTo(points[i].x, points[i].y);
+          ctx.moveTo(coords[0], coords[1]);
+          for (let i = 2; i < coords.length; i += 2) {
+            ctx.lineTo(coords[i], coords[i + 1]);
           }
           ctx.stroke();
         }
@@ -959,19 +953,15 @@ export const Canvas = () => {
 
   const handleStart = (e) => {
     isDrawing.current = true;
-    pointIndex.current = 0;
     currentStrokeId.current = getUniqueId();
-
-    store.setRow('strokes', currentStrokeId.current, {
-      color: brush.brushColor,
-      size: brush.brushSize,
-    });
 
     const point = getPoint(e.nativeEvent);
     if (point) {
-      store.setCell('strokes', currentStrokeId.current, 'x0', point.x);
-      store.setCell('strokes', currentStrokeId.current, 'y0', point.y);
-      pointIndex.current = 1;
+      store.setRow('strokes', currentStrokeId.current, {
+        color: brush.brushColor,
+        size: brush.brushSize,
+        points: JSON.stringify([point.x, point.y]),
+      });
     }
   };
 
@@ -979,10 +969,15 @@ export const Canvas = () => {
     if (isDrawing.current && currentStrokeId.current) {
       const point = getPoint(e.nativeEvent);
       if (point) {
-        const idx = pointIndex.current;
-        store.setCell('strokes', currentStrokeId.current, \`x\${idx}\`, point.x);
-        store.setCell('strokes', currentStrokeId.current, \`y\${idx}\`, point.y);
-        pointIndex.current++;
+        const stroke = store.getRow('strokes', currentStrokeId.current);
+        const coords = stroke?.points ? JSON.parse(stroke.points) : [];
+        coords.push(point.x, point.y);
+        store.setCell(
+          'strokes',
+          currentStrokeId.current,
+          'points',
+          JSON.stringify(coords),
+        );
       }
     }
   };
@@ -990,7 +985,6 @@ export const Canvas = () => {
   const handleEnd = () => {
     isDrawing.current = false;
     currentStrokeId.current = null;
-    pointIndex.current = 0;
   };
 
   return (
@@ -3340,23 +3334,20 @@ export const createCanvas = (settingsStore, canvasStore) => {
 
     const strokes = canvasStore.getTable('strokes');
     Object.entries(strokes).forEach(([id, stroke]) => {
-      const points = [];
-      let i = 0;
-      while (stroke[\`x\${i}\`] !== undefined && stroke[\`y\${i}\`] !== undefined) {
-        points.push({x: stroke[\`x\${i}\`], y: stroke[\`y\${i}\`]});
-        i++;
-      }
-      if (points.length > 0) {
-        ctx.strokeStyle = stroke.color;
-        ctx.lineWidth = stroke.size * 2;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        ctx.beginPath();
-        ctx.moveTo(points[0].x, points[0].y);
-        for (let i = 1; i < points.length; i++) {
-          ctx.lineTo(points[i].x, points[i].y);
+      if (stroke.points) {
+        const coords = JSON.parse(stroke.points);
+        if (coords.length >= 2) {
+          ctx.strokeStyle = stroke.color;
+          ctx.lineWidth = stroke.size * 2;
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+          ctx.beginPath();
+          ctx.moveTo(coords[0], coords[1]);
+          for (let i = 2; i < coords.length; i += 2) {
+            ctx.lineTo(coords[i], coords[i + 1]);
+          }
+          ctx.stroke();
         }
-        ctx.stroke();
       }
     });
   };
@@ -3367,29 +3358,25 @@ export const createCanvas = (settingsStore, canvasStore) => {
     const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
     const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
 
+    const stroke = canvasStore.getRow('strokes', currentStrokeId);
+    const coords = stroke?.points ? JSON.parse(stroke.points) : [];
+    coords.push(clientX - rect.left, clientY - rect.top);
     canvasStore.setCell(
       'strokes',
       currentStrokeId,
-      \`x\${pointIndex}\`,
-      clientX - rect.left,
+      'points',
+      JSON.stringify(coords),
     );
-    canvasStore.setCell(
-      'strokes',
-      currentStrokeId,
-      \`y\${pointIndex}\`,
-      clientY - rect.top,
-    );
-    pointIndex++;
   };
 
   const startStroke = (e) => {
     const brush = settingsStore.getValues();
     currentStrokeId = getUniqueId();
-    pointIndex = 0;
 
     canvasStore.setRow('strokes', currentStrokeId, {
       color: brush.brushColor,
       size: brush.brushSize,
+      points: '[]',
     });
 
     addPoint(e);
@@ -5603,7 +5590,6 @@ export const Canvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isDrawing = useRef(false);
   const currentStrokeId = useRef<string | null>(null);
-  const pointIndex = useRef(0);
   const brush = useValues(SETTINGS_STORE_ID);
   const strokes = useTable('strokes', CANVAS_STORE_ID);
   const store = useStore(CANVAS_STORE_ID);
@@ -5619,25 +5605,17 @@ export const Canvas = () => {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     Object.entries(strokes).forEach(([id, stroke]) => {
-      if (stroke) {
-        const points: Array<{x: number; y: number}> = [];
-        let i = 0;
-        while (stroke[\`x\${i}\`] !== undefined && stroke[\`y\${i}\`] !== undefined) {
-          points.push({
-            x: stroke[\`x\${i}\`] as number,
-            y: stroke[\`y\${i}\`] as number,
-          });
-          i++;
-        }
-        if (points.length > 0) {
+      if (stroke && stroke.points) {
+        const coords = JSON.parse(stroke.points as string) as number[];
+        if (coords.length >= 2) {
           ctx.strokeStyle = stroke.color as string;
           ctx.lineWidth = (stroke.size as number) * 2;
           ctx.lineCap = 'round';
           ctx.lineJoin = 'round';
           ctx.beginPath();
-          ctx.moveTo(points[0].x, points[0].y);
-          for (let i = 1; i < points.length; i++) {
-            ctx.lineTo(points[i].x, points[i].y);
+          ctx.moveTo(coords[0], coords[1]);
+          for (let i = 2; i < coords.length; i += 2) {
+            ctx.lineTo(coords[i], coords[i + 1]);
           }
           ctx.stroke();
         }
@@ -5664,19 +5642,15 @@ export const Canvas = () => {
 
   const handleStart = (e: React.MouseEvent | React.TouchEvent) => {
     isDrawing.current = true;
-    pointIndex.current = 0;
     currentStrokeId.current = getUniqueId();
-
-    store.setRow('strokes', currentStrokeId.current, {
-      color: brush.brushColor,
-      size: brush.brushSize,
-    });
 
     const point = getPoint(e.nativeEvent);
     if (point) {
-      store.setCell('strokes', currentStrokeId.current, 'x0', point.x);
-      store.setCell('strokes', currentStrokeId.current, 'y0', point.y);
-      pointIndex.current = 1;
+      store.setRow('strokes', currentStrokeId.current, {
+        color: brush.brushColor,
+        size: brush.brushSize,
+        points: JSON.stringify([point.x, point.y]),
+      });
     }
   };
 
@@ -5684,10 +5658,17 @@ export const Canvas = () => {
     if (isDrawing.current && currentStrokeId.current) {
       const point = getPoint(e.nativeEvent);
       if (point) {
-        const idx = pointIndex.current;
-        store.setCell('strokes', currentStrokeId.current, \`x\${idx}\`, point.x);
-        store.setCell('strokes', currentStrokeId.current, \`y\${idx}\`, point.y);
-        pointIndex.current++;
+        const stroke = store.getRow('strokes', currentStrokeId.current);
+        const coords = stroke?.points
+          ? JSON.parse(stroke.points as string)
+          : [];
+        coords.push(point.x, point.y);
+        store.setCell(
+          'strokes',
+          currentStrokeId.current,
+          'points',
+          JSON.stringify(coords),
+        );
       }
     }
   };
@@ -5695,7 +5676,6 @@ export const Canvas = () => {
   const handleEnd = () => {
     isDrawing.current = false;
     currentStrokeId.current = null;
-    pointIndex.current = 0;
   };
 
   return (
@@ -8245,23 +8225,20 @@ export const createCanvas = (
 
     const strokes = canvasStore.getTable('strokes');
     Object.entries(strokes).forEach(([id, stroke]: [string, any]) => {
-      const points: Array<{x: number; y: number}> = [];
-      let i = 0;
-      while (stroke[\`x\${i}\`] !== undefined && stroke[\`y\${i}\`] !== undefined) {
-        points.push({x: stroke[\`x\${i}\`], y: stroke[\`y\${i}\`]});
-        i++;
-      }
-      if (points.length > 0) {
-        ctx.strokeStyle = stroke.color;
-        ctx.lineWidth = stroke.size * 2;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        ctx.beginPath();
-        ctx.moveTo(points[0].x, points[0].y);
-        for (let i = 1; i < points.length; i++) {
-          ctx.lineTo(points[i].x, points[i].y);
+      if (stroke.points) {
+        const coords = JSON.parse(stroke.points) as number[];
+        if (coords.length >= 2) {
+          ctx.strokeStyle = stroke.color;
+          ctx.lineWidth = stroke.size * 2;
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+          ctx.beginPath();
+          ctx.moveTo(coords[0], coords[1]);
+          for (let i = 2; i < coords.length; i += 2) {
+            ctx.lineTo(coords[i], coords[i + 1]);
+          }
+          ctx.stroke();
         }
-        ctx.stroke();
       }
     });
   };
@@ -8272,29 +8249,25 @@ export const createCanvas = (
     const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
     const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
 
+    const stroke = canvasStore.getRow('strokes', currentStrokeId);
+    const coords = stroke?.points ? JSON.parse(stroke.points as string) : [];
+    coords.push(clientX - rect.left, clientY - rect.top);
     canvasStore.setCell(
       'strokes',
       currentStrokeId,
-      \`x\${pointIndex}\`,
-      clientX - rect.left,
+      'points',
+      JSON.stringify(coords),
     );
-    canvasStore.setCell(
-      'strokes',
-      currentStrokeId,
-      \`y\${pointIndex}\`,
-      clientY - rect.top,
-    );
-    pointIndex++;
   };
 
   const startStroke = (e: MouseEvent | TouchEvent) => {
     const brush = settingsStore.getValues() as any;
     currentStrokeId = getUniqueId();
-    pointIndex = 0;
 
     canvasStore.setRow('strokes', currentStrokeId, {
       color: brush.brushColor,
       size: brush.brushSize,
+      points: '[]',
     });
 
     addPoint(e);
