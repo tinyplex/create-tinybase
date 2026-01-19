@@ -15,6 +15,18 @@ let browser;
 
 const combinations = [
   {
+    language: 'javascript',
+    framework: 'vanilla',
+    appType: 'todos',
+    name: 'js-vanilla-todos',
+  },
+  {
+    language: 'javascript',
+    framework: 'react',
+    appType: 'todos',
+    name: 'js-react-todos',
+  },
+  {
     language: 'typescript',
     framework: 'vanilla',
     appType: 'todos',
@@ -25,6 +37,18 @@ const combinations = [
     framework: 'react',
     appType: 'todos',
     name: 'ts-react-todos',
+  },
+  {
+    language: 'javascript',
+    framework: 'vanilla',
+    appType: 'chat',
+    name: 'js-vanilla-chat',
+  },
+  {
+    language: 'javascript',
+    framework: 'react',
+    appType: 'chat',
+    name: 'js-react-chat',
   },
   {
     language: 'typescript',
@@ -39,6 +63,18 @@ const combinations = [
     name: 'ts-react-chat',
   },
   {
+    language: 'javascript',
+    framework: 'vanilla',
+    appType: 'drawing',
+    name: 'js-vanilla-drawing',
+  },
+  {
+    language: 'javascript',
+    framework: 'react',
+    appType: 'drawing',
+    name: 'js-react-drawing',
+  },
+  {
     language: 'typescript',
     framework: 'vanilla',
     appType: 'drawing',
@@ -49,6 +85,18 @@ const combinations = [
     framework: 'react',
     appType: 'drawing',
     name: 'ts-react-drawing',
+  },
+  {
+    language: 'javascript',
+    framework: 'vanilla',
+    appType: 'game',
+    name: 'js-vanilla-game',
+  },
+  {
+    language: 'javascript',
+    framework: 'react',
+    appType: 'game',
+    name: 'js-react-game',
   },
   {
     language: 'typescript',
