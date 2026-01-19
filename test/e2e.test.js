@@ -182,7 +182,13 @@ afterAll(async () => {
   }
 });
 
-async function runCLI(projectName, language, framework, appType = 'todos', schemas = false) {
+async function runCLI(
+  projectName,
+  language,
+  framework,
+  appType = 'todos',
+  schemas = false,
+) {
   return new Promise((resolve, reject) => {
     const args = [
       join(__dirname, '..', 'dist', 'cli.js'),
@@ -202,16 +208,15 @@ async function runCLI(projectName, language, framework, appType = 'todos', schem
       '--sync',
       'false',
     ];
-    
+
     if (schemas) {
       args.push('--schemas', 'true');
     }
-    
+
     const cli = spawn('node', args, {
-        cwd: TEST_DIR,
-        stdio: 'pipe',
-      },
-    );
+      cwd: TEST_DIR,
+      stdio: 'pipe',
+    });
 
     let output = '';
     let errorOutput = '';
