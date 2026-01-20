@@ -20,7 +20,7 @@ const sendMessage = () => {
 const text = messageInput.value.trim();
 if (text) {
 chatStore.addRow('messages', {
-username: settingsStore.getValue('username'),
+username: settingsStore.getValue('username') || 'Anonymous',
 text,
 timestamp: Date.now(),
 });

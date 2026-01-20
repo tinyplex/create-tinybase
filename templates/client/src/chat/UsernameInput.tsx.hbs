@@ -9,14 +9,14 @@ export const UsernameInput = () => {
 const username = useValue('username', STORE_ID) || '';
 const setUsername = useSetValueCallback(
 'username',
-(_e) => _e,[],
+(e: React.ChangeEvent<HTMLInputElement>) => e.target.value,[],
 STORE_ID,
 );
 
 return (
 <div id="usernameInput">
   <label>Your name:</label>
-  <Input value={username} onChange={setUsername} placeholder="Enter your name" />
+  <Input value={String(username)} onChange={setUsername} placeholder="Enter your name" />
 </div>
 );
 };

@@ -11,7 +11,7 @@ const gameStatus = useValue('gameStatus', STORE_ID);
 const winningLine = useValue('winningLine', STORE_ID);
 
 const winningPositions = useMemo(() => {
-if (!winningLine) return new Set();
+if (!winningLine || typeof winningLine !== 'string') return new Set();
 return new Set(winningLine.split(',').map(Number));
 }, [winningLine]);
 

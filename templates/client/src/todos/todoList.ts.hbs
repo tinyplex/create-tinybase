@@ -17,8 +17,8 @@ todoIds.forEach((id) => {
 const todo = todos[id];
 const item = createTodoItem(
 id,
-todo.text,
-todo.completed,
+String(todo.text),
+Boolean(todo.completed),
 () => {
 store.setPartialRow('todos', id, {completed: !todo.completed});
 },

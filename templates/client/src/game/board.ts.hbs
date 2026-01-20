@@ -14,13 +14,13 @@ const gameStatus = store.getValue('gameStatus');
 const winningLine = store.getValue('winningLine');
 const currentPlayer = store.getValue('currentPlayer');
 const winningPositions = new Set(
-winningLine ? winningLine.split(',').map(Number) : []
+winningLine && typeof winningLine === 'string' ? winningLine.split(',').map(Number) : []
 );
 const disabled = gameStatus !== 'playing';
 
 board.innerHTML = '';
-for (let i = 0; i < 9; i++) { const cell=store.getCell('board', i.toString(), 'value' ); const square=createSquare( i, cell, ()=> {
-  if (gameStatus === 'playing' && !cell) {
+for (let i = 0; i < 9; i++) { const cell=store.getCell('board', i.toString(), 'value' ); const square=createSquare( i, String(cell || ''), ()=> {
+  if (gameStatus === 'playing' && !cell && currentPlayer) {
   store.setCell('board', i.toString(), 'value', currentPlayer);
   }
   },
