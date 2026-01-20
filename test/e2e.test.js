@@ -202,9 +202,9 @@ async function runCLI(
       '--appType',
       appType,
       '--prettier',
-      'false',
+      'true',
       '--eslint',
-      'false',
+      'true',
       '--sync',
       'false',
     ];
