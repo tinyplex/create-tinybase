@@ -10,15 +10,11 @@ const messagesContainer = document.createElement('div');
 messagesContainer.id = 'messages';
 
 const updateMessages = () => {
-const messageRows = store.getTable('messages');
-const sortedIds = Object.keys(messageRows).sort(
-(a, b) => (messageRows[a].timestamp as number) - (messageRows[b].timestamp as number),
-);
+const sortedIds = store.getSortedRowIds('messages', 'timestamp');
 
 messagesContainer.innerHTML = '';
 sortedIds.forEach((id) => {
-const msg = messageRows[id];
-const messageElement = createMessage(String(msg.username), String(msg.text), msg.timestamp as number);
+const msg = store.getRow('messages', id);
 messagesContainer.appendChild(messageElement);
 });
 };

@@ -4,6 +4,9 @@
   {{addImport "import {createStore} from 'tinybase';"}}
 {{/if}}
 
+{{includeFile template="client/src/chat/utils.ts.hbs" output="client/src/utils.ts"}}
+{{addImport "import {getRandomName} from './utils';"}}
+
 {{#if schemas}}
   const VALUES_SCHEMA = {
   username: {type: 'string'},
@@ -12,6 +15,6 @@
 {{/if}}
 export const settingsStore = createStore(){{#if schemas}}
   .setValuesSchema(VALUES_SCHEMA){{/if}}
-.setValue('username', 'Carol');
+.setValue('username', getRandomName());
 
 export type SettingsStore = typeof settingsStore;

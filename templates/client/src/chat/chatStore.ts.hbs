@@ -4,6 +4,9 @@
   {{addImport "import {createMergeableStore} from 'tinybase';"}}
 {{/if}}
 
+{{includeFile template="client/src/chat/utils.ts.hbs" output="client/src/utils.ts"}}
+{{addImport "import {getDefaultContent} from './utils';"}}
+
 {{#if schemas}}
   const TABLES_SCHEMA = {
   messages: {
@@ -16,15 +19,7 @@
 {{/if}}
 export const chatStore = createMergeableStore(){{#if schemas}}
   .setTablesSchema(TABLES_SCHEMA){{/if}}
-.setDefaultContent([
-{
-messages: {
-'1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
-'2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
-},
-},
-{},
-]);
+.setDefaultContent(getDefaultContent());
 
 {{#if sync}}
   {{includeFile template="client/src/shared/config.ts.hbs" output="client/src/config.ts"}}

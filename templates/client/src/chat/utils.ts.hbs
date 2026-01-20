@@ -1,0 +1,25 @@
+const NAMES = [
+'Carol',
+'Charlie',
+'Casey',
+'Cameron',
+'Chris',
+'Dana',
+'Dakota',
+'Drew',
+'Devon',
+'Dylan',
+];
+
+export const getRandomName = (): string =>
+NAMES[Math.floor(Math.random() * NAMES.length)];
+
+export const getDefaultContent = () => [
+{
+messages: {
+'1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
+'2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
+},
+},
+{},
+];

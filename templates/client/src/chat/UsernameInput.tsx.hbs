@@ -1,23 +1,17 @@
 {{includeFile template="client/src/chat/usernameInput.css.hbs" output="client/src/usernameInput.css"}}
-{{addImport "import {useValue, useSetValueCallback, STORE_ID} from './SettingsStore';"}}
+{{addImport "import {useValueState, STORE_ID} from './SettingsStore';"}}
 {{addImport "import './usernameInput.css';"}}
 
 {{includeFile template="client/src/shared/Input.tsx.hbs" output="client/src/Input.{{ext}}"}}
 {{addImport "import {Input} from './Input';"}}
 
 export const UsernameInput = () => {
-const username = useValue('username', STORE_ID) as string || '';
-const setUsername = useSetValueCallback(
-'username',
-(value: string) => value,
-[],
-STORE_ID,
-);
+const [username, setUsername] = useValueState('username', STORE_ID);
 
 return (
 <div id="usernameInput">
   <label>Your name:</label>
-  <Input value={username} onChange={setUsername} placeholder="Enter your name" />
+  <Input value={username as string} onChange={setUsername} placeholder="Enter your name" />
 </div>
 );
 };

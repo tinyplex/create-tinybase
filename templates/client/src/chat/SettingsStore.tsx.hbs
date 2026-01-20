@@ -4,8 +4,11 @@
   {{addImport "import {type NoTablesSchema} from 'tinybase/with-schemas';"}}
 {{else}}
   {{addImport "import {createStore} from 'tinybase';"}}
-  {{addImport "import {useCreateStore, useProvideStore, useValue, useSetValueCallback} from 'tinybase/ui-react';"}}
+  {{addImport "import {useCreateStore, useProvideStore, useValue, useValueState} from 'tinybase/ui-react';"}}
 {{/if}}
+
+{{includeFile template="client/src/chat/utils.ts.hbs" output="client/src/utils.{{ext}}"}}
+{{addImport "import {getRandomName} from './utils';"}}
 
 export const STORE_ID = 'settings';
 
@@ -16,16 +19,16 @@ export const STORE_ID = 'settings';
 
   type Schemas = [NoTablesSchema, typeof VALUES_SCHEMA];
 
-  const {useCreateStore, useProvideStore, useValue, useSetValueCallback} = UiReact as UiReact.WithSchemas<Schemas>;
+  const {useCreateStore, useProvideStore, useValue, useValueState} = UiReact as UiReact.WithSchemas<Schemas>;
 {{/if}}
 
-export {useValue, useSetValueCallback};
+export {useValue, useValueState};
 
 export const SettingsStore = () => {
 const store = useCreateStore(() =>
 createStore(){{#if schemas}}
   .setValuesSchema(VALUES_SCHEMA){{/if}}
-.setValue('username', 'Carol'),
+.setValue('username', getRandomName()),
 );
 
 useProvideStore(STORE_ID, store);
