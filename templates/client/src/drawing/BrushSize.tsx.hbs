@@ -3,7 +3,7 @@
 {{addImport "import './brushSize.css';"}}
 
 export const BrushSize = () => {
-const size = useValue('brushSize', STORE_ID) ?? 5;
+const size = useValue('brushSize', STORE_ID) as number ?? 5;
 
 const setSize = useSetValueCallback(
 'brushSize',

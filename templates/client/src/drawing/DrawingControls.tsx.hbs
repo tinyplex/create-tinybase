@@ -12,7 +12,7 @@
 {{addImport "import {BrushSize} from './BrushSize';"}}
 
 export const DrawingControls = () => {
-const clearStrokes = useDelTableCallback('strokes', () => null, [], STORE_ID);
+const clearStrokes = useDelTableCallback('strokes', STORE_ID);
 
 return (
 <div id="drawingControls">
