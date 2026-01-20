@@ -6,7 +6,7 @@
 {{addImport "import {Input} from './Input';"}}
 
 export const UsernameInput = () => {
-const username = useValue('username', STORE_ID) || '';
+const username = useValue('username', STORE_ID) as string || '';
 const setUsername = useSetValueCallback(
 'username',
 (value: string) => value,
@@ -16,8 +16,8 @@ STORE_ID,
 
 return (
 <div id="usernameInput">
-<label>Your name:</label>
-<Input value={String(username)} onChange={setUsername} placeholder="Enter your name" />
+  <label>Your name:</label>
+  <Input value={username} onChange={setUsername} placeholder="Enter your name" />
 </div>
 );
 };
