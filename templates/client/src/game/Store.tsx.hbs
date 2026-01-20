@@ -4,7 +4,7 @@
   {{addImport "import {type NoTablesSchema} from 'tinybase/with-schemas';"}}
 {{else}}
   {{addImport "import {createMergeableStore} from 'tinybase';"}}
-  {{addImport "import {useCreateStore, useProvideStore, useStore, useSetValuesCallback, useTableListener, useCell, useValue} from 'tinybase/ui-react';"}}
+  {{addImport "import {useCreateMergeableStore, useProvideStore, useStore, useSetValuesCallback, useTableListener, useCell, useValue} from 'tinybase/ui-react';"}}
 {{/if}}
 
 export const STORE_ID = 'game';
@@ -19,13 +19,13 @@ export const STORE_ID = 'game';
 
   type Schemas = [NoTablesSchema, typeof VALUES_SCHEMA];
 
-  const {useCreateStore, useProvideStore, useStore, useSetValuesCallback, useTableListener, useCell, useValue} = UiReact as UiReact.WithSchemas<Schemas>;
+  const {useCreateMergeableStore, useProvideStore, useStore, useSetValuesCallback, useTableListener, useCell, useValue} = UiReact as UiReact.WithSchemas<Schemas>;
 {{/if}}
 
 export {useStore, useSetValuesCallback, useTableListener, useCell, useValue};
 
 export const Store = () => {
-const store = useCreateStore(() =>
+const store = useCreateMergeableStore(() =>
 createMergeableStore(){{#if schemas}}
   .setValuesSchema(VALUES_SCHEMA){{/if}}
 .setDefaultContent([
@@ -48,10 +48,13 @@ useProvideStore(STORE_ID, store);
   {{else}}
     {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';"}}
   {{/if}}
+{{#if schemas}}
+  {{addImport "import {useCreateSynchronizer} from 'tinybase/ui-react/with-schemas';"}}
+{{else}}
   {{addImport "import {useCreateSynchronizer} from 'tinybase/ui-react';"}}
-  {{addImport "import type {MergeableStore} from 'tinybase';"}}
+{{/if}}
 
-  useCreateSynchronizer(store, async (store: MergeableStore) => {
+  useCreateSynchronizer(store, async (store) => {
   const serverPathId = location.pathname;
   const synchronizer = await createWsSynchronizer(
   store,

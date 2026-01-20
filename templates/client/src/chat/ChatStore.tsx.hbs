@@ -4,7 +4,7 @@
   {{addImport "import {type NoValuesSchema} from 'tinybase/with-schemas';"}}
 {{else}}
   {{addImport "import {createMergeableStore} from 'tinybase';"}}
-  {{addImport "import {useCreateStore, useProvideStore, useAddRowCallback, useRow, useRowIds, useStore} from 'tinybase/ui-react';"}}
+  {{addImport "import {useCreateMergeableStore, useProvideStore, useAddRowCallback, useRow, useRowIds, useStore} from 'tinybase/ui-react';"}}
 {{/if}}
 
 export const STORE_ID = 'chat';
@@ -20,13 +20,13 @@ export const STORE_ID = 'chat';
 
   type Schemas = [typeof TABLES_SCHEMA, NoValuesSchema];
 
-  const {useCreateStore, useProvideStore, useAddRowCallback, useRow, useRowIds, useStore} = UiReact as UiReact.WithSchemas<Schemas>;
+  const {useCreateMergeableStore, useProvideStore, useAddRowCallback, useRow, useRowIds, useStore} = UiReact as UiReact.WithSchemas<Schemas>;
 {{/if}}
 
 export {useAddRowCallback, useRow, useRowIds, useStore};
 
 export const ChatStore = () => {
-const store = useCreateStore(() =>
+const store = useCreateMergeableStore(() =>
 createMergeableStore(){{#if schemas}}
   .setTablesSchema(TABLES_SCHEMA){{/if}}
 .setDefaultContent([
@@ -51,10 +51,13 @@ useProvideStore(STORE_ID, store);
   {{else}}
     {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';"}}
   {{/if}}
+{{#if schemas}}
+  {{addImport "import {useCreateSynchronizer} from 'tinybase/ui-react/with-schemas';"}}
+{{else}}
   {{addImport "import {useCreateSynchronizer} from 'tinybase/ui-react';"}}
-  {{addImport "import type {MergeableStore} from 'tinybase';"}}
+{{/if}}
 
-  useCreateSynchronizer(store, async (store: MergeableStore) => {
+  useCreateSynchronizer(store, async (store) => {
   const serverPathId = location.pathname;
   const synchronizer = await createWsSynchronizer(
   store,

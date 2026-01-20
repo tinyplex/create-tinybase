@@ -48,10 +48,13 @@ useProvideStore(STORE_ID, store);
   {{else}}
     {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';"}}
   {{/if}}
+{{#if schemas}}
+  {{addImport "import {useCreateSynchronizer} from 'tinybase/ui-react/with-schemas';"}}
+{{else}}
   {{addImport "import {useCreateSynchronizer} from 'tinybase/ui-react';"}}
-  {{addImport "import type {MergeableStore} from 'tinybase';"}}
+{{/if}}
 
-  useCreateSynchronizer(store, async (store: MergeableStore) => {
+  useCreateSynchronizer(store, async (store) => {
   const serverPathId = location.pathname;
   const synchronizer = await createWsSynchronizer(
   store,
