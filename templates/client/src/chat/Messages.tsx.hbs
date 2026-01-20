@@ -1,5 +1,5 @@
 {{addImport "import {useMemo} from 'react';"}}
-{{addImport "import {useRowIds, useStore, STORE_ID} from './ChatStore';"}}
+{{addImport "import {useRowIds, STORE_ID} from './ChatStore';"}}
 
 {{includeFile template="client/src/chat/messages.css.hbs" output="client/src/messages.css"}}
 {{addImport "import './messages.css';"}}
@@ -8,16 +8,15 @@
 {{addImport "import {Message} from './Message';"}}
 
 export const Messages = () => {
-const store = useStore(STORE_ID);
 const messageIds = useRowIds('messages', STORE_ID);
 
-const sortedIds = useMemo(() => {
+const sortedIds = useMemo((store) => {
 return [...messageIds].sort((a, b) => {
 const rowA = store.getRow('messages', a) as any;
 const rowB = store.getRow('messages', b) as any;
 return rowA.timestamp - rowB.timestamp;
 });
-}, [messageIds, store]);
+}, [messageIds], STORE_ID);
 
 return (
 <div id="messages">

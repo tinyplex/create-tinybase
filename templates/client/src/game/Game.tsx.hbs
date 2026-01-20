@@ -1,4 +1,4 @@
-{{addImport "import {useStore, useSetValuesCallback, useTableListener, STORE_ID} from './Store';"}}
+{{addImport "import {useSetValuesCallback, useTableListener, STORE_ID} from './Store';"}}
 
 {{includeFile template="client/src/shared/Button.tsx.hbs" output="client/src/Button.{{ext}}"}}
 {{addImport "import {Button} from './Button';"}}
@@ -16,11 +16,9 @@ const WINNING_LINES = [
 ];
 
 export const Game = () => {
-const store = useStore(STORE_ID);
-
 useTableListener(
 'board',
-() => {
+(store) => {
 const gameStatus = store.getValue('gameStatus');
 if (gameStatus !== 'playing') return;
 
@@ -55,7 +53,7 @@ true,
 STORE_ID,);
 
 const resetGame = useSetValuesCallback(
-() => {
+(store) => {
 store.delTable('board');
 return {currentPlayer: 'X',
 gameStatus: 'playing',
