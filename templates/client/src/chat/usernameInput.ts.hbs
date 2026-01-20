@@ -6,7 +6,7 @@
 {{includeFile template="client/src/shared/input.ts.hbs" output="client/src/input.{{ext}}"}}
 {{addImport "import {createInput} from './input';"}}
 
-export const createUsernameInput = (settingsStore: SettingsStore, chatStore: ChatStore): HTMLDivElement => {
+export const createUsernameInput = (settingsStore: SettingsStore, _chatStore: ChatStore): HTMLDivElement => {
 const container = document.createElement('div');
 container.id = 'usernameInput';
 

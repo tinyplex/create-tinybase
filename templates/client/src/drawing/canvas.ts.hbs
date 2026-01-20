@@ -19,7 +19,7 @@ ctx.fillStyle = '#111';
 ctx.fillRect(0, 0, canvas!.width, canvas!.height);
 
 const strokes = canvasStore.getTable('strokes');
-Object.entries(strokes).forEach(([id, stroke]: [string, any]) => {
+Object.entries(strokes).forEach(([_id, stroke]: [string, any]) => {
 if (stroke.points) {
 const coords = JSON.parse(stroke.points) as number[];
 if (coords.length >= 2) {

@@ -8,7 +8,7 @@ rowId: string;
 }
 
 export const Message = ({rowId}: MessageProps) => {
-const row = useRow('messages', rowId, 'chat');
+const row = useRow('messages', rowId, STORE_ID);
 const time = new Date((row as any).timestamp).toLocaleTimeString();
 
 return (

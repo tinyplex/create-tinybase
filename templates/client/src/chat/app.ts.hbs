@@ -4,15 +4,6 @@
 {{includeFile template="client/src/chat/chatStore.ts.hbs" output="client/src/chatStore.ts"}}
 {{addImport "import {chatStore} from './chatStore';"}}
 
-{{includeFile template="client/src/shared/button.ts.hbs" output="client/src/button.{{ext}}"}}
-{{addImport "import {createButton} from './button';"}}
-
-{{includeFile template="client/src/shared/input.ts.hbs" output="client/src/input.{{ext}}"}}
-{{addImport "import {createInput} from './input';"}}
-
-{{includeFile template="client/src/chat/message.ts.hbs" output="client/src/message.{{ext}}"}}
-{{addImport "import {createMessage} from './message';"}}
-
 {{includeFile template="client/src/chat/messages.ts.hbs" output="client/src/messages.{{ext}}"}}
 {{addImport "import {createMessages} from './messages';"}}
 

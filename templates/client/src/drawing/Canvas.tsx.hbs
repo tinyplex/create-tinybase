@@ -23,7 +23,7 @@ const canvasRef = useRef<HTMLCanvasElement>(null);
     ctx.fillStyle = '#111';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    Object.entries(strokes).forEach(([id, stroke]) => {
+    Object.entries(strokes).forEach(([_id, stroke]) => {
     if (stroke && stroke.points) {
     const coords = JSON.parse(stroke.points as string) as number[];
     if (coords.length >= 2) {
