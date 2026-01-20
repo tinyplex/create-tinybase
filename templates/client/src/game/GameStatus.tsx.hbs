@@ -10,12 +10,12 @@ const winner = useValue('winner', STORE_ID);
 return (
 <div id="gameStatus">
   {gameStatus === 'playing' && (
-  <>Player <span className="player">{currentPlayer}</span>'s turn</>
+  <>Player <span className="player">{currentPlayer}</span>&apos;s turn</>
   )}
   {gameStatus === 'won' && (
   <>Player <span className="winner">{winner}</span> wins!</>
   )}
-  {gameStatus === 'draw' && <>It's a draw!</>}
+  {gameStatus === 'draw' && <>It&apos;s a draw!</>}
 </div>
 );
 };

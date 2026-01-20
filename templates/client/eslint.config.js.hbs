@@ -5,13 +5,20 @@
   {{addImport "import pluginReact from 'eslint-plugin-react';"}}
   {{addImport "import pluginReactHooks from 'eslint-plugin-react-hooks';"}}
 {{/if}}
+{{addImport "import globals from 'globals';"}}
 
 export default [
+{
+languageOptions: {
+globals: globals.browser,
+},
+},
 {{#if typescript}}
   ...tseslint.configs.recommended,
   {
   rules: {
   '@typescript-eslint/no-unused-vars': 'warn',
+  '@typescript-eslint/no-explicit-any': 'warn',
   },
   },
 {{else}}
