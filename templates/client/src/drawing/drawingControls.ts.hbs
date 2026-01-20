@@ -1,7 +1,7 @@
 {{includeFile template="client/src/drawing/drawingControls.css.hbs" output="client/src/drawingControls.css"}}
 {{addImport "import './drawingControls.css';"}}
-{{addImport "import type {Store as SettingsStore} from './settingsStore';"}}
-{{addImport "import type {Store as CanvasStore} from './canvasStore';"}}
+{{addImport "import type {SettingsStore} from './settingsStore';"}}
+{{addImport "import type {CanvasStore} from './canvasStore';"}}
 
 {{includeFile template="client/src/shared/button.ts.hbs" output="client/src/button.{{ext}}"}}
 {{addImport "import {createButton} from './button';"}}

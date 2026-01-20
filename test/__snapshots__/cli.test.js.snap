@@ -5233,10 +5233,7 @@ input[type='text']::placeholder {
   flex: 1;
 }
 ",
-  "client/src/vite-env.d.ts": "///
-<reference types="vite/client" />;
-
-declare module '*.css' {
+  "client/src/vite-env.d.ts": "declare module '*.css' {
   const content: string;
   export default content;
 }
@@ -5933,10 +5930,7 @@ addEventListener('load', () => {
   ReactDOM.createRoot(document.getElementById('app')!).render(<App />);
 });
 ",
-  "client/src/vite-env.d.ts": "///
-<reference types="vite/client" />;
-
-declare module '*.css' {
+  "client/src/vite-env.d.ts": "declare module '*.css' {
   const content: string;
   export default content;
 }
@@ -6591,10 +6585,7 @@ addEventListener('load', () => {
   color: var(--bg);
 }
 ",
-  "client/src/vite-env.d.ts": "///
-<reference types="vite/client" />;
-
-declare module '*.css' {
+  "client/src/vite-env.d.ts": "declare module '*.css' {
   const content: string;
   export default content;
 }
@@ -7207,10 +7198,7 @@ input[type='text']::placeholder {
   color: var(--fg2);
 }
 ",
-  "client/src/vite-env.d.ts": "///
-<reference types="vite/client" />;
-
-declare module '*.css' {
+  "client/src/vite-env.d.ts": "declare module '*.css' {
   const content: string;
   export default content;
 }
@@ -7821,10 +7809,7 @@ export const createUsernameInput = (
   return container;
 };
 ",
-  "client/src/vite-env.d.ts": "///
-<reference types="vite/client" />;
-
-declare module '*.css' {
+  "client/src/vite-env.d.ts": "declare module '*.css' {
   const content: string;
   export default content;
 }
@@ -8117,7 +8102,7 @@ export const app = () => {
 }
 ",
   "client/src/brushSize.ts": "import './brushSize.css';
-import type {Store as SettingsStore} from './settingsStore';
+import type {SettingsStore} from './settingsStore';
 
 export const createBrushSize = (store: SettingsStore): HTMLDivElement => {
   const container = document.createElement('div');
@@ -8202,8 +8187,8 @@ export const createButton = (
 ",
   "client/src/canvas.ts": "import './canvas.css';
 import {getUniqueId} from 'tinybase';
-import type {Store as SettingsStore} from './settingsStore';
-import type {Store as CanvasStore} from './canvasStore';
+import type {SettingsStore} from './settingsStore';
+import type {CanvasStore} from './canvasStore';
 
 export const createCanvas = (
   settingsStore: SettingsStore,
@@ -8364,7 +8349,7 @@ export type CanvasStore = typeof canvasStore;
 }
 ",
   "client/src/colorPicker.ts": "import './colorPicker.css';
-import type {Store as SettingsStore} from './settingsStore';
+import type {SettingsStore} from './settingsStore';
 
 export const createColorPicker = (store: SettingsStore): HTMLDivElement => {
   const colors = [
@@ -8420,8 +8405,8 @@ export const createColorPicker = (store: SettingsStore): HTMLDivElement => {
 }
 ",
   "client/src/drawingControls.ts": "import './drawingControls.css';
-import type {Store as SettingsStore} from './settingsStore';
-import type {Store as CanvasStore} from './canvasStore';
+import type {SettingsStore} from './settingsStore';
+import type {CanvasStore} from './canvasStore';
 import {createButton} from './button';
 import {createColorPicker} from './colorPicker';
 import {createBrushSize} from './brushSize';
@@ -8465,10 +8450,7 @@ export const settingsStore = createStore()
 
 export type SettingsStore = typeof settingsStore;
 ",
-  "client/src/vite-env.d.ts": "///
-<reference types="vite/client" />;
-
-declare module '*.css' {
+  "client/src/vite-env.d.ts": "declare module '*.css' {
   const content: string;
   export default content;
 }
@@ -9051,10 +9033,7 @@ createWsSynchronizer(
 
 export type GameStore = typeof store;
 ",
-  "client/src/vite-env.d.ts": "///
-<reference types="vite/client" />;
-
-declare module '*.css' {
+  "client/src/vite-env.d.ts": "declare module '*.css' {
   const content: string;
   export default content;
 }
@@ -9613,10 +9592,7 @@ export const createTodoList = (store: TodosStore): HTMLDivElement => {
   return list;
 };
 ",
-  "client/src/vite-env.d.ts": "///
-<reference types="vite/client" />;
-
-declare module '*.css' {
+  "client/src/vite-env.d.ts": "declare module '*.css' {
   const content: string;
   export default content;
 }

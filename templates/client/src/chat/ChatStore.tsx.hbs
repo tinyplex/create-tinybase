@@ -46,7 +46,11 @@ useProvideStore(STORE_ID, store);
   {{includeFile template="client/src/shared/config.ts.hbs" output="client/src/config.ts"}}
   {{addImport "import {SERVER} from './config';"}}
   {{addImport "import ReconnectingWebSocket from 'reconnecting-websocket';"}}
-  {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';"}}
+  {{#if schemas}}
+    {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client/with-schemas';"}}
+  {{else}}
+    {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';"}}
+  {{/if}}
   {{addImport "import {useCreateSynchronizer} from 'tinybase/ui-react';"}}
   {{addImport "import type {MergeableStore} from 'tinybase';"}}
 

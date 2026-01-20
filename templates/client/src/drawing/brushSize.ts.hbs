@@ -1,6 +1,6 @@
 {{includeFile template="client/src/drawing/brushSize.css.hbs" output="client/src/brushSize.css"}}
 {{addImport "import './brushSize.css';"}}
-{{addImport "import type {Store as SettingsStore} from './settingsStore';"}}
+{{addImport "import type {SettingsStore} from './settingsStore';"}}
 
 export const createBrushSize = (store: SettingsStore): HTMLDivElement => {
 const container = document.createElement('div');

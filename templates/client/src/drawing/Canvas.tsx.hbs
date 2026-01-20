@@ -26,64 +26,64 @@ const canvasRef = useRef<HTMLCanvasElement>(null);
     Object.entries(strokes).forEach(([id, stroke]) => {
     if (stroke && stroke.points) {
     const coords = JSON.parse(stroke.points as string) as number[];
-      if (coords.length >= 2) {
-      ctx.strokeStyle = stroke.color as string;
-      ctx.lineWidth = (stroke.size as number) * 2;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.beginPath();
-      ctx.moveTo(coords[0], coords[1]);
-      for (let i = 2; i < coords.length; i += 2) { ctx.lineTo(coords[i], coords[i + 1]); } ctx.stroke(); } } }); }, [strokes]); useEffect(()=> {
-        draw();
-        }, [draw]);
+    if (coords.length >= 2) {
+    ctx.strokeStyle = stroke.color as string;
+    ctx.lineWidth = (stroke.size as number) * 2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(coords[0], coords[1]);
+    for (let i = 2; i < coords.length; i +=2) { ctx.lineTo(coords[i], coords[i + 1]); } ctx.stroke(); } } }); }, [strokes]); useEffect(()=> {
+      draw();
+      }, [draw]);
 
-        const getPoint = (e: MouseEvent | TouchEvent) => {
-        const canvas = canvasRef.current;
-        if (!canvas) return null;
+      const getPoint = (e: MouseEvent | TouchEvent) => {
+      const canvas = canvasRef.current;
+      if (!canvas) return null;
 
-        const rect = canvas.getBoundingClientRect();
-        const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-        const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+      const rect = canvas.getBoundingClientRect();
+      const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+      const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
 
-        return {
-        x: clientX - rect.left,
-        y: clientY - rect.top,
-        };
-        };
+      return {
+      x: clientX - rect.left,
+      y: clientY - rect.top,
+      };
+      };
 
-        const handleStart = (e: React.MouseEvent | React.TouchEvent) => {
-        isDrawing.current = true;
-        currentStrokeId.current = getUniqueId();
+      const handleStart = (e: React.MouseEvent | React.TouchEvent) => {
+      isDrawing.current = true;
+      currentStrokeId.current = getUniqueId();
 
-        const point = getPoint(e.nativeEvent);
-        if (point) {
-        store.setRow('strokes', currentStrokeId.current, {
-        color: brush.brushColor,
-        size: brush.brushSize,
-        points: JSON.stringify([point.x, point.y]),
-        });
-        }
-        };
+      const point = getPoint(e.nativeEvent);
+      if (point) {
+      store.setRow('strokes', currentStrokeId.current, {
+      color: brush.brushColor,
+      size: brush.brushSize,
+      points: JSON.stringify([point.x, point.y]),
+      });
+      }
+      };
 
-        const handleMove = (e: React.MouseEvent | React.TouchEvent) => {
-        if (isDrawing.current && currentStrokeId.current) {
-        const point = getPoint(e.nativeEvent);
-        if (point) {
-        const stroke = store.getRow('strokes', currentStrokeId.current);
-        const coords = stroke?.points ? JSON.parse(stroke.points as string) : [];
-        coords.push(point.x, point.y);
-        store.setCell('strokes', currentStrokeId.current, 'points', JSON.stringify(coords));
-        }
-        }
-        };
+      const handleMove = (e: React.MouseEvent | React.TouchEvent) => {
+      if (isDrawing.current && currentStrokeId.current) {
+      const point = getPoint(e.nativeEvent);
+      if (point) {
+      const stroke = store.getRow('strokes', currentStrokeId.current);
+      const coords = stroke?.points ? JSON.parse(stroke.points as string) : [];
+      coords.push(point.x, point.y);
+      store.setCell('strokes', currentStrokeId.current, 'points', JSON.stringify(coords));
+      }
+      }
+      };
 
-        const handleEnd = () => {
-        isDrawing.current = false;
-        currentStrokeId.current = null;
-        };
+      const handleEnd = () => {
+      isDrawing.current = false;
+      currentStrokeId.current = null;
+      };
 
-        return (
-        <canvas ref={canvasRef} width={600} height={400} id="drawingCanvas" onMouseDown={handleStart} onMouseMove={handleMove} onMouseUp={handleEnd} onMouseLeave={handleEnd} onTouchStart={handleStart} onTouchMove={handleMove}
-          onTouchEnd={handleEnd} />
-        );
-        };
+      return (
+      <canvas ref={canvasRef} width={600} height={400} id="drawingCanvas" onMouseDown={handleStart} onMouseMove={handleMove} onMouseUp={handleEnd} onMouseLeave={handleEnd} onTouchStart={handleStart} onTouchMove={handleMove}
+        onTouchEnd={handleEnd} />
+      );
+      };

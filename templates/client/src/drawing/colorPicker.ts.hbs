@@ -1,6 +1,6 @@
 {{includeFile template="client/src/drawing/colorPicker.css.hbs" output="client/src/colorPicker.css"}}
 {{addImport "import './colorPicker.css';"}}
-{{addImport "import type {Store as SettingsStore} from './settingsStore';"}}
+{{addImport "import type {SettingsStore} from './settingsStore';"}}
 
 export const createColorPicker = (store: SettingsStore): HTMLDivElement => {
 const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];

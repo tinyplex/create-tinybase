@@ -12,6 +12,7 @@ FILTER=""
 SKIP_INSTALL=false
 PARALLEL_INSTALL=true
 CLEAN=false
+BUILD_ONLY=false
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -31,6 +32,10 @@ while [[ $# -gt 0 ]]; do
       CLEAN=true
       shift
       ;;
+    --build-only)
+      BUILD_ONLY=true
+      shift
+      ;;
     --help)
       echo "Usage: $0 [OPTIONS]"
       echo ""
@@ -39,14 +44,16 @@ while [[ $# -gt 0 ]]; do
       echo "  --skip-install      Skip npm install (assumes deps already installed)"
       echo "  --no-parallel       Install dependencies sequentially instead of in parallel"
       echo "  --clean             Clean tmp directory (force fresh install)"
+      echo "  --build-only        Create and install projects but don't start servers or browsers"
       echo "  --help              Show this help message"
       echo ""
       echo "Examples:"
-      echo "  $0                           # Build all 12 projects (reuse node_modules)"
+      echo "  $0                           # Build all 24 projects (reuse node_modules)"
       echo "  $0 --filter chat             # Build only chat projects"
       echo "  $0 --filter ts-react-chat    # Build only ts-react-chat"
       echo "  $0 --filter drawing --skip-install  # Build drawing projects, skip install"
       echo "  $0 --clean                   # Force fresh install for all projects"
+      echo "  $0 --build-only              # Create all projects without running them"
       exit 0
       ;;
     *)
@@ -244,6 +251,18 @@ if [ "$SKIP_INSTALL" = false ]; then
 else
   echo ""
   echo "Skipping npm install (using existing node_modules)"
+fi
+
+if [ "$BUILD_ONLY" = true ]; then
+  echo ""
+  echo "✅ Build complete! Projects created in $TEST_DIR"
+  echo ""
+  echo "Projects created:"
+  for project in "${projects[@]}"; do
+    IFS=':' read -r name _ _ _ _ _ <<< "$project"
+    echo "  - $name"
+  done
+  exit 0
 fi
 
 echo ""
