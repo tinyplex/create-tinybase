@@ -307,6 +307,122 @@ async function npmInstall(projectPath, force = false) {
   });
 }
 
+async function runTypeScriptCheck(projectPath) {
+  const clientPath = join(projectPath, 'client');
+  const tsconfigPath = join(clientPath, 'tsconfig.json');
+
+  if (!existsSync(tsconfigPath)) {
+    return {passed: true, output: 'No TypeScript config found, skipping'};
+  }
+
+  return new Promise((resolve, reject) => {
+    const tsc = spawn('npx', ['tsc', '--noEmit'], {
+      cwd: clientPath,
+      stdio: 'pipe',
+    });
+
+    let output = '';
+    let errorOutput = '';
+
+    tsc.stdout?.on('data', (data) => {
+      output += data.toString();
+    });
+
+    tsc.stderr?.on('data', (data) => {
+      errorOutput += data.toString();
+    });
+
+    tsc.on('close', (code) => {
+      if (code !== 0) {
+        resolve({
+          passed: false,
+          output,
+          errorOutput,
+          errors: errorOutput + output,
+        });
+      } else {
+        resolve({passed: true, output, errorOutput});
+      }
+    });
+
+    tsc.on('error', reject);
+  });
+}
+
+async function runESLintCheck(projectPath) {
+  const clientPath = join(projectPath, 'client');
+
+  return new Promise((resolve, reject) => {
+    const eslint = spawn('npm', ['run', 'lint'], {
+      cwd: clientPath,
+      stdio: 'pipe',
+    });
+
+    let output = '';
+    let errorOutput = '';
+
+    eslint.stdout?.on('data', (data) => {
+      output += data.toString();
+    });
+
+    eslint.stderr?.on('data', (data) => {
+      errorOutput += data.toString();
+    });
+
+    eslint.on('close', (code) => {
+      if (code !== 0) {
+        resolve({
+          passed: false,
+          output,
+          errorOutput,
+          errors: errorOutput + output,
+        });
+      } else {
+        resolve({passed: true, output, errorOutput});
+      }
+    });
+
+    eslint.on('error', reject);
+  });
+}
+
+async function runPrettierCheck(projectPath) {
+  const clientPath = join(projectPath, 'client');
+
+  return new Promise((resolve, reject) => {
+    const prettier = spawn('npm', ['run', 'format:check'], {
+      cwd: clientPath,
+      stdio: 'pipe',
+    });
+
+    let output = '';
+    let errorOutput = '';
+
+    prettier.stdout?.on('data', (data) => {
+      output += data.toString();
+    });
+
+    prettier.stderr?.on('data', (data) => {
+      errorOutput += data.toString();
+    });
+
+    prettier.on('close', (code) => {
+      if (code !== 0) {
+        resolve({
+          passed: false,
+          output,
+          errorOutput,
+          errors: errorOutput + output,
+        });
+      } else {
+        resolve({passed: true, output, errorOutput});
+      }
+    });
+
+    prettier.on('error', reject);
+  });
+}
+
 async function startDevServer(projectPath, port) {
   const clientPath = join(projectPath, 'client');
 
@@ -599,6 +715,32 @@ describe('e2e tests', {concurrent: true}, () => {
         }
 
         await npmInstall(projectPath, !!process.env.CLEAN_E2E);
+
+        // Run TypeScript check for TypeScript projects
+        if (combo.language === 'typescript') {
+          const tsResult = await runTypeScriptCheck(projectPath);
+          if (!tsResult.passed) {
+            throw new Error(
+              `TypeScript check failed for ${combo.name}:\n${tsResult.errors}`,
+            );
+          }
+        }
+
+        // Run ESLint check
+        const eslintResult = await runESLintCheck(projectPath);
+        if (!eslintResult.passed) {
+          throw new Error(
+            `ESLint check failed for ${combo.name}:\n${eslintResult.errors}`,
+          );
+        }
+
+        // Run Prettier check
+        const prettierResult = await runPrettierCheck(projectPath);
+        if (!prettierResult.passed) {
+          throw new Error(
+            `Prettier check failed for ${combo.name}:\n${prettierResult.errors}`,
+          );
+        }
 
         let devServer;
         try {

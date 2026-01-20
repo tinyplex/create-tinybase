@@ -19,7 +19,7 @@ winningLine && typeof winningLine === 'string' ? winningLine.split(',').map(Numb
 const disabled = gameStatus !== 'playing';
 
 board.innerHTML = '';
-for (let i = 0; i < 9; i++) { const cell=store.getCell('board', i.toString(), 'value' ); const square=createSquare( i, String(cell || ''), ()=> {
+for (let i = 0; i < 9; i++) { const cell=store.getCell('board', i.toString(), 'value' ); const square=createSquare( i, String(cell || '' ), ()=> {
   if (gameStatus === 'playing' && !cell && currentPlayer) {
   store.setCell('board', i.toString(), 'value', currentPlayer);
   }
