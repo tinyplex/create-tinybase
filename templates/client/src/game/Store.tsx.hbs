@@ -1,7 +1,6 @@
 {{#if schemas}}
   {{addImport "import {createMergeableStore} from 'tinybase/with-schemas';"}}
   {{addImport "import * as UiReact from 'tinybase/ui-react/with-schemas';"}}
-  {{addImport "import {type NoTablesSchema} from 'tinybase/with-schemas';"}}
 {{else}}
   {{addImport "import {createMergeableStore} from 'tinybase';"}}
   {{addImport "import {useCreateMergeableStore, useProvideStore, useStore, useSetValuesCallback, useSetCellCallback, useTableListener, useCell, useValue} from 'tinybase/ui-react';"}}
@@ -10,6 +9,12 @@
 export const STORE_ID = 'game';
 
 {{#if schemas}}
+  const TABLES_SCHEMA = {
+  board: {
+  value: {type: 'string'},
+  },
+  } as const;
+
   const VALUES_SCHEMA = {
   currentPlayer: {type: 'string'},
   gameStatus: {type: 'string'},
@@ -17,7 +22,7 @@ export const STORE_ID = 'game';
   winningLine: {type: 'string', default: ''},
   } as const;
 
-  type Schemas = [NoTablesSchema, typeof VALUES_SCHEMA];
+  type Schemas = [typeof TABLES_SCHEMA, typeof VALUES_SCHEMA];
 
   const {useCreateMergeableStore, useProvideStore, useStore, useSetValuesCallback, useSetCellCallback, useTableListener, useCell, useValue} = UiReact as UiReact.WithSchemas<Schemas>;
 {{/if}}
@@ -27,6 +32,7 @@ export {useStore, useSetValuesCallback, useSetCellCallback, useTableListener, us
 export const Store = () => {
 const store = useCreateMergeableStore(() =>
 createMergeableStore(){{#if schemas}}
+  .setTablesSchema(TABLES_SCHEMA)
   .setValuesSchema(VALUES_SCHEMA){{/if}}
 .setDefaultContent([
 {},

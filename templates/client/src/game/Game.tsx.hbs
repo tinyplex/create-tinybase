@@ -53,7 +53,7 @@ true,
 STORE_ID,);
 
 const resetGame = useSetValuesCallback(
-(store) => {
+(_, store) => {
 store.delTable('board');
 return {currentPlayer: 'X',
 gameStatus: 'playing',

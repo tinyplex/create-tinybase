@@ -8,7 +8,7 @@ const currentPlayer = useValue('currentPlayer', STORE_ID);
 
 const isDisabled = disabled || !!value;
 
-const handleClick = useSetCellCallback('board', position.toString(), 'value', () => currentPlayer || 'X', [], STORE_ID);
+const handleClick = useSetCellCallback('board', position.toString(), 'value', () => currentPlayer || 'X', [currentPlayer], STORE_ID);
 
 return (
 <button className={`square${isDisabled ? ' disabled' : '' }${winning ? ' winning' : '' }`} onClick={handleClick} disabled={isDisabled}>
