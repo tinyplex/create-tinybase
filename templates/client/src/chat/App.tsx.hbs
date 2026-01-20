@@ -18,8 +18,7 @@
 {{includeFile template="client/src/chat/MessageInput.tsx.hbs" output="client/src/MessageInput.{{ext}}"}}
 {{addImport "import {MessageInput} from './MessageInput';"}}
 
-export const App = () => {
-return (
+export const App = () => (
 <StrictMode>
   <Provider>
     <SettingsStore />
@@ -31,4 +30,3 @@ return (
   </Provider>
 </StrictMode>
 );
-};

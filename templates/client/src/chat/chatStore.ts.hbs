@@ -1,5 +1,5 @@
 {{#if schemas}}
-  {{addImport "import {createMergeableStore} from 'tinybase/with-schemas';"}}
+  {{addImport "import {createMergeableStore, type Row} from 'tinybase/with-schemas';"}}
 {{else}}
   {{addImport "import {createMergeableStore} from 'tinybase';"}}
 {{/if}}
@@ -10,9 +10,9 @@
 {{#if schemas}}
   const TABLES_SCHEMA = {
   messages: {
-  username: {type: 'string'},
-  text: {type: 'string'},
-  timestamp: {type: 'number'},
+  username: {type: 'string', default: ''},
+  text: {type: 'string', default: ''},
+  timestamp: {type: 'number', default: 0},
   },
   } as const;
 
@@ -20,6 +20,8 @@
 export const chatStore = createMergeableStore(){{#if schemas}}
   .setTablesSchema(TABLES_SCHEMA){{/if}}
 .setDefaultContent(getDefaultContent());
+
+export type MessageRow = {{#if schemas}}Row<typeof TABLES_SCHEMA, 'messages'>{{else}}{username: string; text: string; timestamp: number}{{/if}};
 
 {{#if sync}}
   {{includeFile template="client/src/shared/config.ts.hbs" output="client/src/config.ts"}}

@@ -14,7 +14,8 @@ const NAMES = [
 export const getRandomName = (): string =>
 NAMES[Math.floor(Math.random() * NAMES.length)];
 
-export const getDefaultContent = () => [
+export const getDefaultContent = (): [any, any] =>
+[
 {
 messages: {
 '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},

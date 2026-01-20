@@ -1,5 +1,5 @@
 {{#if schemas}}
-  {{addImport "import {createMergeableStore} from 'tinybase/with-schemas';"}}
+  {{addImport "import {createMergeableStore, type Row} from 'tinybase/with-schemas';"}}
   {{addImport "import * as UiReact from 'tinybase/ui-react/with-schemas';"}}
   {{addImport "import {type NoValuesSchema} from 'tinybase/with-schemas';"}}
 {{else}}
@@ -10,52 +10,65 @@
 {{includeFile template="client/src/chat/utils.ts.hbs" output="client/src/utils.{{ext}}"}}
 {{addImport "import {getDefaultContent} from './utils';"}}
 
-timestamp: {type: 'number'},
-},
-} as const;
+export const STORE_ID = 'chat';
 
-type Schemas = [typeof TABLES_SCHEMA, NoValuesSchema];
+{{#if schemas}}
+  const TABLES_SCHEMA = {
+  messages: {
+  username: {type: 'string', default: ''},
+  text: {type: 'string', default: ''},
+  timestamp: {type: 'number', default: 0},
+  },
+  } as const;
 
-const {useCreateMergeableStore, useProvideStore, useAddRowCallback, useRow, useSortedRowIds, useStore} = UiReact as UiReact.WithSchemas<Schemas>;
+  type Schemas = [typeof TABLES_SCHEMA, NoValuesSchema];
+
+  const {useCreateMergeableStore, useProvideStore, useAddRowCallback, useRow, useSortedRowIds, useStore} = UiReact as UiReact.WithSchemas<Schemas>;
+{{/if}}
+
+export type MessageRow = {{#if schemas}}Row<typeof TABLES_SCHEMA, 'messages'>{{else}}{username: string; text: string; timestamp: number}{{/if}};
+
+export {useAddRowCallback, useRow, useSortedRowIds, useStore};
+
+export const ChatStore = () => {
+const store = useCreateMergeableStore(() =>
+createMergeableStore(){{#if schemas}}
+  .setTablesSchema(TABLES_SCHEMA){{/if}}
+.setDefaultContent(getDefaultContent()),
+);
+
+useProvideStore(STORE_ID, store);
+
+{{#if sync}}
+  {{includeFile template="client/src/shared/config.ts.hbs" output="client/src/config.ts"}}
+  {{addImport "import {SERVER} from './config';"}}
+  {{addImport "import ReconnectingWebSocket from 'reconnecting-websocket';"}}
+  {{#if schemas}}
+    {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client/with-schemas';"}}
+  {{else}}
+    {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';"}}
+  {{/if}}
+  {{#if schemas}}
+    {{addImport "import {useCreateSynchronizer} from 'tinybase/ui-react/with-schemas';"}}
+  {{else}}
+    {{addImport "import {useCreateSynchronizer} from 'tinybase/ui-react';"}}
   {{/if}}
 
-  export {useAddRowCallback, useRow, useSortedRowIds, useStore};
+  useCreateSynchronizer(store, async (store) => {
+  const serverPathId = location.pathname;
+  const synchronizer = await createWsSynchronizer(
+  store,
+  new ReconnectingWebSocket(SERVER + serverPathId),
+  );
+  await synchronizer.startSync();
 
-  export const ChatStore = () => {
-  const store = useCreateMergeableStore(() =>
-  createMergeableStore(){{#if schemas}}
-    .setTablesSchema(TABLES_SCHEMA){{/if}}
-  .setDefaultContent(getDefaultContent()),
-  {{#if sync}}
-    {{includeFile template="client/src/shared/config.ts.hbs" output="client/src/config.ts"}}
-    {{addImport "import {SERVER} from './config';"}}
-    {{addImport "import ReconnectingWebSocket from 'reconnecting-websocket';"}}
-    {{#if schemas}}
-      {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client/with-schemas';"}}
-    {{else}}
-      {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';"}}
-    {{/if}}
-    {{#if schemas}}
-      {{addImport "import {useCreateSynchronizer} from 'tinybase/ui-react/with-schemas';"}}
-    {{else}}
-      {{addImport "import {useCreateSynchronizer} from 'tinybase/ui-react';"}}
-    {{/if}}
+  synchronizer.getWebSocket().addEventListener('open', () => {
+  synchronizer.load().then(() => synchronizer.save());
+  });
 
-    useCreateSynchronizer(store, async (store) => {
-    const serverPathId = location.pathname;
-    const synchronizer = await createWsSynchronizer(
-    store,
-    new ReconnectingWebSocket(SERVER + serverPathId),
-    );
-    await synchronizer.startSync();
+  return synchronizer;
+  });
+{{/if}}
 
-    synchronizer.getWebSocket().addEventListener('open', () => {
-    synchronizer.load().then(() => synchronizer.save());
-    });
-
-    return synchronizer;
-    });
-  {{/if}}
-
-  return null;
-  };
+return null;
+};

@@ -1,4 +1,4 @@
-{{addImport "import {useRow, STORE_ID} from './ChatStore';"}}
+{{addImport "import {useRow, type MessageRow, STORE_ID} from './ChatStore';"}}
 
 {{includeFile template="client/src/chat/message.css.hbs" output="client/src/message.css"}}
 {{addImport "import './message.css';"}}
@@ -8,14 +8,13 @@ rowId: string;
 }
 
 export const Message = ({rowId}: MessageProps) => {
-const row = useRow('messages', rowId, STORE_ID);
-const time = new Date(row?.timestamp).toLocaleTimeString();
+const {username, text, timestamp} = useRow('messages', rowId, STORE_ID) as MessageRow;
 
 return (
 <div className="message">
-  <span className="username">{row?.username}:</span>
-  <span className="text">{row?.text}</span>
-  <span className="time">{time}</span>
+  <span className="username">{username}:</span>
+  <span className="text">{text}</span>
+  <span className="time">{new Date(timestamp).toLocaleTimeString()}</span>
 </div>
-);
+)
 };

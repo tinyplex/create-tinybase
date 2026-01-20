@@ -1,7 +1,7 @@
 {{includeFile template="client/src/chat/message.css.hbs" output="client/src/message.css"}}
 {{addImport "import './message.css';"}}
 
-export const createMessage = (username: string, text: string, timestamp: number): HTMLDivElement => {
+export const createMessage = ({username, text, timestamp}: {username: string; text: string; timestamp: number;}): HTMLDivElement => {
 const time = new Date(timestamp).toLocaleTimeString();
 
 const messageDiv = document.createElement('div');

@@ -11,7 +11,7 @@ const [username, setUsername] = useValueState('username', STORE_ID);
 return (
 <div id="usernameInput">
   <label>Your name:</label>
-  <Input value={username as string} onChange={setUsername} placeholder="Enter your name" />
+  <Input value={username + '' } onChange={setUsername} placeholder="Enter your name" />
 </div>
 );
 };
