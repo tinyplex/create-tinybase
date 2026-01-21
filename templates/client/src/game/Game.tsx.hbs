@@ -10,9 +10,9 @@
 {{addImport "import {GameStatus} from './GameStatus';"}}
 
 const WINNING_LINES = [
-[0, 1, 2], [3, 4, 5], [6, 7, 8],
-[0, 3, 6], [1, 4, 7], [2, 5, 8],
-[0, 4, 8], [2, 4, 6],
+['0', '1', '2'], ['3', '4', '5'], ['6', '7', '8'],
+['0', '3', '6'], ['1', '4', '7'], ['2', '5', '8'],
+['0', '4', '8'], ['2', '4', '6'],
 ];
 
 export const Game = () => {
@@ -22,13 +22,11 @@ useTableListener(
 const gameStatus = store.getValue('gameStatus');
 if (gameStatus !== 'playing') return;
 
-const board = store.getTable('board');
-
 for (const line of WINNING_LINES) {
 const [a, b, c] = line;
-const cellA = board[a]?.value;
-const cellB = board[b]?.value;
-const cellC = board[c]?.value;
+const cellA = store.getCell('board', a, 'value');
+const cellB = store.getCell('board', b, 'value');
+const cellC = store.getCell('board', c, 'value');
 
 if (cellA && cellA === cellB && cellA === cellC) {
 store.setValue('gameStatus', 'won');
@@ -38,9 +36,7 @@ return;
 }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const filledCells = Object.values(board).filter((cell: any) => cell.value).length;
-if (filledCells === 9) {
+if (store.getRowCount('board') === 9) {
 store.setValue('gameStatus', 'draw');
 return;
 }

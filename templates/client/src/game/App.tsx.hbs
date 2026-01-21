@@ -9,8 +9,7 @@
 {{includeFile template="client/src/game/Game.tsx.hbs" output="client/src/Game.{{ext}}"}}
 {{addImport "import {Game} from './Game';"}}
 
-export const App = () => {
-return (
+export const App = () => (
 <StrictMode>
   <Provider>
     <Store />
@@ -19,4 +18,3 @@ return (
   </Provider>
 </StrictMode>
 );
-};
