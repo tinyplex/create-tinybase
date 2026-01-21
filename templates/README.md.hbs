@@ -9,8 +9,8 @@ A TinyBase app built with {{#if typescript}}TypeScript{{else}}JavaScript{{/if}} 
 
 ## Getting Started
 
-Alongside this file, you will see a directory called `client` (and optionally
-one called `server` if you included server code).
+Alongside this file, you will see a directory called `client`{{#if server}} (and optionally
+one called `server` for your {{#if (eq syncType "node")}}local Node.js server{{else if (eq syncType "durable-objects")}}local Cloudflare Durable Objects server{{/if}}){{/if}}.
 
 To start the web client with Vite, run the following commands:
 

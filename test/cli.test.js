@@ -112,6 +112,7 @@ async function runCLI(projectName, language, framework, appType = 'todos') {
     language,
     framework,
     appType,
+    'none',
     false,
     false,
   );
@@ -122,6 +123,7 @@ async function runCLIWithOptions(
   language,
   framework,
   appType,
+  syncType,
   prettier,
   eslint,
 ) {
@@ -139,6 +141,8 @@ async function runCLIWithOptions(
         framework,
         '--appType',
         appType,
+        '--syncType',
+        syncType,
         '--prettier',
         prettier.toString(),
         '--eslint',
@@ -292,12 +296,13 @@ describe('create-tinybase', () => {
         'typescript',
         'react',
         'todos',
+        'none',
         true,
         true,
       );
       const files = await getFileList(projectPath);
 
-      expect(files).toContain('client/.prettierrc');
+      expect(files).toContain('client/.prettierrc.json');
       expect(files).toContain('client/eslint.config.js');
       expect(files).toContain('client/package.json');
 

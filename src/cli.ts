@@ -73,28 +73,19 @@ const config = {
       initial: false,
     },
     {
-      type: 'confirm' as const,
-      name: 'sync',
-      message: 'Enable synchronization?',
-      initial: true,
-    },
-    {
-      type: (prev: unknown, answers: Record<string, unknown>) =>
-        answers.sync ? ('confirm' as const) : null,
-      name: 'server',
-      message: 'Add code for server?',
-      initial: false,
-    },
-    {
-      type: (prev: unknown, answers: Record<string, unknown>) =>
-        answers.server ? ('select' as const) : null,
-      name: 'serverType',
-      message: 'Server type:',
+      type: 'select' as const,
+      name: 'syncType',
+      message: 'Synchronization:',
       choices: [
-        {title: 'Node', value: 'node'},
-        {title: 'Durable Objects', value: 'durable-objects'},
+        {title: 'None', value: 'none'},
+        {title: 'Via remote demo server (stateless)', value: 'remote'},
+        {title: 'Via local node server (stateless)', value: 'node'},
+        {
+          title: 'Via local DurableObjects server (stateful)',
+          value: 'durable-objects',
+        },
       ],
-      initial: 0,
+      initial: 1,
     },
     {
       type: 'confirm' as const,
@@ -110,7 +101,9 @@ const config = {
     },
     {
       type: (prev: unknown, answers: Record<string, unknown>) =>
-        !answers.server ? ('confirm' as const) : null,
+        answers.syncType !== 'node' && answers.syncType !== 'durable-objects'
+          ? ('confirm' as const)
+          : null,
       name: 'installAndRun',
       message: 'Install dependencies and start dev server?',
       initial: true,
@@ -126,15 +119,19 @@ const config = {
       prettier,
       eslint,
       schemas,
-      sync,
-      server,
-      serverType,
+      syncType,
       installAndRun,
     } = answers;
     const typescript = language === 'typescript';
     const javascript = !typescript;
     const react = framework === 'react';
     const ext = typescript ? (react ? 'tsx' : 'ts') : react ? 'jsx' : 'js';
+    const normalizedSyncType = syncType || 'remote';
+    const sync = normalizedSyncType !== 'none';
+    const server =
+      normalizedSyncType === 'node' || normalizedSyncType === 'durable-objects';
+    const serverType =
+      normalizedSyncType === 'durable-objects' ? 'durable-objects' : 'node';
 
     return {
       projectName,
@@ -144,9 +141,10 @@ const config = {
       prettier,
       eslint,
       schemas: typescript && (schemas === true || schemas === 'true'),
-      sync: sync === true || sync === 'true',
-      server: server === true || server === 'true',
-      serverType: serverType || 'node',
+      syncType: normalizedSyncType,
+      sync,
+      server,
+      serverType,
       installAndRun: installAndRun === true || installAndRun === 'true',
       typescript,
       javascript,
@@ -202,7 +200,8 @@ const config = {
   workingDirectory: 'client',
 
   onSuccess: (projectName: string, context: Record<string, unknown>) => {
-    const server = context.server as boolean;
+    const syncType = context.syncType as string;
+    const server = syncType === 'node' || syncType === 'durable-objects';
     const pm = detectPackageManager();
 
     console.log(`Next steps:`);

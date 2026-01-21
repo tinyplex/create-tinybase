@@ -205,8 +205,8 @@ async function runCLI(
       'true',
       '--eslint',
       'true',
-      '--sync',
-      'false',
+      '--syncType',
+      'none',
     ];
 
     if (schemas) {

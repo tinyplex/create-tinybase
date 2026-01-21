@@ -1,9 +1,7 @@
-{{#if server}}
-  {{#if (eq serverType "node")}}
-    export const SERVER = 'ws://localhost:8043';
-  {{else}}
-    export const SERVER = 'ws://localhost:8787';
-  {{/if}}
+{{#if (eq syncType "node")}}
+  export const SERVER = 'ws://localhost:8043';
+{{else if (eq syncType "durable-objects")}}
+  export const SERVER = 'ws://localhost:8787';
 {{else}}
   export const SERVER = 'wss://vite.tinybase.org';
 {{/if}}

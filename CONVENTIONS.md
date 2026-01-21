@@ -348,7 +348,7 @@ When retrieving typed values from stores:
 const username = settingsStore.getValue('username') as string;
 
 // Use nullish coalescing for optional values
-const points = store.getCell('strokes', id, 'points') as string ?? '[]';
+const points = (store.getCell('strokes', id, 'points') as string) ?? '[]';
 ```
 
 ### Unused Parameters

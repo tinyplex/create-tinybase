@@ -22,8 +22,7 @@ This will prompt you with questions to configure your new TinyBase app:
 - **Framework** - React or Vanilla JS
 - **App type** - Todo app, Chat app, Drawing app, or Tic-tac-toe game
 - **Store schemas** - TypeScript type safety for stores (TypeScript only)
-- **Synchronization** - Enable real-time sync between clients
-- **Server code** - Include Node.js or Cloudflare Durable Objects server
+- **Synchronization** - None, remote demo server, local Node server, or local Durable Objects server
 - **Prettier** - Include Prettier for code formatting
 - **ESLint** - Include ESLint for code linting
 
@@ -146,44 +145,44 @@ Schemas define:
 
 ### Synchronization
 
-**Enabled** (default):
+Choose from four synchronization options:
 
-- Real-time sync between browser tabs
-- WebSocket-based synchronization
-- Connects to demo server by default (wss://vite.tinybase.org)
-- MergeableStore for conflict-free replication
-- Automatic reconnection handling
-
-**Disabled**:
+**None**:
 
 - Local-only data storage
 - No network dependencies
 - Simpler architecture
 - Still uses MergeableStore for consistency
 
-### Server Code
+**Via remote demo server (stateless)** (default):
 
-When synchronization is enabled, you can include server code:
+- Real-time sync between browser tabs
+- WebSocket-based synchronization
+- Connects to demo server (wss://vite.tinybase.org)
+- MergeableStore for conflict-free replication
+- Automatic reconnection handling
+- Great for prototyping
+- No local server management needed
 
-**Node.js Server** (port 8043):
+**Via local node server (stateless)** (port 8043):
 
+- Real-time sync with local Node.js server
 - WebSocket server using `ws` library
 - TinyBase server synchronizer
 - Runs with `npm run dev` in server directory
+- Stateless - no data persistence
 - Easy to deploy to any Node.js host
+- Full control over server code
 
-**Cloudflare Durable Objects** (port 8787):
+**Via local DurableObjects server (stateful)** (port 8787):
 
+- Real-time sync with Cloudflare Durable Objects
 - Serverless WebSocket server
 - Edge computing with Durable Objects
+- Stateful - data persists in Durable Objects storage
 - Global distribution
 - Runs locally with Wrangler
-
-**No Server**:
-
-- Connects to public demo server
-- Great for prototyping
-- No local server management needed
+- Designed for production deployment
 
 ### Prettier & ESLint
 
