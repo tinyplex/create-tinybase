@@ -73,7 +73,7 @@ export const createTodoInput = (store: TodosStore): HTMLDivElement => {
 import {createMergeableStore} from 'tinybase';
 import {useCreateStore, useProvideStore /* hooks */} from 'tinybase/ui-react';
 
-const STORE_ID = 'todos'; // or 'game'
+export const STORE_ID = 'todos'; // or 'game' - exported for use in components
 
 export /* re-export hooks */ {};
 
@@ -94,7 +94,7 @@ export const Store = () => {
 
 ```typescript
 // SettingsStore.tsx
-const STORE_ID = 'settings';
+export const STORE_ID = 'settings'; // exported for use in components
 
 export const SettingsStore = () => {
   const store = useCreateStore(() =>
@@ -107,7 +107,7 @@ export const SettingsStore = () => {
 };
 
 // ChatStore.tsx or CanvasStore.tsx
-const STORE_ID = 'chat'; // or 'canvas'
+export const STORE_ID = 'chat'; // or 'canvas' - exported for use in components
 
 export const ChatStore = () => {
   const store = useCreateStore(() =>
@@ -127,7 +127,7 @@ export const ChatStore = () => {
 ```typescript
 import {createMergeableStore} from 'tinybase';
 
-const STORE_ID = 'todos'; // or 'game'
+// Note: STORE_ID not exported in vanilla - stores are passed directly as instances
 
 export const store = createMergeableStore().setTable('todos', {
   /* ... */
@@ -140,15 +140,13 @@ export type TodosStore = typeof store; // or GameStore
 
 ```typescript
 // settingsStore.ts
-const STORE_ID = 'settings';
+// Note: STORE_ID not exported in vanilla - stores are passed directly as instances
 
 export const settingsStore = createStore().setValue('username', 'Carol');
 
 export type SettingsStore = typeof settingsStore;
 
 // chatStore.ts or canvasStore.ts
-const STORE_ID = 'chat'; // or 'canvas'
-
 export const chatStore = createMergeableStore().setTable('messages', {});
 
 export type ChatStore = typeof chatStore; // or CanvasStore
@@ -280,6 +278,90 @@ Both React and vanilla support schema typing via conditionals:
 
 export const store = createMergeableStore(){{#if schemas}}
   .setTablesSchema(SCHEMA){{/if}};
+```
+
+---
+
+## Hybrid Logical Clock (HLC) Usage
+
+When generating sortable unique IDs (e.g., for timestamp-based ordering), use HLC functions:
+
+### Pattern
+
+```typescript
+import {getHlcFunctions} from 'tinybase';
+
+// Call at module level (outside components/functions)
+const [getNextHlc] = getHlcFunctions();
+
+// Usage in component
+const id = getNextHlc(); // Generates a sortable, unique timestamp-based ID
+```
+
+### Key Points
+
+- `getHlcFunctions()` returns an **array**, use array destructuring: `const [getNextHlc] = ...`
+- Call `getHlcFunctions()` at the **module level** (outside React components or vanilla functions)
+- Use for IDs that need chronological ordering (e.g., drawing strokes, messages with timestamps)
+- Don't use `getUniqueId()` when chronological ordering matters
+
+### Example Usage (Drawing App)
+
+```typescript
+// Canvas.tsx or canvas.ts
+import {getHlcFunctions} from 'tinybase';
+
+const [getNextHlc] = getHlcFunctions(); // Module level
+
+export const Canvas = () => {
+  // ...
+  const handleStart = () => {
+    const strokeId = getNextHlc(); // Sortable ID
+    store.setRow('strokes', strokeId, {...});
+  };
+};
+```
+
+---
+
+## Type Coercion Patterns
+
+### React Components
+
+When dealing with potentially undefined values from stores:
+
+```typescript
+// Preferred: String coercion with +
+const username = useValue('username', STORE_ID);
+<Input value={username + ''} onChange={...} />
+
+// Alternative: Nullish coalescing
+<Input value={username ?? ''} onChange={...} />
+```
+
+### Vanilla Components
+
+When retrieving typed values from stores:
+
+```typescript
+// Use 'as' type assertions when type is known
+const username = settingsStore.getValue('username') as string;
+
+// Use nullish coalescing for optional values
+const points = store.getCell('strokes', id, 'points') as string ?? '[]';
+```
+
+### Unused Parameters
+
+Prefix unused parameters with underscore to indicate intentional non-use:
+
+```typescript
+export const createUsernameInput = (
+  settingsStore: SettingsStore,
+  _chatStore: ChatStore, // Underscore indicates intentionally unused
+): HTMLDivElement => {
+  // Only uses settingsStore
+};
 ```
 
 ---
