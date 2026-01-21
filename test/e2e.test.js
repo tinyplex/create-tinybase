@@ -168,26 +168,13 @@ const combinations = [
   },
 ];
 
-beforeAll(async () => {
-  if (process.env.CLEAN_E2E) {
-    await rm(TEST_DIR, {recursive: true, force: true});
-  }
-  await mkdir(TEST_DIR, {recursive: true});
-  browser = await puppeteer.launch({headless: true});
-});
-
-afterAll(async () => {
-  if (browser) {
-    await browser.close();
-  }
-});
-
 async function runCLI(
   projectName,
   language,
   framework,
   appType = 'todos',
   schemas = false,
+  syncType = 'none',
 ) {
   return new Promise((resolve, reject) => {
     const args = [
@@ -206,7 +193,7 @@ async function runCLI(
       '--eslint',
       'true',
       '--syncType',
-      'none',
+      syncType,
     ];
 
     if (schemas) {
@@ -243,6 +230,50 @@ async function runCLI(
 
     cli.on('error', reject);
   });
+}
+
+async function setupTestProject(
+  projectName,
+  language,
+  framework,
+  appType,
+  schemas = false,
+  syncType = 'none',
+) {
+  const projectPath = join(TEST_DIR, projectName);
+  const clientPath = join(projectPath, 'client');
+  const nodeModulesBackup = join(TEST_DIR, `${projectName}-node_modules`);
+  const nodeModulesPath = join(clientPath, 'node_modules');
+  const cacheFile = join(clientPath, '.package.json.cache');
+
+  if (existsSync(projectPath) && !process.env.CLEAN_E2E) {
+    if (existsSync(nodeModulesPath)) {
+      await cp(nodeModulesPath, nodeModulesBackup, {recursive: true});
+    }
+    if (existsSync(cacheFile)) {
+      await cp(cacheFile, join(TEST_DIR, `${projectName}.cache`));
+    }
+    await rm(projectPath, {recursive: true});
+  }
+
+  await runCLI(projectName, language, framework, appType, schemas, syncType);
+
+  if (existsSync(nodeModulesBackup)) {
+    const {mkdir} = await import('fs/promises');
+    await mkdir(clientPath, {recursive: true});
+
+    await cp(nodeModulesBackup, nodeModulesPath, {recursive: true});
+    await rm(nodeModulesBackup, {recursive: true});
+    const cachedFile = join(TEST_DIR, `${projectName}.cache`);
+    if (existsSync(cachedFile)) {
+      await cp(cachedFile, cacheFile);
+      await rm(cachedFile);
+    }
+  }
+
+  await npmInstall(projectPath, !!process.env.CLEAN_E2E);
+
+  return {projectPath, clientPath};
 }
 
 async function npmInstall(projectPath, force = false) {
@@ -468,31 +499,15 @@ async function checkPageLoads(port, framework, appType) {
   const url = `http://localhost:${port}`;
   const page = await browser.newPage();
 
-  const consoleMessages = [];
-  const consoleErrors = [];
-  const pageErrors = [];
-
-  page.on('console', (msg) => {
-    consoleMessages.push(`${msg.type()}: ${msg.text()}`);
-    if (msg.type() === 'error') {
-      consoleErrors.push(msg.text());
-    }
-  });
-
-  page.on('pageerror', (error) => {
-    pageErrors.push(error.message);
-  });
+  const {checkErrors} = setupPageErrorHandling(page);
 
   try {
-    await page.goto(url, {waitUntil: 'domcontentloaded', timeout: 45000});
+    await page.goto(url, {waitUntil: 'domcontentloaded', timeout: 10000});
 
-    await sleep(1000);
+    await sleep(200);
 
-    const title = await page.title();
-    const bodyText = await page.evaluate(() => document.body.textContent);
-
-    expect(title).toContain('TinyBase');
-    expect(bodyText).toContain('TinyBase');
+    expect(await page.title()).toContain('TinyBase');
+    await waitForTextInPage(page, 'TinyBase');
 
     if (framework === 'react') {
       const hasReactRoot = await page.evaluate(() => {
@@ -500,9 +515,7 @@ async function checkPageLoads(port, framework, appType) {
         return app && app.children.length > 0;
       });
       expect(hasReactRoot).toBe(true);
-    }
 
-    if (framework === 'react') {
       const screenshotPath = join(
         __dirname,
         '..',
@@ -518,30 +531,19 @@ async function checkPageLoads(port, framework, appType) {
     if (appType === 'todos') {
       const input = await page.$('input[type="text"]');
       expect(input).toBeTruthy();
-      await input.click();
       await page.type('input[type="text"]', 'Test todo item');
+      await sleep(200);
 
-      await sleep(100);
       const inputValue = await page.evaluate(() => {
         const inp = document.querySelector('input[type="text"]');
         return inp ? inp.value : '';
       });
 
-      if (inputValue !== 'Test todo item') {
-        throw new Error(
-          `Input value is "${inputValue}", expected "Test todo item"`,
-        );
-      }
+      expect(inputValue).toBe('Test todo item');
 
       await page.keyboard.press('Enter');
-      await sleep(1000);
-      let todoExists = await page.evaluate(() => {
-        const text = 'Test todo item';
-        const allText = document.body.textContent;
-        return allText.includes(text);
-      });
 
-      expect(todoExists).toBe(true);
+      await waitForTextInPage(page, 'Test todo item');
 
       const checkbox = await page.$('input[type="checkbox"]');
       await checkbox.click();
@@ -573,10 +575,8 @@ async function checkPageLoads(port, framework, appType) {
       expect(messageInput).toBeTruthy();
       await messageInput.type('Hello from e2e test!');
       await page.keyboard.press('Enter');
-      await sleep(500);
 
-      const messages = await page.evaluate(() => document.body.textContent);
-      expect(messages).toContain('Hello from e2e test!');
+      await waitForTextInPage(page, 'Hello from e2e test!');
     } else if (appType === 'drawing') {
       const canvas = await page.$('canvas');
       expect(canvas).toBeTruthy();
@@ -603,47 +603,34 @@ async function checkPageLoads(port, framework, appType) {
       expect(squares.length).toBeGreaterThanOrEqual(9);
 
       await squares[0].click();
-      await sleep(300);
+      await sleep(200);
       squares = await page.$$('button.square, button[class*="square"]');
       let square0Text = await squares[0].evaluate((el) => el.textContent);
       expect(square0Text).toBe('X');
 
       await squares[1].click();
-      await sleep(300);
+      await sleep(200);
       squares = await page.$$('button.square, button[class*="square"]');
       let square1Text = await squares[1].evaluate((el) => el.textContent);
       expect(square1Text).toBe('O');
 
       squares = await page.$$('button.square, button[class*="square"]');
       await squares[3].click();
-      await sleep(300);
+      await sleep(200);
 
       squares = await page.$$('button.square, button[class*="square"]');
       await squares[4].click();
-      await sleep(300);
+      await sleep(200);
 
       squares = await page.$$('button.square, button[class*="square"]');
       await squares[6].click();
-      await sleep(300);
+      await sleep(200);
 
       const bodyText = await page.evaluate(() => document.body.textContent);
       expect(bodyText).toMatch(/won|wins|winner/i);
     }
 
-    const realErrors = consoleErrors.filter(
-      (err) =>
-        !err.includes('ERR_NETWORK_CHANGED') &&
-        !err.includes('ERR_NAME_NOT_RESOLVED') &&
-        !err.includes('Failed to load resource') &&
-        !err.includes('WebSocket'),
-    );
-    if (realErrors.length > 0) {
-      throw new Error(`Console errors: ${realErrors.join(', ')}`);
-    }
-
-    if (pageErrors.length > 0) {
-      throw new Error(`Page errors: ${pageErrors.join(', ')}`);
-    }
+    checkErrors();
   } finally {
     await page.close();
   }
@@ -668,6 +655,55 @@ function killProcess(proc) {
   });
 }
 
+function setupPageErrorHandling(page) {
+  const consoleErrors = [];
+  const pageErrors = [];
+
+  page.on('console', (msg) => {
+    if (msg.type() === 'error') {
+      consoleErrors.push(msg.text());
+    }
+  });
+
+  page.on('pageerror', (error) => {
+    pageErrors.push(error.message);
+  });
+
+  return {
+    checkErrors: () => {
+      if (consoleErrors.length > 0) {
+        throw new Error(`Console errors: ${consoleErrors.join(', ')}`);
+      }
+      if (pageErrors.length > 0) {
+        throw new Error(`Page errors: ${pageErrors.join(', ')}`);
+      }
+    },
+  };
+}
+
+async function waitForTextInPage(page, text, timeout = 5000) {
+  return page.waitForFunction(
+    (searchText) =>
+      document.querySelector('body').innerText.includes(searchText),
+    {timeout},
+    text,
+  );
+}
+
+beforeAll(async () => {
+  if (process.env.CLEAN_E2E) {
+    await rm(TEST_DIR, {recursive: true, force: true});
+  }
+  await mkdir(TEST_DIR, {recursive: true});
+  browser = await puppeteer.launch({headless: true});
+}, 60000);
+
+afterAll(async () => {
+  if (browser) {
+    await browser.close();
+  }
+});
+
 describe('e2e tests', {concurrent: true}, () => {
   combinations.forEach((combo, index) => {
     it(
@@ -675,25 +711,9 @@ describe('e2e tests', {concurrent: true}, () => {
       {timeout: 120000},
       async () => {
         const projectName = `test-${combo.name}`;
-        const projectPath = join(TEST_DIR, projectName);
-        const clientPath = join(projectPath, 'client');
         const port = BASE_PORT + index;
 
-        const nodeModulesBackup = join(TEST_DIR, `${projectName}-node_modules`);
-        const nodeModulesPath = join(clientPath, 'node_modules');
-        const cacheFile = join(clientPath, '.package.json.cache');
-
-        if (existsSync(projectPath) && !process.env.CLEAN_E2E) {
-          if (existsSync(nodeModulesPath)) {
-            await cp(nodeModulesPath, nodeModulesBackup, {recursive: true});
-          }
-          if (existsSync(cacheFile)) {
-            await cp(cacheFile, join(TEST_DIR, `${projectName}.cache`));
-          }
-          await rm(projectPath, {recursive: true});
-        }
-
-        await runCLI(
+        const {projectPath} = await setupTestProject(
           projectName,
           combo.language,
           combo.framework,
@@ -701,22 +721,6 @@ describe('e2e tests', {concurrent: true}, () => {
           combo.schemas,
         );
 
-        if (existsSync(nodeModulesBackup)) {
-          const {mkdir} = await import('fs/promises');
-          await mkdir(clientPath, {recursive: true});
-
-          await cp(nodeModulesBackup, nodeModulesPath, {recursive: true});
-          await rm(nodeModulesBackup, {recursive: true});
-          const cachedFile = join(TEST_DIR, `${projectName}.cache`);
-          if (existsSync(cachedFile)) {
-            await cp(cachedFile, cacheFile);
-            await rm(cachedFile);
-          }
-        }
-
-        await npmInstall(projectPath, !!process.env.CLEAN_E2E);
-
-        // Run TypeScript check for TypeScript projects
         if (combo.language === 'typescript') {
           const tsResult = await runTypeScriptCheck(projectPath);
           if (!tsResult.passed) {
@@ -726,7 +730,6 @@ describe('e2e tests', {concurrent: true}, () => {
           }
         }
 
-        // Run ESLint check
         const eslintResult = await runESLintCheck(projectPath);
         if (!eslintResult.passed) {
           throw new Error(
@@ -734,7 +737,6 @@ describe('e2e tests', {concurrent: true}, () => {
           );
         }
 
-        // Run Prettier check
         const prettierResult = await runPrettierCheck(projectPath);
         if (!prettierResult.passed) {
           throw new Error(
@@ -746,9 +748,115 @@ describe('e2e tests', {concurrent: true}, () => {
         try {
           devServer = await startDevServer(projectPath, port);
 
-          await sleep(1500);
+          await sleep(200);
 
           await checkPageLoads(port, combo.framework, combo.appType);
+        } finally {
+          if (devServer) {
+            await killProcess(devServer);
+          }
+        }
+      },
+    );
+  });
+});
+
+describe('sync e2e tests', () => {
+  const syncCombinations = [
+    {
+      language: 'javascript',
+      framework: 'vanilla',
+      appType: 'todos',
+      name: 'js-vanilla-todos-sync',
+    },
+    {
+      language: 'javascript',
+      framework: 'react',
+      appType: 'todos',
+      name: 'js-react-todos-sync',
+    },
+  ];
+
+  syncCombinations.forEach((combo, index) => {
+    it(
+      `should sync ${combo.name} between two windows`,
+      {timeout: 120000},
+      async () => {
+        const projectName = `test-${combo.name}`;
+        const port = BASE_PORT + combinations.length + index;
+
+        const {projectPath} = await setupTestProject(
+          projectName,
+          combo.language,
+          combo.framework,
+          combo.appType,
+          false,
+          'remote',
+        );
+
+        let devServer;
+        try {
+          devServer = await startDevServer(projectPath, port);
+
+          await sleep(200);
+
+          const uniqueId = `test${Math.random().toString(36).substring(2, 8)}`;
+          const url = `http://localhost:${port}/${uniqueId}`;
+
+          const page1 = await browser.newPage();
+          const page2 = await browser.newPage();
+
+          const errorHandler1 = setupPageErrorHandling(page1);
+          const errorHandler2 = setupPageErrorHandling(page2);
+
+          try {
+            await page1.goto(url, {
+              waitUntil: 'domcontentloaded',
+              timeout: 10000,
+            });
+            await page2.goto(url, {
+              waitUntil: 'domcontentloaded',
+              timeout: 10000,
+            });
+
+            await sleep(200);
+
+            expect(await page1.title()).toContain('TinyBase');
+            expect(await page2.title()).toContain('TinyBase');
+            await waitForTextInPage(page1, 'TinyBase');
+            await waitForTextInPage(page2, 'TinyBase');
+
+            await page1.bringToFront();
+            await page1.type('input[type="text"]', 'Synced todo item');
+            await page1.keyboard.press('Enter');
+            await waitForTextInPage(page1, 'Synced todo item');
+
+            await page2.bringToFront();
+            await waitForTextInPage(page2, 'Synced todo item');
+            await page2.click('input[type="checkbox"]');
+            await page2.waitForFunction(
+              () => {
+                const cb = document.querySelector('input[type="checkbox"]');
+                return cb && cb.checked;
+              },
+              {timeout: 5000},
+            );
+
+            await page1.bringToFront();
+            await page1.waitForFunction(
+              () => {
+                const cb = document.querySelector('input[type="checkbox"]');
+                return cb && cb.checked;
+              },
+              {timeout: 5000},
+            );
+
+            errorHandler1.checkErrors();
+            errorHandler2.checkErrors();
+          } finally {
+            await page1.close();
+            await page2.close();
+          }
         } finally {
           if (devServer) {
             await killProcess(devServer);
