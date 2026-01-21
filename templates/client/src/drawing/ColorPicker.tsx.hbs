@@ -1,17 +1,10 @@
 {{includeFile template="client/src/drawing/colorPicker.css.hbs" output="client/src/colorPicker.css"}}
 {{addImport "import './colorPicker.css';"}}
-{{addImport "import {useValue, useSetValueCallback, STORE_ID} from './SettingsStore';"}}
+{{addImport "import {useValueState, STORE_ID} from './SettingsStore';"}}
 
 export const ColorPicker = () => {
 const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];
-const currentColor = useValue('brushColor', STORE_ID);
-
-const setColor = useSetValueCallback(
-'brushColor',
-(color: string) => color,
-[],
-STORE_ID,
-);
+const [currentColor, setColor] = useValueState('brushColor', STORE_ID);
 
 return (
 <div id="colorPicker">

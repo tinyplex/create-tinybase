@@ -2,7 +2,7 @@
 {{addImport "import './canvas.css';"}}
 {{addImport "import {getUniqueId} from 'tinybase';"}}
 {{addImport "import type {SettingsStore} from './settingsStore';"}}
-{{addImport "import type {CanvasStore} from './canvasStore';"}}
+{{addImport "import type {CanvasStore, StrokeRow} from './canvasStore';"}}
 
 export const createCanvas = (settingsStore: SettingsStore, canvasStore: CanvasStore): HTMLCanvasElement => {
 const canvas = document.createElement('canvas');
@@ -18,28 +18,28 @@ const draw = () => {
 ctx.fillStyle = '#111';
 ctx.fillRect(0, 0, canvas!.width, canvas!.height);
 
-const strokes = canvasStore.getTable('strokes');
-Object.entries(strokes).forEach(([_id, stroke]: [string, any]) => {
+const sortedIds = canvasStore.getSortedRowIds('strokes');
+sortedIds.forEach((id) => {
+const stroke = canvasStore.getRow('strokes', id) as StrokeRow;
 if (stroke.points) {
-const coords = JSON.parse(stroke.points) as number[];
-if (coords.length >= 2) {
+const pointsArray = JSON.parse(stroke.points) as number[];
+if (pointsArray.length >= 2) {
 ctx.strokeStyle = stroke.color;
 ctx.lineWidth = stroke.size * 2;
 ctx.lineCap = 'round';
 ctx.lineJoin = 'round';
 ctx.beginPath();
-ctx.moveTo(coords[0], coords[1]);
-for (let i = 2; i < coords.length; i +=2) { ctx.lineTo(coords[i], coords[i + 1]); } ctx.stroke(); } } }); }; const addPoint=(e: MouseEvent | TouchEvent)=> {
+ctx.moveTo(pointsArray[0], pointsArray[1]);
+for (let i = 2; i < pointsArray.length; i +=2) { ctx.lineTo(pointsArray[i], pointsArray[i + 1]); } ctx.stroke(); } } }); }; const addPoint=(e: MouseEvent | TouchEvent)=> {
   if (!currentStrokeId) return;
 
   const rect = canvas!.getBoundingClientRect();
   const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
   const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
 
-  const stroke = canvasStore.getRow('strokes', currentStrokeId);
-  const coords = stroke?.points ? JSON.parse(stroke.points as string) : [];
-  coords.push(clientX - rect.left, clientY - rect.top);
-  canvasStore.setCell('strokes', currentStrokeId, 'points', JSON.stringify(coords));
+  const pointsArray = JSON.parse(canvasStore.getCell('strokes', currentStrokeId, 'points') as string ?? '[]') as number[];
+  pointsArray.push(clientX - rect.left, clientY - rect.top);
+  canvasStore.setCell('strokes', currentStrokeId, 'points', JSON.stringify(pointsArray));
   };
 
   const startStroke = (e: MouseEvent | TouchEvent) => {

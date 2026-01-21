@@ -1,6 +1,6 @@
 {{includeFile template="client/src/drawing/canvas.css.hbs" output="client/src/canvas.css"}}
 {{addImport "import {useCallback, useEffect, useRef} from 'react';"}}
-{{addImport "import {useTable, useStore, STORE_ID as CANVAS_STORE_ID} from './CanvasStore';"}}
+{{addImport "import {useSortedRowIds, useTable, useStore, type StrokeRow, STORE_ID as CANVAS_STORE_ID} from './CanvasStore';"}}
 {{addImport "import {useValues, STORE_ID as SETTINGS_STORE_ID} from './SettingsStore';"}}
 {{addImport "import {getUniqueId} from 'tinybase';"}}
 {{addImport "import './canvas.css';"}}
@@ -10,6 +10,7 @@ const canvasRef = useRef<HTMLCanvasElement>(null);
   const isDrawing = useRef(false);
   const currentStrokeId = useRef<string | null>(null);
     const brush = useValues(SETTINGS_STORE_ID);
+    const sortedIds = useSortedRowIds('strokes', undefined, false, 0, undefined, CANVAS_STORE_ID);
     const strokes = useTable('strokes', CANVAS_STORE_ID);
     const store = useStore(CANVAS_STORE_ID);
 
@@ -23,17 +24,18 @@ const canvasRef = useRef<HTMLCanvasElement>(null);
     ctx.fillStyle = '#111';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    Object.entries(strokes).forEach(([_id, stroke]) => {
-    if (stroke && stroke.points) {
-    const coords = JSON.parse(stroke.points as string) as number[];
-    if (coords.length >= 2) {
-    ctx.strokeStyle = stroke.color as string;
-    ctx.lineWidth = (stroke.size as number) * 2;
+    sortedIds.forEach((id) => {
+    const stroke = store?.getRow('strokes', id) as StrokeRow;
+    if (stroke?.points) {
+    const pointsArray = JSON.parse(stroke.points) as number[];
+    if (pointsArray.length >= 2) {
+    ctx.strokeStyle = stroke.color;
+    ctx.lineWidth = stroke.size * 2;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     ctx.beginPath();
-    ctx.moveTo(coords[0], coords[1]);
-    for (let i = 2; i < coords.length; i +=2) { ctx.lineTo(coords[i], coords[i + 1]); } ctx.stroke(); } } }); }, [strokes]); useEffect(()=> {
+    ctx.moveTo(pointsArray[0], pointsArray[1]);
+    for (let i = 2; i < pointsArray.length; i +=2) { ctx.lineTo(pointsArray[i], pointsArray[i + 1]); } ctx.stroke(); } } }); }, [sortedIds, strokes, store]); useEffect(()=> {
       draw();
       }, [draw]);
 
@@ -69,10 +71,9 @@ const canvasRef = useRef<HTMLCanvasElement>(null);
       if (isDrawing.current && currentStrokeId.current && store) {
       const point = getPoint(e.nativeEvent);
       if (point) {
-      const stroke = store.getRow('strokes', currentStrokeId.current);
-      const coords = stroke?.points ? JSON.parse(stroke.points as string) : [];
-      coords.push(point.x, point.y);
-      store.setCell('strokes', currentStrokeId.current, 'points', JSON.stringify(coords));
+      const pointsArray = JSON.parse(store.getCell('strokes', currentStrokeId.current, 'points') as string ?? '[]');
+      pointsArray.push(point.x, point.y);
+      store.setCell('strokes', currentStrokeId.current, 'points', JSON.stringify(pointsArray));
       }
       }
       };

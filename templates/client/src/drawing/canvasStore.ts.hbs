@@ -1,5 +1,5 @@
 {{#if schemas}}
-  {{addImport "import {createMergeableStore} from 'tinybase/with-schemas';"}}
+  {{addImport "import {createMergeableStore, type Row} from 'tinybase/with-schemas';"}}
 {{else}}
   {{addImport "import {createMergeableStore} from 'tinybase';"}}
 {{/if}}
@@ -7,9 +7,9 @@
 {{#if schemas}}
   const TABLES_SCHEMA = {
   strokes: {
-  color: {type: 'string'},
-  size: {type: 'number'},
-  points: {type: 'string'},
+  color: {type: 'string', default: ''},
+  size: {type: 'number', default: 1},
+  points: {type: 'string', default: '[]'},
   },
   } as const;
 
@@ -17,6 +17,8 @@
 export const canvasStore = createMergeableStore(){{#if schemas}}
   .setTablesSchema(TABLES_SCHEMA){{/if}}
 .setDefaultContent([{strokes: {}}, {}]);
+
+export type StrokeRow = {{#if schemas}}Row<typeof TABLES_SCHEMA, 'strokes'>{{else}}{color: string; size: number; points: string}{{/if}};
 
 {{#if sync}}
   {{includeFile template="client/src/shared/config.ts.hbs" output="client/src/config.ts"}}

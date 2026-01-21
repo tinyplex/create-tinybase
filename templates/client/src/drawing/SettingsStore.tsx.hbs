@@ -4,7 +4,7 @@
   {{addImport "import {type NoTablesSchema} from 'tinybase/with-schemas';"}}
 {{else}}
   {{addImport "import {createStore} from 'tinybase';"}}
-  {{addImport "import {useCreateStore, useProvideStore, useValue, useSetValueCallback, useValues} from 'tinybase/ui-react';"}}
+  {{addImport "import {useCreateStore, useProvideStore, useValueState, useValues} from 'tinybase/ui-react';"}}
 {{/if}}
 
 export const STORE_ID = 'settings';
@@ -17,10 +17,10 @@ export const STORE_ID = 'settings';
 
   type Schemas = [NoTablesSchema, typeof VALUES_SCHEMA];
 
-  const {useCreateStore, useProvideStore, useValue, useSetValueCallback, useValues} = UiReact as UiReact.WithSchemas<Schemas>;
+  const {useCreateStore, useProvideStore, useValueState, useValues} = UiReact as UiReact.WithSchemas<Schemas>;
 {{/if}}
 
-export {useValue, useSetValueCallback, useValues};
+export {useValueState, useValues};
 
 export const SettingsStore = () => {
 const store = useCreateStore(() =>

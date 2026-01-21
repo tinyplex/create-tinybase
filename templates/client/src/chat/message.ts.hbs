@@ -1,7 +1,8 @@
 {{includeFile template="client/src/chat/message.css.hbs" output="client/src/message.css"}}
 {{addImport "import './message.css';"}}
+{{addImport "import type {MessageRow} from './messageStore';"}}
 
-export const createMessage = ({username, text, timestamp}: {username: string; text: string; timestamp: number;}): HTMLDivElement => {
+export const createMessage = ({username, text, timestamp}: MessageRow): HTMLDivElement => {
 const time = new Date(timestamp).toLocaleTimeString();
 
 const messageDiv = document.createElement('div');

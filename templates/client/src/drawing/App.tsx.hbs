@@ -15,8 +15,7 @@
 {{includeFile template="client/src/drawing/Canvas.tsx.hbs" output="client/src/Canvas.{{ext}}"}}
 {{addImport "import {Canvas} from './Canvas';"}}
 
-export const App = () => {
-return (
+export const App = () => (
 <StrictMode>
   <Provider>
     <SettingsStore />
@@ -27,4 +26,3 @@ return (
   </Provider>
 </StrictMode>
 );
-};
