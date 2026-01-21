@@ -6,14 +6,14 @@ export const BrushSize = () => {
 const [size, setSize] = useValueState('brushSize', STORE_ID);
 
 const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-setSize(parseInt(e.target.value) as any);
-};
+  setSize(parseInt(e.target.value));
+  };
 
-return (
-<div id="brushSize">
-  <label>Size:</label>
-  <input type="range" min="1" max="50" value={Number(size ?? 5)} onChange={handleChange} />
-  <span id="brushSizeValue">{size}</span>
-</div>
-);
+  return (
+  <div id="brushSize">
+    <label>Size:</label>
+    <input type="range" min="1" max="50" value={(size as number) ?? 5} onChange={handleChange} />
+    <span id="brushSizeValue">{size}</span>
+  </div>
+  );
   };

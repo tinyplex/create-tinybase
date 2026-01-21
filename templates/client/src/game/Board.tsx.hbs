@@ -12,7 +12,7 @@ const winningLine = useValue('winningLine', STORE_ID);
 
 const winningPositions = useMemo(() => {
 if (!winningLine || typeof winningLine !== 'string') return new Set();
-return new Set(winningLine.split(',').map(Number));
+return new Set(winningLine.split(','));
 }, [winningLine]);
 
 const disabled = gameStatus !== 'playing';
@@ -20,7 +20,7 @@ const disabled = gameStatus !== 'playing';
 return (
 <div id="board">
   {Array.from({length: 9}, (_, i) => (
-  <Square key={i} position={i} disabled={disabled} winning={winningPositions.has(i)} />
+  <Square key={i} position={i.toString()} disabled={disabled} winning={winningPositions.has(i.toString())} />
   ))}
 </div>
 );

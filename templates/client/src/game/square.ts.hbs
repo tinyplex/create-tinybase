@@ -1,10 +1,10 @@
 {{includeFile template="client/src/game/square.css.hbs" output="client/src/square.css"}}
 {{addImport "import './square.css';"}}
 
-export const createSquare = (_position: number, value: string | undefined, onClick: () => void, disabled: boolean, winning: boolean): HTMLButtonElement => {
+export const createSquare = (value: string | undefined, onClick: () => void, disabled: boolean, winning: boolean): HTMLButtonElement => {
 const square = document.createElement('button');
 square.className = `square${disabled ? ' disabled' : ''}${winning ? ' winning' : ''}`;
-square.textContent = value || '';
+square.textContent = value ?? '';
 square.disabled = disabled;
 square.addEventListener('click', onClick);
 return square;

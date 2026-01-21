@@ -9,7 +9,7 @@ export const Canvas = () => {
 const canvasRef = useRef<HTMLCanvasElement>(null);
   const isDrawing = useRef(false);
   const currentStrokeId = useRef<string | null>(null);
-    const brush = useValues(SETTINGS_STORE_ID);
+    const {brushColor, brushSize} = useValues(SETTINGS_STORE_ID);
     const sortedIds = useSortedRowIds('strokes', undefined, false, 0, undefined, CANVAS_STORE_ID);
     const strokes = useTable('strokes', CANVAS_STORE_ID);
     const store = useStore(CANVAS_STORE_ID);
@@ -60,8 +60,8 @@ const canvasRef = useRef<HTMLCanvasElement>(null);
       const point = getPoint(e.nativeEvent);
       if (point && store) {
       store.setRow('strokes', currentStrokeId.current, {
-      color: brush.brushColor,
-      size: brush.brushSize,
+      color: brushColor,
+      size: brushSize,
       points: JSON.stringify([point.x, point.y]),
       });
       }

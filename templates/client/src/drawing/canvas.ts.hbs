@@ -43,12 +43,12 @@ for (let i = 2; i < pointsArray.length; i +=2) { ctx.lineTo(pointsArray[i], poin
   };
 
   const startStroke = (e: MouseEvent | TouchEvent) => {
-  const brush = settingsStore.getValues() as any;
+  const {brushColor, brushSize} = settingsStore.getValues();
   currentStrokeId = getUniqueId();
 
   canvasStore.setRow('strokes', currentStrokeId, {
-  color: brush.brushColor,
-  size: brush.brushSize,
+  color: brushColor,
+  size: brushSize,
   points: '[]',
   });
 

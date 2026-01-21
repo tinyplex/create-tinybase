@@ -2,13 +2,13 @@
 {{addImport "import './square.css';"}}
 {{addImport "import {useCell, useSetCellCallback, useValue, STORE_ID} from './Store';"}}
 
-export const Square = ({position, disabled, winning}: {position: number; disabled: boolean; winning: boolean}) => {
-const value = useCell('board', position.toString(), 'value', STORE_ID);
+export const Square = ({position, disabled, winning}: {position: string; disabled: boolean; winning: boolean}) => {
+const value = useCell('board', position, 'value', STORE_ID);
 const currentPlayer = useValue('currentPlayer', STORE_ID);
 
 const isDisabled = disabled || !!value;
 
-const handleClick = useSetCellCallback('board', position.toString(), 'value', () => currentPlayer || 'X', [currentPlayer], STORE_ID);
+const handleClick = useSetCellCallback('board', position, 'value', () => currentPlayer || 'X', [currentPlayer], STORE_ID);
 
 return (
 <button className={`square${isDisabled ? ' disabled' : '' }${winning ? ' winning' : '' }`} onClick={handleClick} disabled={isDisabled}>
