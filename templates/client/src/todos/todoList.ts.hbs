@@ -1,6 +1,6 @@
 {{includeFile template="client/src/todos/todoList.css.hbs" output="client/src/todoList.css"}}
 {{addImport "import './todoList.css';"}}
-{{addImport "import {type TodosStore} from './store';"}}
+{{addImport "import {type TodosStore, type TodoRow} from './store';"}}
 {{includeFile template="client/src/todos/todoItem.ts.hbs" output="client/src/todoItem.{{ext}}"}}
 {{addImport "import {createTodoItem} from './todoItem';"}}
 
@@ -9,16 +9,15 @@ const list = document.createElement('div');
 list.id = 'todoList';
 
 const render = () => {
-const todos = store.getTable('todos');
-const todoIds = Object.keys(todos);
+const todoIds = store.getSortedRowIds('todos');
 
 list.innerHTML = '';
 todoIds.forEach((id) => {
-const todo = todos[id];
+const todo = store.getRow('todos', id) as TodoRow;
 const item = createTodoItem(
 id,
-String(todo.text),
-Boolean(todo.completed),
+todo.text,
+todo.completed,
 () => {
 store.setPartialRow('todos', id, {completed: !todo.completed});
 },

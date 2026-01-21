@@ -1,24 +1,26 @@
 {{#if schemas}}
-  {{addImport "import {createMergeableStore} from 'tinybase/with-schemas';"}}
+  {{addImport "import {createMergeableStore, type Row} from 'tinybase/with-schemas';"}}
   {{addImport "import * as UiReact from 'tinybase/ui-react/with-schemas';"}}
   {{addImport "import {type NoValuesSchema} from 'tinybase/with-schemas';"}}
 
   const TODOS_SCHEMA = {
   todos: {
-  text: {type: 'string'},
-  completed: {type: 'boolean'},
+  text: {type: 'string', default: ''},
+  completed: {type: 'boolean', default: false},
   },
   } as const;
 
   type Schemas = [typeof TODOS_SCHEMA, NoValuesSchema];
 
-  const {useCreateMergeableStore, useProvideStore, useAddRowCallback, useDelRowCallback, useRow, useRowIds, useSetPartialRowCallback} = UiReact as UiReact.WithSchemas<Schemas>;
+  const {useCreateMergeableStore, useProvideStore, useAddRowCallback, useDelRowCallback, useRow, useSortedRowIds, useSetPartialRowCallback} = UiReact as UiReact.WithSchemas<Schemas>;
 {{else}}
   {{addImport "import {createMergeableStore} from 'tinybase';"}}
-  {{addImport "import {useCreateMergeableStore, useProvideStore, useAddRowCallback, useDelRowCallback, useRow, useRowIds, useSetPartialRowCallback} from 'tinybase/ui-react';"}}
+  {{addImport "import {useCreateMergeableStore, useProvideStore, useAddRowCallback, useDelRowCallback, useRow, useSortedRowIds, useSetPartialRowCallback} from 'tinybase/ui-react';"}}
 {{/if}}
 
-export {useAddRowCallback, useDelRowCallback, useRow, useRowIds, useSetPartialRowCallback};
+export type TodoRow = {{#if schemas}}Row<typeof TODOS_SCHEMA, 'todos'>{{else}}{text: string; completed: boolean}{{/if}};
+
+export {useAddRowCallback, useDelRowCallback, useRow, useSortedRowIds, useSetPartialRowCallback};
 
 export const STORE_ID = 'todos';
 

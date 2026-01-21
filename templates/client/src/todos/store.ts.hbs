@@ -1,14 +1,16 @@
 {{#if schemas}}
-  {{addImport "import {createMergeableStore} from 'tinybase/with-schemas';"}}
+  {{addImport "import {createMergeableStore, type Row} from 'tinybase/with-schemas';"}}
   const TODOS_SCHEMA = {
   todos: {
-  text: {type: 'string'},
-  completed: {type: 'boolean'},
+  text: {type: 'string', default: ''},
+  completed: {type: 'boolean', default: false},
   },
   } as const;
 {{else}}
   {{addImport "import {createMergeableStore} from 'tinybase';"}}
 {{/if}}
+
+export type TodoRow = {{#if schemas}}Row<typeof TODOS_SCHEMA, 'todos'>{{else}}{text: string; completed: boolean}{{/if}};
 
 export const store = createMergeableStore(){{#if schemas}}
   .setTablesSchema(TODOS_SCHEMA){{/if}}

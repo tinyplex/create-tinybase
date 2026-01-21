@@ -8,8 +8,7 @@
 {{includeFile template="client/src/todos/TodoList.tsx.hbs" output="client/src/TodoList.{{ext}}"}}
 {{addImport "import {TodoList} from './TodoList';"}}
 
-export const App = () => {
-return (
+export const App = () => (
 <StrictMode>
   <Provider>
     <Store />
@@ -19,4 +18,3 @@ return (
   </Provider>
 </StrictMode>
 );
-};
