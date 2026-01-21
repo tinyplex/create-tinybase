@@ -1,16 +1,15 @@
-{{addImport "import {Id, IdAddedOrRemoved} from 'tinybase';"}}
-{{addImport "import {\n  getWsServerDurableObjectFetch,\n  WsServerDurableObject,\n} from 'tinybase/synchronizers/synchronizer-ws-server-durable-object';"}}
+{{addImport "import {createMergeableStore} from 'tinybase';"}}
+{{addImport "import {createDurableObjectSqlStoragePersister} from 'tinybase/persisters/persister-durable-object-sql-storage';"}}
+{{addImport "import {getWsServerDurableObjectFetch, WsServerDurableObject} from 'tinybase/synchronizers/synchronizer-ws-server-durable-object';"}}
 
 export class TinyBaseDurableObject extends WsServerDurableObject {
-onPathId(pathId: Id, addedOrRemoved: IdAddedOrRemoved) {
-console.info((addedOrRemoved ? 'Added' : 'Removed') + ` path ${pathId}`);
-}
-
-onClientId(pathId: Id, clientId: Id, addedOrRemoved: IdAddedOrRemoved) {
-console.info(
-(addedOrRemoved ? 'Added' : 'Removed') +
-` client ${clientId} on path ${pathId}`,
+createPersister() {
+const store = createMergeableStore();
+const persister = createDurableObjectSqlStoragePersister(
+store,
+this.ctx.storage.sql,
 );
+return persister;
 }
 }
 
