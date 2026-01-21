@@ -2,8 +2,10 @@
 {{addImport "import {useCallback, useEffect, useRef} from 'react';"}}
 {{addImport "import {useSortedRowIds, useTable, useStore, type StrokeRow, STORE_ID as CANVAS_STORE_ID} from './CanvasStore';"}}
 {{addImport "import {useValues, STORE_ID as SETTINGS_STORE_ID} from './SettingsStore';"}}
-{{addImport "import {getUniqueId} from 'tinybase';"}}
+{{addImport "import {getHlcFunctions} from 'tinybase';"}}
 {{addImport "import './canvas.css';"}}
+
+const [getNextHlc] = getHlcFunctions();
 
 export const Canvas = () => {
 const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -55,7 +57,7 @@ const canvasRef = useRef<HTMLCanvasElement>(null);
 
       const handleStart = (e: React.MouseEvent | React.TouchEvent) => {
       isDrawing.current = true;
-      currentStrokeId.current = getUniqueId();
+      currentStrokeId.current = getNextHlc();
 
       const point = getPoint(e.nativeEvent);
       if (point && store) {
