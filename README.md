@@ -23,6 +23,7 @@ This will prompt you with questions to configure your new TinyBase app:
 - **App type** - Todo app, Chat app, Drawing app, or Tic-tac-toe game
 - **Store schemas** - TypeScript type safety for stores (TypeScript only)
 - **Synchronization** - None, remote demo server, local Node server, or local Durable Objects server
+- **Persistence** - None, Local Storage, SQLite, or PGLite
 - **Prettier** - Include Prettier for code formatting
 - **ESLint** - Include ESLint for code linting
 
@@ -183,6 +184,50 @@ Choose from four synchronization options:
 - Global distribution
 - Runs locally with Wrangler
 - Designed for production deployment
+
+### Persistence
+
+Choose how to persist store data on the client:
+
+**None**:
+
+- No client-side persistence
+- Data lost on page refresh
+- Simplest option for demos
+- Still works with synchronization
+
+**Local Storage** (default):
+
+- Browser localStorage persistence
+- Data persists across sessions
+- Simple and widely supported
+- Automatic load/save with `createLocalPersister`
+- Best for most use cases
+
+**SQLite**:
+
+- Browser-based SQLite via WebAssembly
+- Structured database storage
+- Uses `@sqlite.org/sqlite-wasm` package
+- IndexedDB-backed (`:local:` prefix)
+- Good for complex data structures
+- Slightly larger bundle size
+
+**PGLite**:
+
+- PostgreSQL in the browser
+- Full PostgreSQL compatibility
+- Uses `@electric-sql/pglite` package
+- IndexedDB-backed (`idb://` prefix)
+- Advanced SQL features
+- Larger bundle size
+
+**Important Notes:**
+
+- Persistence is configured **before** synchronization to avoid race conditions
+- Works with all sync types (or no sync)
+- In multi-store apps, all stores get persistence
+- Data is automatically loaded on app start and saved on changes
 
 ### Prettier & ESLint
 

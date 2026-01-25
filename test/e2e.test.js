@@ -175,6 +175,7 @@ async function runCLI(
   appType = 'todos',
   schemas = false,
   syncType = 'none',
+  persistenceType = 'local-storage',
 ) {
   return new Promise((resolve, reject) => {
     const args = [
@@ -194,6 +195,8 @@ async function runCLI(
       'true',
       '--syncType',
       syncType,
+      '--persistenceType',
+      persistenceType,
     ];
 
     if (schemas) {
@@ -239,6 +242,7 @@ async function setupTestProject(
   appType,
   schemas = false,
   syncType = 'none',
+  persistenceType = 'local-storage',
 ) {
   const projectPath = join(TEST_DIR, projectName);
   const clientPath = join(projectPath, 'client');
@@ -256,7 +260,15 @@ async function setupTestProject(
     await rm(projectPath, {recursive: true});
   }
 
-  await runCLI(projectName, language, framework, appType, schemas, syncType);
+  await runCLI(
+    projectName,
+    language,
+    framework,
+    appType,
+    schemas,
+    syncType,
+    persistenceType,
+  );
 
   if (existsSync(nodeModulesBackup)) {
     const {mkdir} = await import('fs/promises');
@@ -751,6 +763,166 @@ describe('e2e tests', {concurrent: true}, () => {
           await sleep(200);
 
           await checkPageLoads(port, combo.framework, combo.appType);
+        } finally {
+          if (devServer) {
+            await killProcess(devServer);
+          }
+        }
+      },
+    );
+  });
+});
+
+describe('persistence e2e tests', () => {
+  const persistenceCombinations = [
+    {
+      language: 'typescript',
+      framework: 'react',
+      appType: 'todos',
+      persistenceType: 'local-storage',
+      name: 'ts-react-todos-persist-localstorage',
+    },
+    {
+      language: 'typescript',
+      framework: 'react',
+      appType: 'todos',
+      persistenceType: 'sqlite',
+      name: 'ts-react-todos-persist-sqlite',
+    },
+    {
+      language: 'typescript',
+      framework: 'react',
+      appType: 'todos',
+      persistenceType: 'pglite',
+      name: 'ts-react-todos-persist-pglite',
+    },
+    {
+      language: 'javascript',
+      framework: 'vanilla',
+      appType: 'chat',
+      persistenceType: 'local-storage',
+      name: 'js-vanilla-chat-persist-localstorage',
+    },
+  ];
+
+  persistenceCombinations.forEach((combo, index) => {
+    it(
+      `should persist data with ${combo.persistenceType} in ${combo.name}`,
+      {timeout: 120000},
+      async () => {
+        const projectName = `test-${combo.name}`;
+        const port = BASE_PORT + combinations.length + index + 10;
+
+        const {projectPath} = await setupTestProject(
+          projectName,
+          combo.language,
+          combo.framework,
+          combo.appType,
+          false,
+          'none',
+          combo.persistenceType,
+        );
+
+        let devServer;
+        try {
+          devServer = await startDevServer(projectPath, port);
+
+          await sleep(200);
+
+          const url = `http://localhost:${port}`;
+          const page = await browser.newPage();
+
+          const {checkErrors} = setupPageErrorHandling(page);
+
+          try {
+            // Initial page load
+            await page.goto(url, {
+              waitUntil: 'domcontentloaded',
+              timeout: 10000,
+            });
+
+            await sleep(1000); // Extra time for persister initialization
+
+            expect(await page.title()).toContain('TinyBase');
+            await waitForTextInPage(page, 'TinyBase');
+
+            if (combo.appType === 'todos') {
+              // Add a todo item
+              const testTodo = `Persisted todo ${combo.persistenceType}`;
+              await page.type('input[type="text"]', testTodo);
+              await page.keyboard.press('Enter');
+              await waitForTextInPage(page, testTodo);
+
+              // Give persistence time to save
+              await sleep(300);
+
+              // Reload the page
+              await page.reload({waitUntil: 'domcontentloaded'});
+              await sleep(500);
+
+              // Verify the todo is still there after reload
+              await waitForTextInPage(page, testTodo);
+
+              // Check the todo by clicking checkbox
+              const checkbox = await page.$('input[type="checkbox"]');
+              await checkbox.click();
+              await sleep(300);
+
+              // Reload again
+              await page.reload({waitUntil: 'domcontentloaded'});
+              await sleep(500);
+
+              // Verify checkbox state persisted
+              const isChecked = await page.evaluate(() => {
+                const cb = document.querySelector('input[type="checkbox"]');
+                return cb ? cb.checked : false;
+              });
+              expect(isChecked).toBe(true);
+            } else if (combo.appType === 'chat') {
+              // Set username
+              const usernameInput = await page.$(
+                'input[placeholder*="name" i]',
+              );
+              if (usernameInput) {
+                await usernameInput.click({clickCount: 3});
+                await usernameInput.type('PersistUser');
+                await sleep(300);
+              }
+
+              // Send a message
+              const messageInput = await page.evaluateHandle(() => {
+                const inputs = Array.from(
+                  document.querySelectorAll('input[type="text"]'),
+                );
+                return (
+                  inputs.find(
+                    (input) =>
+                      !input.placeholder.toLowerCase().includes('name') &&
+                      !input.value,
+                  ) || inputs[inputs.length - 1]
+                );
+              });
+              const testMessage = `Persisted message ${combo.persistenceType}`;
+              await messageInput.type(testMessage);
+              await page.keyboard.press('Enter');
+              await waitForTextInPage(page, testMessage);
+
+              // Give persistence time to save
+              await sleep(300);
+
+              // Reload the page
+              await page.reload({waitUntil: 'domcontentloaded'});
+              await sleep(500);
+
+              // Verify the message and username are still there
+              await waitForTextInPage(page, testMessage);
+              await waitForTextInPage(page, 'PersistUser');
+            }
+
+            checkErrors();
+          } finally {
+            await page.close();
+          }
         } finally {
           if (devServer) {
             await killProcess(devServer);

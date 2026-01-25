@@ -30,6 +30,46 @@ gameStatus: 'playing',
 },
 ]);
 
+{{#if persist}}
+  {{#if persistLocalStorage}}
+    {{#if schemas}}
+      {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser/with-schemas';"}}
+    {{else}}
+      {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser';"}}
+    {{/if}}
+
+    const persister = createLocalPersister(store, 'game');
+    persister.startAutoLoad().then(() => persister.startAutoSave());
+  {{/if}}
+  {{#if persistSqlite}}
+    {{#if schemas}}
+      {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm/with-schemas';"}}
+    {{else}}
+      {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';"}}
+    {{/if}}
+    {{addImport "import sqlite3InitModule from '@sqlite.org/sqlite-wasm';"}}
+
+    sqlite3InitModule().then((sqlite3) => {
+    const db = new sqlite3.oo1.DB(':local:game', 'c');
+    const persister = createSqliteWasmPersister(store, sqlite3, db, 'game');
+    persister.startAutoLoad().then(() => persister.startAutoSave());
+    });
+  {{/if}}
+  {{#if persistPglite}}
+    {{#if schemas}}
+      {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite/with-schemas';"}}
+    {{else}}
+      {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite';"}}
+    {{/if}}
+    {{addImport "import {PGlite} from '@electric-sql/pglite';"}}
+
+    PGlite.create('idb://game').then((pgLite) => {
+    const persister = createPglitePersister(store, pgLite, 'game');
+    persister.startAutoLoad().then(() => persister.startAutoSave());
+    });
+  {{/if}}
+{{/if}}
+
 {{#if sync}}
   {{includeFile template="client/src/shared/config.ts.hbs" output="client/src/config.ts"}}
   {{addImport "import {SERVER} from './config';"}}

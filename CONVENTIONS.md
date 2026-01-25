@@ -86,6 +86,27 @@ export const Store = () => {
 
   useProvideStore(STORE_ID, store);
 
+  // Persistence (if enabled)
+  {{#if persist}}
+    {{#if persistLocalStorage}}
+      useCreatePersister(
+        store,
+        (store) => createLocalPersister(store, STORE_ID),
+        [],
+        async (persister) => {
+          await persister.startAutoLoad();
+          await persister.startAutoSave();
+        },
+      );
+    {{/if}}
+    // Similar patterns for persistSqlite and persistPglite
+  {{/if}}
+
+  // Synchronization (if enabled)
+  {{#if sync}}
+    // ... synchronizer setup
+  {{/if}}
+
   return null;
 };
 ```
@@ -132,6 +153,20 @@ import {createMergeableStore} from 'tinybase';
 export const store = createMergeableStore().setTable('todos', {
   /* ... */
 });
+
+// Persistence (if enabled)
+{{#if persist}}
+  {{#if persistLocalStorage}}
+    const persister = createLocalPersister(store, 'todos');
+    persister.startAutoLoad().then(() => persister.startAutoSave());
+  {{/if}}
+  // Similar patterns for persistSqlite and persistPglite
+{{/if}}
+
+// Synchronization (if enabled)
+{{#if sync}}
+  // ... synchronizer setup
+{{/if}}
 
 export type TodosStore = typeof store; // or GameStore
 ```
@@ -453,6 +488,126 @@ App
     ├── Board
     │   └── Square (repeated)
     └── Button
+```
+
+---
+
+## Persistence Patterns
+
+### Order of Initialization
+
+Persistence should be configured **before** synchronization to avoid race conditions.
+
+**React Pattern:**
+
+```typescript
+export const Store = () => {
+  const store = useCreateStore(() => createMergeableStore());
+
+  useProvideStore(STORE_ID, store);
+
+  // 1. Configure persistence FIRST
+  useCreatePersister(
+    store,
+    (store) => createLocalPersister(store, STORE_ID),
+    [],
+    async (persister) => {
+      await persister.startAutoLoad();
+      await persister.startAutoSave();
+    },
+  );
+
+  // 2. Configure synchronization SECOND
+  useCreateSynchronizer(store, async (store) => {
+    const synchronizer = await createWsSynchronizer(/* ... */);
+    await synchronizer.startSync();
+    return synchronizer;
+  });
+
+  return null;
+};
+```
+
+**Vanilla Pattern:**
+
+```typescript
+export const store = createMergeableStore();
+
+// 1. Configure persistence FIRST
+const persister = createLocalPersister(store, 'todos');
+persister.startAutoLoad().then(() => persister.startAutoSave());
+
+// 2. Configure synchronization SECOND
+createWsSynchronizer(store, new ReconnectingWebSocket(SERVER)).then(
+  async (synchronizer) => {
+    await synchronizer.startSync();
+  },
+);
+```
+
+### Persister Types
+
+**Local Storage (Browser):**
+
+```typescript
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+
+const persister = createLocalPersister(store, STORE_ID);
+await persister.startAutoLoad();
+await persister.startAutoSave();
+```
+
+**SQLite (WebAssembly):**
+
+```typescript
+import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';
+import sqlite3InitModule from '@sqlite.org/sqlite-wasm';
+
+const sqlite3 = await sqlite3InitModule();
+const db = new sqlite3.oo1.DB(':local:' + STORE_ID, 'c');
+const persister = createSqliteWasmPersister(store, sqlite3, db, STORE_ID);
+await persister.startAutoLoad();
+await persister.startAutoSave();
+```
+
+**PGLite (PostgreSQL in Browser):**
+
+```typescript
+import {createPglitePersister} from 'tinybase/persisters/persister-pglite';
+import {PGlite} from '@electric-sql/pglite';
+
+const pgLite = await PGlite.create('idb://' + STORE_ID);
+const persister = createPglitePersister(store, pgLite, STORE_ID);
+await persister.startAutoLoad();
+await persister.startAutoSave();
+```
+
+### Multi-Store Persistence
+
+In apps with multiple stores (chat, drawing), **both** stores get persistence:
+
+```typescript
+// settingsStore - local preferences
+const settingsPersister = createLocalPersister(settingsStore, 'settings');
+settingsPersister.startAutoLoad().then(() => settingsPersister.startAutoSave());
+
+// chatStore - collaborative data (also gets persistence AND sync)
+const chatPersister = createLocalPersister(chatStore, 'chat');
+chatPersister.startAutoLoad().then(() => chatPersister.startAutoSave());
+```
+
+### Schema Support
+
+When using schemas, import from the schema-aware paths:
+
+```typescript
+{{#if schemas}}
+  import {createLocalPersister} from 'tinybase/persisters/persister-browser/with-schemas';
+  import {useCreatePersister} from 'tinybase/ui-react/with-schemas';
+{{else}}
+  import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+  import {useCreatePersister} from 'tinybase/ui-react';
+{{/if}}
 ```
 
 ---

@@ -59,6 +59,12 @@
   {{#if sync}}
     "reconnecting-websocket": "^4.4.0"
   {{/if}}
+  {{#if persistSqlite}}
+    "@sqlite.org/sqlite-wasm": "^3.50.4-build1"
+  {{/if}}
+  {{#if persistPglite}}
+    "@electric-sql/pglite": "^0.3.15"
+  {{/if}}
 {{/list}}
 }
 }

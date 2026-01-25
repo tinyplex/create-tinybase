@@ -176,7 +176,8 @@ for project in "${projects[@]}"; do
     --appType "$appType" \
     --schemas "$schemas" \
     --prettier true \
-    --eslint true
+    --eslint true \
+    --persistenceType local-storage
   
   # Restore node_modules if we backed it up
   backup_path="$TEST_DIR/.${name}-node_modules"

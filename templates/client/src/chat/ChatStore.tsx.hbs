@@ -23,7 +23,7 @@ export const STORE_ID = 'chat';
 
   type Schemas = [typeof TABLES_SCHEMA, NoValuesSchema];
 
-  const {useCreateMergeableStore, useProvideStore, useAddRowCallback, useRow, useSortedRowIds, useStore} = UiReact as UiReact.WithSchemas<Schemas>;
+  const {useAddRowCallback, useCreateMergeableStore, {{#if persist}}useCreatePersister, {{/if}}useProvideStore, useRow, useSortedRowIds, useStore} = UiReact as UiReact.WithSchemas<Schemas>;
 {{/if}}
 
 export type MessageRow = {{#if schemas}}Row<typeof TABLES_SCHEMA, 'messages'>{{else}}{username: string; text: string; timestamp: number}{{/if}};
@@ -38,6 +38,72 @@ createMergeableStore(){{#if schemas}}
 );
 
 useProvideStore(STORE_ID, store);
+
+{{#if persist}}
+  {{#if persistLocalStorage}}
+    {{#if schemas}}
+      {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser/with-schemas';"}}
+    {{else}}
+      {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser';"}}
+      {{addImport "import {useCreatePersister} from 'tinybase/ui-react';"}}
+    {{/if}}
+
+    useCreatePersister(
+    store,
+    (store) => createLocalPersister(store, STORE_ID),
+    [],
+    async (persister) => {
+    await persister.startAutoLoad();
+    await persister.startAutoSave();
+    },
+    );
+  {{/if}}
+  {{#if persistSqlite}}
+    {{#if schemas}}
+      {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm/with-schemas';"}}
+    {{else}}
+      {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';"}}
+      {{addImport "import {useCreatePersister} from 'tinybase/ui-react';"}}
+    {{/if}}
+    {{addImport "import sqlite3InitModule from '@sqlite.org/sqlite-wasm';"}}
+
+    useCreatePersister(
+    store,
+    async (store) => {
+    const sqlite3 = await sqlite3InitModule();
+    const db = new sqlite3.oo1.DB(':local:' + STORE_ID, 'c');
+    return createSqliteWasmPersister(store, sqlite3, db, STORE_ID);
+    },
+    [],
+    async (persister) => {
+    await persister.startAutoLoad();
+    await persister.startAutoSave();
+    },
+    );
+  {{/if}}
+  {{#if persistPglite}}
+    {{#if schemas}}
+      {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite/with-schemas';"}}
+    {{else}}
+      {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite';"}}
+      {{addImport "import {useCreatePersister} from 'tinybase/ui-react';"}}
+    {{/if}}
+    {{addImport "import {PGlite} from '@electric-sql/pglite';"}}
+
+    useCreatePersister(
+    store,
+    async (store) => {
+    const pgLite = await PGlite.create('idb://' + STORE_ID);
+    return createPglitePersister(store, pgLite, STORE_ID);
+    },
+    [],
+    async (persister) => {
+    await persister.startAutoLoad();
+    await persister.startAutoSave();
+    },
+    );
+  {{/if}}
+{{/if}}
 
 {{#if sync}}
   {{includeFile template="client/src/shared/config.ts.hbs" output="client/src/config.ts"}}

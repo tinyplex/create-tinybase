@@ -17,4 +17,44 @@ export const settingsStore = createStore(){{#if schemas}}
   .setValuesSchema(VALUES_SCHEMA){{/if}}
 .setValue('username', getRandomName());
 
+{{#if persist}}
+  {{#if persistLocalStorage}}
+    {{#if schemas}}
+      {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser/with-schemas';"}}
+    {{else}}
+      {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser';"}}
+    {{/if}}
+
+    const settingsPersister = createLocalPersister(settingsStore, 'settings');
+    settingsPersister.startAutoLoad().then(() => settingsPersister.startAutoSave());
+  {{/if}}
+  {{#if persistSqlite}}
+    {{#if schemas}}
+      {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm/with-schemas';"}}
+    {{else}}
+      {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';"}}
+    {{/if}}
+    {{addImport "import sqlite3InitModule from '@sqlite.org/sqlite-wasm';"}}
+
+    sqlite3InitModule().then((sqlite3) => {
+    const db = new sqlite3.oo1.DB(':local:settings', 'c');
+    const settingsPersister = createSqliteWasmPersister(settingsStore, sqlite3, db, 'settings');
+    settingsPersister.startAutoLoad().then(() => settingsPersister.startAutoSave());
+    });
+  {{/if}}
+  {{#if persistPglite}}
+    {{#if schemas}}
+      {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite/with-schemas';"}}
+    {{else}}
+      {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite';"}}
+    {{/if}}
+    {{addImport "import {PGlite} from '@electric-sql/pglite';"}}
+
+    PGlite.create('idb://settings').then((pgLite) => {
+    const settingsPersister = createPglitePersister(settingsStore, pgLite, 'settings');
+    settingsPersister.startAutoLoad().then(() => settingsPersister.startAutoSave());
+    });
+  {{/if}}
+{{/if}}
+
 export type SettingsStore = typeof settingsStore;

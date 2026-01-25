@@ -88,6 +88,18 @@ const config = {
       initial: 1,
     },
     {
+      type: 'select' as const,
+      name: 'persistenceType',
+      message: 'Persistence:',
+      choices: [
+        {title: 'None', value: 'none'},
+        {title: 'Local Storage', value: 'local-storage'},
+        {title: 'SQLite', value: 'sqlite'},
+        {title: 'PGlite', value: 'pglite'},
+      ],
+      initial: 1,
+    },
+    {
       type: 'confirm' as const,
       name: 'prettier',
       message: 'Include Prettier?',
@@ -120,6 +132,7 @@ const config = {
       eslint,
       schemas,
       syncType,
+      persistenceType,
       installAndRun,
     } = answers;
     const typescript = language === 'typescript';
@@ -132,6 +145,11 @@ const config = {
       normalizedSyncType === 'node' || normalizedSyncType === 'durable-objects';
     const serverType =
       normalizedSyncType === 'durable-objects' ? 'durable-objects' : 'node';
+    const normalizedPersistenceType = persistenceType || 'local-storage';
+    const persist = normalizedPersistenceType !== 'none';
+    const persistLocalStorage = normalizedPersistenceType === 'local-storage';
+    const persistSqlite = normalizedPersistenceType === 'sqlite';
+    const persistPglite = normalizedPersistenceType === 'pglite';
 
     return {
       projectName,
@@ -145,6 +163,11 @@ const config = {
       sync,
       server,
       serverType,
+      persistenceType: normalizedPersistenceType,
+      persist,
+      persistLocalStorage,
+      persistSqlite,
+      persistPglite,
       installAndRun: installAndRun === true || installAndRun === 'true',
       typescript,
       javascript,
