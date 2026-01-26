@@ -24,8 +24,7 @@ export const STORE_ID = 'game';
 
   type Schemas = [typeof TABLES_SCHEMA, typeof VALUES_SCHEMA];
 
-  const {useCell, useCreateMergeableStore, {{#if persist}}useCreatePersister, {{/if}}useProvideStore, useSetCellCallback, useSetPartialValuesCallback, useSetValuesCallback, useStore, useTableListener, useValue} = UiReact as
-  UiReact.WithSchemas<Schemas>;
+  const {useCell, useCreateMergeableStore, {{#if persist}}useCreatePersister, {{/if}}useProvideStore, useSetCellCallback, useSetValuesCallback, useStore, useTableListener, useValue} = UiReact as UiReact.WithSchemas<Schemas>;
 {{/if}}
 
 export {useStore, useSetValuesCallback, useSetCellCallback, useTableListener, useCell, useValue};

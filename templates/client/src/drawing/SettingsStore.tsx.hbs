@@ -17,7 +17,7 @@ export const STORE_ID = 'settings';
 
   type Schemas = [NoTablesSchema, typeof VALUES_SCHEMA];
 
-  const {useCreateStore, {{#if persist}}useCreatePersister, {{/if}}useProvideStore, useValue, useValues, useValueState} = UiReact as UiReact.WithSchemas<Schemas>;
+  const {useCreateStore, {{#if persist}}useCreatePersister, {{/if}}useProvideStore, useValues, useValueState} = UiReact as UiReact.WithSchemas<Schemas>;
 {{/if}}
 
 export {useValueState, useValues};
