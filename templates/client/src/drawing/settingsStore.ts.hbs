@@ -12,9 +12,7 @@
 
 {{/if}}
 export const settingsStore = createStore(){{#if schemas}}
-  .setValuesSchema(VALUES_SCHEMA){{/if}}
-.setValue('brushColor', '#d81b60')
-.setValue('brushSize', 5);
+  .setValuesSchema(VALUES_SCHEMA){{/if}};
 
 {{#if persist}}
   {{#if persistLocalStorage}}
@@ -25,7 +23,7 @@ export const settingsStore = createStore(){{#if schemas}}
     {{/if}}
 
     const settingsPersister = createLocalPersister(settingsStore, 'settings');
-    settingsPersister.startAutoLoad().then(() => settingsPersister.startAutoSave());
+    settingsPersister.startAutoLoad([{}, {brushColor: '#d81b60', brushSize: 5}]).then(() => settingsPersister.startAutoSave());
   {{/if}}
   {{#if persistSqlite}}
     {{#if schemas}}
@@ -38,7 +36,7 @@ export const settingsStore = createStore(){{#if schemas}}
     sqlite3InitModule().then((sqlite3) => {
     const db = new sqlite3.oo1.DB(':local:settings', 'c');
     const settingsPersister = createSqliteWasmPersister(settingsStore, sqlite3, db, 'settings');
-    settingsPersister.startAutoLoad().then(() => settingsPersister.startAutoSave());
+    settingsPersister.startAutoLoad([{}, {brushColor: '#d81b60', brushSize: 5}]).then(() => settingsPersister.startAutoSave());
     });
   {{/if}}
   {{#if persistPglite}}
@@ -51,9 +49,11 @@ export const settingsStore = createStore(){{#if schemas}}
 
     PGlite.create('idb://settings').then((pgLite) => {
     const settingsPersister = createPglitePersister(settingsStore, pgLite, 'settings');
-    settingsPersister.startAutoLoad().then(() => settingsPersister.startAutoSave());
+    settingsPersister.startAutoLoad([{}, {brushColor: '#d81b60', brushSize: 5}]).then(() => settingsPersister.startAutoSave());
     });
   {{/if}}
+{{else}}
+  settingsStore.setValue('brushColor', '#d81b60').setValue('brushSize', 5);
 {{/if}}
 
 export type SettingsStore = typeof settingsStore;

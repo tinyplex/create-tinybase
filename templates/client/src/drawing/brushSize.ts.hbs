@@ -13,17 +13,24 @@ const sizeSlider = document.createElement('input');
 sizeSlider.type = 'range';
 sizeSlider.min = '1';
 sizeSlider.max = '50';
-sizeSlider.value = '5';
 
 const sizeLabel = document.createElement('span');
 sizeLabel.id = 'brushSizeValue';
-sizeLabel.textContent = '5';
+
+const updateSize = () => {
+const size = store.getValue('brushSize') ?? 5;
+sizeSlider.value = `${size}`;
+sizeLabel.textContent = `${size}`;
+};
 
 sizeSlider.addEventListener('input', () => {
 const size = parseInt(sizeSlider.value);
 store.setValue('brushSize', size);
 sizeLabel.textContent = `${size}`;
 });
+
+store.addValueListener('brushSize', updateSize);
+updateSize();
 
 container.appendChild(label);
 container.appendChild(sizeSlider);
