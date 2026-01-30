@@ -69,14 +69,14 @@ cleanup() {
   echo "Stopping servers..."
   pkill -P $$ 2>/dev/null || true
   kill ${PIDS[@]} 2>/dev/null || true
-  pkill -f "vite.*--port.*51[7-8][0-9]" 2>/dev/null || true
+  pkill -f "vite.*--port.*(51[7-9][0-9]|52[0-2][0-9])" 2>/dev/null || true
   exit 0
 }
 
 trap cleanup INT TERM EXIT
 
 echo "Cleaning up any previous servers..."
-pkill -f "vite.*--port.*51[7-8][0-9]" 2>/dev/null || true
+pkill -f "vite.*--port.*(51[7-9][0-9]|52[0-2][0-9])" 2>/dev/null || true
 
 mkdir -p "$TEST_DIR"
 

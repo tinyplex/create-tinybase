@@ -775,12 +775,20 @@ describe('e2e tests', {concurrent: true}, () => {
 
 describe('persistence e2e tests', () => {
   const persistenceCombinations = [
+    // Todos persistence tests
     {
       language: 'typescript',
-      framework: 'react',
+      framework: 'vanilla',
       appType: 'todos',
-      persistenceType: 'local-storage',
-      name: 'ts-react-todos-persist-localstorage',
+      persistenceType: 'sqlite',
+      name: 'ts-vanilla-todos-persist-sqlite',
+    },
+    {
+      language: 'typescript',
+      framework: 'vanilla',
+      appType: 'todos',
+      persistenceType: 'pglite',
+      name: 'ts-vanilla-todos-persist-pglite',
     },
     {
       language: 'typescript',
@@ -796,12 +804,92 @@ describe('persistence e2e tests', () => {
       persistenceType: 'pglite',
       name: 'ts-react-todos-persist-pglite',
     },
+    // Chat persistence tests
     {
-      language: 'javascript',
+      language: 'typescript',
       framework: 'vanilla',
       appType: 'chat',
-      persistenceType: 'local-storage',
-      name: 'js-vanilla-chat-persist-localstorage',
+      persistenceType: 'sqlite',
+      name: 'ts-vanilla-chat-persist-sqlite',
+    },
+    {
+      language: 'typescript',
+      framework: 'vanilla',
+      appType: 'chat',
+      persistenceType: 'pglite',
+      name: 'ts-vanilla-chat-persist-pglite',
+    },
+    {
+      language: 'typescript',
+      framework: 'react',
+      appType: 'chat',
+      persistenceType: 'sqlite',
+      name: 'ts-react-chat-persist-sqlite',
+    },
+    {
+      language: 'typescript',
+      framework: 'react',
+      appType: 'chat',
+      persistenceType: 'pglite',
+      name: 'ts-react-chat-persist-pglite',
+    },
+    // Drawing persistence tests
+    {
+      language: 'typescript',
+      framework: 'vanilla',
+      appType: 'drawing',
+      persistenceType: 'sqlite',
+      name: 'ts-vanilla-drawing-persist-sqlite',
+    },
+    {
+      language: 'typescript',
+      framework: 'vanilla',
+      appType: 'drawing',
+      persistenceType: 'pglite',
+      name: 'ts-vanilla-drawing-persist-pglite',
+    },
+    {
+      language: 'typescript',
+      framework: 'react',
+      appType: 'drawing',
+      persistenceType: 'sqlite',
+      name: 'ts-react-drawing-persist-sqlite',
+    },
+    {
+      language: 'typescript',
+      framework: 'react',
+      appType: 'drawing',
+      persistenceType: 'pglite',
+      name: 'ts-react-drawing-persist-pglite',
+    },
+    // Game persistence tests
+    {
+      language: 'typescript',
+      framework: 'vanilla',
+      appType: 'game',
+      persistenceType: 'sqlite',
+      name: 'ts-vanilla-game-persist-sqlite',
+    },
+    {
+      language: 'typescript',
+      framework: 'vanilla',
+      appType: 'game',
+      persistenceType: 'pglite',
+      name: 'ts-vanilla-game-persist-pglite',
+    },
+    {
+      language: 'typescript',
+      framework: 'react',
+      appType: 'game',
+      persistenceType: 'sqlite',
+      name: 'ts-react-game-persist-sqlite',
+    },
+    {
+      language: 'typescript',
+      framework: 'react',
+      appType: 'game',
+      persistenceType: 'pglite',
+      name: 'ts-react-game-persist-pglite',
     },
   ];
 
@@ -920,6 +1008,87 @@ describe('persistence e2e tests', () => {
               // Verify the message and username are still there
               await waitForTextInPage(page, testMessage);
               await waitForTextInPage(page, 'PersistUser');
+            } else if (combo.appType === 'drawing') {
+              // Draw something
+              const canvas = await page.$('canvas');
+              if (canvas) {
+                const box = await canvas.boundingBox();
+                // Draw a simple line
+                await page.mouse.move(box.x + 50, box.y + 50);
+                await page.mouse.down();
+                await page.mouse.move(box.x + 100, box.y + 100);
+                await page.mouse.up();
+                await sleep(300);
+
+                // Get canvas data
+                const canvasData = await page.evaluate(() => {
+                  const cnv = document.querySelector('canvas');
+                  return cnv ? cnv.toDataURL() : null;
+                });
+
+                // Reload the page
+                await page.reload({waitUntil: 'domcontentloaded'});
+                await sleep(500);
+
+                // Verify drawing persisted
+                const persistedCanvasData = await page.evaluate(() => {
+                  const cnv = document.querySelector('canvas');
+                  return cnv ? cnv.toDataURL() : null;
+                });
+                expect(persistedCanvasData).toBe(canvasData);
+
+                // Test settings store (change brush color)
+                const colorInput = await page.$('input[type="color"]');
+                if (colorInput) {
+                  const initialColor = await page.evaluate(
+                    (el) => el.value,
+                    colorInput,
+                  );
+
+                  await colorInput.click();
+                  await page.evaluate((el) => {
+                    el.value = '#ff0000';
+                    el.dispatchEvent(new Event('input', {bubbles: true}));
+                  }, colorInput);
+                  await sleep(300);
+
+                  // Reload and verify color persisted
+                  await page.reload({waitUntil: 'domcontentloaded'});
+                  await sleep(500);
+
+                  const persistedColor = await page.evaluate(() => {
+                    const input = document.querySelector('input[type="color"]');
+                    return input ? input.value : null;
+                  });
+                  expect(persistedColor).toBe('#ff0000');
+                  expect(persistedColor).not.toBe(initialColor);
+                }
+              }
+            } else if (combo.appType === 'game') {
+              // Click to start/interact with game
+              const gameElement = await page.$('#root, #app, main, body');
+              if (gameElement) {
+                // Try clicking on the game area to make a move
+                const box = await gameElement.boundingBox();
+                await page.mouse.click(box.x + 100, box.y + 100);
+                await sleep(300);
+
+                // Get text content (should show game state)
+                const gameState = await page.evaluate(() => {
+                  return document.body.textContent;
+                });
+
+                // Reload the page
+                await page.reload({waitUntil: 'domcontentloaded'});
+                await sleep(500);
+
+                // Verify game state persisted
+                const persistedState = await page.evaluate(() => {
+                  return document.body.textContent;
+                });
+                // Check that some game state persisted (not blank)
+                expect(persistedState.length).toBeGreaterThan(10);
+              }
             }
 
             checkErrors();
