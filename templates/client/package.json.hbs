@@ -34,6 +34,12 @@
   {{#if react}}
     "@vitejs/plugin-react": "^5.1.2"
   {{/if}}
+  {{#if persistSqlite}}
+    "vite-plugin-static-copy": "^3.2.0"
+  {{/if}}
+  {{#if persistPglite}}
+    "vite-plugin-static-copy": "^3.2.0"
+  {{/if}}
   {{#if prettier}}
     "prettier": "^3.8.0"
   {{/if}}
@@ -76,6 +82,13 @@
 {{/if}}
 {{#if react}}
   {{includeFile template="client/vite.config.js.hbs" output="client/vite.config.js"}}
+{{else}}
+  {{#if persistSqlite}}
+    {{includeFile template="client/vite.config.js.hbs" output="client/vite.config.js"}}
+  {{/if}}
+  {{#if persistPglite}}
+    {{includeFile template="client/vite.config.js.hbs" output="client/vite.config.js"}}
+  {{/if}}
 {{/if}}
 {{#if typescript}}
   {{includeFile template="client/tsconfig.json.hbs" output="client/tsconfig.json"}}

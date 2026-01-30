@@ -2,11 +2,61 @@
 {{#if react}}
   {{addImport "import react from '@vitejs/plugin-react';"}}
 {{/if}}
+{{#if persistSqlite}}
+  {{addImport "import {viteStaticCopy} from 'vite-plugin-static-copy';"}}
+{{/if}}
+{{#if persistPglite}}
+  {{addImport "import {viteStaticCopy} from 'vite-plugin-static-copy';"}}
+{{/if}}
 
 export default defineConfig({
+plugins: [
 {{#if react}}
-  plugins: [react({
-    jsxRuntime: 'automatic',
-  })],
+  react({
+  jsxRuntime: 'automatic',
+  }),
+{{/if}}
+{{#if persistSqlite}}
+  viteStaticCopy({
+  targets: [
+  {
+  src: 'node_modules/@sqlite.org/sqlite-wasm/sqlite-wasm/jswasm/sqlite3.wasm',
+  dest: '.'
+  }
+  ]
+  }),
+{{/if}}
+{{#if persistPglite}}
+  viteStaticCopy({
+  targets: [
+  {
+  src: 'node_modules/@electric-sql/pglite/dist/*.wasm',
+  dest: '.'
+  }
+  ]
+  }),
+{{/if}}
+],
+{{#if persistSqlite}}
+  server: {
+  headers: {
+  'Cross-Origin-Opener-Policy': 'same-origin',
+  'Cross-Origin-Embedder-Policy': 'require-corp',
+  },
+  },
+  optimizeDeps: {
+  exclude: ['@sqlite.org/sqlite-wasm'],
+  },
+{{/if}}
+{{#if persistPglite}}
+  server: {
+  headers: {
+  'Cross-Origin-Opener-Policy': 'same-origin',
+  'Cross-Origin-Embedder-Policy': 'require-corp',
+  },
+  },
+  optimizeDeps: {
+  exclude: ['@electric-sql/pglite'],
+  },
 {{/if}}
 });

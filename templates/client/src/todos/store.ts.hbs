@@ -33,7 +33,7 @@ todos: {
     {{/if}}
 
     const persister = createLocalPersister(store, 'todos');
-    persister.startAutoLoad().then(() => persister.startAutoSave());
+    persister.load().then(() => persister.startAutoSave());
   {{/if}}
   {{#if persistSqlite}}
     {{#if schemas}}
@@ -41,12 +41,12 @@ todos: {
     {{else}}
       {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';"}}
     {{/if}}
-    {{addImport "import sqlite3InitModule from '@sqlite.org/sqlite-wasm';"}}
+    {{includeFile template="client/src/shared/sqlite.ts.hbs" output="client/src/sqlite.ts"}}
+    {{addImport "import {getDb} from './sqlite';"}}
 
-    sqlite3InitModule().then((sqlite3) => {
-    const db = new sqlite3.oo1.DB(':local:todos', 'c');
+    getDb().then(({sqlite3, db}) => {
     const persister = createSqliteWasmPersister(store, sqlite3, db, 'todos');
-    persister.startAutoLoad().then(() => persister.startAutoSave());
+    persister.load().then(() => persister.startAutoSave());
     });
   {{/if}}
   {{#if persistPglite}}
@@ -59,7 +59,7 @@ todos: {
 
     PGlite.create('idb://todos').then((pgLite) => {
     const persister = createPglitePersister(store, pgLite, 'todos');
-    persister.startAutoLoad().then(() => persister.startAutoSave());
+    persister.load().then(() => persister.startAutoSave());
     });
   {{/if}}
 {{/if}}

@@ -82,29 +82,48 @@ mkdir -p "$TEST_DIR"
 
 declare -a all_projects=(
   "test-js-vanilla-todos:javascript:vanilla:todos:5173:false"
-  "test-js-react-todos:javascript:react:todos:5174:false"
-  "test-ts-vanilla-todos:typescript:vanilla:todos:5175:false"
-  "test-ts-react-todos:typescript:react:todos:5176:false"
-  "test-ts-vanilla-todos-schemas:typescript:vanilla:todos:5189:true"
-  "test-ts-react-todos-schemas:typescript:react:todos:5190:true"
-  "test-js-vanilla-chat:javascript:vanilla:chat:5177:false"
-  "test-js-react-chat:javascript:react:chat:5178:false"
-  "test-ts-vanilla-chat:typescript:vanilla:chat:5179:false"
-  "test-ts-react-chat:typescript:react:chat:5180:false"
-  "test-ts-vanilla-chat-schemas:typescript:vanilla:chat:5191:true"
-  "test-ts-react-chat-schemas:typescript:react:chat:5192:true"
-  "test-js-vanilla-drawing:javascript:vanilla:drawing:5181:false"
-  "test-js-react-drawing:javascript:react:drawing:5182:false"
-  "test-ts-vanilla-drawing:typescript:vanilla:drawing:5183:false"
-  "test-ts-react-drawing:typescript:react:drawing:5184:false"
-  "test-ts-vanilla-drawing-schemas:typescript:vanilla:drawing:5193:true"
-  "test-ts-react-drawing-schemas:typescript:react:drawing:5194:true"
-  "test-js-vanilla-game:javascript:vanilla:game:5185:false"
-  "test-js-react-game:javascript:react:game:5186:false"
-  "test-ts-vanilla-game:typescript:vanilla:game:5187:false"
-  "test-ts-react-game:typescript:react:game:5188:false"
-  "test-ts-vanilla-game-schemas:typescript:vanilla:game:5195:true"
-  "test-ts-react-game-schemas:typescript:react:game:5196:true"
+  "test-ts-vanilla-todos:typescript:vanilla:todos:5174:false"
+  "test-ts-vanilla-todos-schemas:typescript:vanilla:todos:5175:true"
+  "test-ts-vanilla-todos-persist-sqlite:typescript:vanilla:todos:5176:false:sqlite"
+  "test-ts-vanilla-todos-persist-pglite:typescript:vanilla:todos:5177:false:pglite"
+  "test-js-react-todos:javascript:react:todos:5178:false"
+  "test-ts-react-todos:typescript:react:todos:5179:false"
+  "test-ts-react-todos-schemas:typescript:react:todos:5180:true"
+  "test-ts-react-todos-persist-sqlite:typescript:react:todos:5181:false:sqlite"
+  "test-ts-react-todos-persist-pglite:typescript:react:todos:5182:false:pglite"
+
+  "test-js-vanilla-chat:javascript:vanilla:chat:5183:false"
+  "test-ts-vanilla-chat:typescript:vanilla:chat:5184:false"
+  "test-ts-vanilla-chat-schemas:typescript:vanilla:chat:5185:true"
+  "test-ts-vanilla-chat-persist-sqlite:typescript:vanilla:chat:5186:false:sqlite"
+  "test-ts-vanilla-chat-persist-pglite:typescript:vanilla:chat:5187:false:pglite"
+  "test-js-react-chat:javascript:react:chat:5188:false"
+  "test-ts-react-chat:typescript:react:chat:5189:false"
+  "test-ts-react-chat-schemas:typescript:react:chat:5190:true"
+  "test-ts-react-chat-persist-sqlite:typescript:react:chat:5191:false:sqlite"
+  "test-ts-react-chat-persist-pglite:typescript:react:chat:5192:false:pglite"
+
+  "test-js-vanilla-drawing:javascript:vanilla:drawing:5193:false"
+  "test-ts-vanilla-drawing:typescript:vanilla:drawing:5194:false"
+  "test-ts-vanilla-drawing-schemas:typescript:vanilla:drawing:5195:true"
+  "test-ts-vanilla-drawing-persist-sqlite:typescript:vanilla:drawing:5196:false:sqlite"
+  "test-ts-vanilla-drawing-persist-pglite:typescript:vanilla:drawing:5197:false:pglite"
+  "test-js-react-drawing:javascript:react:drawing:5198:false"
+  "test-ts-react-drawing:typescript:react:drawing:5199:false"
+  "test-ts-react-drawing-schemas:typescript:react:drawing:5200:true"
+  "test-ts-react-drawing-persist-sqlite:typescript:react:drawing:5201:false:sqlite"
+  "test-ts-react-drawing-persist-pglite:typescript:react:drawing:5202:false:pglite"
+
+  "test-js-vanilla-game:javascript:vanilla:game:5203:false"
+  "test-ts-vanilla-game:typescript:vanilla:game:5204:false"
+  "test-ts-vanilla-game-schemas:typescript:vanilla:game:5205:true"
+  "test-ts-vanilla-game-persist-sqlite:typescript:vanilla:game:5206:false:sqlite"
+  "test-ts-vanilla-game-persist-pglite:typescript:vanilla:game:5207:false:pglite"
+  "test-js-react-game:javascript:react:game:5208:false"
+  "test-ts-react-game:typescript:react:game:5209:false"
+  "test-ts-react-game-schemas:typescript:react:game:5210:true"
+  "test-ts-react-game-persist-sqlite:typescript:react:game:5211:false:sqlite"
+  "test-ts-react-game-persist-pglite:typescript:react:game:5212:false:pglite"
 )
 
 # Filter projects if requested
@@ -112,7 +131,7 @@ declare -a projects=()
 if [ -n "$FILTER" ]; then
   echo "Filtering projects by: $FILTER"
   for project in "${all_projects[@]}"; do
-    IFS=':' read -r name _ _ _ _ _ <<< "$project"
+    IFS=':' read -r name _ _ _ _ _ _ <<< "$project"
     if [[ "$name" == *"$FILTER"* ]]; then
       projects+=("$project")
     fi
@@ -138,7 +157,7 @@ else
   echo "Smart mode: preserving node_modules where possible..."
   # For each project we're about to build, backup node_modules if it exists
   for project in "${projects[@]}"; do
-    IFS=':' read -r name _ _ _ _ _ <<< "$project"
+    IFS=':' read -r name _ _ _ _ _ _ <<< "$project"
     project_path="$TEST_DIR/$name"
     if [ -d "$project_path" ]; then
       # Check for client/node_modules (new structure)
@@ -166,7 +185,9 @@ cd "$TEST_DIR"
 
 echo "Creating projects..."
 for project in "${projects[@]}"; do
-  IFS=':' read -r name lang framework appType port schemas <<< "$project"
+  IFS=':' read -r name lang framework appType port schemas persistenceType <<< "$project"
+  # Default to local-storage if not specified
+  persistenceType="${persistenceType:-local-storage}"
   echo "Creating $name..."
   node "$CLI_PATH" \
     --non-interactive \
@@ -177,7 +198,7 @@ for project in "${projects[@]}"; do
     --schemas "$schemas" \
     --prettier true \
     --eslint true \
-    --persistenceType local-storage
+    --persistenceType "$persistenceType"
   
   # Restore node_modules if we backed it up
   backup_path="$TEST_DIR/.${name}-node_modules"
@@ -232,7 +253,7 @@ if [ "$SKIP_INSTALL" = false ]; then
     echo "Installing dependencies in parallel..."
     INSTALL_PIDS=()
     for project in "${projects[@]}"; do
-      IFS=':' read -r name _ _ _ _ _ <<< "$project"
+      IFS=':' read -r name _ _ _ _ _ _ <<< "$project"
       smart_install "$name" &
       INSTALL_PIDS+=($!)
     done
@@ -245,7 +266,7 @@ if [ "$SKIP_INSTALL" = false ]; then
   else
     echo "Installing dependencies sequentially..."
     for project in "${projects[@]}"; do
-      IFS=':' read -r name _ _ _ _ _ <<< "$project"
+      IFS=':' read -r name _ _ _ _ _ _ <<< "$project"
       smart_install "$name"
     done
   fi
@@ -260,7 +281,7 @@ if [ "$BUILD_ONLY" = true ]; then
   echo ""
   echo "Projects created:"
   for project in "${projects[@]}"; do
-    IFS=':' read -r name _ _ _ _ _ <<< "$project"
+    IFS=':' read -r name _ _ _ _ _ _ <<< "$project"
     echo "  - $name"
   done
   exit 0
@@ -270,7 +291,7 @@ echo ""
 echo "Starting dev servers..."
 PIDS=()
 for project in "${projects[@]}"; do
-  IFS=':' read -r name _ _ _ port _ <<< "$project"
+  IFS=':' read -r name _ _ _ port _ _ <<< "$project"
   echo "Starting $name on port $port..."
   # Check if package.json is in client/ subdirectory
   if [ -f "$name/client/package.json" ]; then
@@ -288,7 +309,7 @@ sleep 2
 echo ""
 echo "Opening browsers..."
 for project in "${projects[@]}"; do
-  IFS=':' read -r name _ _ _ port _ <<< "$project"
+  IFS=':' read -r name _ _ _ port _ _ <<< "$project"
   URL="http://localhost:$port"
   echo "Opening $name at $URL"
   open "$URL"
@@ -297,7 +318,7 @@ done
 echo ""
 echo "Projects running on ports:"
 for project in "${projects[@]}"; do
-  IFS=':' read -r name _ _ _ port _ <<< "$project"
+  IFS=':' read -r name _ _ _ port _ _ <<< "$project"
   printf "  - %-25s http://localhost:%s\n" "$name:" "$port"
 done
 echo ""

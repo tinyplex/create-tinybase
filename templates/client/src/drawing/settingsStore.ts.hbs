@@ -23,7 +23,7 @@ export const settingsStore = createStore(){{#if schemas}}
     {{/if}}
 
     const settingsPersister = createLocalPersister(settingsStore, 'settings');
-    settingsPersister.startAutoLoad([{}, {brushColor: '#d81b60', brushSize: 5}]).then(() => settingsPersister.startAutoSave());
+    settingsPersister.load([{}, {brushColor: '#d81b60', brushSize: 5}]).then(() => settingsPersister.startAutoSave());
   {{/if}}
   {{#if persistSqlite}}
     {{#if schemas}}
@@ -31,12 +31,12 @@ export const settingsStore = createStore(){{#if schemas}}
     {{else}}
       {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';"}}
     {{/if}}
-    {{addImport "import sqlite3InitModule from '@sqlite.org/sqlite-wasm';"}}
+    {{includeFile template="client/src/shared/sqlite.ts.hbs" output="client/src/sqlite.ts"}}
+    {{addImport "import {getDb} from './sqlite';"}}
 
-    sqlite3InitModule().then((sqlite3) => {
-    const db = new sqlite3.oo1.DB(':local:settings', 'c');
+    getDb().then(({sqlite3, db}) => {
     const settingsPersister = createSqliteWasmPersister(settingsStore, sqlite3, db, 'settings');
-    settingsPersister.startAutoLoad([{}, {brushColor: '#d81b60', brushSize: 5}]).then(() => settingsPersister.startAutoSave());
+    settingsPersister.load([{}, {brushColor: '#d81b60', brushSize: 5}]).then(() => settingsPersister.startAutoSave());
     });
   {{/if}}
   {{#if persistPglite}}
@@ -49,7 +49,7 @@ export const settingsStore = createStore(){{#if schemas}}
 
     PGlite.create('idb://settings').then((pgLite) => {
     const settingsPersister = createPglitePersister(settingsStore, pgLite, 'settings');
-    settingsPersister.startAutoLoad([{}, {brushColor: '#d81b60', brushSize: 5}]).then(() => settingsPersister.startAutoSave());
+    settingsPersister.load([{}, {brushColor: '#d81b60', brushSize: 5}]).then(() => settingsPersister.startAutoSave());
     });
   {{/if}}
 {{else}}

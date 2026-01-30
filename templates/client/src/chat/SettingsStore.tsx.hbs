@@ -47,7 +47,7 @@ useProvideStore(STORE_ID, store);
     (store) => createLocalPersister(store, STORE_ID),
     [],
     async (persister) => {
-    await persister.startAutoLoad();
+    await persister.load();
     await persister.startAutoSave();
     },
     );
@@ -59,18 +59,18 @@ useProvideStore(STORE_ID, store);
       {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';"}}
       {{addImport "import {useCreatePersister} from 'tinybase/ui-react';"}}
     {{/if}}
-    {{addImport "import sqlite3InitModule from '@sqlite.org/sqlite-wasm';"}}
+    {{includeFile template="client/src/shared/sqlite.ts.hbs" output="client/src/sqlite.{{ext}}"}}
+    {{addImport "import {getDb} from './sqlite';"}}
 
     useCreatePersister(
     store,
     async (store) => {
-    const sqlite3 = await sqlite3InitModule();
-    const db = new sqlite3.oo1.DB(':local:' + STORE_ID, 'c');
+    const {sqlite3, db} = await getDb();
     return createSqliteWasmPersister(store, sqlite3, db, STORE_ID);
     },
     [],
     async (persister) => {
-    await persister.startAutoLoad();
+    await persister.load();
     await persister.startAutoSave();
     },
     );
@@ -92,7 +92,7 @@ useProvideStore(STORE_ID, store);
     },
     [],
     async (persister) => {
-    await persister.startAutoLoad();
+    await persister.load();
     await persister.startAutoSave();
     },
     );

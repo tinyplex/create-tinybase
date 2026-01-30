@@ -861,7 +861,10 @@ describe('persistence e2e tests', () => {
               await sleep(500);
 
               // Verify the todo is still there after reload
-              await waitForTextInPage(page, testTodo);
+              // SQLite and PGLite take longer to initialize
+              const timeout =
+                combo.persistenceType === 'local-storage' ? 5000 : 10000;
+              await waitForTextInPage(page, testTodo, timeout);
 
               // Check the todo by clicking checkbox
               const checkbox = await page.$('input[type="checkbox"]');
