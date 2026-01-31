@@ -1003,11 +1003,12 @@ describe('persistence e2e tests', () => {
 
               // Reload the page
               await page.reload({waitUntil: 'domcontentloaded'});
-              await sleep(500);
+              // PGlite takes longer to initialize than SQLite
+              await sleep(combo.persistenceType === 'pglite' ? 2000 : 500);
 
               // Verify the message and username are still there
-              await waitForTextInPage(page, testMessage);
-              await waitForTextInPage(page, 'PersistUser');
+              await waitForTextInPage(page, testMessage, 10000);
+              await waitForTextInPage(page, 'PersistUser', 10000);
             } else if (combo.appType === 'drawing') {
               // Draw something
               const canvas = await page.$('canvas');

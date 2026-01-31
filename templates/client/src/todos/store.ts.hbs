@@ -55,11 +55,13 @@ todos: {
     {{else}}
       {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite';"}}
     {{/if}}
-    {{addImport "import {PGlite} from '@electric-sql/pglite';"}}
+    {{includeFile template="client/src/shared/pglite.ts.hbs" output="client/src/pglite.{{ext}}"}}
+    {{addImport "import {getPgLite} from './pglite';"}}
 
-    PGlite.create('idb://todos').then((pgLite) => {
-    const persister = createPglitePersister(store, pgLite, 'todos');
+    getPgLite().then((pgLite) => {
+    createPglitePersister(store, pgLite, 'todos').then((persister) => {
     persister.load().then(() => persister.startAutoSave());
+    });
     });
   {{/if}}
 {{/if}}

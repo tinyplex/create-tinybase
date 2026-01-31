@@ -47,11 +47,13 @@ export const settingsStore = createStore(){{#if schemas}}
     {{else}}
       {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite';"}}
     {{/if}}
-    {{addImport "import {PGlite} from '@electric-sql/pglite';"}}
+    {{includeFile template="client/src/shared/pglite.ts.hbs" output="client/src/pglite.{{ext}}"}}
+    {{addImport "import {getPgLite} from './pglite';"}}
 
-    PGlite.create('idb://settings').then((pgLite) => {
-    const settingsPersister = createPglitePersister(settingsStore, pgLite, 'settings');
+    getPgLite().then((pgLite) => {
+    createPglitePersister(settingsStore, pgLite, 'settings').then((settingsPersister) => {
     settingsPersister.load([{}, {username: getRandomName()}]).then(() => settingsPersister.startAutoSave());
+    });
     });
   {{/if}}
 {{else}}

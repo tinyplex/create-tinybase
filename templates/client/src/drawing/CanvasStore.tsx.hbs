@@ -85,13 +85,14 @@ useProvideStore(STORE_ID, store);
       {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite';"}}
       {{addImport "import {useCreatePersister} from 'tinybase/ui-react';"}}
     {{/if}}
-    {{addImport "import {PGlite} from '@electric-sql/pglite';"}}
+    {{includeFile template="client/src/shared/pglite.ts.hbs" output="client/src/pglite.{{ext}}"}}
+    {{addImport "import {getPgLite} from './pglite';"}}
 
     useCreatePersister(
     store,
     async (store) => {
-    const pgLite = await PGlite.create('idb://' + STORE_ID);
-    return createPglitePersister(store, pgLite, STORE_ID);
+    const pgLite = await getPgLite();
+    return await createPglitePersister(store, pgLite, 'canvas');
     },
     [],
     async (persister) => {

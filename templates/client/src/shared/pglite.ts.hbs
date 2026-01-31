@@ -1,0 +1,10 @@
+{{addImport "import {PGlite} from '@electric-sql/pglite';"}}
+
+let pgLitePromise: Promise<PGlite> | null = null;
+
+  export const getPgLite = async (): Promise<PGlite> => {
+    if (!pgLitePromise) {
+    pgLitePromise = PGlite.create('idb://local');
+    }
+    return await pgLitePromise;
+    };

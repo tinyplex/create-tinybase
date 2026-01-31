@@ -51,11 +51,13 @@ export type StrokeRow = {{#if schemas}}Row<typeof TABLES_SCHEMA, 'strokes'>{{els
     {{else}}
       {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite';"}}
     {{/if}}
-    {{addImport "import {PGlite} from '@electric-sql/pglite';"}}
+    {{includeFile template="client/src/shared/pglite.ts.hbs" output="client/src/pglite.{{ext}}"}}
+    {{addImport "import {getPgLite} from './pglite';"}}
 
-    PGlite.create('idb://canvas').then((pgLite) => {
-    const canvasPersister = createPglitePersister(canvasStore, pgLite, 'canvas');
+    getPgLite().then((pgLite) => {
+    createPglitePersister(canvasStore, pgLite, 'canvas').then((canvasPersister) => {
     canvasPersister.load().then(() => canvasPersister.startAutoSave());
+    });
     });
   {{/if}}
 {{/if}}

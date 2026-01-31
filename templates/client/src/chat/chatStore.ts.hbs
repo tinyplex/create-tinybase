@@ -54,11 +54,13 @@ export type MessageRow = {{#if schemas}}Row<typeof TABLES_SCHEMA, 'messages'>{{e
     {{else}}
       {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite';"}}
     {{/if}}
-    {{addImport "import {PGlite} from '@electric-sql/pglite';"}}
+    {{includeFile template="client/src/shared/pglite.ts.hbs" output="client/src/pglite.{{ext}}"}}
+    {{addImport "import {getPgLite} from './pglite';"}}
 
-    PGlite.create('idb://chat').then((pgLite) => {
-    const chatPersister = createPglitePersister(chatStore, pgLite, 'chat');
+    getPgLite().then((pgLite) => {
+    createPglitePersister(chatStore, pgLite, 'chat').then((chatPersister) => {
     chatPersister.load().then(() => chatPersister.startAutoSave());
+    });
     });
   {{/if}}
 {{/if}}
