@@ -16,7 +16,7 @@ BUILD_ONLY=false
 
 while [[ $# -gt 0 ]]; do
   case $1 in
-    --filter)
+    -t)
       FILTER="$2"
       shift 2
       ;;
@@ -40,7 +40,7 @@ while [[ $# -gt 0 ]]; do
       echo "Usage: $0 [OPTIONS]"
       echo ""
       echo "Options:"
-      echo "  --filter PATTERN    Only build projects matching pattern (e.g., 'chat', 'ts-react', 'drawing')"
+      echo "  -t PATTERN    Only build projects matching pattern (e.g., 'chat', 'ts-react', 'drawing')"
       echo "  --skip-install      Skip npm install (assumes deps already installed)"
       echo "  --no-parallel       Install dependencies sequentially instead of in parallel"
       echo "  --clean             Clean tmp directory (force fresh install)"
@@ -49,9 +49,9 @@ while [[ $# -gt 0 ]]; do
       echo ""
       echo "Examples:"
       echo "  $0                           # Build all 24 projects (reuse node_modules)"
-      echo "  $0 --filter chat             # Build only chat projects"
-      echo "  $0 --filter ts-react-chat    # Build only ts-react-chat"
-      echo "  $0 --filter drawing --skip-install  # Build drawing projects, skip install"
+      echo "  $0 -t chat             # Build only chat projects"
+      echo "  $0 -t ts-react-chat    # Build only ts-react-chat"
+      echo "  $0 -t drawing --skip-install  # Build drawing projects, skip install"
       echo "  $0 --clean                   # Force fresh install for all projects"
       echo "  $0 --build-only              # Create all projects without running them"
       exit 0

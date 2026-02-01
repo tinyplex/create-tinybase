@@ -16,48 +16,63 @@
 export const settingsStore = createStore(){{#if schemas}}
   .setValuesSchema(VALUES_SCHEMA){{/if}};
 
-{{#if persist}}
-  {{#if persistLocalStorage}}
-    {{#if schemas}}
-      {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser/with-schemas';"}}
-    {{else}}
-      {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser';"}}
+let resolveSettingsReady: () => void;
+export const settingsStoreReady = new Promise<void>((resolve) => {
+  resolveSettingsReady = resolve;
+  });
+
+  {{#if persist}}
+    {{#if persistLocalStorage}}
+      {{#if schemas}}
+        {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser/with-schemas';"}}
+      {{else}}
+        {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser';"}}
+      {{/if}}
+
+      const settingsPersister = createLocalPersister(settingsStore, 'settings');
+      settingsPersister.load([{}, {username: getRandomName()}]).then(() => {
+      settingsPersister.startAutoSave();
+      resolveSettingsReady();
+      });
     {{/if}}
+    {{#if persistSqlite}}
+      {{#if schemas}}
+        {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm/with-schemas';"}}
+      {{else}}
+        {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';"}}
+      {{/if}}
+      {{includeFile template="client/src/shared/sqlite.ts.hbs" output="client/src/sqlite.ts"}}
+      {{addImport "import {getDb} from './sqlite';"}}
 
-    const settingsPersister = createLocalPersister(settingsStore, 'settings');
-    settingsPersister.load([{}, {username: getRandomName()}]).then(() => settingsPersister.startAutoSave());
-  {{/if}}
-  {{#if persistSqlite}}
-    {{#if schemas}}
-      {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm/with-schemas';"}}
-    {{else}}
-      {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';"}}
+      getDb().then(({sqlite3, db}) => {
+      const settingsPersister = createSqliteWasmPersister(settingsStore, sqlite3, db, 'settings');
+      settingsPersister.load([{}, {username: getRandomName()}]).then(() => {
+      settingsPersister.startAutoSave();
+      resolveSettingsReady();
+      });
+      });
     {{/if}}
-    {{includeFile template="client/src/shared/sqlite.ts.hbs" output="client/src/sqlite.ts"}}
-    {{addImport "import {getDb} from './sqlite';"}}
+    {{#if persistPglite}}
+      {{#if schemas}}
+        {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite/with-schemas';"}}
+      {{else}}
+        {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite';"}}
+      {{/if}}
+      {{includeFile template="client/src/shared/pglite.ts.hbs" output="client/src/pglite.{{ext}}"}}
+      {{addImport "import {getPgLite} from './pglite';"}}
 
-    getDb().then(({sqlite3, db}) => {
-    const settingsPersister = createSqliteWasmPersister(settingsStore, sqlite3, db, 'settings');
-    settingsPersister.load([{}, {username: getRandomName()}]).then(() => settingsPersister.startAutoSave());
-    });
-  {{/if}}
-  {{#if persistPglite}}
-    {{#if schemas}}
-      {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite/with-schemas';"}}
-    {{else}}
-      {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite';"}}
+      getPgLite().then((pgLite) => {
+      createPglitePersister(settingsStore, pgLite, 'settings').then((settingsPersister) => {
+      settingsPersister.load([{}, {username: getRandomName()}]).then(() => {
+      settingsPersister.startAutoSave();
+      resolveSettingsReady();
+      });
+      });
+      });
     {{/if}}
-    {{includeFile template="client/src/shared/pglite.ts.hbs" output="client/src/pglite.{{ext}}"}}
-    {{addImport "import {getPgLite} from './pglite';"}}
-
-    getPgLite().then((pgLite) => {
-    createPglitePersister(settingsStore, pgLite, 'settings').then((settingsPersister) => {
-    settingsPersister.load([{}, {username: getRandomName()}]).then(() => settingsPersister.startAutoSave());
-    });
-    });
+  {{else}}
+    settingsStore.setValue('username', getRandomName());
+    resolveSettingsReady();
   {{/if}}
-{{else}}
-  settingsStore.setValue('username', getRandomName());
-{{/if}}
 
-export type SettingsStore = typeof settingsStore;
+  export type SettingsStore = typeof settingsStore;

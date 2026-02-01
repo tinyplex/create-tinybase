@@ -1,4 +1,4 @@
-{{addImport "import {StrictMode} from 'react';"}}
+{{addImport "import {StrictMode, useState} from 'react';"}}
 
 {{addImport "import {Provider} from 'tinybase/ui-react';"}}
 {{addImport "import {Inspector} from 'tinybase/ui-react-inspector';"}}
@@ -18,15 +18,31 @@
 {{includeFile template="client/src/chat/MessageInput.tsx.hbs" output="client/src/MessageInput.{{ext}}"}}
 {{addImport "import {MessageInput} from './MessageInput';"}}
 
-export const App = () => (
+export const App = () => {
+const [settingsReady, setSettingsReady] = useState(false);
+const [chatReady, setChatReady] = useState(false);
+const loading = !settingsReady || !chatReady;
+
+return (
 <StrictMode>
   <Provider>
-    <SettingsStore />
-    <ChatStore />
-    <UsernameInput />
-    <Messages />
-    <MessageInput />
-    <Inspector />
+    <SettingsStore onReady={()=> setSettingsReady(true)} />
+      <ChatStore onReady={()=> setChatReady(true)} />
+        {loading ? (
+        {{{{raw}}}}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+          <div style={{ fontSize: '2rem' }}>⏳ Loading...</div>
+        </div>
+        {{{{/raw}}}}
+        ) : (
+        <>
+          <UsernameInput />
+          <Messages />
+          <MessageInput />
+          <Inspector />
+        </>
+        )}
   </Provider>
 </StrictMode>
 );
+};

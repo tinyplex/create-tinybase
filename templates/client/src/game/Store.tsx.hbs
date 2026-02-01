@@ -29,7 +29,7 @@ export const STORE_ID = 'game';
 
 export {useStore, useSetValuesCallback, useSetCellCallback, useTableListener, useCell, useValue};
 
-export const Store = () => {
+export const Store = ({onReady}: {onReady?: () => void}) => {
 const store = useCreateMergeableStore(() =>
 createMergeableStore(){{#if schemas}}
   .setTablesSchema(TABLES_SCHEMA)
@@ -61,6 +61,7 @@ useProvideStore(STORE_ID, store);
     async (persister) => {
     await persister.load();
     await persister.startAutoSave();
+    onReady?.();
     },
     );
   {{/if}}
@@ -84,6 +85,7 @@ useProvideStore(STORE_ID, store);
     async (persister) => {
     await persister.load();
     await persister.startAutoSave();
+    onReady?.();
     },
     );
   {{/if}}
@@ -107,6 +109,7 @@ useProvideStore(STORE_ID, store);
     async (persister) => {
     await persister.load();
     await persister.startAutoSave();
+    onReady?.();
     },
     );
   {{/if}}
@@ -136,12 +139,19 @@ useProvideStore(STORE_ID, store);
   await synchronizer.startSync();
 
   synchronizer.getWebSocket().addEventListener('open', () => {
-  synchronizer.load().then(() => synchronizer.save());
+  synchronizer.load().then(() => {
+  synchronizer.save();
+  {{#unless persist}}onReady?.();{{/unless}}
+  });
   });
 
   return synchronizer;
   });
 {{/if}}
+
+{{#unless persist}}{{#unless sync}}
+    onReady?.();
+  {{/unless}}{{/unless}}
 
 return null;
 };

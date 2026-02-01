@@ -27,7 +27,7 @@ export type StrokeRow = {{#if schemas}}Row<typeof TABLES_SCHEMA, 'strokes'>{{els
 
 export {useDelTableCallback, useRow, useSortedRowIds, useStore, useTable};
 
-export const CanvasStore = () => {
+export const CanvasStore = ({onReady}: {onReady?: () => void}) => {
 const store = useCreateMergeableStore(() =>
 createMergeableStore(){{#if schemas}}
   .setTablesSchema(TABLES_SCHEMA){{/if}}
@@ -52,6 +52,7 @@ useProvideStore(STORE_ID, store);
     async (persister) => {
     await persister.load();
     await persister.startAutoSave();
+    onReady?.();
     },
     );
   {{/if}}
@@ -75,6 +76,7 @@ useProvideStore(STORE_ID, store);
     async (persister) => {
     await persister.load();
     await persister.startAutoSave();
+    onReady?.();
     },
     );
   {{/if}}
@@ -98,6 +100,7 @@ useProvideStore(STORE_ID, store);
     async (persister) => {
     await persister.load();
     await persister.startAutoSave();
+    onReady?.();
     },
     );
   {{/if}}
@@ -127,12 +130,19 @@ useProvideStore(STORE_ID, store);
   await synchronizer.startSync();
 
   synchronizer.getWebSocket().addEventListener('open', () => {
-  synchronizer.load().then(() => synchronizer.save());
+  synchronizer.load().then(() => {
+  synchronizer.save();
+  {{#unless persist}}onReady?.();{{/unless}}
+  });
   });
 
   return synchronizer;
   });
 {{/if}}
+
+{{#unless persist}}{{#unless sync}}
+    onReady?.();
+  {{/unless}}{{/unless}}
 
 return null;
 };

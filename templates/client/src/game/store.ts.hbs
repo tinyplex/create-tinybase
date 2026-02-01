@@ -30,69 +30,90 @@ gameStatus: 'playing',
 },
 ]);
 
-{{#if persist}}
-  {{#if persistLocalStorage}}
-    {{#if schemas}}
-      {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser/with-schemas';"}}
-    {{else}}
-      {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser';"}}
-    {{/if}}
-
-    const persister = createLocalPersister(store, 'game');
-    persister.load().then(() => persister.startAutoSave());
-  {{/if}}
-  {{#if persistSqlite}}
-    {{#if schemas}}
-      {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm/with-schemas';"}}
-    {{else}}
-      {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';"}}
-    {{/if}}
-    {{includeFile template="client/src/shared/sqlite.ts.hbs" output="client/src/sqlite.ts"}}
-    {{addImport "import {getDb} from './sqlite';"}}
-
-    getDb().then(({sqlite3, db}) => {
-    const persister = createSqliteWasmPersister(store, sqlite3, db, 'game');
-    persister.load().then(() => persister.startAutoSave());
-    });
-  {{/if}}
-  {{#if persistPglite}}
-    {{#if schemas}}
-      {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite/with-schemas';"}}
-    {{else}}
-      {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite';"}}
-    {{/if}}
-    {{includeFile template="client/src/shared/pglite.ts.hbs" output="client/src/pglite.{{ext}}"}}
-    {{addImport "import {getPgLite} from './pglite';"}}
-
-    getPgLite().then((pgLite) => {
-    createPglitePersister(store, pgLite, 'game').then((persister) => {
-    persister.load().then(() => persister.startAutoSave());
-    });
-    });
-  {{/if}}
-{{/if}}
-
-{{#if sync}}
-  {{includeFile template="client/src/shared/config.ts.hbs" output="client/src/config.ts"}}
-  {{addImport "import {SERVER} from './config';"}}
-  {{addImport "import ReconnectingWebSocket from 'reconnecting-websocket';"}}
-  {{#if schemas}}
-    {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client/with-schemas';"}}
-  {{else}}
-    {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';"}}
-  {{/if}}
-
-  const serverPathId = location.pathname;
-  createWsSynchronizer(
-  store,
-  new ReconnectingWebSocket(SERVER + serverPathId),
-  ).then(async (synchronizer) => {
-  await synchronizer.startSync();
-
-  synchronizer.getWebSocket().addEventListener('open', () => {
-  synchronizer.load().then(() => synchronizer.save());
+let resolveReady: () => void;
+export const storeReady = new Promise<void>((resolve) => {
+  resolveReady = resolve;
   });
-  });
-{{/if}}
 
-export type GameStore = typeof store;
+  {{#if persist}}
+    {{#if persistLocalStorage}}
+      {{#if schemas}}
+        {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser/with-schemas';"}}
+      {{else}}
+        {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser';"}}
+      {{/if}}
+
+      const persister = createLocalPersister(store, 'game');
+      persister.load().then(() => {
+      persister.startAutoSave();
+      resolveReady();
+      });
+    {{/if}}
+    {{#if persistSqlite}}
+      {{#if schemas}}
+        {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm/with-schemas';"}}
+      {{else}}
+        {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';"}}
+      {{/if}}
+      {{includeFile template="client/src/shared/sqlite.ts.hbs" output="client/src/sqlite.ts"}}
+      {{addImport "import {getDb} from './sqlite';"}}
+
+      getDb().then(({sqlite3, db}) => {
+      const persister = createSqliteWasmPersister(store, sqlite3, db, 'game');
+      persister.load().then(() => {
+      persister.startAutoSave();
+      resolveReady();
+      });
+      });
+    {{/if}}
+    {{#if persistPglite}}
+      {{#if schemas}}
+        {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite/with-schemas';"}}
+      {{else}}
+        {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite';"}}
+      {{/if}}
+      {{includeFile template="client/src/shared/pglite.ts.hbs" output="client/src/pglite.{{ext}}"}}
+      {{addImport "import {getPgLite} from './pglite';"}}
+
+      getPgLite().then((pgLite) => {
+      createPglitePersister(store, pgLite, 'game').then((persister) => {
+      persister.load().then(() => {
+      persister.startAutoSave();
+      resolveReady();
+      });
+      });
+      });
+    {{/if}}
+  {{/if}}
+
+  {{#if sync}}
+    {{includeFile template="client/src/shared/config.ts.hbs" output="client/src/config.ts"}}
+    {{addImport "import {SERVER} from './config';"}}
+    {{addImport "import ReconnectingWebSocket from 'reconnecting-websocket';"}}
+    {{#if schemas}}
+      {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client/with-schemas';"}}
+    {{else}}
+      {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';"}}
+    {{/if}}
+
+    const serverPathId = location.pathname;
+    createWsSynchronizer(
+    store,
+    new ReconnectingWebSocket(SERVER + serverPathId),
+    ).then(async (synchronizer) => {
+    await synchronizer.startSync();
+
+    synchronizer.getWebSocket().addEventListener('open', () => {
+    synchronizer.load().then(() => {
+    synchronizer.save();
+    {{#unless persist}}resolveReady();{{/unless}}
+    });
+    });
+    });
+  {{/if}}
+
+  {{#unless persist}}{{#unless sync}}
+      resolveReady();
+    {{/unless}}{{/unless}}
+
+  export type GameStore = typeof store;

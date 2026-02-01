@@ -1,12 +1,27 @@
 {{includeFile template="client/src/todos/store.ts.hbs" output="client/src/store.ts"}}
-{{addImport "import {store} from './store';"}}
+{{addImport "import {store, storeReady} from './store';"}}
 {{includeFile template="client/src/todos/todoInput.ts.hbs" output="client/src/todoInput.{{ext}}"}}
 {{addImport "import {createTodoInput} from './todoInput';"}}
 {{includeFile template="client/src/todos/todoList.ts.hbs" output="client/src/todoList.{{ext}}"}}
 {{addImport "import {createTodoList} from './todoList';"}}
 
-export const app = () => {
+export const app = async () => {
 const appContainer = document.getElementById('app')!;
+
+// Show loading spinner
+const loadingDiv = document.createElement('div');
+loadingDiv.style.display = 'flex';
+loadingDiv.style.alignItems = 'center';
+loadingDiv.style.justifyContent = 'center';
+loadingDiv.style.height = '100vh';
+loadingDiv.innerHTML = '<div style="font-size: 2rem">⏳ Loading...</div>';
+appContainer.appendChild(loadingDiv);
+
+// Wait for store to be ready
+await storeReady;
+
+// Remove loading spinner
+appContainer.removeChild(loadingDiv);
 
 const todoInputContainer = createTodoInput(store);
 appContainer.appendChild(todoInputContainer);

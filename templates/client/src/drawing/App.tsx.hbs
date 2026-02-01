@@ -1,4 +1,4 @@
-{{addImport "import {StrictMode} from 'react';"}}
+{{addImport "import {StrictMode, useState} from 'react';"}}
 
 {{addImport "import {Provider} from 'tinybase/ui-react';"}}
 {{addImport "import {Inspector} from 'tinybase/ui-react-inspector';"}}
@@ -15,14 +15,30 @@
 {{includeFile template="client/src/drawing/Canvas.tsx.hbs" output="client/src/Canvas.{{ext}}"}}
 {{addImport "import {Canvas} from './Canvas';"}}
 
-export const App = () => (
+export const App = () => {
+const [settingsReady, setSettingsReady] = useState(false);
+const [canvasReady, setCanvasReady] = useState(false);
+const loading = !settingsReady || !canvasReady;
+
+return (
 <StrictMode>
   <Provider>
-    <SettingsStore />
-    <CanvasStore />
-    <DrawingControls />
-    <Canvas />
-    <Inspector />
+    <SettingsStore onReady={()=> setSettingsReady(true)} />
+      <CanvasStore onReady={()=> setCanvasReady(true)} />
+        {loading ? (
+        {{{{raw}}}}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+          <div style={{ fontSize: '2rem' }}>⏳ Loading...</div>
+        </div>
+        {{{{/raw}}}}
+        ) : (
+        <>
+          <DrawingControls />
+          <Canvas />
+          <Inspector />
+        </>
+        )}
   </Provider>
 </StrictMode>
 );
+};

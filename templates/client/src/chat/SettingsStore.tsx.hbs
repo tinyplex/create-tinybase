@@ -24,7 +24,7 @@ export const STORE_ID = 'settings';
 
 export {useValue, useValueState};
 
-export const SettingsStore = () => {
+export const SettingsStore = ({onReady}: {onReady?: () => void}) => {
 const store = useCreateStore(() =>
 createStore(){{#if schemas}}
   .setValuesSchema(VALUES_SCHEMA){{/if}}
@@ -49,6 +49,7 @@ useProvideStore(STORE_ID, store);
     async (persister) => {
     await persister.load();
     await persister.startAutoSave();
+    onReady?.();
     },
     );
   {{/if}}
@@ -72,6 +73,7 @@ useProvideStore(STORE_ID, store);
     async (persister) => {
     await persister.load();
     await persister.startAutoSave();
+    onReady?.();
     },
     );
   {{/if}}
@@ -95,10 +97,15 @@ useProvideStore(STORE_ID, store);
     async (persister) => {
     await persister.load();
     await persister.startAutoSave();
+    onReady?.();
     },
     );
   {{/if}}
 {{/if}}
+
+{{#unless persist}}{{#unless sync}}
+    onReady?.();
+  {{/unless}}{{/unless}}
 
 return null;
 };

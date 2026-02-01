@@ -1,10 +1,26 @@
 {{includeFile template="client/src/game/store.ts.hbs" output="client/src/store.ts"}}
-{{addImport "import {store} from './store';"}}
+{{addImport "import {store, storeReady} from './store';"}}
 
 {{includeFile template="client/src/game/game.ts.hbs" output="client/src/game.{{ext}}"}}
 {{addImport "import {createGame} from './game';"}}
 
-export const app = () => {
+export const app = async () => {
 const appContainer = document.getElementById('app')!;
+
+// Show loading spinner
+const loadingDiv = document.createElement('div');
+loadingDiv.style.display = 'flex';
+loadingDiv.style.alignItems = 'center';
+loadingDiv.style.justifyContent = 'center';
+loadingDiv.style.height = '100vh';
+loadingDiv.innerHTML = '<div style="font-size: 2rem">⏳ Loading...</div>';
+appContainer.appendChild(loadingDiv);
+
+// Wait for store to be ready
+await storeReady;
+
+// Remove loading spinner
+appContainer.removeChild(loadingDiv);
+
 appContainer.appendChild(createGame(store));
 };

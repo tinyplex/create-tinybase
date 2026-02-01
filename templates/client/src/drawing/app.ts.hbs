@@ -1,8 +1,8 @@
 {{includeFile template="client/src/drawing/settingsStore.ts.hbs" output="client/src/settingsStore.ts"}}
-{{addImport "import {settingsStore} from './settingsStore';"}}
+{{addImport "import {settingsStore, settingsStoreReady} from './settingsStore';"}}
 
 {{includeFile template="client/src/drawing/canvasStore.ts.hbs" output="client/src/canvasStore.ts"}}
-{{addImport "import {canvasStore} from './canvasStore';"}}
+{{addImport "import {canvasStore, canvasStoreReady} from './canvasStore';"}}
 
 {{includeFile template="client/src/drawing/drawingControls.ts.hbs" output="client/src/drawingControls.{{ext}}"}}
 {{addImport "import {createDrawingControls} from './drawingControls';"}}
@@ -10,8 +10,23 @@
 {{includeFile template="client/src/drawing/canvas.ts.hbs" output="client/src/canvas.{{ext}}"}}
 {{addImport "import {createCanvas} from './canvas';"}}
 
-export const app = () => {
+export const app = async () => {
 const appContainer = document.getElementById('app')!;
+
+// Show loading spinner
+const loadingDiv = document.createElement('div');
+loadingDiv.style.display = 'flex';
+loadingDiv.style.alignItems = 'center';
+loadingDiv.style.justifyContent = 'center';
+loadingDiv.style.height = '100vh';
+loadingDiv.innerHTML = '<div style="font-size: 2rem">⏳ Loading...</div>';
+appContainer.appendChild(loadingDiv);
+
+// Wait for stores to be ready
+await Promise.all([settingsStoreReady, canvasStoreReady]);
+
+// Remove loading spinner
+appContainer.removeChild(loadingDiv);
 
 appContainer.appendChild(createDrawingControls(settingsStore, canvasStore));
 appContainer.appendChild(createCanvas(settingsStore, canvasStore));

@@ -20,69 +20,90 @@ export const canvasStore = createMergeableStore(){{#if schemas}}
 
 export type StrokeRow = {{#if schemas}}Row<typeof TABLES_SCHEMA, 'strokes'>{{else}}{color: string; size: number; points: string}{{/if}};
 
-{{#if persist}}
-  {{#if persistLocalStorage}}
-    {{#if schemas}}
-      {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser/with-schemas';"}}
-    {{else}}
-      {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser';"}}
-    {{/if}}
-
-    const canvasPersister = createLocalPersister(canvasStore, 'canvas');
-    canvasPersister.load().then(() => canvasPersister.startAutoSave());
-  {{/if}}
-  {{#if persistSqlite}}
-    {{#if schemas}}
-      {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm/with-schemas';"}}
-    {{else}}
-      {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';"}}
-    {{/if}}
-    {{includeFile template="client/src/shared/sqlite.ts.hbs" output="client/src/sqlite.ts"}}
-    {{addImport "import {getDb} from './sqlite';"}}
-
-    getDb().then(({sqlite3, db}) => {
-    const canvasPersister = createSqliteWasmPersister(canvasStore, sqlite3, db, 'canvas');
-    canvasPersister.load().then(() => canvasPersister.startAutoSave());
-    });
-  {{/if}}
-  {{#if persistPglite}}
-    {{#if schemas}}
-      {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite/with-schemas';"}}
-    {{else}}
-      {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite';"}}
-    {{/if}}
-    {{includeFile template="client/src/shared/pglite.ts.hbs" output="client/src/pglite.{{ext}}"}}
-    {{addImport "import {getPgLite} from './pglite';"}}
-
-    getPgLite().then((pgLite) => {
-    createPglitePersister(canvasStore, pgLite, 'canvas').then((canvasPersister) => {
-    canvasPersister.load().then(() => canvasPersister.startAutoSave());
-    });
-    });
-  {{/if}}
-{{/if}}
-
-{{#if sync}}
-  {{includeFile template="client/src/shared/config.ts.hbs" output="client/src/config.ts"}}
-  {{addImport "import {SERVER} from './config';"}}
-  {{addImport "import ReconnectingWebSocket from 'reconnecting-websocket';"}}
-  {{#if schemas}}
-    {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client/with-schemas';"}}
-  {{else}}
-    {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';"}}
-  {{/if}}
-
-  const serverPathId = location.pathname;
-  createWsSynchronizer(
-  canvasStore,
-  new ReconnectingWebSocket(SERVER + serverPathId),
-  ).then(async (synchronizer) => {
-  await synchronizer.startSync();
-
-  synchronizer.getWebSocket().addEventListener('open', () => {
-  synchronizer.load().then(() => synchronizer.save());
+let resolveCanvasReady: () => void;
+export const canvasStoreReady = new Promise<void>((resolve) => {
+  resolveCanvasReady = resolve;
   });
-  });
-{{/if}}
 
-export type CanvasStore = typeof canvasStore;
+  {{#if persist}}
+    {{#if persistLocalStorage}}
+      {{#if schemas}}
+        {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser/with-schemas';"}}
+      {{else}}
+        {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser';"}}
+      {{/if}}
+
+      const canvasPersister = createLocalPersister(canvasStore, 'canvas');
+      canvasPersister.load().then(() => {
+      canvasPersister.startAutoSave();
+      resolveCanvasReady();
+      });
+    {{/if}}
+    {{#if persistSqlite}}
+      {{#if schemas}}
+        {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm/with-schemas';"}}
+      {{else}}
+        {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';"}}
+      {{/if}}
+      {{includeFile template="client/src/shared/sqlite.ts.hbs" output="client/src/sqlite.ts"}}
+      {{addImport "import {getDb} from './sqlite';"}}
+
+      getDb().then(({sqlite3, db}) => {
+      const canvasPersister = createSqliteWasmPersister(canvasStore, sqlite3, db, 'canvas');
+      canvasPersister.load().then(() => {
+      canvasPersister.startAutoSave();
+      resolveCanvasReady();
+      });
+      });
+    {{/if}}
+    {{#if persistPglite}}
+      {{#if schemas}}
+        {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite/with-schemas';"}}
+      {{else}}
+        {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite';"}}
+      {{/if}}
+      {{includeFile template="client/src/shared/pglite.ts.hbs" output="client/src/pglite.{{ext}}"}}
+      {{addImport "import {getPgLite} from './pglite';"}}
+
+      getPgLite().then((pgLite) => {
+      createPglitePersister(canvasStore, pgLite, 'canvas').then((canvasPersister) => {
+      canvasPersister.load().then(() => {
+      canvasPersister.startAutoSave();
+      resolveCanvasReady();
+      });
+      });
+      });
+    {{/if}}
+  {{/if}}
+
+  {{#if sync}}
+    {{includeFile template="client/src/shared/config.ts.hbs" output="client/src/config.ts"}}
+    {{addImport "import {SERVER} from './config';"}}
+    {{addImport "import ReconnectingWebSocket from 'reconnecting-websocket';"}}
+    {{#if schemas}}
+      {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client/with-schemas';"}}
+    {{else}}
+      {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';"}}
+    {{/if}}
+
+    const serverPathId = location.pathname;
+    createWsSynchronizer(
+    canvasStore,
+    new ReconnectingWebSocket(SERVER + serverPathId),
+    ).then(async (synchronizer) => {
+    await synchronizer.startSync();
+
+    synchronizer.getWebSocket().addEventListener('open', () => {
+    synchronizer.load().then(() => {
+    synchronizer.save();
+    {{#unless persist}}resolveCanvasReady();{{/unless}}
+    });
+    });
+    });
+  {{/if}}
+
+  {{#unless persist}}{{#unless sync}}
+      resolveCanvasReady();
+    {{/unless}}{{/unless}}
+
+  export type CanvasStore = typeof canvasStore;

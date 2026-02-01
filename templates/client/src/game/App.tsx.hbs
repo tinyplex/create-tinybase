@@ -1,4 +1,4 @@
-{{addImport "import {StrictMode} from 'react';"}}
+{{addImport "import {StrictMode, useState} from 'react';"}}
 
 {{addImport "import {Provider} from 'tinybase/ui-react';"}}
 {{addImport "import {Inspector} from 'tinybase/ui-react-inspector';"}}
@@ -9,12 +9,26 @@
 {{includeFile template="client/src/game/Game.tsx.hbs" output="client/src/Game.{{ext}}"}}
 {{addImport "import {Game} from './Game';"}}
 
-export const App = () => (
+export const App = () => {
+const [loading, setLoading] = useState(true);
+
+return (
 <StrictMode>
   <Provider>
-    <Store />
-    <Game />
-    <Inspector />
+    <Store onReady={()=> setLoading(false)} />
+      {loading ? (
+      {{{{raw}}}}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+        <div style={{ fontSize: '2rem' }}>⏳ Loading...</div>
+      </div>
+      {{{{/raw}}}}
+      ) : (
+      <>
+        <Game />
+        <Inspector />
+      </>
+      )}
   </Provider>
 </StrictMode>
 );
+};

@@ -516,7 +516,11 @@ async function checkPageLoads(port, framework, appType) {
   try {
     await page.goto(url, {waitUntil: 'domcontentloaded', timeout: 10000});
 
-    await sleep(200);
+    // Wait for loading screen to disappear (app to be ready)
+    await page.waitForFunction(
+      () => !document.body.innerText.includes('Loading'),
+      {timeout: 10000},
+    );
 
     expect(await page.title()).toContain('TinyBase');
     await waitForTextInPage(page, 'TinyBase');
@@ -544,7 +548,6 @@ async function checkPageLoads(port, framework, appType) {
       const input = await page.$('input[type="text"]');
       expect(input).toBeTruthy();
       await page.type('input[type="text"]', 'Test todo item');
-      await sleep(200);
 
       const inputValue = await page.evaluate(() => {
         const inp = document.querySelector('input[type="text"]');
@@ -559,18 +562,17 @@ async function checkPageLoads(port, framework, appType) {
 
       const checkbox = await page.$('input[type="checkbox"]');
       await checkbox.click();
-      await sleep(200);
-
-      const isChecked = await page.evaluate(() => {
-        const cb = document.querySelector('input[type="checkbox"]');
-        return cb ? cb.checked : false;
-      });
-      expect(isChecked).toBe(true);
+      await page.waitForFunction(
+        () => {
+          const cb = document.querySelector('input[type="checkbox"]');
+          return cb && cb.checked;
+        },
+        {timeout: 2000},
+      );
     } else if (appType === 'chat') {
       const usernameInput = await page.$('input[placeholder*="name" i]');
       if (usernameInput) {
         await usernameInput.type('TestUser');
-        await sleep(200);
       }
 
       const messageInput = await page.evaluateHandle(() => {
@@ -598,7 +600,21 @@ async function checkPageLoads(port, framework, appType) {
       await page.mouse.down();
       await page.mouse.move(box.x + 150, box.y + 150);
       await page.mouse.up();
-      await sleep(200);
+
+      // Wait for canvas to update
+      await page.waitForFunction(
+        () => {
+          const canvas = document.querySelector('canvas');
+          if (!canvas) return false;
+          const ctx = canvas.getContext('2d');
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          return imageData.data.some((value, index) => {
+            if (index % 4 === 3) return false;
+            return value > 20;
+          });
+        },
+        {timeout: 2000},
+      );
 
       const hasStrokes = await page.evaluate(() => {
         const canvas = document.querySelector('canvas');
@@ -615,28 +631,54 @@ async function checkPageLoads(port, framework, appType) {
       expect(squares.length).toBeGreaterThanOrEqual(9);
 
       await squares[0].click();
-      await sleep(200);
-      squares = await page.$$('button.square, button[class*="square"]');
-      let square0Text = await squares[0].evaluate((el) => el.textContent);
-      expect(square0Text).toBe('X');
+      await page.waitForFunction(
+        () => {
+          const sq = document.querySelectorAll(
+            'button.square, button[class*="square"]',
+          )[0];
+          return sq && sq.textContent === 'X';
+        },
+        {timeout: 2000},
+      );
 
-      await squares[1].click();
-      await sleep(200);
       squares = await page.$$('button.square, button[class*="square"]');
-      let square1Text = await squares[1].evaluate((el) => el.textContent);
-      expect(square1Text).toBe('O');
+      await squares[1].click();
+      await page.waitForFunction(
+        () => {
+          const sq = document.querySelectorAll(
+            'button.square, button[class*="square"]',
+          )[1];
+          return sq && sq.textContent === 'O';
+        },
+        {timeout: 2000},
+      );
 
       squares = await page.$$('button.square, button[class*="square"]');
       await squares[3].click();
-      await sleep(200);
+      await page.waitForFunction(
+        () =>
+          document.querySelectorAll('button.square, button[class*="square"]')[3]
+            .textContent === 'X',
+        {timeout: 2000},
+      );
 
       squares = await page.$$('button.square, button[class*="square"]');
       await squares[4].click();
-      await sleep(200);
+      await page.waitForFunction(
+        () =>
+          document.querySelectorAll('button.square, button[class*="square"]')[4]
+            .textContent === 'O',
+        {timeout: 2000},
+      );
 
       squares = await page.$$('button.square, button[class*="square"]');
       await squares[6].click();
-      await sleep(200);
+      await page.waitForFunction(
+        () =>
+          document.querySelectorAll('button.square, button[class*="square"]')[6]
+            .textContent === 'X',
+        {timeout: 2000},
+      );
 
       const bodyText = await page.evaluate(() => document.body.textContent);
       expect(bodyText).toMatch(/won|wins|winner/i);
@@ -759,8 +801,6 @@ describe('e2e tests', {concurrent: true}, () => {
         let devServer;
         try {
           devServer = await startDevServer(projectPath, port);
-
-          await sleep(200);
 
           await checkPageLoads(port, combo.framework, combo.appType);
         } finally {
@@ -929,39 +969,67 @@ describe('persistence e2e tests', () => {
               timeout: 10000,
             });
 
-            await sleep(1000); // Extra time for persister initialization
+            // PGlite takes longer to initialize
+            const loadingTimeout =
+              combo.persistenceType === 'pglite' ? 15000 : 5000;
+
+            // Wait for loading screen to disappear (app to be ready)
+            // For PGlite, waitForSelector below will handle the full wait
+            try {
+              await page.waitForFunction(
+                () => !document.body.innerText.includes('Loading'),
+                {timeout: loadingTimeout},
+              );
+            } catch (e) {
+              // Loading screen may already be gone, that's okay
+            }
 
             expect(await page.title()).toContain('TinyBase');
-            await waitForTextInPage(page, 'TinyBase');
 
             if (combo.appType === 'todos') {
               // Add a todo item
               const testTodo = `Persisted todo ${combo.persistenceType}`;
+              // Wait for input to be ready (ensures loading is complete)
+              await page.waitForSelector('input[type="text"]', {
+                visible: true,
+                timeout: loadingTimeout,
+              });
               await page.type('input[type="text"]', testTodo);
               await page.keyboard.press('Enter');
               await waitForTextInPage(page, testTodo);
 
-              // Give persistence time to save
-              await sleep(300);
-
               // Reload the page
               await page.reload({waitUntil: 'domcontentloaded'});
-              await sleep(500);
+
+              // Wait for loading screen to disappear again
+              await page.waitForFunction(
+                () => !document.body.innerText.includes('Loading'),
+                {timeout: loadingTimeout},
+              );
 
               // Verify the todo is still there after reload
-              // SQLite and PGLite take longer to initialize
-              const timeout =
-                combo.persistenceType === 'local-storage' ? 5000 : 10000;
-              await waitForTextInPage(page, testTodo, timeout);
+              await waitForTextInPage(page, testTodo, 5000);
 
               // Check the todo by clicking checkbox
               const checkbox = await page.$('input[type="checkbox"]');
               await checkbox.click();
-              await sleep(300);
+              await page.waitForFunction(
+                () => {
+                  const cb = document.querySelector('input[type="checkbox"]');
+                  return cb && cb.checked;
+                },
+                {timeout: 2000},
+              );
 
               // Reload again
               await page.reload({waitUntil: 'domcontentloaded'});
-              await sleep(500);
+
+              // Wait for checkbox to be ready (polls until element appears)
+              const checkboxTimeout =
+                combo.persistenceType === 'pglite' ? 20000 : 5000;
+              await page.waitForSelector('input[type="checkbox"]', {
+                timeout: checkboxTimeout,
+              });
 
               // Verify checkbox state persisted
               const isChecked = await page.evaluate(() => {
@@ -977,7 +1045,6 @@ describe('persistence e2e tests', () => {
               if (usernameInput) {
                 await usernameInput.click({clickCount: 3});
                 await usernameInput.type('PersistUser');
-                await sleep(300);
               }
 
               // Send a message
@@ -998,17 +1065,19 @@ describe('persistence e2e tests', () => {
               await page.keyboard.press('Enter');
               await waitForTextInPage(page, testMessage);
 
-              // Give persistence time to save
-              await sleep(300);
-
               // Reload the page
               await page.reload({waitUntil: 'domcontentloaded'});
-              // PGlite takes longer to initialize than SQLite
-              await sleep(combo.persistenceType === 'pglite' ? 2000 : 500);
+              await page.waitForFunction(
+                () => !document.body.innerText.includes('Loading'),
+                {timeout: loadingTimeout},
+              );
 
               // Verify the message and username are still there
-              await waitForTextInPage(page, testMessage, 10000);
-              await waitForTextInPage(page, 'PersistUser', 10000);
+              // Longer timeout for PGlite with multiple stores
+              const chatTimeout =
+                combo.persistenceType === 'pglite' ? 15000 : 10000;
+              await waitForTextInPage(page, testMessage, chatTimeout);
+              await waitForTextInPage(page, 'PersistUser', chatTimeout);
             } else if (combo.appType === 'drawing') {
               // Draw something
               const canvas = await page.$('canvas');
@@ -1019,7 +1088,6 @@ describe('persistence e2e tests', () => {
                 await page.mouse.down();
                 await page.mouse.move(box.x + 100, box.y + 100);
                 await page.mouse.up();
-                await sleep(300);
 
                 // Get canvas data
                 const canvasData = await page.evaluate(() => {
@@ -1029,7 +1097,10 @@ describe('persistence e2e tests', () => {
 
                 // Reload the page
                 await page.reload({waitUntil: 'domcontentloaded'});
-                await sleep(500);
+                await page.waitForFunction(
+                  () => !document.body.innerText.includes('Loading'),
+                  {timeout: loadingTimeout},
+                );
 
                 // Verify drawing persisted
                 const persistedCanvasData = await page.evaluate(() => {
@@ -1051,11 +1122,13 @@ describe('persistence e2e tests', () => {
                     el.value = '#ff0000';
                     el.dispatchEvent(new Event('input', {bubbles: true}));
                   }, colorInput);
-                  await sleep(300);
 
                   // Reload and verify color persisted
                   await page.reload({waitUntil: 'domcontentloaded'});
-                  await sleep(500);
+                  await page.waitForFunction(
+                    () => !document.body.innerText.includes('Loading'),
+                    {timeout: loadingTimeout},
+                  );
 
                   const persistedColor = await page.evaluate(() => {
                     const input = document.querySelector('input[type="color"]');
@@ -1072,7 +1145,6 @@ describe('persistence e2e tests', () => {
                 // Try clicking on the game area to make a move
                 const box = await gameElement.boundingBox();
                 await page.mouse.click(box.x + 100, box.y + 100);
-                await sleep(300);
 
                 // Get text content (should show game state)
                 const gameState = await page.evaluate(() => {
@@ -1081,7 +1153,10 @@ describe('persistence e2e tests', () => {
 
                 // Reload the page
                 await page.reload({waitUntil: 'domcontentloaded'});
-                await sleep(500);
+                await page.waitForFunction(
+                  () => !document.body.innerText.includes('Loading'),
+                  {timeout: loadingTimeout},
+                );
 
                 // Verify game state persisted
                 const persistedState = await page.evaluate(() => {
@@ -1143,8 +1218,6 @@ describe('sync e2e tests', () => {
         try {
           devServer = await startDevServer(projectPath, port);
 
-          await sleep(200);
-
           const uniqueId = `test${Math.random().toString(36).substring(2, 8)}`;
           const url = `http://localhost:${port}/${uniqueId}`;
 
@@ -1164,7 +1237,15 @@ describe('sync e2e tests', () => {
               timeout: 10000,
             });
 
-            await sleep(200);
+            // Wait for loading screen to disappear on both pages
+            await page1.waitForFunction(
+              () => !document.body.innerText.includes('Loading'),
+              {timeout: 10000},
+            );
+            await page2.waitForFunction(
+              () => !document.body.innerText.includes('Loading'),
+              {timeout: 10000},
+            );
 
             expect(await page1.title()).toContain('TinyBase');
             expect(await page2.title()).toContain('TinyBase');
