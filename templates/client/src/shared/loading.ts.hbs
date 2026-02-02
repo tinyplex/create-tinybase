@@ -1,0 +1,13 @@
+{{includeFile template="client/src/shared/loading.css.hbs" output="client/src/loading.css"}}
+{{addImport "import './loading.css';"}}
+
+export const showLoading = (container: HTMLElement): HTMLElement => {
+const loadingDiv = document.createElement('div');
+loadingDiv.id = 'loading';
+container.appendChild(loadingDiv);
+return loadingDiv;
+};
+
+export const hideLoading = (loadingDiv: HTMLElement): void => {
+loadingDiv.remove();
+};

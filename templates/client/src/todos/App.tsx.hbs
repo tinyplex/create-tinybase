@@ -1,4 +1,6 @@
 {{addImport "import {StrictMode, useState} from 'react';"}}
+{{includeFile template="client/src/shared/Loading.tsx.hbs" output="client/src/Loading.{{ext}}"}}
+{{addImport "import {Loading} from './Loading';"}}
 {{addImport "import {Provider} from 'tinybase/ui-react';"}}
 {{addImport "import {Inspector} from 'tinybase/ui-react-inspector';"}}
 {{includeFile template="client/src/todos/Store.tsx.hbs" output="client/src/Store.{{ext}}"}}
@@ -16,11 +18,7 @@ return (
   <Provider>
     <Store onReady={()=> setLoading(false)} />
       {loading ? (
-      {{{{raw}}}}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-        <div style={{ fontSize: '2rem' }}>⏳ Loading...</div>
-      </div>
-      {{{{/raw}}}}
+      <Loading />
       ) : (
       <>
         <TodoInput />

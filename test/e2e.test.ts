@@ -2,7 +2,7 @@ import {spawn} from 'child_process';
 import {existsSync} from 'fs';
 import {cp, mkdir, readFile, rm} from 'fs/promises';
 import {dirname, join} from 'path';
-import puppeteer from 'puppeteer';
+import puppeteer, {Browser, ConsoleMessage, Page} from 'puppeteer';
 import {setTimeout as sleep} from 'timers/promises';
 import {fileURLToPath} from 'url';
 import {afterAll, beforeAll, describe, expect, it} from 'vitest';
@@ -11,7 +11,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const TEST_DIR = join(__dirname, '..', 'tmp');
 const BASE_PORT = 5173;
 
-let browser;
+let browser: Browser;
 
 const combinations = [
   {
@@ -169,9 +169,9 @@ const combinations = [
 ];
 
 async function runCLI(
-  projectName,
-  language,
-  framework,
+  projectName: string,
+  language: string,
+  framework: string,
   appType = 'todos',
   schemas = false,
   syncType = 'none',
@@ -236,10 +236,10 @@ async function runCLI(
 }
 
 async function setupTestProject(
-  projectName,
-  language,
-  framework,
-  appType,
+  projectName: string,
+  language: string,
+  framework: string,
+  appType: string,
   schemas = false,
   syncType = 'none',
   persistenceType = 'local-storage',
@@ -288,7 +288,7 @@ async function setupTestProject(
   return {projectPath, clientPath};
 }
 
-async function npmInstall(projectPath, force = false) {
+async function npmInstall(projectPath: string, force = false) {
   const clientPath = join(projectPath, 'client');
 
   if (!force) {
@@ -350,7 +350,7 @@ async function npmInstall(projectPath, force = false) {
   });
 }
 
-async function runTypeScriptCheck(projectPath) {
+async function runTypeScriptCheck(projectPath: string) {
   const clientPath = join(projectPath, 'client');
   const tsconfigPath = join(clientPath, 'tsconfig.json');
 
@@ -392,7 +392,7 @@ async function runTypeScriptCheck(projectPath) {
   });
 }
 
-async function runESLintCheck(projectPath) {
+async function runESLintCheck(projectPath: string) {
   const clientPath = join(projectPath, 'client');
 
   return new Promise((resolve, reject) => {
@@ -429,7 +429,7 @@ async function runESLintCheck(projectPath) {
   });
 }
 
-async function runPrettierCheck(projectPath) {
+async function runPrettierCheck(projectPath: string) {
   const clientPath = join(projectPath, 'client');
 
   return new Promise((resolve, reject) => {
@@ -466,7 +466,7 @@ async function runPrettierCheck(projectPath) {
   });
 }
 
-async function startDevServer(projectPath, port) {
+async function startDevServer(projectPath: string, port: number) {
   const clientPath = join(projectPath, 'client');
 
   return new Promise((resolve, reject) => {
@@ -479,7 +479,7 @@ async function startDevServer(projectPath, port) {
     let output = '';
     let isReady = false;
 
-    const onData = (data) => {
+    const onData = (data: Buffer) => {
       output += data.toString();
       if (
         (output.includes('Local:') || output.includes('localhost')) &&
@@ -507,7 +507,364 @@ async function startDevServer(projectPath, port) {
   });
 }
 
-async function checkPageLoads(port, framework, appType) {
+async function testTodosApp(page: Page) {
+  await sleep(1000);
+  const input = await page.$('input[type="text"]');
+  expect(input).toBeTruthy();
+  await page.type('input[type="text"]', 'Test todo item');
+
+  const inputValue = await page.evaluate(() => {
+    const inp = document.querySelector(
+      'input[type="text"]',
+    ) as HTMLInputElement;
+    return inp ? inp.value : '';
+  });
+
+  expect(inputValue).toBe('Test todo item');
+
+  await page.keyboard.press('Enter');
+
+  await waitForTextInPage(page, 'Test todo item');
+
+  const checkbox = await page.$('input[type="checkbox"]');
+  await checkbox!.click();
+  await page.waitForFunction(
+    () => {
+      const cb = document.querySelector(
+        'input[type="checkbox"]',
+      ) as HTMLInputElement;
+      return cb && cb.checked;
+    },
+    {timeout: 2000},
+  );
+}
+
+async function testChatApp(page: Page) {
+  const usernameInput = await page.$('input[placeholder*="name" i]');
+  if (usernameInput) {
+    await usernameInput.type('TestUser');
+  }
+
+  // Type into the message input field (not the username input)
+  // Use page.type with a selector that excludes the username field
+  await page.waitForSelector(
+    'input[type="text"]:not([placeholder*="name" i])',
+    {visible: true, timeout: 5000},
+  );
+  await page.type(
+    'input[type="text"]:not([placeholder*="name" i])',
+    'Hello from e2e test!',
+  );
+  await page.keyboard.press('Enter');
+
+  await waitForTextInPage(page, 'Hello from e2e test!');
+}
+
+async function testDrawingApp(page: Page) {
+  const canvas = await page.$('canvas');
+  expect(canvas).toBeTruthy();
+
+  const box = await canvas!.boundingBox();
+  await page.mouse.move(box!.x + 50, box!.y + 50);
+  await page.mouse.down();
+  await page.mouse.move(box!.x + 150, box!.y + 150);
+  await page.mouse.up();
+
+  // Wait for canvas to update
+  await page.waitForFunction(
+    () => {
+      const canvas = document.querySelector('canvas');
+      if (!canvas) return false;
+      const ctx = canvas.getContext('2d');
+      const imageData = ctx!.getImageData(0, 0, canvas.width, canvas.height);
+      return imageData.data.some((value, index) => {
+        if (index % 4 === 3) return false;
+        return value > 20;
+      });
+    },
+    {timeout: 2000},
+  );
+
+  const hasStrokes = await page.evaluate(() => {
+    const canvas = document.querySelector('canvas')!;
+    const ctx = canvas.getContext('2d');
+    const imageData = ctx!.getImageData(0, 0, canvas.width, canvas.height);
+    return imageData.data.some((value, index) => {
+      if (index % 4 === 3) return false;
+      return value > 20;
+    });
+  });
+  expect(hasStrokes).toBe(true);
+}
+
+async function testGameApp(page: Page) {
+  let squares = await page.$$('button.square, button[class*="square"]');
+  expect(squares.length).toBeGreaterThanOrEqual(9);
+
+  await squares[0].click();
+  await page.waitForFunction(
+    () => {
+      const sq = document.querySelectorAll(
+        'button.square, button[class*="square"]',
+      )[0];
+      return sq && sq.textContent === 'X';
+    },
+    {timeout: 2000},
+  );
+
+  squares = await page.$$('button.square, button[class*="square"]');
+  await squares[1].click();
+  await page.waitForFunction(
+    () => {
+      const sq = document.querySelectorAll(
+        'button.square, button[class*="square"]',
+      )[1];
+      return sq && sq.textContent === 'O';
+    },
+    {timeout: 2000},
+  );
+
+  squares = await page.$$('button.square, button[class*="square"]');
+  await squares[3].click();
+  await page.waitForFunction(
+    () =>
+      document.querySelectorAll('button.square, button[class*="square"]')[3]
+        .textContent === 'X',
+    {timeout: 2000},
+  );
+
+  squares = await page.$$('button.square, button[class*="square"]');
+  await squares[4].click();
+  await page.waitForFunction(
+    () =>
+      document.querySelectorAll('button.square, button[class*="square"]')[4]
+        .textContent === 'O',
+    {timeout: 2000},
+  );
+
+  squares = await page.$$('button.square, button[class*="square"]');
+  await squares[6].click();
+  await page.waitForFunction(
+    () =>
+      document.querySelectorAll('button.square, button[class*="square"]')[6]
+        .textContent === 'X',
+    {timeout: 2000},
+  );
+
+  const bodyText = await page.evaluate(() => document.body.textContent);
+  expect(bodyText).toMatch(/won|wins|winner/i);
+}
+
+async function testTodosPersistence(
+  page: Page,
+  persistenceType: string,
+  loadingTimeout: number,
+) {
+  // Add a todo item
+  const testTodo = `Persisted todo ${persistenceType}`;
+  // Wait for input to be ready (ensures loading is complete)
+  await page.waitForSelector('input[type="text"]', {
+    visible: true,
+    timeout: loadingTimeout,
+  });
+  await page.type('input[type="text"]', testTodo);
+  await page.keyboard.press('Enter');
+  await waitForTextInPage(page, testTodo);
+
+  // Wait for persistence to complete before reload
+  await sleep(500);
+
+  // Reload the page
+  await page.reload({waitUntil: 'domcontentloaded'});
+
+  // Wait for loading screen to disappear again
+  await page.waitForFunction(() => !document.getElementById('loading'), {
+    timeout: loadingTimeout,
+  });
+
+  console.log('Page reloaded, checking for persisted todo');
+
+  // Verify the todo is still there after reload
+  await waitForTextInPage(page, testTodo, 5000);
+
+  // Check the todo by clicking checkbox
+  const checkbox = await page.$('input[type="checkbox"]');
+  await checkbox!.click();
+  await page.waitForFunction(
+    () => {
+      const cb = document.querySelector(
+        'input[type="checkbox"]',
+      ) as HTMLInputElement;
+      return cb && cb.checked;
+    },
+    {timeout: 2000},
+  );
+
+  // Reload again
+  await sleep(500);
+  await page.reload({waitUntil: 'domcontentloaded'});
+
+  // Wait for checkbox to be ready (polls until element appears)
+  const checkboxTimeout = persistenceType === 'pglite' ? 20000 : 5000;
+  await page.waitForSelector('input[type="checkbox"]', {
+    timeout: checkboxTimeout,
+  });
+
+  // Verify checkbox state persisted
+  const isChecked = await page.evaluate(() => {
+    const cb = document.querySelector(
+      'input[type="checkbox"]',
+    ) as HTMLInputElement;
+    return cb ? cb.checked : false;
+  });
+  expect(isChecked).toBe(true);
+}
+
+async function testChatPersistence(
+  page: Page,
+  persistenceType: string,
+  loadingTimeout: number,
+) {
+  // Set username
+  const usernameInput = await page.$('input[placeholder*="name" i]');
+  if (usernameInput) {
+    await usernameInput.click({clickCount: 3});
+    await usernameInput.type('PersistUser');
+    // Give it a moment to process the username
+    await sleep(100);
+  }
+
+  // Send a message - wait for message input to appear
+  await page.waitForSelector(
+    'input[type="text"]:not([placeholder*="name" i])',
+    {visible: true, timeout: 5000},
+  );
+  const testMessage = `Persisted message ${persistenceType}`;
+  await page.type(
+    'input[type="text"]:not([placeholder*="name" i])',
+    testMessage,
+  );
+  await page.keyboard.press('Enter');
+  // Increased timeout for React chat with PGlite (two stores to load)
+  const initialChatTimeout = persistenceType === 'pglite' ? 20000 : 10000;
+  await waitForTextInPage(page, testMessage, initialChatTimeout);
+
+  // Reload the page - extra delay for React chat with PGlite (two stores)
+  await sleep(persistenceType === 'pglite' ? 1000 : 500);
+  await page.reload({waitUntil: 'domcontentloaded'});
+  await page.waitForFunction(() => !document.getElementById('loading'), {
+    timeout: loadingTimeout,
+  });
+
+  // Verify the message and username are still there
+  // Longer timeout for PGlite with multiple stores
+  const chatTimeout = persistenceType === 'pglite' ? 15000 : 10000;
+  await waitForTextInPage(page, testMessage, chatTimeout);
+  await waitForTextInPage(page, 'PersistUser', chatTimeout);
+}
+
+async function testDrawingPersistence(
+  page: Page,
+  persistenceType: string,
+  loadingTimeout: number,
+) {
+  // Draw something
+  const canvas = await page.$('canvas');
+  if (canvas) {
+    const box = await canvas.boundingBox();
+    // Draw a simple line
+    await page.mouse.move(box!.x + 50, box!.y + 50);
+    await page.mouse.down();
+    await page.mouse.move(box!.x + 100, box!.y + 100);
+    await page.mouse.up();
+
+    // Get canvas data
+    const canvasData = await page.evaluate(() => {
+      const cnv = document.querySelector('canvas');
+      return cnv ? cnv.toDataURL() : null;
+    });
+
+    // Reload the page
+    await sleep(500);
+    await page.reload({waitUntil: 'domcontentloaded'});
+    await page.waitForFunction(() => !document.getElementById('loading'), {
+      timeout: loadingTimeout,
+    });
+
+    // Verify drawing persisted
+    const persistedCanvasData = await page.evaluate(() => {
+      const cnv = document.querySelector('canvas');
+      return cnv ? cnv.toDataURL() : null;
+    });
+    expect(persistedCanvasData).toBe(canvasData);
+
+    // Test settings store (change brush color)
+    const colorInput = await page.$('input[type="color"]');
+    if (colorInput) {
+      const initialColor = await page.evaluate(
+        (el: HTMLInputElement) => el.value,
+        colorInput,
+      );
+
+      await colorInput.click();
+      await page.evaluate((el: HTMLInputElement) => {
+        el.value = '#ff0000';
+        el.dispatchEvent(new Event('input', {bubbles: true}));
+      }, colorInput);
+
+      // Reload and verify color persisted
+      await sleep(500);
+      await page.reload({waitUntil: 'domcontentloaded'});
+      await page.waitForFunction(() => !document.getElementById('loading'), {
+        timeout: loadingTimeout,
+      });
+
+      const persistedColor = await page.evaluate(() => {
+        const input = document.querySelector(
+          'input[type="color"]',
+        ) as HTMLInputElement;
+        return input ? input.value : null;
+      });
+      expect(persistedColor).toBe('#ff0000');
+      expect(persistedColor).not.toBe(initialColor);
+    }
+  }
+}
+
+async function testGamePersistence(
+  page: Page,
+  persistenceType: string,
+  loadingTimeout: number,
+) {
+  // Click to start/interact with game
+  const gameElement = await page.$('#root, #app, main, body');
+  if (gameElement) {
+    // Try clicking on the game area to make a move
+    const box = await gameElement.boundingBox();
+    await page.mouse.click(box!.x + 100, box!.y + 100);
+
+    // Get text content (should show game state)
+    const gameState = await page.evaluate(() => {
+      return document.body.textContent;
+    });
+
+    // Reload the page
+    await sleep(500);
+    await page.reload({waitUntil: 'domcontentloaded'});
+    await page.waitForFunction(() => !document.getElementById('loading'), {
+      timeout: loadingTimeout,
+    });
+
+    // Verify game state persisted
+    const persistedState = await page.evaluate(() => {
+      return document.body.textContent;
+    });
+    // Check that some game state persisted (not blank)
+    expect(persistedState.length).toBeGreaterThan(10);
+  }
+}
+
+async function testApp(port: number, framework: string, appType: string) {
   const url = `http://localhost:${port}`;
   const page = await browser.newPage();
 
@@ -544,141 +901,13 @@ async function checkPageLoads(port, framework, appType) {
     }
 
     if (appType === 'todos') {
-      await sleep(1000);
-      const input = await page.$('input[type="text"]');
-      expect(input).toBeTruthy();
-      await page.type('input[type="text"]', 'Test todo item');
-
-      const inputValue = await page.evaluate(() => {
-        const inp = document.querySelector('input[type="text"]');
-        return inp ? inp.value : '';
-      });
-
-      expect(inputValue).toBe('Test todo item');
-
-      await page.keyboard.press('Enter');
-
-      await waitForTextInPage(page, 'Test todo item');
-
-      const checkbox = await page.$('input[type="checkbox"]');
-      await checkbox.click();
-      await page.waitForFunction(
-        () => {
-          const cb = document.querySelector('input[type="checkbox"]');
-          return cb && cb.checked;
-        },
-        {timeout: 2000},
-      );
+      await testTodosApp(page);
     } else if (appType === 'chat') {
-      const usernameInput = await page.$('input[placeholder*="name" i]');
-      if (usernameInput) {
-        await usernameInput.type('TestUser');
-      }
-
-      // Type into the message input field (not the username input)
-      // Use page.type with a selector that excludes the username field
-      await page.waitForSelector(
-        'input[type="text"]:not([placeholder*="name" i])',
-        {visible: true, timeout: 5000},
-      );
-      await page.type(
-        'input[type="text"]:not([placeholder*="name" i])',
-        'Hello from e2e test!',
-      );
-      await page.keyboard.press('Enter');
-
-      await waitForTextInPage(page, 'Hello from e2e test!');
+      await testChatApp(page);
     } else if (appType === 'drawing') {
-      const canvas = await page.$('canvas');
-      expect(canvas).toBeTruthy();
-
-      const box = await canvas.boundingBox();
-      await page.mouse.move(box.x + 50, box.y + 50);
-      await page.mouse.down();
-      await page.mouse.move(box.x + 150, box.y + 150);
-      await page.mouse.up();
-
-      // Wait for canvas to update
-      await page.waitForFunction(
-        () => {
-          const canvas = document.querySelector('canvas');
-          if (!canvas) return false;
-          const ctx = canvas.getContext('2d');
-          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          return imageData.data.some((value, index) => {
-            if (index % 4 === 3) return false;
-            return value > 20;
-          });
-        },
-        {timeout: 2000},
-      );
-
-      const hasStrokes = await page.evaluate(() => {
-        const canvas = document.querySelector('canvas');
-        const ctx = canvas.getContext('2d');
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        return imageData.data.some((value, index) => {
-          if (index % 4 === 3) return false;
-          return value > 20;
-        });
-      });
-      expect(hasStrokes).toBe(true);
+      await testDrawingApp(page);
     } else if (appType === 'game') {
-      let squares = await page.$$('button.square, button[class*="square"]');
-      expect(squares.length).toBeGreaterThanOrEqual(9);
-
-      await squares[0].click();
-      await page.waitForFunction(
-        () => {
-          const sq = document.querySelectorAll(
-            'button.square, button[class*="square"]',
-          )[0];
-          return sq && sq.textContent === 'X';
-        },
-        {timeout: 2000},
-      );
-
-      squares = await page.$$('button.square, button[class*="square"]');
-      await squares[1].click();
-      await page.waitForFunction(
-        () => {
-          const sq = document.querySelectorAll(
-            'button.square, button[class*="square"]',
-          )[1];
-          return sq && sq.textContent === 'O';
-        },
-        {timeout: 2000},
-      );
-
-      squares = await page.$$('button.square, button[class*="square"]');
-      await squares[3].click();
-      await page.waitForFunction(
-        () =>
-          document.querySelectorAll('button.square, button[class*="square"]')[3]
-            .textContent === 'X',
-        {timeout: 2000},
-      );
-
-      squares = await page.$$('button.square, button[class*="square"]');
-      await squares[4].click();
-      await page.waitForFunction(
-        () =>
-          document.querySelectorAll('button.square, button[class*="square"]')[4]
-            .textContent === 'O',
-        {timeout: 2000},
-      );
-
-      squares = await page.$$('button.square, button[class*="square"]');
-      await squares[6].click();
-      await page.waitForFunction(
-        () =>
-          document.querySelectorAll('button.square, button[class*="square"]')[6]
-            .textContent === 'X',
-        {timeout: 2000},
-      );
-
-      const bodyText = await page.evaluate(() => document.body.textContent);
-      expect(bodyText).toMatch(/won|wins|winner/i);
+      await testGameApp(page);
     }
 
     checkErrors();
@@ -687,8 +916,8 @@ async function checkPageLoads(port, framework, appType) {
   }
 }
 
-function killProcess(proc) {
-  return new Promise((resolve) => {
+function killProcess(proc: any) {
+  return new Promise<void>((resolve) => {
     if (!proc || proc.killed) {
       resolve();
       return;
@@ -706,11 +935,42 @@ function killProcess(proc) {
   });
 }
 
-function setupPageErrorHandling(page) {
-  const consoleErrors = [];
-  const pageErrors = [];
+async function testTodosSync(page1: Page, page2: Page) {
+  await page1.bringToFront();
+  await page1.type('input[type="text"]', 'Synced todo item');
+  await page1.keyboard.press('Enter');
+  await waitForTextInPage(page1, 'Synced todo item');
 
-  page.on('console', (msg) => {
+  await page2.bringToFront();
+  await waitForTextInPage(page2, 'Synced todo item');
+  await page2.click('input[type="checkbox"]');
+  await page2.waitForFunction(
+    () => {
+      const cb = document.querySelector(
+        'input[type="checkbox"]',
+      ) as HTMLInputElement;
+      return cb && cb.checked;
+    },
+    {timeout: 5000},
+  );
+
+  await page1.bringToFront();
+  await page1.waitForFunction(
+    () => {
+      const cb = document.querySelector(
+        'input[type="checkbox"]',
+      ) as HTMLInputElement;
+      return cb && cb.checked;
+    },
+    {timeout: 5000},
+  );
+}
+
+function setupPageErrorHandling(page: Page) {
+  const consoleErrors: string[] = [];
+  const pageErrors: string[] = [];
+
+  page.on('console', (msg: ConsoleMessage) => {
     const type = msg.type();
     const text = msg.text();
 
@@ -730,8 +990,9 @@ function setupPageErrorHandling(page) {
   });
 
   page.on('pageerror', (error) => {
-    console.error(`[Page Error] ${error.message}`);
-    pageErrors.push(error.message);
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`[Page Error] ${message}`);
+    pageErrors.push(message);
   });
 
   return {
@@ -746,10 +1007,10 @@ function setupPageErrorHandling(page) {
   };
 }
 
-async function waitForTextInPage(page, text, timeout = 5000) {
+async function waitForTextInPage(page: Page, text: string, timeout = 5000) {
   return page.waitForFunction(
-    (searchText) =>
-      document.querySelector('body').innerText.includes(searchText),
+    (searchText: string) =>
+      document.querySelector('body')!.innerText.includes(searchText),
     {timeout},
     text,
   );
@@ -787,7 +1048,7 @@ describe('e2e tests', {concurrent: true}, () => {
         );
 
         if (combo.language === 'typescript') {
-          const tsResult = await runTypeScriptCheck(projectPath);
+          const tsResult = (await runTypeScriptCheck(projectPath)) as any;
           if (!tsResult.passed) {
             throw new Error(
               `TypeScript check failed for ${combo.name}:\n${tsResult.errors}`,
@@ -795,14 +1056,14 @@ describe('e2e tests', {concurrent: true}, () => {
           }
         }
 
-        const eslintResult = await runESLintCheck(projectPath);
+        const eslintResult = (await runESLintCheck(projectPath)) as any;
         if (!eslintResult.passed) {
           throw new Error(
             `ESLint check failed for ${combo.name}:\n${eslintResult.errors}`,
           );
         }
 
-        const prettierResult = await runPrettierCheck(projectPath);
+        const prettierResult = (await runPrettierCheck(projectPath)) as any;
         if (!prettierResult.passed) {
           throw new Error(
             `Prettier check failed for ${combo.name}:\n${prettierResult.errors}`,
@@ -813,7 +1074,7 @@ describe('e2e tests', {concurrent: true}, () => {
         try {
           devServer = await startDevServer(projectPath, port);
 
-          await checkPageLoads(port, combo.framework, combo.appType);
+          await testApp(port, combo.framework, combo.appType);
         } finally {
           if (devServer) {
             await killProcess(devServer);
@@ -998,195 +1259,29 @@ describe('persistence e2e tests', () => {
             expect(await page.title()).toContain('TinyBase');
 
             if (combo.appType === 'todos') {
-              // Add a todo item
-              const testTodo = `Persisted todo ${combo.persistenceType}`;
-              // Wait for input to be ready (ensures loading is complete)
-              await page.waitForSelector('input[type="text"]', {
-                visible: true,
-                timeout: loadingTimeout,
-              });
-              await page.type('input[type="text"]', testTodo);
-              await page.keyboard.press('Enter');
-              await waitForTextInPage(page, testTodo);
-
-              // Wait for persistence to complete before reload
-              await sleep(500);
-
-              // Reload the page
-              await page.reload({waitUntil: 'domcontentloaded'});
-
-              // Wait for loading screen to disappear again
-              await page.waitForFunction(
-                () => !document.getElementById('loading'),
-                {timeout: loadingTimeout},
+              await testTodosPersistence(
+                page,
+                combo.persistenceType,
+                loadingTimeout,
               );
-
-              console.log('Page reloaded, checking for persisted todo');
-              // console.log(await page.content());
-
-              // Verify the todo is still there after reload
-              await waitForTextInPage(page, testTodo, 5000);
-
-              // Check the todo by clicking checkbox
-              const checkbox = await page.$('input[type="checkbox"]');
-              await checkbox.click();
-              await page.waitForFunction(
-                () => {
-                  const cb = document.querySelector('input[type="checkbox"]');
-                  return cb && cb.checked;
-                },
-                {timeout: 2000},
-              );
-
-              // Reload again
-              await sleep(500);
-              await page.reload({waitUntil: 'domcontentloaded'});
-
-              // Wait for checkbox to be ready (polls until element appears)
-              const checkboxTimeout =
-                combo.persistenceType === 'pglite' ? 20000 : 5000;
-              await page.waitForSelector('input[type="checkbox"]', {
-                timeout: checkboxTimeout,
-              });
-
-              // Verify checkbox state persisted
-              const isChecked = await page.evaluate(() => {
-                const cb = document.querySelector('input[type="checkbox"]');
-                return cb ? cb.checked : false;
-              });
-              expect(isChecked).toBe(true);
             } else if (combo.appType === 'chat') {
-              // Set username
-              const usernameInput = await page.$(
-                'input[placeholder*="name" i]',
+              await testChatPersistence(
+                page,
+                combo.persistenceType,
+                loadingTimeout,
               );
-              if (usernameInput) {
-                await usernameInput.click({clickCount: 3});
-                await usernameInput.type('PersistUser');
-                // Give it a moment to process the username
-                await sleep(100);
-              }
-
-              // Send a message - wait for message input to appear
-              await page.waitForSelector(
-                'input[type="text"]:not([placeholder*="name" i])',
-                {visible: true, timeout: 5000},
-              );
-              const testMessage = `Persisted message ${combo.persistenceType}`;
-              await page.type(
-                'input[type="text"]:not([placeholder*="name" i])',
-                testMessage,
-              );
-              await page.keyboard.press('Enter');
-              // Increased timeout for React chat with PGlite (two stores to load)
-              const initialChatTimeout =
-                combo.persistenceType === 'pglite' ? 20000 : 10000;
-              await waitForTextInPage(page, testMessage, initialChatTimeout);
-
-              // Reload the page - extra delay for React chat with PGlite (two stores)
-              await sleep(combo.persistenceType === 'pglite' ? 1000 : 500);
-              await page.reload({waitUntil: 'domcontentloaded'});
-              await page.waitForFunction(
-                () => !document.getElementById('loading'),
-                {timeout: loadingTimeout},
-              );
-
-              // Verify the message and username are still there
-              // Longer timeout for PGlite with multiple stores
-              const chatTimeout =
-                combo.persistenceType === 'pglite' ? 15000 : 10000;
-              await waitForTextInPage(page, testMessage, chatTimeout);
-              await waitForTextInPage(page, 'PersistUser', chatTimeout);
             } else if (combo.appType === 'drawing') {
-              // Draw something
-              const canvas = await page.$('canvas');
-              if (canvas) {
-                const box = await canvas.boundingBox();
-                // Draw a simple line
-                await page.mouse.move(box.x + 50, box.y + 50);
-                await page.mouse.down();
-                await page.mouse.move(box.x + 100, box.y + 100);
-                await page.mouse.up();
-
-                // Get canvas data
-                const canvasData = await page.evaluate(() => {
-                  const cnv = document.querySelector('canvas');
-                  return cnv ? cnv.toDataURL() : null;
-                });
-
-                // Reload the page
-                await sleep(500);
-                await page.reload({waitUntil: 'domcontentloaded'});
-                await page.waitForFunction(
-                  () => !document.getElementById('loading'),
-                  {timeout: loadingTimeout},
-                );
-
-                // Verify drawing persisted
-                const persistedCanvasData = await page.evaluate(() => {
-                  const cnv = document.querySelector('canvas');
-                  return cnv ? cnv.toDataURL() : null;
-                });
-                expect(persistedCanvasData).toBe(canvasData);
-
-                // Test settings store (change brush color)
-                const colorInput = await page.$('input[type="color"]');
-                if (colorInput) {
-                  const initialColor = await page.evaluate(
-                    (el) => el.value,
-                    colorInput,
-                  );
-
-                  await colorInput.click();
-                  await page.evaluate((el) => {
-                    el.value = '#ff0000';
-                    el.dispatchEvent(new Event('input', {bubbles: true}));
-                  }, colorInput);
-
-                  // Reload and verify color persisted
-                  await sleep(500);
-                  await page.reload({waitUntil: 'domcontentloaded'});
-                  await page.waitForFunction(
-                    () => !document.getElementById('loading'),
-                    {timeout: loadingTimeout},
-                  );
-
-                  const persistedColor = await page.evaluate(() => {
-                    const input = document.querySelector('input[type="color"]');
-                    return input ? input.value : null;
-                  });
-                  expect(persistedColor).toBe('#ff0000');
-                  expect(persistedColor).not.toBe(initialColor);
-                }
-              }
+              await testDrawingPersistence(
+                page,
+                combo.persistenceType,
+                loadingTimeout,
+              );
             } else if (combo.appType === 'game') {
-              // Click to start/interact with game
-              const gameElement = await page.$('#root, #app, main, body');
-              if (gameElement) {
-                // Try clicking on the game area to make a move
-                const box = await gameElement.boundingBox();
-                await page.mouse.click(box.x + 100, box.y + 100);
-
-                // Get text content (should show game state)
-                const gameState = await page.evaluate(() => {
-                  return document.body.textContent;
-                });
-
-                // Reload the page
-                await sleep(500);
-                await page.reload({waitUntil: 'domcontentloaded'});
-                await page.waitForFunction(
-                  () => !document.getElementById('loading'),
-                  {timeout: loadingTimeout},
-                );
-
-                // Verify game state persisted
-                const persistedState = await page.evaluate(() => {
-                  return document.body.textContent;
-                });
-                // Check that some game state persisted (not blank)
-                expect(persistedState.length).toBeGreaterThan(10);
-              }
+              await testGamePersistence(
+                page,
+                combo.persistenceType,
+                loadingTimeout,
+              );
             }
 
             checkErrors();
@@ -1274,30 +1369,9 @@ describe('sync e2e tests', () => {
             await waitForTextInPage(page1, 'TinyBase');
             await waitForTextInPage(page2, 'TinyBase');
 
-            await page1.bringToFront();
-            await page1.type('input[type="text"]', 'Synced todo item');
-            await page1.keyboard.press('Enter');
-            await waitForTextInPage(page1, 'Synced todo item');
-
-            await page2.bringToFront();
-            await waitForTextInPage(page2, 'Synced todo item');
-            await page2.click('input[type="checkbox"]');
-            await page2.waitForFunction(
-              () => {
-                const cb = document.querySelector('input[type="checkbox"]');
-                return cb && cb.checked;
-              },
-              {timeout: 5000},
-            );
-
-            await page1.bringToFront();
-            await page1.waitForFunction(
-              () => {
-                const cb = document.querySelector('input[type="checkbox"]');
-                return cb && cb.checked;
-              },
-              {timeout: 5000},
-            );
+            if (combo.appType === 'todos') {
+              await testTodosSync(page1, page2);
+            }
 
             errorHandler1.checkErrors();
             errorHandler2.checkErrors();

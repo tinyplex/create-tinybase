@@ -1,4 +1,6 @@
 {{addImport "import {StrictMode, useState} from 'react';"}}
+{{includeFile template="client/src/shared/Loading.tsx.hbs" output="client/src/Loading.{{ext}}"}}
+{{addImport "import {Loading} from './Loading';"}}
 
 {{addImport "import {Provider} from 'tinybase/ui-react';"}}
 {{addImport "import {Inspector} from 'tinybase/ui-react-inspector';"}}
@@ -26,11 +28,7 @@ return (
     <SettingsStore onReady={()=> setSettingsReady(true)} />
       <CanvasStore onReady={()=> setCanvasReady(true)} />
         {loading ? (
-        {{{{raw}}}}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-          <div style={{ fontSize: '2rem' }}>⏳ Loading...</div>
-        </div>
-        {{{{/raw}}}}
+        <Loading />
         ) : (
         <>
           <DrawingControls />

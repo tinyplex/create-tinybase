@@ -4,6 +4,9 @@
 {{includeFile template="client/src/drawing/canvasStore.ts.hbs" output="client/src/canvasStore.ts"}}
 {{addImport "import {canvasStore, canvasStoreReady} from './canvasStore';"}}
 
+{{includeFile template="client/src/shared/loading.ts.hbs" output="client/src/loading.{{ext}}"}}
+{{addImport "import {showLoading, hideLoading} from './loading';"}}
+
 {{includeFile template="client/src/drawing/drawingControls.ts.hbs" output="client/src/drawingControls.{{ext}}"}}
 {{addImport "import {createDrawingControls} from './drawingControls';"}}
 
@@ -14,19 +17,13 @@ export const app = async () => {
 const appContainer = document.getElementById('app')!;
 
 // Show loading spinner
-const loadingDiv = document.createElement('div');
-loadingDiv.style.display = 'flex';
-loadingDiv.style.alignItems = 'center';
-loadingDiv.style.justifyContent = 'center';
-loadingDiv.style.height = '100vh';
-loadingDiv.innerHTML = '<div style="font-size: 2rem">⏳ Loading...</div>';
-appContainer.appendChild(loadingDiv);
+const loadingDiv = showLoading(appContainer);
 
 // Wait for stores to be ready
 await Promise.all([settingsStoreReady, canvasStoreReady]);
 
 // Remove loading spinner
-appContainer.removeChild(loadingDiv);
+hideLoading(loadingDiv);
 
 appContainer.appendChild(createDrawingControls(settingsStore, canvasStore));
 appContainer.appendChild(createCanvas(settingsStore, canvasStore));
