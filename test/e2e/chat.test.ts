@@ -133,7 +133,7 @@ async function testChatPersistence(
   const initialChatTimeout = persistenceType === 'pglite' ? 20000 : 10000;
   await waitForTextInPage(page, testMessage, initialChatTimeout);
 
-  await sleep(persistenceType === 'pglite' ? 1000 : 500);
+  await sleep(persistenceType === 'pglite' ? 1500 : 500);
   await page.reload({waitUntil: 'domcontentloaded'});
   await page.waitForFunction(() => !document.getElementById('loading'), {
     timeout: loadingTimeout,

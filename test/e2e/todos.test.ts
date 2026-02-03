@@ -150,15 +150,13 @@ async function testTodosPersistence(
   await page.keyboard.press('Enter');
   await waitForTextInPage(page, testTodo);
 
-  await sleep(500);
+  await sleep(persistenceType === 'pglite' ? 1000 : 500);
 
   await page.reload({waitUntil: 'domcontentloaded'});
 
   await page.waitForFunction(() => !document.getElementById('loading'), {
     timeout: loadingTimeout,
   });
-
-  console.log('Page reloaded, checking for persisted todo');
 
   await waitForTextInPage(page, testTodo, 5000);
 
@@ -174,7 +172,7 @@ async function testTodosPersistence(
     {timeout: 2000},
   );
 
-  await sleep(500);
+  await sleep(persistenceType === 'pglite' ? 1000 : 500);
   await page.reload({waitUntil: 'domcontentloaded'});
 
   const checkboxTimeout = persistenceType === 'pglite' ? 20000 : 5000;

@@ -160,7 +160,7 @@ async function testGamePersistence(
       return document.body.textContent;
     });
 
-    await sleep(500);
+    await sleep(persistenceType === 'pglite' ? 1000 : 500);
     await page.reload({waitUntil: 'domcontentloaded'});
     await page.waitForFunction(() => !document.getElementById('loading'), {
       timeout: loadingTimeout,

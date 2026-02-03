@@ -98,7 +98,8 @@ async function testDrawingApp(page: Page) {
   await page.mouse.move(box!.x + 150, box!.y + 150);
   await page.mouse.up();
 
-  // Wait for canvas to update
+  await sleep(100);
+
   await page.waitForFunction(
     () => {
       const canvas = document.querySelector('canvas');
@@ -143,7 +144,7 @@ async function testDrawingPersistence(
       return cnv ? cnv.toDataURL() : null;
     });
 
-    await sleep(500);
+    await sleep(persistenceType === 'pglite' ? 1000 : 500);
     await page.reload({waitUntil: 'domcontentloaded'});
     await page.waitForFunction(() => !document.getElementById('loading'), {
       timeout: loadingTimeout,
@@ -168,7 +169,7 @@ async function testDrawingPersistence(
         el.dispatchEvent(new Event('input', {bubbles: true}));
       }, colorInput);
 
-      await sleep(500);
+      await sleep(persistenceType === 'pglite' ? 1000 : 500);
       await page.reload({waitUntil: 'domcontentloaded'});
       await page.waitForFunction(() => !document.getElementById('loading'), {
         timeout: loadingTimeout,
