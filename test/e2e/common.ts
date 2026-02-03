@@ -392,23 +392,13 @@ export function setupPageErrorHandling(page: Page) {
     const type = msg.type();
     const text = msg.text();
 
-    if (type === 'log') {
-      console.log(`[Browser] ${text}`);
-    } else if (type === 'warn') {
-      console.warn(`[Browser] ${text}`);
-    } else if (type === 'error') {
-      console.error(`[Browser] ${text}`);
+    if (type === 'error') {
       consoleErrors.push(text);
-    } else if (type === 'info') {
-      console.info(`[Browser] ${text}`);
-    } else if (type === 'debug') {
-      console.debug(`[Browser] ${text}`);
     }
   });
 
   page.on('pageerror', (error) => {
     const message = error instanceof Error ? error.message : String(error);
-    console.error(`[Page Error] ${message}`);
     pageErrors.push(message);
   });
 
