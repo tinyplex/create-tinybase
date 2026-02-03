@@ -1,4 +1,4 @@
-import {spawn} from 'child_process';
+import {ChildProcess, spawn} from 'child_process';
 import {mkdir, readdir, readFile, rm} from 'fs/promises';
 import {dirname, join} from 'path';
 import {fileURLToPath} from 'url';
@@ -7,7 +7,14 @@ import {afterAll, beforeAll, describe, expect, it} from 'vitest';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const TEST_DIR = join(__dirname, '.test-output');
 
-const combinations = [
+interface Combination {
+  language: 'javascript' | 'typescript';
+  framework: 'vanilla' | 'react';
+  appType: 'todos' | 'chat' | 'drawing' | 'game';
+  name: string;
+}
+
+const combinations: Combination[] = [
   {
     language: 'javascript',
     framework: 'vanilla',
@@ -106,7 +113,22 @@ const combinations = [
   },
 ];
 
-async function runCLI(projectName, language, framework, appType = 'todos') {
+interface CLIResult {
+  output: string;
+  errorOutput: string;
+}
+
+type Language = 'javascript' | 'typescript';
+type Framework = 'vanilla' | 'react';
+type AppType = 'todos' | 'chat' | 'drawing' | 'game';
+type SyncType = 'none' | string;
+
+async function runCLI(
+  projectName: string,
+  language: Language,
+  framework: Framework,
+  appType: AppType = 'todos',
+): Promise<CLIResult> {
   return runCLIWithOptions(
     projectName,
     language,
@@ -119,16 +141,16 @@ async function runCLI(projectName, language, framework, appType = 'todos') {
 }
 
 async function runCLIWithOptions(
-  projectName,
-  language,
-  framework,
-  appType,
-  syncType,
-  prettier,
-  eslint,
-) {
+  projectName: string,
+  language: Language,
+  framework: Framework,
+  appType: AppType,
+  syncType: SyncType,
+  prettier: boolean,
+  eslint: boolean,
+): Promise<CLIResult> {
   return new Promise((resolve, reject) => {
-    const cli = spawn(
+    const cli: ChildProcess = spawn(
       'node',
       [
         join(__dirname, '..', 'dist', 'cli.js'),
@@ -156,10 +178,11 @@ async function runCLIWithOptions(
 
     let output = '';
     let errorOutput = '';
-    cli.stdout.on('data', (data) => (output += data.toString()));
-    cli.stderr.on('data', (data) => (errorOutput += data.toString()));
 
-    cli.on('close', (code) => {
+    cli.stdout?.on('data', (data: Buffer) => (output += data.toString()));
+    cli.stderr?.on('data', (data: Buffer) => (errorOutput += data.toString()));
+
+    cli.on('close', (code: number | null) => {
       if (code === 0) {
         resolve({output, errorOutput});
       } else {
@@ -171,14 +194,17 @@ async function runCLIWithOptions(
       }
     });
 
-    cli.on('error', (error) => {
+    cli.on('error', (error: Error) => {
       reject(error);
     });
   });
 }
 
-async function getFileList(dir, relativePath = '') {
-  const files = [];
+async function getFileList(
+  dir: string,
+  relativePath: string = '',
+): Promise<string[]> {
+  const files: string[] = [];
   const entries = await readdir(dir, {withFileTypes: true});
 
   for (const entry of entries) {
@@ -193,6 +219,13 @@ async function getFileList(dir, relativePath = '') {
   }
 
   return files.sort();
+}
+
+interface PackageJson {
+  name: string;
+  dependencies: Record<string, string>;
+  devDependencies?: Record<string, string>;
+  scripts: Record<string, string>;
 }
 
 describe('create-tinybase', () => {
@@ -221,7 +254,7 @@ describe('create-tinybase', () => {
 
       it('should have correct package.json', async () => {
         const pkgPath = join(projectPath, 'client', 'package.json');
-        const pkg = JSON.parse(await readFile(pkgPath, 'utf-8'));
+        const pkg: PackageJson = JSON.parse(await readFile(pkgPath, 'utf-8'));
 
         expect(pkg.name).toBe(projectName);
         expect(pkg.dependencies.tinybase).toBeDefined();
@@ -241,7 +274,9 @@ describe('create-tinybase', () => {
         expect(files).toContain('client/index.html');
         expect(files).toContain('README.md');
 
-        const srcFiles = files.filter((f) => f.startsWith('client/src/'));
+        const srcFiles = files.filter((f: string) =>
+          f.startsWith('client/src/'),
+        );
         expect(srcFiles.length).toBeGreaterThan(0);
 
         if (combo.language === 'typescript') {
@@ -256,7 +291,7 @@ describe('create-tinybase', () => {
       it('should have valid source files', async () => {
         const files = await getFileList(projectPath);
         const srcFiles = files.filter(
-          (f) => f.startsWith('client/src/') && !f.endsWith('.css'),
+          (f: string) => f.startsWith('client/src/') && !f.endsWith('.css'),
         );
 
         expect(srcFiles.length).toBeGreaterThan(0);
@@ -274,7 +309,7 @@ describe('create-tinybase', () => {
 
       it('should match snapshot', async () => {
         const files = await getFileList(projectPath);
-        const snapshot = {};
+        const snapshot: Record<string, string> = {};
 
         for (const file of files) {
           const content = await readFile(join(projectPath, file), 'utf-8');
@@ -306,7 +341,7 @@ describe('create-tinybase', () => {
       expect(files).toContain('client/eslint.config.js');
       expect(files).toContain('client/package.json');
 
-      const pkg = JSON.parse(
+      const pkg: PackageJson = JSON.parse(
         await readFile(join(projectPath, 'client', 'package.json'), 'utf-8'),
       );
       expect(pkg.devDependencies).toHaveProperty('prettier');

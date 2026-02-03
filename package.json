@@ -28,8 +28,8 @@
     "ts": "tsc --noEmit",
     "prettier": "prettier --check .",
     "lint": "eslint .",
-    "test": "npm run build && vitest run --exclude test/e2e.test.js",
-    "test:e2e": "npm run build && vitest run test/e2e.test.js",
+    "test": "npm run build && vitest run --exclude test/e2e",
+    "test:e2e": "npm run build && vitest run test/e2e",
     "test:manual": "npm run build && ./test/manual-test.sh",
     "prePublishPackage": "npm run ts && npm run prettier && npm run lint && npm run test && npm run test:e2e"
   },
