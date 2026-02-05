@@ -160,7 +160,6 @@ async function npmInstall(projectPath: string, force = false) {
         );
 
         if (currentPackageJson === cachedPackageJson) {
-          console.log(`  ⚡ Reusing node_modules for ${clientPath}`);
           return {output: 'Reused existing node_modules', errorOutput: ''};
         }
       } catch (err) {}

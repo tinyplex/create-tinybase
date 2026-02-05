@@ -191,7 +191,7 @@ afterAll(async () => {
   await closeBrowser();
 });
 
-describe('game e2e tests', {concurrent: true}, () => {
+describe('game e2e tests', {concurrent: false}, () => {
   combinations.forEach((combo, index) => {
     test(
       `should create and run ${combo.name} app`,
