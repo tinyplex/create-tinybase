@@ -1,5 +1,4 @@
 import {Page} from 'puppeteer';
-import {setTimeout as sleep} from 'timers/promises';
 import {afterAll, beforeAll, describe, expect, test} from 'vitest';
 import {
   BASE_PORT,
@@ -12,6 +11,7 @@ import {
   runTypeScriptCheck,
   setupPageErrorHandling,
   setupTestProject,
+  sleepForPersistence,
   startDevServer,
   testBasicApp,
 } from './common.js';
@@ -97,8 +97,6 @@ async function testDrawingApp(page: Page) {
   await page.mouse.move(box!.x + 150, box!.y + 150);
   await page.mouse.up();
 
-  await sleep(100);
-
   await page.waitForFunction(() => {
     const canvas = document.querySelector('canvas');
     if (!canvas) return false;
@@ -135,7 +133,7 @@ async function testDrawingPersistence(page: Page, persistenceType: string) {
     return cnv ? cnv.toDataURL() : null;
   });
 
-  await sleep(persistenceType === 'pglite' ? 1000 : 500);
+  await sleepForPersistence(persistenceType);
   await page.reload({waitUntil: 'domcontentloaded'});
   await page.waitForFunction(() => !document.getElementById('loading'));
 
@@ -155,11 +153,11 @@ async function testDrawingPersistence(page: Page, persistenceType: string) {
     Object.getOwnPropertyDescriptor(
       window.HTMLInputElement.prototype,
       'value',
-    )!.set!.call(input, '20'); // apparently
+    )!.set!.call(input, '20');
     input.dispatchEvent(new Event('input', {bubbles: true}));
   });
 
-  await sleep(persistenceType === 'pglite' ? 1000 : 1500);
+  await sleepForPersistence(persistenceType);
   await page.reload({waitUntil: 'domcontentloaded'});
   await page.waitForFunction(() => !document.getElementById('loading'));
 
@@ -268,8 +266,6 @@ describe('drawing persistence e2e tests', () => {
         let devServer;
         try {
           devServer = await startDevServer(projectPath, port);
-
-          await sleep(200);
 
           const url = `http://localhost:${port}`;
           const page = await browser.newPage();

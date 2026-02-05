@@ -1,5 +1,4 @@
 import {Page} from 'puppeteer';
-import {setTimeout as sleep} from 'timers/promises';
 import {afterAll, beforeAll, describe, expect, test} from 'vitest';
 import {
   BASE_PORT,
@@ -12,6 +11,7 @@ import {
   runTypeScriptCheck,
   setupPageErrorHandling,
   setupTestProject,
+  sleepForPersistence,
   startDevServer,
   testBasicApp,
   waitForTextInPage,
@@ -105,7 +105,6 @@ const syncCombinations = [
 ];
 
 async function testTodosApp(page: Page) {
-  await sleep(1000);
   const input = await page.waitForSelector('input[type="text"]');
   await page.type('input[type="text"]', 'Test todo item');
 
@@ -139,7 +138,7 @@ async function testTodosPersistence(page: Page, persistenceType: string) {
   await page.keyboard.press('Enter');
   await waitForTextInPage(page, testTodo);
 
-  await sleep(persistenceType === 'pglite' ? 1000 : 500);
+  await sleepForPersistence(persistenceType);
 
   await page.reload({waitUntil: 'domcontentloaded'});
 
@@ -156,7 +155,7 @@ async function testTodosPersistence(page: Page, persistenceType: string) {
     return cb && cb.checked;
   });
 
-  await sleep(persistenceType === 'pglite' ? 1000 : 500);
+  await sleepForPersistence(persistenceType);
   await page.reload({waitUntil: 'domcontentloaded'});
 
   await page.waitForSelector('input[type="checkbox"]');
@@ -165,7 +164,7 @@ async function testTodosPersistence(page: Page, persistenceType: string) {
     const cb = document.querySelector(
       'input[type="checkbox"]',
     ) as HTMLInputElement;
-    return cb ? cb.checked : false;
+    return cb && cb.checked;
   });
   expect(isChecked).toBe(true);
 }
@@ -285,8 +284,6 @@ describe('todos persistence e2e tests', () => {
         let devServer;
         try {
           devServer = await startDevServer(projectPath, port);
-
-          await sleep(200);
 
           const url = `http://localhost:${port}`;
           const page = await browser.newPage();

@@ -1,5 +1,4 @@
 import {Page} from 'puppeteer';
-import {setTimeout as sleep} from 'timers/promises';
 import {afterAll, beforeAll, describe, expect, test} from 'vitest';
 import {
   BASE_PORT,
@@ -12,6 +11,7 @@ import {
   runTypeScriptCheck,
   setupPageErrorHandling,
   setupTestProject,
+  sleepForPersistence,
   startDevServer,
   testBasicApp,
 } from './common.js';
@@ -173,7 +173,7 @@ async function testGamePersistence(page: Page, persistenceType: string) {
     return document.body.textContent;
   });
 
-  await sleep(persistenceType === 'pglite' ? 1000 : 500);
+  await sleepForPersistence(persistenceType);
   await page.reload({waitUntil: 'domcontentloaded'});
   await page.waitForFunction(() => !document.getElementById('loading'));
 
@@ -268,8 +268,6 @@ describe('game persistence e2e tests', () => {
         let devServer;
         try {
           devServer = await startDevServer(projectPath, port);
-
-          await sleep(200);
 
           const url = `http://localhost:${port}`;
           const page = await browser.newPage();

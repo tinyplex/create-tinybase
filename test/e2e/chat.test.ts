@@ -1,5 +1,4 @@
 import {Page} from 'puppeteer';
-import {setTimeout as sleep} from 'timers/promises';
 import {afterAll, beforeAll, describe, expect, test} from 'vitest';
 import {
   BASE_PORT,
@@ -12,6 +11,7 @@ import {
   runTypeScriptCheck,
   setupPageErrorHandling,
   setupTestProject,
+  sleepForPersistence,
   startDevServer,
   testBasicApp,
   waitForTextInPage,
@@ -90,12 +90,10 @@ const persistenceCombinations = [
 ];
 
 async function testChatApp(page: Page) {
-  try {
-    const usernameInput = await page.waitForSelector(
-      'input[placeholder*="name" i]',
-    );
-    await usernameInput!.type('TestUser');
-  } catch {}
+  const usernameInput = await page.waitForSelector(
+    'input[placeholder*="name" i]',
+  );
+  await usernameInput!.type('TestUser');
 
   await page.waitForSelector('input[type="text"]:not([placeholder*="name" i])');
   await page.type(
@@ -123,12 +121,19 @@ async function testChatPersistence(page: Page, persistenceType: string) {
   await page.keyboard.press('Enter');
   await waitForTextInPage(page, testMessage);
 
-  await sleep(persistenceType === 'pglite' ? 1500 : 500);
+  await sleepForPersistence(persistenceType);
   await page.reload({waitUntil: 'domcontentloaded'});
   await page.waitForFunction(() => !document.getElementById('loading'));
 
   await waitForTextInPage(page, testMessage);
-  await waitForTextInPage(page, 'PersistUser');
+
+  const persistedUsername = await page.evaluate(() => {
+    const input = document.querySelector(
+      'input[placeholder*="name" i]',
+    ) as HTMLInputElement;
+    return input ? input.value : null;
+  });
+  expect(persistedUsername).toBe('PersistUser');
 }
 
 beforeAll(async () => {
@@ -216,8 +221,6 @@ describe('chat persistence e2e tests', () => {
         let devServer;
         try {
           devServer = await startDevServer(projectPath, port);
-
-          await sleep(200);
 
           const url = `http://localhost:${port}`;
           const page = await browser.newPage();

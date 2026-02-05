@@ -3,6 +3,7 @@ import {existsSync} from 'fs';
 import {cp, mkdir, readFile, rename, rm} from 'fs/promises';
 import {dirname, join} from 'path';
 import puppeteer, {Browser, ConsoleMessage, Page} from 'puppeteer';
+import {setTimeout as sleep} from 'timers/promises';
 import {fileURLToPath} from 'url';
 import {expect} from 'vitest';
 
@@ -24,6 +25,10 @@ export async function closeBrowser() {
   if (browser) {
     await browser.close();
   }
+}
+
+export async function sleepForPersistence(persistenceType: string) {
+  await sleep(persistenceType === 'pglite' ? 2000 : 100);
 }
 
 export async function runCLI(
