@@ -1,6 +1,6 @@
 import {spawn} from 'child_process';
 import {existsSync} from 'fs';
-import {cp, mkdir, readFile, rm} from 'fs/promises';
+import {cp, mkdir, readFile, rename, rm} from 'fs/promises';
 import {dirname, join} from 'path';
 import puppeteer, {Browser, ConsoleMessage, Page} from 'puppeteer';
 import {fileURLToPath} from 'url';
@@ -110,10 +110,10 @@ export async function setupTestProject(
 
   if (existsSync(projectPath) && !process.env.CLEAN_E2E) {
     if (existsSync(nodeModulesPath)) {
-      await cp(nodeModulesPath, nodeModulesBackup, {recursive: true});
+      await rename(nodeModulesPath, nodeModulesBackup);
     }
     if (existsSync(cacheFile)) {
-      await cp(cacheFile, join(TEST_DIR, `${projectName}.cache`));
+      await rename(cacheFile, join(TEST_DIR, `${projectName}.cache`));
     }
     await rm(projectPath, {recursive: true});
   }
@@ -129,15 +129,12 @@ export async function setupTestProject(
   );
 
   if (existsSync(nodeModulesBackup)) {
-    const {mkdir} = await import('fs/promises');
     await mkdir(clientPath, {recursive: true});
 
-    await cp(nodeModulesBackup, nodeModulesPath, {recursive: true});
-    await rm(nodeModulesBackup, {recursive: true});
+    await rename(nodeModulesBackup, nodeModulesPath);
     const cachedFile = join(TEST_DIR, `${projectName}.cache`);
     if (existsSync(cachedFile)) {
-      await cp(cachedFile, cacheFile);
-      await rm(cachedFile);
+      await rename(cachedFile, cacheFile);
     }
   }
 
