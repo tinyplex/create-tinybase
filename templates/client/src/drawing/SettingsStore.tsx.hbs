@@ -61,7 +61,6 @@ useProvideStore(STORE_ID, store);
     {{/if}}
     {{includeFile template="client/src/shared/sqlite.ts.hbs" output="client/src/sqlite.{{ext}}"}}
     {{addImport "import {getDb} from './sqlite';"}}
-
     useCreatePersister(
     store,
     async (store) => {

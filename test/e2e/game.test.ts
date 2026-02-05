@@ -1,6 +1,6 @@
 import {Page} from 'puppeteer';
 import {setTimeout as sleep} from 'timers/promises';
-import {afterAll, beforeAll, describe, expect, it} from 'vitest';
+import {afterAll, beforeAll, describe, expect, test} from 'vitest';
 import {
   BASE_PORT,
   browser,
@@ -89,88 +89,98 @@ const persistenceCombinations = [
 ];
 
 async function testGameApp(page: Page) {
-  let squares = await page.$$('button.square, button[class*="square"]');
+  await page.waitForSelector('button.square, button[class*="square"]');
+  const squares = await page.$$('button.square, button[class*="square"]');
   expect(squares.length).toBeGreaterThanOrEqual(9);
 
-  await squares[0].click();
-  await page.waitForFunction(
-    () => {
-      const sq = document.querySelectorAll(
+  await page.evaluate(() =>
+    (
+      document.querySelectorAll(
         'button.square, button[class*="square"]',
-      )[0];
-      return sq && sq.textContent === 'X';
-    },
-    {timeout: 2000},
+      )[0] as HTMLButtonElement
+    ).click(),
   );
+  await page.waitForFunction(() => {
+    const sq = document.querySelectorAll(
+      'button.square, button[class*="square"]',
+    )[0];
+    return sq && sq.textContent === 'X';
+  });
 
-  squares = await page.$$('button.square, button[class*="square"]');
-  await squares[1].click();
-  await page.waitForFunction(
-    () => {
-      const sq = document.querySelectorAll(
+  await page.evaluate(() =>
+    (
+      document.querySelectorAll(
         'button.square, button[class*="square"]',
-      )[1];
-      return sq && sq.textContent === 'O';
-    },
-    {timeout: 2000},
+      )[1] as HTMLButtonElement
+    ).click(),
   );
+  await page.waitForFunction(() => {
+    const sq = document.querySelectorAll(
+      'button.square, button[class*="square"]',
+    )[1];
+    return sq && sq.textContent === 'O';
+  });
 
-  squares = await page.$$('button.square, button[class*="square"]');
-  await squares[3].click();
+  await page.evaluate(() =>
+    (
+      document.querySelectorAll(
+        'button.square, button[class*="square"]',
+      )[3] as HTMLButtonElement
+    ).click(),
+  );
   await page.waitForFunction(
     () =>
       document.querySelectorAll('button.square, button[class*="square"]')[3]
         .textContent === 'X',
-    {timeout: 2000},
   );
 
-  squares = await page.$$('button.square, button[class*="square"]');
-  await squares[4].click();
+  await page.evaluate(() =>
+    (
+      document.querySelectorAll(
+        'button.square, button[class*="square"]',
+      )[4] as HTMLButtonElement
+    ).click(),
+  );
   await page.waitForFunction(
     () =>
       document.querySelectorAll('button.square, button[class*="square"]')[4]
         .textContent === 'O',
-    {timeout: 2000},
   );
 
-  squares = await page.$$('button.square, button[class*="square"]');
-  await squares[6].click();
+  await page.evaluate(() =>
+    (
+      document.querySelectorAll(
+        'button.square, button[class*="square"]',
+      )[6] as HTMLButtonElement
+    ).click(),
+  );
   await page.waitForFunction(
     () =>
       document.querySelectorAll('button.square, button[class*="square"]')[6]
         .textContent === 'X',
-    {timeout: 2000},
   );
 
   const bodyText = await page.evaluate(() => document.body.textContent);
   expect(bodyText).toMatch(/won|wins|winner/i);
 }
 
-async function testGamePersistence(
-  page: Page,
-  persistenceType: string,
-  loadingTimeout: number,
-) {
-  const gameElement = await page.$('#root, #app, main, body');
-  if (gameElement) {
-    const box = await gameElement.boundingBox();
-    await page.mouse.click(box!.x + 100, box!.y + 100);
+async function testGamePersistence(page: Page, persistenceType: string) {
+  const gameElement = await page.waitForSelector('#root, #app, main, body');
+  const box = await gameElement!.boundingBox();
+  await page.mouse.click(box!.x + 100, box!.y + 100);
 
-    const gameState = await page.evaluate(() => {
-      return document.body.textContent;
-    });
+  const gameState = await page.evaluate(() => {
+    return document.body.textContent;
+  });
 
-    await sleep(persistenceType === 'pglite' ? 1000 : 500);
-    await page.reload({waitUntil: 'domcontentloaded'});
-    await page.waitForFunction(() => !document.getElementById('loading'), {
-      timeout: loadingTimeout,
-    });
+  await sleep(persistenceType === 'pglite' ? 1000 : 500);
+  await page.reload({waitUntil: 'domcontentloaded'});
+  await page.waitForFunction(() => !document.getElementById('loading'));
 
-    const persistedState = await page.evaluate(() => {
-      return document.body.textContent;
-    });
-    expect(persistedState.length).toBeGreaterThan(10);
-  }
+  const persistedState = await page.evaluate(() => {
+    return document.body.textContent;
+  });
+  expect(persistedState.length).toBeGreaterThan(10);
 }
 
 beforeAll(async () => {
@@ -183,7 +193,7 @@ afterAll(async () => {
 
 describe('game e2e tests', {concurrent: true}, () => {
   combinations.forEach((combo, index) => {
-    it(
+    test(
       `should create and run ${combo.name} app`,
       {timeout: 120000},
       async () => {
@@ -238,7 +248,7 @@ describe('game e2e tests', {concurrent: true}, () => {
 
 describe('game persistence e2e tests', () => {
   persistenceCombinations.forEach((combo, index) => {
-    it(
+    test(
       `should persist data with ${combo.persistenceType} in ${combo.name}`,
       {timeout: 120000},
       async () => {
@@ -267,28 +277,15 @@ describe('game persistence e2e tests', () => {
           const {checkErrors} = setupPageErrorHandling(page);
 
           try {
-            await page.goto(url, {
-              waitUntil: 'domcontentloaded',
-              timeout: 10000,
-            });
+            await page.goto(url, {waitUntil: 'domcontentloaded'});
 
-            const loadingTimeout =
-              combo.persistenceType === 'pglite' ? 15000 : 5000;
-
-            try {
-              await page.waitForFunction(
-                () => !document.getElementById('loading'),
-                {timeout: loadingTimeout},
-              );
-            } catch (e) {}
+            await page.waitForFunction(
+              () => !document.getElementById('loading'),
+            );
 
             expect(await page.title()).toContain('TinyBase');
 
-            await testGamePersistence(
-              page,
-              combo.persistenceType,
-              loadingTimeout,
-            );
+            await testGamePersistence(page, combo.persistenceType);
 
             checkErrors();
           } finally {

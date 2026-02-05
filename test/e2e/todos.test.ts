@@ -1,6 +1,6 @@
 import {Page} from 'puppeteer';
 import {setTimeout as sleep} from 'timers/promises';
-import {afterAll, beforeAll, describe, expect, it} from 'vitest';
+import {afterAll, beforeAll, describe, expect, test} from 'vitest';
 import {
   BASE_PORT,
   browser,
@@ -106,8 +106,7 @@ const syncCombinations = [
 
 async function testTodosApp(page: Page) {
   await sleep(1000);
-  const input = await page.$('input[type="text"]');
-  expect(input).toBeTruthy();
+  const input = await page.waitForSelector('input[type="text"]');
   await page.type('input[type="text"]', 'Test todo item');
 
   const inputValue = await page.evaluate(() => {
@@ -123,29 +122,19 @@ async function testTodosApp(page: Page) {
 
   await waitForTextInPage(page, 'Test todo item');
 
-  const checkbox = await page.$('input[type="checkbox"]');
+  const checkbox = await page.waitForSelector('input[type="checkbox"]');
   await checkbox!.click();
-  await page.waitForFunction(
-    () => {
-      const cb = document.querySelector(
-        'input[type="checkbox"]',
-      ) as HTMLInputElement;
-      return cb && cb.checked;
-    },
-    {timeout: 2000},
-  );
+  await page.waitForFunction(() => {
+    const cb = document.querySelector(
+      'input[type="checkbox"]',
+    ) as HTMLInputElement;
+    return cb && cb.checked;
+  });
 }
 
-async function testTodosPersistence(
-  page: Page,
-  persistenceType: string,
-  loadingTimeout: number,
-) {
+async function testTodosPersistence(page: Page, persistenceType: string) {
   const testTodo = `Persisted todo ${persistenceType}`;
-  await page.waitForSelector('input[type="text"]', {
-    visible: true,
-    timeout: loadingTimeout,
-  });
+  await page.waitForSelector('input[type="text"]', {visible: true});
   await page.type('input[type="text"]', testTodo);
   await page.keyboard.press('Enter');
   await waitForTextInPage(page, testTodo);
@@ -154,31 +143,23 @@ async function testTodosPersistence(
 
   await page.reload({waitUntil: 'domcontentloaded'});
 
-  await page.waitForFunction(() => !document.getElementById('loading'), {
-    timeout: loadingTimeout,
-  });
+  await page.waitForFunction(() => !document.getElementById('loading'));
 
-  await waitForTextInPage(page, testTodo, 5000);
+  await waitForTextInPage(page, testTodo);
 
-  const checkbox = await page.$('input[type="checkbox"]');
+  const checkbox = await page.waitForSelector('input[type="checkbox"]');
   await checkbox!.click();
-  await page.waitForFunction(
-    () => {
-      const cb = document.querySelector(
-        'input[type="checkbox"]',
-      ) as HTMLInputElement;
-      return cb && cb.checked;
-    },
-    {timeout: 2000},
-  );
+  await page.waitForFunction(() => {
+    const cb = document.querySelector(
+      'input[type="checkbox"]',
+    ) as HTMLInputElement;
+    return cb && cb.checked;
+  });
 
   await sleep(persistenceType === 'pglite' ? 1000 : 500);
   await page.reload({waitUntil: 'domcontentloaded'});
 
-  const checkboxTimeout = persistenceType === 'pglite' ? 20000 : 5000;
-  await page.waitForSelector('input[type="checkbox"]', {
-    timeout: checkboxTimeout,
-  });
+  await page.waitForSelector('input[type="checkbox"]');
 
   const isChecked = await page.evaluate(() => {
     const cb = document.querySelector(
@@ -198,26 +179,20 @@ async function testTodosSync(page1: Page, page2: Page) {
   await page2.bringToFront();
   await waitForTextInPage(page2, 'Synced todo item');
   await page2.click('input[type="checkbox"]');
-  await page2.waitForFunction(
-    () => {
-      const cb = document.querySelector(
-        'input[type="checkbox"]',
-      ) as HTMLInputElement;
-      return cb && cb.checked;
-    },
-    {timeout: 5000},
-  );
+  await page2.waitForFunction(() => {
+    const cb = document.querySelector(
+      'input[type="checkbox"]',
+    ) as HTMLInputElement;
+    return cb && cb.checked;
+  });
 
   await page1.bringToFront();
-  await page1.waitForFunction(
-    () => {
-      const cb = document.querySelector(
-        'input[type="checkbox"]',
-      ) as HTMLInputElement;
-      return cb && cb.checked;
-    },
-    {timeout: 5000},
-  );
+  await page1.waitForFunction(() => {
+    const cb = document.querySelector(
+      'input[type="checkbox"]',
+    ) as HTMLInputElement;
+    return cb && cb.checked;
+  });
 }
 
 beforeAll(async () => {
@@ -230,7 +205,7 @@ afterAll(async () => {
 
 describe('todos e2e tests', {concurrent: true}, () => {
   combinations.forEach((combo, index) => {
-    it(
+    test(
       `should create and run ${combo.name} app`,
       {timeout: 120000},
       async () => {
@@ -290,7 +265,7 @@ describe('todos e2e tests', {concurrent: true}, () => {
 
 describe('todos persistence e2e tests', () => {
   persistenceCombinations.forEach((combo, index) => {
-    it(
+    test(
       `should persist data with ${combo.persistenceType} in ${combo.name}`,
       {timeout: 120000},
       async () => {
@@ -319,28 +294,15 @@ describe('todos persistence e2e tests', () => {
           const {checkErrors} = setupPageErrorHandling(page);
 
           try {
-            await page.goto(url, {
-              waitUntil: 'domcontentloaded',
-              timeout: 10000,
-            });
+            await page.goto(url, {waitUntil: 'domcontentloaded'});
 
-            const loadingTimeout =
-              combo.persistenceType === 'pglite' ? 15000 : 5000;
-
-            try {
-              await page.waitForFunction(
-                () => !document.getElementById('loading'),
-                {timeout: loadingTimeout},
-              );
-            } catch (e) {}
+            await page.waitForFunction(
+              () => !document.getElementById('loading'),
+            );
 
             expect(await page.title()).toContain('TinyBase');
 
-            await testTodosPersistence(
-              page,
-              combo.persistenceType,
-              loadingTimeout,
-            );
+            await testTodosPersistence(page, combo.persistenceType);
 
             checkErrors();
           } finally {
@@ -358,7 +320,7 @@ describe('todos persistence e2e tests', () => {
 
 describe('todos sync e2e tests', () => {
   syncCombinations.forEach((combo, index) => {
-    it(
+    test(
       `should sync ${combo.name} between two windows`,
       {timeout: 120000},
       async () => {
@@ -388,22 +350,14 @@ describe('todos sync e2e tests', () => {
           const errorHandler2 = setupPageErrorHandling(page2);
 
           try {
-            await page1.goto(url, {
-              waitUntil: 'domcontentloaded',
-              timeout: 10000,
-            });
-            await page2.goto(url, {
-              waitUntil: 'domcontentloaded',
-              timeout: 10000,
-            });
+            await page1.goto(url, {waitUntil: 'domcontentloaded'});
+            await page2.goto(url, {waitUntil: 'domcontentloaded'});
 
             await page1.waitForFunction(
               () => !document.getElementById('loading'),
-              {timeout: 10000},
             );
             await page2.waitForFunction(
               () => !document.getElementById('loading'),
-              {timeout: 10000},
             );
 
             expect(await page1.title()).toContain('TinyBase');

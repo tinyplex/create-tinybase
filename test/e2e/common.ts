@@ -391,6 +391,7 @@ export function setupPageErrorHandling(page: Page) {
   page.on('console', (msg: ConsoleMessage) => {
     const type = msg.type();
     const text = msg.text();
+    // console[type](text);
 
     if (type === 'error') {
       consoleErrors.push(text);
@@ -414,15 +415,11 @@ export function setupPageErrorHandling(page: Page) {
   };
 }
 
-export async function waitForTextInPage(
-  page: Page,
-  text: string,
-  timeout = 5000,
-) {
+export async function waitForTextInPage(page: Page, text: string) {
   return page.waitForFunction(
     (searchText: string) =>
       document.querySelector('body')!.innerText.includes(searchText),
-    {timeout},
+    {},
     text,
   );
 }
@@ -439,21 +436,17 @@ export async function testBasicApp(
   const {checkErrors} = setupPageErrorHandling(page);
 
   try {
-    await page.goto(url, {waitUntil: 'domcontentloaded', timeout: 10000});
-
-    await page.waitForFunction(() => !document.getElementById('loading'), {
-      timeout: 10000,
-    });
+    await page.goto(url, {waitUntil: 'domcontentloaded'});
+    await page.waitForFunction(() => !document.getElementById('loading'));
 
     expect(await page.title()).toContain('TinyBase');
     await waitForTextInPage(page, 'TinyBase');
 
     if (framework === 'react') {
-      const hasReactRoot = await page.evaluate(() => {
+      await page.waitForFunction(() => {
         const app = document.getElementById('app');
         return app && app.children.length > 0;
       });
-      expect(hasReactRoot).toBe(true);
 
       const screenshotPath = join(
         __dirname,

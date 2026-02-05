@@ -1,6 +1,6 @@
 import {Page} from 'puppeteer';
 import {setTimeout as sleep} from 'timers/promises';
-import {afterAll, beforeAll, describe, expect, it} from 'vitest';
+import {afterAll, beforeAll, describe, expect, test} from 'vitest';
 import {
   BASE_PORT,
   browser,
@@ -89,8 +89,7 @@ const persistenceCombinations = [
 ];
 
 async function testDrawingApp(page: Page) {
-  const canvas = await page.$('canvas');
-  expect(canvas).toBeTruthy();
+  const canvas = await page.waitForSelector('canvas');
 
   const box = await canvas!.boundingBox();
   await page.mouse.move(box!.x + 50, box!.y + 50);
@@ -100,19 +99,16 @@ async function testDrawingApp(page: Page) {
 
   await sleep(100);
 
-  await page.waitForFunction(
-    () => {
-      const canvas = document.querySelector('canvas');
-      if (!canvas) return false;
-      const ctx = canvas.getContext('2d');
-      const imageData = ctx!.getImageData(0, 0, canvas.width, canvas.height);
-      return imageData.data.some((value, index) => {
-        if (index % 4 === 3) return false;
-        return value > 20;
-      });
-    },
-    {timeout: 2000},
-  );
+  await page.waitForFunction(() => {
+    const canvas = document.querySelector('canvas');
+    if (!canvas) return false;
+    const ctx = canvas.getContext('2d');
+    const imageData = ctx!.getImageData(0, 0, canvas.width, canvas.height);
+    return imageData.data.some((value, index) => {
+      if (index % 4 === 3) return false;
+      return value > 20;
+    });
+  });
 
   const hasStrokes = await page.evaluate(() => {
     const canvas = document.querySelector('canvas')!;
@@ -126,65 +122,60 @@ async function testDrawingApp(page: Page) {
   expect(hasStrokes).toBe(true);
 }
 
-async function testDrawingPersistence(
-  page: Page,
-  persistenceType: string,
-  loadingTimeout: number,
-) {
-  const canvas = await page.$('canvas');
-  if (canvas) {
-    const box = await canvas.boundingBox();
-    await page.mouse.move(box!.x + 50, box!.y + 50);
-    await page.mouse.down();
-    await page.mouse.move(box!.x + 100, box!.y + 100);
-    await page.mouse.up();
+async function testDrawingPersistence(page: Page, persistenceType: string) {
+  const canvas = await page.waitForSelector('canvas');
+  const box = await canvas!.boundingBox();
+  await page.mouse.move(box!.x + 50, box!.y + 50);
+  await page.mouse.down();
+  await page.mouse.move(box!.x + 100, box!.y + 100);
+  await page.mouse.up();
 
-    const canvasData = await page.evaluate(() => {
-      const cnv = document.querySelector('canvas');
-      return cnv ? cnv.toDataURL() : null;
-    });
+  const canvasData = await page.evaluate(() => {
+    const cnv = document.querySelector('canvas');
+    return cnv ? cnv.toDataURL() : null;
+  });
 
-    await sleep(persistenceType === 'pglite' ? 1000 : 500);
-    await page.reload({waitUntil: 'domcontentloaded'});
-    await page.waitForFunction(() => !document.getElementById('loading'), {
-      timeout: loadingTimeout,
-    });
+  await sleep(persistenceType === 'pglite' ? 1000 : 500);
+  await page.reload({waitUntil: 'domcontentloaded'});
+  await page.waitForFunction(() => !document.getElementById('loading'));
 
-    const persistedCanvasData = await page.evaluate(() => {
-      const cnv = document.querySelector('canvas');
-      return cnv ? cnv.toDataURL() : null;
-    });
-    expect(persistedCanvasData).toBe(canvasData);
+  const persistedCanvasData = await page.evaluate(() => {
+    const cnv = document.querySelector('canvas');
+    return cnv ? cnv.toDataURL() : null;
+  });
+  expect(persistedCanvasData).toBe(canvasData);
 
-    const colorInput = await page.$('input[type="color"]');
-    if (colorInput) {
-      const initialColor = await page.evaluate(
-        (el: HTMLInputElement) => el.value,
-        colorInput,
-      );
+  await page.waitForSelector('.colorBtn');
+  const colorButtons = await page.$$('.colorBtn');
+  await colorButtons[1]!.click();
 
-      await colorInput.click();
-      await page.evaluate((el: HTMLInputElement) => {
-        el.value = '#ff0000';
-        el.dispatchEvent(new Event('input', {bubbles: true}));
-      }, colorInput);
+  const sizeSlider = await page.waitForSelector('input[type="range"]');
+  await sizeSlider?.evaluate((slider) => {
+    const input = slider as HTMLInputElement;
+    Object.getOwnPropertyDescriptor(
+      window.HTMLInputElement.prototype,
+      'value',
+    )!.set!.call(input, '20'); // apparently
+    input.dispatchEvent(new Event('input', {bubbles: true}));
+  });
 
-      await sleep(persistenceType === 'pglite' ? 1000 : 500);
-      await page.reload({waitUntil: 'domcontentloaded'});
-      await page.waitForFunction(() => !document.getElementById('loading'), {
-        timeout: loadingTimeout,
-      });
+  await sleep(persistenceType === 'pglite' ? 1000 : 1500);
+  await page.reload({waitUntil: 'domcontentloaded'});
+  await page.waitForFunction(() => !document.getElementById('loading'));
 
-      const persistedColor = await page.evaluate(() => {
-        const input = document.querySelector(
-          'input[type="color"]',
-        ) as HTMLInputElement;
-        return input ? input.value : null;
-      });
-      expect(persistedColor).toBe('#ff0000');
-      expect(persistedColor).not.toBe(initialColor);
-    }
-  }
+  await page.waitForSelector('.colorBtn');
+  const activeColor = await page.evaluate(() => {
+    const activeBtn = document.querySelector('.colorBtn.active');
+    return activeBtn ? (activeBtn as HTMLElement).style.background : null;
+  });
+
+  const persistedSize = await page.evaluate(() => {
+    const slider = document.querySelector('#brushSizeValue');
+    return slider ? (slider as HTMLInputElement).innerText : null;
+  });
+
+  expect(activeColor).toBe('rgb(25, 118, 210)');
+  expect(persistedSize).toBe('20');
 }
 
 beforeAll(async () => {
@@ -197,7 +188,7 @@ afterAll(async () => {
 
 describe('drawing e2e tests', {concurrent: true}, () => {
   combinations.forEach((combo, index) => {
-    it(
+    test(
       `should create and run ${combo.name} app`,
       {timeout: 120000},
       async () => {
@@ -257,7 +248,7 @@ describe('drawing e2e tests', {concurrent: true}, () => {
 
 describe('drawing persistence e2e tests', () => {
   persistenceCombinations.forEach((combo, index) => {
-    it(
+    test(
       `should persist data with ${combo.persistenceType} in ${combo.name}`,
       {timeout: 120000},
       async () => {
@@ -286,28 +277,15 @@ describe('drawing persistence e2e tests', () => {
           const {checkErrors} = setupPageErrorHandling(page);
 
           try {
-            await page.goto(url, {
-              waitUntil: 'domcontentloaded',
-              timeout: 10000,
-            });
+            await page.goto(url, {waitUntil: 'domcontentloaded'});
 
-            const loadingTimeout =
-              combo.persistenceType === 'pglite' ? 15000 : 5000;
-
-            try {
-              await page.waitForFunction(
-                () => !document.getElementById('loading'),
-                {timeout: loadingTimeout},
-              );
-            } catch (e) {}
+            await page.waitForFunction(
+              () => !document.getElementById('loading'),
+            );
 
             expect(await page.title()).toContain('TinyBase');
 
-            await testDrawingPersistence(
-              page,
-              combo.persistenceType,
-              loadingTimeout,
-            );
+            await testDrawingPersistence(page, combo.persistenceType);
 
             checkErrors();
           } finally {

@@ -1,6 +1,6 @@
 import {Page} from 'puppeteer';
 import {setTimeout as sleep} from 'timers/promises';
-import {afterAll, beforeAll, describe, expect, it} from 'vitest';
+import {afterAll, beforeAll, describe, expect, test} from 'vitest';
 import {
   BASE_PORT,
   browser,
@@ -90,15 +90,14 @@ const persistenceCombinations = [
 ];
 
 async function testChatApp(page: Page) {
-  const usernameInput = await page.$('input[placeholder*="name" i]');
-  if (usernameInput) {
-    await usernameInput.type('TestUser');
-  }
+  try {
+    const usernameInput = await page.waitForSelector(
+      'input[placeholder*="name" i]',
+    );
+    await usernameInput!.type('TestUser');
+  } catch {}
 
-  await page.waitForSelector(
-    'input[type="text"]:not([placeholder*="name" i])',
-    {visible: true, timeout: 5000},
-  );
+  await page.waitForSelector('input[type="text"]:not([placeholder*="name" i])');
   await page.type(
     'input[type="text"]:not([placeholder*="name" i])',
     'Hello from e2e test!',
@@ -108,40 +107,28 @@ async function testChatApp(page: Page) {
   await waitForTextInPage(page, 'Hello from e2e test!');
 }
 
-async function testChatPersistence(
-  page: Page,
-  persistenceType: string,
-  loadingTimeout: number,
-) {
-  const usernameInput = await page.$('input[placeholder*="name" i]');
-  if (usernameInput) {
-    await usernameInput.click({clickCount: 3});
-    await usernameInput.type('PersistUser');
-    await sleep(100);
-  }
-
-  await page.waitForSelector(
-    'input[type="text"]:not([placeholder*="name" i])',
-    {visible: true, timeout: 5000},
+async function testChatPersistence(page: Page, persistenceType: string) {
+  const usernameInput = await page.waitForSelector(
+    'input[placeholder*="name" i]',
   );
+  await usernameInput!.click({clickCount: 3});
+  await usernameInput!.type('PersistUser');
+
+  await page.waitForSelector('input[type="text"]:not([placeholder*="name" i])');
   const testMessage = `Persisted message ${persistenceType}`;
   await page.type(
     'input[type="text"]:not([placeholder*="name" i])',
     testMessage,
   );
   await page.keyboard.press('Enter');
-  const initialChatTimeout = persistenceType === 'pglite' ? 20000 : 10000;
-  await waitForTextInPage(page, testMessage, initialChatTimeout);
+  await waitForTextInPage(page, testMessage);
 
   await sleep(persistenceType === 'pglite' ? 1500 : 500);
   await page.reload({waitUntil: 'domcontentloaded'});
-  await page.waitForFunction(() => !document.getElementById('loading'), {
-    timeout: loadingTimeout,
-  });
+  await page.waitForFunction(() => !document.getElementById('loading'));
 
-  const chatTimeout = persistenceType === 'pglite' ? 15000 : 10000;
-  await waitForTextInPage(page, testMessage, chatTimeout);
-  await waitForTextInPage(page, 'PersistUser', chatTimeout);
+  await waitForTextInPage(page, testMessage);
+  await waitForTextInPage(page, 'PersistUser');
 }
 
 beforeAll(async () => {
@@ -154,7 +141,7 @@ afterAll(async () => {
 
 describe('chat e2e tests', {concurrent: true}, () => {
   combinations.forEach((combo, index) => {
-    it(
+    test(
       `should create and run ${combo.name} app`,
       {timeout: 120000},
       async () => {
@@ -209,7 +196,7 @@ describe('chat e2e tests', {concurrent: true}, () => {
 
 describe('chat persistence e2e tests', () => {
   persistenceCombinations.forEach((combo, index) => {
-    it(
+    test(
       `should persist data with ${combo.persistenceType} in ${combo.name}`,
       {timeout: 120000},
       async () => {
@@ -240,26 +227,17 @@ describe('chat persistence e2e tests', () => {
           try {
             await page.goto(url, {
               waitUntil: 'domcontentloaded',
-              timeout: 10000,
             });
-
-            const loadingTimeout =
-              combo.persistenceType === 'pglite' ? 15000 : 5000;
 
             try {
               await page.waitForFunction(
                 () => !document.getElementById('loading'),
-                {timeout: loadingTimeout},
               );
             } catch (e) {}
 
             expect(await page.title()).toContain('TinyBase');
 
-            await testChatPersistence(
-              page,
-              combo.persistenceType,
-              loadingTimeout,
-            );
+            await testChatPersistence(page, combo.persistenceType);
 
             checkErrors();
           } finally {
