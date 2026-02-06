@@ -88,6 +88,21 @@ const persistenceCombinations = [
   },
 ];
 
+const syncCombinations = [
+  {
+    language: 'javascript',
+    framework: 'vanilla',
+    appType: 'drawing',
+    name: 'js-vanilla-drawing-sync',
+  },
+  {
+    language: 'javascript',
+    framework: 'react',
+    appType: 'drawing',
+    name: 'js-react-drawing-sync',
+  },
+];
+
 async function testDrawingApp(page: Page) {
   const canvas = await page.waitForSelector('canvas');
 
@@ -174,6 +189,69 @@ async function testDrawingPersistence(page: Page, persistenceType: string) {
 
   expect(activeColor).toBe('rgb(25, 118, 210)');
   expect(persistedSize).toBe('20');
+}
+
+async function testDrawingSync(page1: Page, page2: Page) {
+  await page1.bringToFront();
+  const canvas = await page1.waitForSelector('canvas');
+  const box = await canvas!.boundingBox();
+  await page1.mouse.move(box!.x + 50, box!.y + 50);
+  await page1.mouse.down();
+  await page1.mouse.move(box!.x + 100, box!.y + 100);
+  await page1.mouse.up();
+
+  const canvasData = await page1.evaluate(() => {
+    const cnv = document.querySelector('canvas');
+    return cnv ? cnv.toDataURL() : null;
+  });
+
+  await page2.bringToFront();
+  await page2.waitForFunction(
+    (expectedData) => {
+      const cnv = document.querySelector('canvas');
+      return cnv && cnv.toDataURL() === expectedData;
+    },
+    {},
+    canvasData,
+  );
+
+  const syncedCanvasData = await page2.evaluate(() => {
+    const cnv = document.querySelector('canvas');
+    return cnv ? cnv.toDataURL() : null;
+  });
+  expect(syncedCanvasData).toBe(canvasData);
+
+  // Verify that settings (color, size) DON'T sync
+  await page2.waitForSelector('.colorBtn');
+  const colorButtons = await page2.$$('.colorBtn');
+  await colorButtons[1]!.click();
+
+  const sizeSlider = await page2.waitForSelector('input[type="range"]');
+  await sizeSlider?.evaluate((slider) => {
+    const input = slider as HTMLInputElement;
+    Object.getOwnPropertyDescriptor(
+      window.HTMLInputElement.prototype,
+      'value',
+    )!.set!.call(input, '20');
+    input.dispatchEvent(new Event('input', {bubbles: true}));
+  });
+
+  // Wait a bit to ensure changes would have synced if they were going to
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  await page1.bringToFront();
+  const page1Color = await page1.evaluate(() => {
+    const activeBtn = document.querySelector('.colorBtn.active');
+    return activeBtn ? (activeBtn as HTMLElement).style.background : null;
+  });
+  const page1Size = await page1.evaluate(() => {
+    const slider = document.querySelector('#brushSizeValue');
+    return slider ? (slider as HTMLElement).innerText : null;
+  });
+
+  // Settings should remain at their original values (not synced)
+  expect(page1Color).toBe('rgb(216, 27, 96)'); // Original default color
+  expect(page1Size).toBe('5'); // Original default size
 }
 
 beforeAll(async () => {
@@ -286,6 +364,69 @@ describe('drawing persistence e2e tests', () => {
             checkErrors();
           } finally {
             await page.close();
+          }
+        } finally {
+          if (devServer) {
+            await killProcess(devServer);
+          }
+        }
+      },
+    );
+  });
+});
+
+describe('drawing sync e2e tests', () => {
+  syncCombinations.forEach((combo, index) => {
+    test(
+      `should sync ${combo.name} between two windows`,
+      {timeout: 120000},
+      async () => {
+        const projectName = `test-${combo.name}`;
+        const port = BASE_PORT + 300 + combinations.length + index;
+
+        const {projectPath} = await setupTestProject(
+          projectName,
+          combo.language,
+          combo.framework,
+          combo.appType,
+          false,
+          'remote',
+        );
+
+        let devServer;
+        try {
+          devServer = await startDevServer(projectPath, port);
+
+          const uniqueId = `test${Math.random().toString(36).substring(2, 8)}`;
+          const url = `http://localhost:${port}/${uniqueId}`;
+
+          const page1 = await browser.newPage();
+          const page2 = await browser.newPage();
+
+          const errorHandler1 = setupPageErrorHandling(page1);
+          const errorHandler2 = setupPageErrorHandling(page2);
+
+          try {
+            await page1.goto(url, {waitUntil: 'domcontentloaded'});
+            await page2.goto(url, {waitUntil: 'domcontentloaded'});
+
+            await page1.waitForFunction(
+              () => !document.getElementById('loading'),
+            );
+            await page2.waitForFunction(
+              () => !document.getElementById('loading'),
+            );
+
+            expect(await page1.title()).toContain('TinyBase');
+            expect(await page2.title()).toContain('TinyBase');
+
+            await testDrawingSync(page1, page2);
+
+            errorHandler1.checkErrors();
+            errorHandler2.checkErrors();
+          } finally {
+            await page1.close();
+            await page2.close();
           }
         } finally {
           if (devServer) {

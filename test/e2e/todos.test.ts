@@ -139,9 +139,7 @@ async function testTodosPersistence(page: Page, persistenceType: string) {
   await waitForTextInPage(page, testTodo);
 
   await sleepForPersistence(persistenceType);
-
   await page.reload({waitUntil: 'domcontentloaded'});
-
   await page.waitForFunction(() => !document.getElementById('loading'));
 
   await waitForTextInPage(page, testTodo);
@@ -158,26 +156,27 @@ async function testTodosPersistence(page: Page, persistenceType: string) {
   await sleepForPersistence(persistenceType);
   await page.reload({waitUntil: 'domcontentloaded'});
 
-  await page.waitForSelector('input[type="checkbox"]');
-
-  const isChecked = await page.evaluate(() => {
+  await page.waitForFunction(() => {
     const cb = document.querySelector(
       'input[type="checkbox"]',
     ) as HTMLInputElement;
     return cb && cb.checked;
   });
-  expect(isChecked).toBe(true);
 }
 
 async function testTodosSync(page1: Page, page2: Page) {
+  const testTodo = 'Synced todo item';
   await page1.bringToFront();
-  await page1.type('input[type="text"]', 'Synced todo item');
+  await page1.waitForSelector('input[type="text"]', {visible: true});
+  await page1.type('input[type="text"]', testTodo);
   await page1.keyboard.press('Enter');
-  await waitForTextInPage(page1, 'Synced todo item');
+  await waitForTextInPage(page1, testTodo);
 
   await page2.bringToFront();
-  await waitForTextInPage(page2, 'Synced todo item');
-  await page2.click('input[type="checkbox"]');
+  await waitForTextInPage(page2, testTodo);
+
+  const checkbox = await page2.waitForSelector('input[type="checkbox"]');
+  await checkbox!.click();
   await page2.waitForFunction(() => {
     const cb = document.querySelector(
       'input[type="checkbox"]',

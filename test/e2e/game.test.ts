@@ -88,6 +88,21 @@ const persistenceCombinations = [
   },
 ];
 
+const syncCombinations = [
+  {
+    language: 'javascript',
+    framework: 'vanilla',
+    appType: 'game',
+    name: 'js-vanilla-game-sync',
+  },
+  {
+    language: 'javascript',
+    framework: 'react',
+    appType: 'game',
+    name: 'js-react-game-sync',
+  },
+];
+
 async function testGameApp(page: Page) {
   await page.waitForSelector('button.square, button[class*="square"]');
   const squares = await page.$$('button.square, button[class*="square"]');
@@ -181,6 +196,32 @@ async function testGamePersistence(page: Page, persistenceType: string) {
     return document.body.textContent;
   });
   expect(persistedState.length).toBeGreaterThan(10);
+}
+
+async function testGameSync(page1: Page, page2: Page) {
+  await page1.bringToFront();
+  const gameElement = await page1.waitForSelector('#root, #app, main, body');
+  const box = await gameElement!.boundingBox();
+  await page1.mouse.click(box!.x + 100, box!.y + 100);
+
+  const gameState = await page1.evaluate(() => {
+    return document.body.textContent;
+  });
+
+  await page2.bringToFront();
+  await page2.waitForFunction(
+    (expectedState) => {
+      return document.body.textContent === expectedState;
+    },
+    {},
+    gameState,
+  );
+
+  const syncedState = await page2.evaluate(() => {
+    return document.body.textContent;
+  });
+  expect(syncedState).toBe(gameState);
+  expect(syncedState.length).toBeGreaterThan(10);
 }
 
 beforeAll(async () => {
@@ -288,6 +329,69 @@ describe('game persistence e2e tests', () => {
             checkErrors();
           } finally {
             await page.close();
+          }
+        } finally {
+          if (devServer) {
+            await killProcess(devServer);
+          }
+        }
+      },
+    );
+  });
+});
+
+describe('game sync e2e tests', () => {
+  syncCombinations.forEach((combo, index) => {
+    test(
+      `should sync ${combo.name} between two windows`,
+      {timeout: 120000},
+      async () => {
+        const projectName = `test-${combo.name}`;
+        const port = BASE_PORT + 500 + combinations.length + index;
+
+        const {projectPath} = await setupTestProject(
+          projectName,
+          combo.language,
+          combo.framework,
+          combo.appType,
+          false,
+          'remote',
+        );
+
+        let devServer;
+        try {
+          devServer = await startDevServer(projectPath, port);
+
+          const uniqueId = `test${Math.random().toString(36).substring(2, 8)}`;
+          const url = `http://localhost:${port}/${uniqueId}`;
+
+          const page1 = await browser.newPage();
+          const page2 = await browser.newPage();
+
+          const errorHandler1 = setupPageErrorHandling(page1);
+          const errorHandler2 = setupPageErrorHandling(page2);
+
+          try {
+            await page1.goto(url, {waitUntil: 'domcontentloaded'});
+            await page2.goto(url, {waitUntil: 'domcontentloaded'});
+
+            await page1.waitForFunction(
+              () => !document.getElementById('loading'),
+            );
+            await page2.waitForFunction(
+              () => !document.getElementById('loading'),
+            );
+
+            expect(await page1.title()).toContain('TinyBase');
+            expect(await page2.title()).toContain('TinyBase');
+
+            await testGameSync(page1, page2);
+
+            errorHandler1.checkErrors();
+            errorHandler2.checkErrors();
+          } finally {
+            await page1.close();
+            await page2.close();
           }
         } finally {
           if (devServer) {
