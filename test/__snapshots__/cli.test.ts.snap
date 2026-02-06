@@ -228,7 +228,8 @@ After that, start hacking!
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "client/src/App.jsx": "import {StrictMode} from 'react';
+  "client/src/App.jsx": "import {StrictMode, useState} from 'react';
+import {Loading} from './Loading';
 import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {SettingsStore} from './SettingsStore';
@@ -237,18 +238,30 @@ import {UsernameInput} from './UsernameInput';
 import {Messages} from './Messages';
 import {MessageInput} from './MessageInput';
 
-export const App = () => (
-  <StrictMode>
-    <Provider>
-      <SettingsStore />
-      <ChatStore />
-      <UsernameInput />
-      <Messages />
-      <MessageInput />
-      <Inspector />
-    </Provider>
-  </StrictMode>
-);
+export const App = () => {
+  const [settingsReady, setSettingsReady] = useState(false);
+  const [chatReady, setChatReady] = useState(false);
+  const loading = !settingsReady || !chatReady;
+
+  return (
+    <StrictMode>
+      <Provider>
+        <SettingsStore onReady={() => setSettingsReady(true)} />
+        <ChatStore onReady={() => setChatReady(true)} />
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            <UsernameInput />
+            <Messages />
+            <MessageInput />
+            <Inspector />
+          </>
+        )}
+      </Provider>
+    </StrictMode>
+  );
+};
 ",
   "client/src/Button.jsx": "import './button.css';
 import {ReactNode} from 'react';
@@ -283,7 +296,7 @@ export const STORE_ID = 'chat';
 
 export {useAddRowCallback, useRow, useSortedRowIds, useStore};
 
-export const ChatStore = () => {
+export const ChatStore = ({onReady}) => {
   const store = useCreateMergeableStore(() =>
     createMergeableStore().setDefaultContent(getDefaultContent()),
   );
@@ -309,6 +322,10 @@ export const Input = ({
     autoFocus={autoFocus}
   />
 );
+",
+  "client/src/Loading.jsx": "import './loading.css';
+
+export const Loading = () => <div id="loading" />;
 ",
   "client/src/Message.jsx": "import {useRow, STORE_ID} from './ChatStore';
 import './message.css';
@@ -406,7 +423,7 @@ export const STORE_ID = 'settings';
 
 export {useValue, useValueState};
 
-export const SettingsStore = () => {
+export const SettingsStore = ({onReady}) => {
   const store = useCreateStore(() =>
     createStore().setValue('username', getRandomName()),
   );
@@ -489,6 +506,28 @@ input[type='text']:focus {
 
 input[type='text']::placeholder {
   color: var(--fg2);
+}
+",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
+  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
+</svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 ",
   "client/src/message.css": ".message {
@@ -809,7 +848,8 @@ After that, start hacking!
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "client/src/App.jsx": "import {StrictMode} from 'react';
+  "client/src/App.jsx": "import {StrictMode, useState} from 'react';
+import {Loading} from './Loading';
 import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {SettingsStore} from './SettingsStore';
@@ -817,17 +857,29 @@ import {CanvasStore} from './CanvasStore';
 import {DrawingControls} from './DrawingControls';
 import {Canvas} from './Canvas';
 
-export const App = () => (
-  <StrictMode>
-    <Provider>
-      <SettingsStore />
-      <CanvasStore />
-      <DrawingControls />
-      <Canvas />
-      <Inspector />
-    </Provider>
-  </StrictMode>
-);
+export const App = () => {
+  const [settingsReady, setSettingsReady] = useState(false);
+  const [canvasReady, setCanvasReady] = useState(false);
+  const loading = !settingsReady || !canvasReady;
+
+  return (
+    <StrictMode>
+      <Provider>
+        <SettingsStore onReady={() => setSettingsReady(true)} />
+        <CanvasStore onReady={() => setCanvasReady(true)} />
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            <DrawingControls />
+            <Canvas />
+            <Inspector />
+          </>
+        )}
+      </Provider>
+    </StrictMode>
+  );
+};
 ",
   "client/src/BrushSize.jsx": "import {useValueState, STORE_ID} from './SettingsStore';
 import './brushSize.css';
@@ -1017,7 +1069,7 @@ export const STORE_ID = 'canvas';
 
 export {useDelTableCallback, useRow, useSortedRowIds, useStore, useTable};
 
-export const CanvasStore = () => {
+export const CanvasStore = ({onReady}) => {
   const store = useCreateMergeableStore(() =>
     createMergeableStore().setDefaultContent([{strokes: {}}, {}]),
   );
@@ -1075,6 +1127,10 @@ export const DrawingControls = () => {
   );
 };
 ",
+  "client/src/Loading.jsx": "import './loading.css';
+
+export const Loading = () => <div id="loading" />;
+",
   "client/src/SettingsStore.jsx": "import {createStore} from 'tinybase';
 import {
   useCreateStore,
@@ -1087,7 +1143,7 @@ export const STORE_ID = 'settings';
 
 export {useValueState, useValues};
 
-export const SettingsStore = () => {
+export const SettingsStore = ({onReady}) => {
   const store = useCreateStore(() =>
     createStore().setValue('brushColor', '#d81b60').setValue('brushSize', 5),
   );
@@ -1195,6 +1251,28 @@ import {App} from './App';
 addEventListener('load', () => {
   ReactDOM.createRoot(document.getElementById('app')).render(<App />);
 });
+",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
+  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
+</svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 ",
   "client/vite.config.js": "import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
@@ -1438,21 +1516,32 @@ After that, start hacking!
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "client/src/App.jsx": "import {StrictMode} from 'react';
+  "client/src/App.jsx": "import {StrictMode, useState} from 'react';
+import {Loading} from './Loading';
 import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {Store} from './Store';
 import {Game} from './Game';
 
-export const App = () => (
-  <StrictMode>
-    <Provider>
-      <Store />
-      <Game />
-      <Inspector />
-    </Provider>
-  </StrictMode>
-);
+export const App = () => {
+  const [loading, setLoading] = useState(true);
+
+  return (
+    <StrictMode>
+      <Provider>
+        <Store onReady={() => setLoading(false)} />
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            <Game />
+            <Inspector />
+          </>
+        )}
+      </Provider>
+    </StrictMode>
+  );
+};
 ",
   "client/src/Board.jsx": "import './board.css';
 import {useMemo} from 'react';
@@ -1599,6 +1688,10 @@ export const GameStatus = () => {
   );
 };
 ",
+  "client/src/Loading.jsx": "import './loading.css';
+
+export const Loading = () => <div id="loading" />;
+",
   "client/src/Square.jsx": "import './square.css';
 import {useCell, useSetCellCallback, useValue, STORE_ID} from './Store';
 
@@ -1651,7 +1744,7 @@ export {
   useValue,
 };
 
-export const Store = () => {
+export const Store = ({onReady}) => {
   const store = useCreateMergeableStore(() =>
     createMergeableStore().setDefaultContent([
       {},
@@ -1736,6 +1829,28 @@ import {App} from './App';
 addEventListener('load', () => {
   ReactDOM.createRoot(document.getElementById('app')).render(<App />);
 });
+",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
+  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
+</svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 ",
   "client/src/square.css": ".square {
   width: 100px;
@@ -2018,23 +2133,34 @@ After that, start hacking!
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "client/src/App.jsx": "import {StrictMode} from 'react';
+  "client/src/App.jsx": "import {StrictMode, useState} from 'react';
+import {Loading} from './Loading';
 import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {Store} from './Store';
 import {TodoInput} from './TodoInput';
 import {TodoList} from './TodoList';
 
-export const App = () => (
-  <StrictMode>
-    <Provider>
-      <Store />
-      <TodoInput />
-      <TodoList />
-      <Inspector />
-    </Provider>
-  </StrictMode>
-);
+export const App = () => {
+  const [loading, setLoading] = useState(true);
+
+  return (
+    <StrictMode>
+      <Provider>
+        <Store onReady={() => setLoading(false)} />
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            <TodoInput />
+            <TodoList />
+            <Inspector />
+          </>
+        )}
+      </Provider>
+    </StrictMode>
+  );
+};
 ",
   "client/src/Button.jsx": "import './button.css';
 import {ReactNode} from 'react';
@@ -2071,6 +2197,10 @@ export const Input = ({
   />
 );
 ",
+  "client/src/Loading.jsx": "import './loading.css';
+
+export const Loading = () => <div id="loading" />;
+",
   "client/src/Store.jsx": "import {createMergeableStore} from 'tinybase';
 import {
   useCreateMergeableStore,
@@ -2092,7 +2222,7 @@ export {
 
 export const STORE_ID = 'todos';
 
-export const Store = () => {
+export const Store = ({onReady}) => {
   const store = useCreateMergeableStore(() =>
     createMergeableStore().setDefaultContent([
       {
@@ -2259,6 +2389,28 @@ input[type='text']:focus {
 
 input[type='text']::placeholder {
   color: var(--fg2);
+}
+",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
+  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
+</svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 ",
   "client/src/todoInput.css": "#todoInput {
@@ -2559,14 +2711,24 @@ After that, start hacking!
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "client/src/app.js": "import {settingsStore} from './settingsStore';
-import {chatStore} from './chatStore';
+  "client/src/app.js": "import {settingsStore, settingsStoreReady} from './settingsStore';
+import {chatStore, chatStoreReady} from './chatStore';
+import {showLoading, hideLoading} from './loading';
 import {createMessages} from './messages';
 import {createUsernameInput} from './usernameInput';
 import {createMessageInput} from './messageInput';
 
-export const app = () => {
+export const app = async () => {
   const appContainer = document.getElementById('app');
+
+  // Show loading spinner
+  const loadingDiv = showLoading(appContainer);
+
+  // Wait for stores to be ready
+  await Promise.all([settingsStoreReady, chatStoreReady]);
+
+  // Remove loading spinner
+  hideLoading(loadingDiv);
 
   appContainer.appendChild(createUsernameInput(settingsStore, chatStore));
   appContainer.appendChild(createMessages(chatStore));
@@ -2621,6 +2783,11 @@ import {getDefaultContent} from './utils';
 
 export const chatStore =
   createMergeableStore().setDefaultContent(getDefaultContent());
+
+let resolveChatReady;
+export const chatStoreReady = new Promise((resolve) => {
+  resolveChatReady = resolve;
+});
 ",
   "client/src/index.js": "import {app} from './app';
 
@@ -2662,6 +2829,41 @@ export const createInput = (placeholder = '', value = '', onInput) => {
     input.addEventListener('input', () => onInput(input.value));
   }
   return input;
+};
+",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
+  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
+</svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+",
+  "client/src/loading.js": "import './loading.css';
+
+export const showLoading = (container) => {
+  const loadingDiv = document.createElement('div');
+  loadingDiv.id = 'loading';
+  container.appendChild(loadingDiv);
+  return loadingDiv;
+};
+
+export const hideLoading = (loadingDiv) => {
+  loadingDiv.remove();
 };
 ",
   "client/src/message.css": ".message {
@@ -2791,10 +2993,12 @@ export const createMessages = (store) => {
   "client/src/settingsStore.js": "import {createStore} from 'tinybase';
 import {getRandomName} from './utils';
 
-export const settingsStore = createStore().setValue(
-  'username',
-  getRandomName(),
-);
+export const settingsStore = createStore();
+
+let resolveSettingsReady;
+export const settingsStoreReady = new Promise((resolve) => {
+  resolveSettingsReady = resolve;
+});
 ",
   "client/src/usernameInput.css": "#usernameInput {
   margin-bottom: 1rem;
@@ -3096,13 +3300,23 @@ After that, start hacking!
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "client/src/app.js": "import {settingsStore} from './settingsStore';
-import {canvasStore} from './canvasStore';
+  "client/src/app.js": "import {settingsStore, settingsStoreReady} from './settingsStore';
+import {canvasStore, canvasStoreReady} from './canvasStore';
+import {showLoading, hideLoading} from './loading';
 import {createDrawingControls} from './drawingControls';
 import {createCanvas} from './canvas';
 
-export const app = () => {
+export const app = async () => {
   const appContainer = document.getElementById('app');
+
+  // Show loading spinner
+  const loadingDiv = showLoading(appContainer);
+
+  // Wait for stores to be ready
+  await Promise.all([settingsStoreReady, canvasStoreReady]);
+
+  // Remove loading spinner
+  hideLoading(loadingDiv);
 
   appContainer.appendChild(createDrawingControls(settingsStore, canvasStore));
   appContainer.appendChild(createCanvas(settingsStore, canvasStore));
@@ -3142,17 +3356,24 @@ export const createBrushSize = (store) => {
   sizeSlider.type = 'range';
   sizeSlider.min = '1';
   sizeSlider.max = '50';
-  sizeSlider.value = '5';
 
   const sizeLabel = document.createElement('span');
   sizeLabel.id = 'brushSizeValue';
-  sizeLabel.textContent = '5';
+
+  const updateSize = () => {
+    const size = store.getValue('brushSize') ?? 5;
+    sizeSlider.value = \`\${size}\`;
+    sizeLabel.textContent = \`\${size}\`;
+  };
 
   sizeSlider.addEventListener('input', () => {
     const size = parseInt(sizeSlider.value);
     store.setValue('brushSize', size);
     sizeLabel.textContent = \`\${size}\`;
   });
+
+  store.addValueListener('brushSize', updateSize);
+  updateSize();
 
   container.appendChild(label);
   container.appendChild(sizeSlider);
@@ -3327,6 +3548,11 @@ export const canvasStore = createMergeableStore().setDefaultContent([
   {strokes: {}},
   {},
 ]);
+
+let resolveCanvasReady;
+export const canvasStoreReady = new Promise((resolve) => {
+  resolveCanvasReady = resolve;
+});
 ",
   "client/src/colorPicker.css": "#colorPicker {
   display: flex;
@@ -3430,11 +3656,49 @@ addEventListener('load', () => {
   app();
 });
 ",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
+  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
+</svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+",
+  "client/src/loading.js": "import './loading.css';
+
+export const showLoading = (container) => {
+  const loadingDiv = document.createElement('div');
+  loadingDiv.id = 'loading';
+  container.appendChild(loadingDiv);
+  return loadingDiv;
+};
+
+export const hideLoading = (loadingDiv) => {
+  loadingDiv.remove();
+};
+",
   "client/src/settingsStore.js": "import {createStore} from 'tinybase';
 
-export const settingsStore = createStore()
-  .setValue('brushColor', '#d81b60')
-  .setValue('brushSize', 5);
+export const settingsStore = createStore();
+
+let resolveSettingsReady;
+export const settingsStoreReady = new Promise((resolve) => {
+  resolveSettingsReady = resolve;
+});
 ",
 }
 `;
@@ -3664,11 +3928,22 @@ After that, start hacking!
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "client/src/app.js": "import {store} from './store';
+  "client/src/app.js": "import {store, storeReady} from './store';
+import {showLoading, hideLoading} from './loading';
 import {createGame} from './game';
 
-export const app = () => {
+export const app = async () => {
   const appContainer = document.getElementById('app');
+
+  // Show loading spinner
+  const loadingDiv = showLoading(appContainer);
+
+  // Wait for store to be ready
+  await storeReady;
+
+  // Remove loading spinner
+  hideLoading(loadingDiv);
+
   appContainer.appendChild(createGame(store));
 };
 ",
@@ -3887,6 +4162,41 @@ addEventListener('load', () => {
   app();
 });
 ",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
+  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
+</svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+",
+  "client/src/loading.js": "import './loading.css';
+
+export const showLoading = (container) => {
+  const loadingDiv = document.createElement('div');
+  loadingDiv.id = 'loading';
+  container.appendChild(loadingDiv);
+  return loadingDiv;
+};
+
+export const hideLoading = (loadingDiv) => {
+  loadingDiv.remove();
+};
+",
   "client/src/square.css": ".square {
   width: 100px;
   height: 100px;
@@ -3946,6 +4256,11 @@ export const store = createMergeableStore().setDefaultContent([
     gameStatus: 'playing',
   },
 ]);
+
+let resolveReady;
+export const storeReady = new Promise((resolve) => {
+  resolveReady = resolve;
+});
 ",
 }
 `;
@@ -4175,12 +4490,22 @@ After that, start hacking!
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "client/src/app.js": "import {store} from './store';
+  "client/src/app.js": "import {store, storeReady} from './store';
+import {showLoading, hideLoading} from './loading';
 import {createTodoInput} from './todoInput';
 import {createTodoList} from './todoList';
 
-export const app = () => {
+export const app = async () => {
   const appContainer = document.getElementById('app');
+
+  // Show loading spinner
+  const loadingDiv = showLoading(appContainer);
+
+  // Wait for store to be ready
+  await storeReady;
+
+  // Remove loading spinner
+  hideLoading(loadingDiv);
 
   const todoInputContainer = createTodoInput(store);
   appContainer.appendChild(todoInputContainer);
@@ -4271,6 +4596,41 @@ export const createInput = (placeholder = '', value = '', onInput) => {
   return input;
 };
 ",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
+  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
+</svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+",
+  "client/src/loading.js": "import './loading.css';
+
+export const showLoading = (container) => {
+  const loadingDiv = document.createElement('div');
+  loadingDiv.id = 'loading';
+  container.appendChild(loadingDiv);
+  return loadingDiv;
+};
+
+export const hideLoading = (loadingDiv) => {
+  loadingDiv.remove();
+};
+",
   "client/src/store.js": "import {createMergeableStore} from 'tinybase';
 
 export const store = createMergeableStore().setDefaultContent([
@@ -4282,6 +4642,11 @@ export const store = createMergeableStore().setDefaultContent([
   },
   {},
 ]);
+
+let resolveReady;
+export const storeReady = new Promise((resolve) => {
+  resolveReady = resolve;
+});
 ",
   "client/src/todoInput.css": "#todoInput {
   display: flex;
@@ -4671,7 +5036,8 @@ After that, start hacking!
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "client/src/App.tsx": "import {StrictMode} from 'react';
+  "client/src/App.tsx": "import {StrictMode, useState} from 'react';
+import {Loading} from './Loading';
 import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {SettingsStore} from './SettingsStore';
@@ -4680,18 +5046,30 @@ import {UsernameInput} from './UsernameInput';
 import {Messages} from './Messages';
 import {MessageInput} from './MessageInput';
 
-export const App = () => (
-  <StrictMode>
-    <Provider>
-      <SettingsStore />
-      <ChatStore />
-      <UsernameInput />
-      <Messages />
-      <MessageInput />
-      <Inspector />
-    </Provider>
-  </StrictMode>
-);
+export const App = () => {
+  const [settingsReady, setSettingsReady] = useState(false);
+  const [chatReady, setChatReady] = useState(false);
+  const loading = !settingsReady || !chatReady;
+
+  return (
+    <StrictMode>
+      <Provider>
+        <SettingsStore onReady={() => setSettingsReady(true)} />
+        <ChatStore onReady={() => setChatReady(true)} />
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            <UsernameInput />
+            <Messages />
+            <MessageInput />
+            <Inspector />
+          </>
+        )}
+      </Provider>
+    </StrictMode>
+  );
+};
 ",
   "client/src/Button.tsx": "import './button.css';
 import {ReactNode} from 'react';
@@ -4735,7 +5113,7 @@ export type MessageRow = {username: string; text: string; timestamp: number};
 
 export {useAddRowCallback, useRow, useSortedRowIds, useStore};
 
-export const ChatStore = () => {
+export const ChatStore = ({onReady}: {onReady?: () => void}) => {
   const store = useCreateMergeableStore(() =>
     createMergeableStore().setDefaultContent(getDefaultContent()),
   );
@@ -4768,6 +5146,10 @@ export const Input = ({
     autoFocus={autoFocus}
   />
 );
+",
+  "client/src/Loading.tsx": "import './loading.css';
+
+export const Loading = () => <div id="loading" />;
 ",
   "client/src/Message.tsx": "import {useRow, type MessageRow, STORE_ID} from './ChatStore';
 import './message.css';
@@ -4873,7 +5255,7 @@ export const STORE_ID = 'settings';
 
 export {useValue, useValueState};
 
-export const SettingsStore = () => {
+export const SettingsStore = ({onReady}: {onReady?: () => void}) => {
   const store = useCreateStore(() =>
     createStore().setValue('username', getRandomName()),
   );
@@ -4956,6 +5338,28 @@ input[type='text']:focus {
 
 input[type='text']::placeholder {
   color: var(--fg2);
+}
+",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
+  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
+</svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 ",
   "client/src/message.css": ".message {
@@ -5307,7 +5711,8 @@ After that, start hacking!
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "client/src/App.tsx": "import {StrictMode} from 'react';
+  "client/src/App.tsx": "import {StrictMode, useState} from 'react';
+import {Loading} from './Loading';
 import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {SettingsStore} from './SettingsStore';
@@ -5315,17 +5720,29 @@ import {CanvasStore} from './CanvasStore';
 import {DrawingControls} from './DrawingControls';
 import {Canvas} from './Canvas';
 
-export const App = () => (
-  <StrictMode>
-    <Provider>
-      <SettingsStore />
-      <CanvasStore />
-      <DrawingControls />
-      <Canvas />
-      <Inspector />
-    </Provider>
-  </StrictMode>
-);
+export const App = () => {
+  const [settingsReady, setSettingsReady] = useState(false);
+  const [canvasReady, setCanvasReady] = useState(false);
+  const loading = !settingsReady || !canvasReady;
+
+  return (
+    <StrictMode>
+      <Provider>
+        <SettingsStore onReady={() => setSettingsReady(true)} />
+        <CanvasStore onReady={() => setCanvasReady(true)} />
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            <DrawingControls />
+            <Canvas />
+            <Inspector />
+          </>
+        )}
+      </Provider>
+    </StrictMode>
+  );
+};
 ",
   "client/src/BrushSize.tsx": "import {useValueState, STORE_ID} from './SettingsStore';
 import './brushSize.css';
@@ -5529,7 +5946,7 @@ export type StrokeRow = {color: string; size: number; points: string};
 
 export {useDelTableCallback, useRow, useSortedRowIds, useStore, useTable};
 
-export const CanvasStore = () => {
+export const CanvasStore = ({onReady}: {onReady?: () => void}) => {
   const store = useCreateMergeableStore(() =>
     createMergeableStore().setDefaultContent([{strokes: {}}, {}]),
   );
@@ -5587,6 +6004,10 @@ export const DrawingControls = () => {
   );
 };
 ",
+  "client/src/Loading.tsx": "import './loading.css';
+
+export const Loading = () => <div id="loading" />;
+",
   "client/src/SettingsStore.tsx": "import {createStore} from 'tinybase';
 import {
   useCreateStore,
@@ -5599,7 +6020,7 @@ export const STORE_ID = 'settings';
 
 export {useValueState, useValues};
 
-export const SettingsStore = () => {
+export const SettingsStore = ({onReady}: {onReady?: () => void}) => {
   const store = useCreateStore(() =>
     createStore().setValue('brushColor', '#d81b60').setValue('brushSize', 5),
   );
@@ -5707,6 +6128,28 @@ import {App} from './App';
 addEventListener('load', () => {
   ReactDOM.createRoot(document.getElementById('app')!).render(<App />);
 });
+",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
+  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
+</svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 ",
   "client/src/vite-env.d.ts": "declare module '*.css' {
   const content: string;
@@ -5981,21 +6424,32 @@ After that, start hacking!
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "client/src/App.tsx": "import {StrictMode} from 'react';
+  "client/src/App.tsx": "import {StrictMode, useState} from 'react';
+import {Loading} from './Loading';
 import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {Store} from './Store';
 import {Game} from './Game';
 
-export const App = () => (
-  <StrictMode>
-    <Provider>
-      <Store />
-      <Game />
-      <Inspector />
-    </Provider>
-  </StrictMode>
-);
+export const App = () => {
+  const [loading, setLoading] = useState(true);
+
+  return (
+    <StrictMode>
+      <Provider>
+        <Store onReady={() => setLoading(false)} />
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            <Game />
+            <Inspector />
+          </>
+        )}
+      </Provider>
+    </StrictMode>
+  );
+};
 ",
   "client/src/Board.tsx": "import './board.css';
 import {useMemo} from 'react';
@@ -6149,6 +6603,10 @@ export const GameStatus = () => {
   );
 };
 ",
+  "client/src/Loading.tsx": "import './loading.css';
+
+export const Loading = () => <div id="loading" />;
+",
   "client/src/Square.tsx": "import './square.css';
 import {useCell, useSetCellCallback, useValue, STORE_ID} from './Store';
 
@@ -6209,7 +6667,7 @@ export {
   useValue,
 };
 
-export const Store = () => {
+export const Store = ({onReady}: {onReady?: () => void}) => {
   const store = useCreateMergeableStore(() =>
     createMergeableStore().setDefaultContent([
       {},
@@ -6294,6 +6752,28 @@ import {App} from './App';
 addEventListener('load', () => {
   ReactDOM.createRoot(document.getElementById('app')!).render(<App />);
 });
+",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
+  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
+</svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 ",
   "client/src/square.css": ".square {
   width: 100px;
@@ -6607,23 +7087,34 @@ After that, start hacking!
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "client/src/App.tsx": "import {StrictMode} from 'react';
+  "client/src/App.tsx": "import {StrictMode, useState} from 'react';
+import {Loading} from './Loading';
 import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {Store} from './Store';
 import {TodoInput} from './TodoInput';
 import {TodoList} from './TodoList';
 
-export const App = () => (
-  <StrictMode>
-    <Provider>
-      <Store />
-      <TodoInput />
-      <TodoList />
-      <Inspector />
-    </Provider>
-  </StrictMode>
-);
+export const App = () => {
+  const [loading, setLoading] = useState(true);
+
+  return (
+    <StrictMode>
+      <Provider>
+        <Store onReady={() => setLoading(false)} />
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            <TodoInput />
+            <TodoList />
+            <Inspector />
+          </>
+        )}
+      </Provider>
+    </StrictMode>
+  );
+};
 ",
   "client/src/Button.tsx": "import './button.css';
 import {ReactNode} from 'react';
@@ -6674,6 +7165,10 @@ export const Input = ({
   />
 );
 ",
+  "client/src/Loading.tsx": "import './loading.css';
+
+export const Loading = () => <div id="loading" />;
+",
   "client/src/Store.tsx": "import {createMergeableStore} from 'tinybase';
 import {
   useCreateMergeableStore,
@@ -6697,7 +7192,7 @@ export {
 
 export const STORE_ID = 'todos';
 
-export const Store = () => {
+export const Store = ({onReady}: {onReady?: () => void}) => {
   const store = useCreateMergeableStore(() =>
     createMergeableStore().setDefaultContent([
       {
@@ -6865,6 +7360,28 @@ input[type='text']:focus {
 
 input[type='text']::placeholder {
   color: var(--fg2);
+}
+",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
+  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
+</svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 ",
   "client/src/todoInput.css": "#todoInput {
@@ -7194,14 +7711,24 @@ After that, start hacking!
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "client/src/app.ts": "import {settingsStore} from './settingsStore';
-import {chatStore} from './chatStore';
+  "client/src/app.ts": "import {settingsStore, settingsStoreReady} from './settingsStore';
+import {chatStore, chatStoreReady} from './chatStore';
+import {showLoading, hideLoading} from './loading';
 import {createMessages} from './messages';
 import {createUsernameInput} from './usernameInput';
 import {createMessageInput} from './messageInput';
 
-export const app = () => {
+export const app = async () => {
   const appContainer = document.getElementById('app')!;
+
+  // Show loading spinner
+  const loadingDiv = showLoading(appContainer);
+
+  // Wait for stores to be ready
+  await Promise.all([settingsStoreReady, chatStoreReady]);
+
+  // Remove loading spinner
+  hideLoading(loadingDiv);
 
   appContainer.appendChild(createUsernameInput(settingsStore, chatStore));
   appContainer.appendChild(createMessages(chatStore));
@@ -7263,6 +7790,11 @@ export const chatStore =
 
 export type MessageRow = {username: string; text: string; timestamp: number};
 
+let resolveChatReady: () => void;
+export const chatStoreReady = new Promise<void>((resolve) => {
+  resolveChatReady = resolve;
+});
+
 export type ChatStore = typeof chatStore;
 ",
   "client/src/index.ts": "import {app} from './app';
@@ -7309,6 +7841,41 @@ export const createInput = (
     input.addEventListener('input', () => onInput(input.value));
   }
   return input;
+};
+",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
+  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
+</svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+",
+  "client/src/loading.ts": "import './loading.css';
+
+export const showLoading = (container: HTMLElement): HTMLElement => {
+  const loadingDiv = document.createElement('div');
+  loadingDiv.id = 'loading';
+  container.appendChild(loadingDiv);
+  return loadingDiv;
+};
+
+export const hideLoading = (loadingDiv: HTMLElement): void => {
+  loadingDiv.remove();
 };
 ",
   "client/src/message.css": ".message {
@@ -7447,10 +8014,12 @@ export const createMessages = (store: ChatStore): HTMLDivElement => {
   "client/src/settingsStore.ts": "import {createStore} from 'tinybase';
 import {getRandomName} from './utils';
 
-export const settingsStore = createStore().setValue(
-  'username',
-  getRandomName(),
-);
+export const settingsStore = createStore();
+
+let resolveSettingsReady: () => void;
+export const settingsStoreReady = new Promise<void>((resolve) => {
+  resolveSettingsReady = resolve;
+});
 
 export type SettingsStore = typeof settingsStore;
 ",
@@ -7785,13 +8354,23 @@ After that, start hacking!
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "client/src/app.ts": "import {settingsStore} from './settingsStore';
-import {canvasStore} from './canvasStore';
+  "client/src/app.ts": "import {settingsStore, settingsStoreReady} from './settingsStore';
+import {canvasStore, canvasStoreReady} from './canvasStore';
+import {showLoading, hideLoading} from './loading';
 import {createDrawingControls} from './drawingControls';
 import {createCanvas} from './canvas';
 
-export const app = () => {
+export const app = async () => {
   const appContainer = document.getElementById('app')!;
+
+  // Show loading spinner
+  const loadingDiv = showLoading(appContainer);
+
+  // Wait for stores to be ready
+  await Promise.all([settingsStoreReady, canvasStoreReady]);
+
+  // Remove loading spinner
+  hideLoading(loadingDiv);
 
   appContainer.appendChild(createDrawingControls(settingsStore, canvasStore));
   appContainer.appendChild(createCanvas(settingsStore, canvasStore));
@@ -7833,17 +8412,24 @@ export const createBrushSize = (store: SettingsStore): HTMLDivElement => {
   sizeSlider.type = 'range';
   sizeSlider.min = '1';
   sizeSlider.max = '50';
-  sizeSlider.value = '5';
 
   const sizeLabel = document.createElement('span');
   sizeLabel.id = 'brushSizeValue';
-  sizeLabel.textContent = '5';
+
+  const updateSize = () => {
+    const size = store.getValue('brushSize') ?? 5;
+    sizeSlider.value = \`\${size}\`;
+    sizeLabel.textContent = \`\${size}\`;
+  };
 
   sizeSlider.addEventListener('input', () => {
     const size = parseInt(sizeSlider.value);
     store.setValue('brushSize', size);
     sizeLabel.textContent = \`\${size}\`;
   });
+
+  store.addValueListener('brushSize', updateSize);
+  updateSize();
 
   container.appendChild(label);
   container.appendChild(sizeSlider);
@@ -8032,6 +8618,11 @@ export const canvasStore = createMergeableStore().setDefaultContent([
 
 export type StrokeRow = {color: string; size: number; points: string};
 
+let resolveCanvasReady: () => void;
+export const canvasStoreReady = new Promise<void>((resolve) => {
+  resolveCanvasReady = resolve;
+});
+
 export type CanvasStore = typeof canvasStore;
 ",
   "client/src/colorPicker.css": "#colorPicker {
@@ -8143,11 +8734,49 @@ addEventListener('load', () => {
   app();
 });
 ",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
+  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
+</svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+",
+  "client/src/loading.ts": "import './loading.css';
+
+export const showLoading = (container: HTMLElement): HTMLElement => {
+  const loadingDiv = document.createElement('div');
+  loadingDiv.id = 'loading';
+  container.appendChild(loadingDiv);
+  return loadingDiv;
+};
+
+export const hideLoading = (loadingDiv: HTMLElement): void => {
+  loadingDiv.remove();
+};
+",
   "client/src/settingsStore.ts": "import {createStore} from 'tinybase';
 
-export const settingsStore = createStore()
-  .setValue('brushColor', '#d81b60')
-  .setValue('brushSize', 5);
+export const settingsStore = createStore();
+
+let resolveSettingsReady: () => void;
+export const settingsStoreReady = new Promise<void>((resolve) => {
+  resolveSettingsReady = resolve;
+});
 
 export type SettingsStore = typeof settingsStore;
 ",
@@ -8407,11 +9036,22 @@ After that, start hacking!
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "client/src/app.ts": "import {store} from './store';
+  "client/src/app.ts": "import {store, storeReady} from './store';
+import {showLoading, hideLoading} from './loading';
 import {createGame} from './game';
 
-export const app = () => {
+export const app = async () => {
   const appContainer = document.getElementById('app')!;
+
+  // Show loading spinner
+  const loadingDiv = showLoading(appContainer);
+
+  // Wait for store to be ready
+  await storeReady;
+
+  // Remove loading spinner
+  hideLoading(loadingDiv);
+
   appContainer.appendChild(createGame(store));
 };
 ",
@@ -8638,6 +9278,41 @@ addEventListener('load', () => {
   app();
 });
 ",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
+  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
+</svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+",
+  "client/src/loading.ts": "import './loading.css';
+
+export const showLoading = (container: HTMLElement): HTMLElement => {
+  const loadingDiv = document.createElement('div');
+  loadingDiv.id = 'loading';
+  container.appendChild(loadingDiv);
+  return loadingDiv;
+};
+
+export const hideLoading = (loadingDiv: HTMLElement): void => {
+  loadingDiv.remove();
+};
+",
   "client/src/square.css": ".square {
   width: 100px;
   height: 100px;
@@ -8702,6 +9377,11 @@ export const store = createMergeableStore().setDefaultContent([
     gameStatus: 'playing',
   },
 ]);
+
+let resolveReady: () => void;
+export const storeReady = new Promise<void>((resolve) => {
+  resolveReady = resolve;
+});
 
 export type GameStore = typeof store;
 ",
@@ -8961,12 +9641,22 @@ After that, start hacking!
   <path
     d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
 </svg>",
-  "client/src/app.ts": "import {store} from './store';
+  "client/src/app.ts": "import {store, storeReady} from './store';
+import {showLoading, hideLoading} from './loading';
 import {createTodoInput} from './todoInput';
 import {createTodoList} from './todoList';
 
-export const app = () => {
+export const app = async () => {
   const appContainer = document.getElementById('app')!;
+
+  // Show loading spinner
+  const loadingDiv = showLoading(appContainer);
+
+  // Wait for store to be ready
+  await storeReady;
+
+  // Remove loading spinner
+  hideLoading(loadingDiv);
 
   const todoInputContainer = createTodoInput(store);
   appContainer.appendChild(todoInputContainer);
@@ -9065,6 +9755,41 @@ export const createInput = (
   return input;
 };
 ",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
+  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
+</svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+",
+  "client/src/loading.ts": "import './loading.css';
+
+export const showLoading = (container: HTMLElement): HTMLElement => {
+  const loadingDiv = document.createElement('div');
+  loadingDiv.id = 'loading';
+  container.appendChild(loadingDiv);
+  return loadingDiv;
+};
+
+export const hideLoading = (loadingDiv: HTMLElement): void => {
+  loadingDiv.remove();
+};
+",
   "client/src/store.ts": "import {createMergeableStore} from 'tinybase';
 
 export type TodoRow = {text: string; completed: boolean};
@@ -9078,6 +9803,11 @@ export const store = createMergeableStore().setDefaultContent([
   },
   {},
 ]);
+
+let resolveReady: () => void;
+export const storeReady = new Promise<void>((resolve) => {
+  resolveReady = resolve;
+});
 
 export type TodosStore = typeof store;
 ",

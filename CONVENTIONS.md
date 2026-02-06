@@ -612,6 +612,383 @@ When using schemas, import from the schema-aware paths:
 
 ---
 
+## Testing Conventions
+
+### Test Organization
+
+Tests are organized in the `test/e2e/` directory with one file per app type:
+
+- `todos.test.ts`
+- `chat.test.ts`
+- `drawing.test.ts`
+- `game.test.ts`
+- `common.ts` (shared utilities)
+
+### Test Categories
+
+Each app has three categories of tests:
+
+1. **Basic Tests**: Verify core functionality across all combinations
+2. **Persistence Tests**: Verify data persists after reload (sqlite, pglite)
+3. **Sync Tests**: Verify data syncs between two browser windows
+
+### Combination Arrays
+
+Define test combinations consistently:
+
+```typescript
+// Basic tests: All framework/language/schema combinations
+const combinations = [
+  {
+    language: 'javascript',
+    framework: 'vanilla',
+    appType: 'todos',
+    name: 'js-vanilla-todos',
+  },
+  {
+    language: 'javascript',
+    framework: 'react',
+    appType: 'todos',
+    name: 'js-react-todos',
+  },
+  {
+    language: 'typescript',
+    framework: 'vanilla',
+    appType: 'todos',
+    name: 'ts-vanilla-todos',
+  },
+  // ... etc
+];
+
+// Persistence tests: Only TypeScript (both vanilla and react)
+const persistenceCombinations = [
+  {
+    language: 'typescript',
+    framework: 'vanilla',
+    appType: 'todos',
+    persistenceType: 'sqlite',
+    name: 'ts-vanilla-todos-persist-sqlite',
+  },
+  {
+    language: 'typescript',
+    framework: 'vanilla',
+    appType: 'todos',
+    persistenceType: 'pglite',
+    name: 'ts-vanilla-todos-persist-pglite',
+  },
+  // ... react versions
+];
+
+// Sync tests: Only JavaScript (both vanilla and react)
+const syncCombinations = [
+  {
+    language: 'javascript',
+    framework: 'vanilla',
+    appType: 'todos',
+    name: 'js-vanilla-todos-sync',
+  },
+  {
+    language: 'javascript',
+    framework: 'react',
+    appType: 'todos',
+    name: 'js-react-todos-sync',
+  },
+];
+```
+
+### Test Function Patterns
+
+**Basic Test Function:**
+
+```typescript
+async function testTodosApp(page: Page) {
+  // Test core functionality
+  await page.waitForSelector('input[type="text"]');
+  await page.type('input[type="text"]', 'Test todo item');
+  await page.keyboard.press('Enter');
+  await waitForTextInPage(page, 'Test todo item');
+}
+```
+
+**Persistence Test Function:**
+
+```typescript
+async function testTodosPersistence(page: Page, persistenceType: string) {
+  // 1. Perform action and capture state
+  const testTodo = `Persisted todo ${persistenceType}`;
+  await page.type('input[type="text"]', testTodo);
+  await page.keyboard.press('Enter');
+
+  // 2. Wait for persistence
+  await sleepForPersistence(persistenceType);
+
+  // 3. Reload page
+  await page.reload({waitUntil: 'domcontentloaded'});
+  await page.waitForFunction(() => !document.getElementById('loading'));
+
+  // 4. Verify state persisted
+  await waitForTextInPage(page, testTodo);
+}
+```
+
+**Sync Test Function:**
+
+```typescript
+async function testTodosSync(page1: Page, page2: Page) {
+  // 1. Perform action in page1 and verify it syncs to page2
+  const testTodo = 'Synced todo item';
+  await page1.type('input[type="text"]', testTodo);
+  await page1.keyboard.press('Enter');
+  await waitForTextInPage(page1, testTodo);
+
+  await page2.bringToFront();
+  await waitForTextInPage(page2, testTodo);
+
+  // 2. (Optional) Perform bidirectional action
+  // Check a todo in page2 and verify it syncs to page1
+  const checkbox = await page2.waitForSelector('input[type="checkbox"]');
+  await checkbox!.click();
+
+  await page1.bringToFront();
+  await page1.waitForFunction(() => {
+    const cb = document.querySelector(
+      'input[type="checkbox"]',
+    ) as HTMLInputElement;
+    return cb && cb.checked;
+  });
+}
+```
+
+### Sync Test Principles
+
+**What Should Sync:**
+
+- Main data stores (todos, messages, canvas drawings, game state)
+- Use `createMergeableStore()` for data that syncs
+
+**What Should NOT Sync:**
+
+- Local settings stores (username in chat, brush color/size in drawing)
+- Use `createStore()` (non-mergeable) for local settings
+
+**Testing Non-Sync Behavior:**
+
+For apps with separate settings stores (chat, drawing), verify settings DON'T sync:
+
+```typescript
+// Drawing example: Verify color/size settings don't sync
+async function testDrawingSync(page1: Page, page2: Page) {
+  // Test canvas data syncs (omitted for brevity)
+
+  // Verify that settings DON'T sync
+  // Change settings in page2
+  await page2.waitForSelector('.colorBtn');
+  const colorButtons = await page2.$$('.colorBtn');
+  await colorButtons[1]!.click();
+
+  // Wait to ensure changes would have synced if they were going to
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  // Verify page1 still has original values
+  await page1.bringToFront();
+  const page1Color = await page1.evaluate(() => {
+    const activeBtn = document.querySelector('.colorBtn.active');
+    return activeBtn ? (activeBtn as HTMLElement).style.background : null;
+  });
+
+  expect(page1Color).toBe('rgb(216, 27, 96)'); // Original default color
+}
+
+// Chat example: Verify username fields exist (simpler check)
+async function testChatSync(page1: Page, page2: Page) {
+  // Test message syncs (omitted for brevity)
+
+  // Verify that username fields exist in both windows
+  // (confirming settings store is separate and doesn't sync)
+  const hasUsernameInput1 = await page1.evaluate(() => {
+    return !!document.querySelector('input[placeholder*="name" i]');
+  });
+  const hasUsernameInput2 = await page2.evaluate(() => {
+    return !!document.querySelector('input[placeholder*="name" i]');
+  });
+
+  expect(hasUsernameInput1).toBe(true);
+  expect(hasUsernameInput2).toBe(true);
+}
+```
+
+### Common Utilities
+
+Use shared functions from `common.ts`:
+
+```typescript
+import {
+  setupTestProject, // Creates and configures test project
+  startDevServer, // Starts Vite dev server
+  killProcess, // Stops dev server
+  waitForTextInPage, // Waits for text to appear on page
+  sleepForPersistence, // Waits appropriate time for persistence type
+  initBrowser, // Initializes Puppeteer browser
+  closeBrowser, // Closes Puppeteer browser
+  setupPageErrorHandling, // Sets up error/warning capture
+} from './common';
+```
+
+### Test Structure
+
+Each test file follows this structure:
+
+```typescript
+import {describe, test, beforeAll, afterAll, expect} from 'vitest';
+import {} from /* common utilities */ './common';
+
+// Define combinations
+const combinations = [
+  /* ... */
+];
+const persistenceCombinations = [
+  /* ... */
+];
+const syncCombinations = [
+  /* ... */
+];
+
+// Test functions
+async function testApp(page: Page) {
+  /* ... */
+}
+async function testPersistence(page: Page, persistenceType: string) {
+  /* ... */
+}
+async function testSync(page1: Page, page2: Page) {
+  /* ... */
+}
+
+// Lifecycle hooks
+beforeAll(async () => {
+  await initBrowser();
+}, 60000);
+
+afterAll(async () => {
+  await closeBrowser();
+});
+
+// Test suites
+describe('app e2e tests', {concurrent: false}, () => {
+  combinations.forEach((combo, index) => {
+    test(
+      `should create and run ${combo.name} app`,
+      {timeout: 120000},
+      async () => {
+        // Test implementation
+      },
+    );
+  });
+});
+
+describe('app persistence e2e tests', () => {
+  persistenceCombinations.forEach((combo, index) => {
+    test(
+      `should persist data with ${combo.persistenceType} in ${combo.name}`,
+      {timeout: 120000},
+      async () => {
+        // Test implementation
+      },
+    );
+  });
+});
+
+describe('app sync e2e tests', () => {
+  syncCombinations.forEach((combo, index) => {
+    test(
+      `should sync ${combo.name} between two windows`,
+      {timeout: 120000},
+      async () => {
+        // Test implementation
+      },
+    );
+  });
+});
+```
+
+### Port Allocation
+
+Use consistent port offsets per app type:
+
+- **Todos**: `BASE_PORT + 0-99` (5173-5272)
+- **Chat**: `BASE_PORT + 100-199` (5273-5372)
+- **Drawing**: `BASE_PORT + 300-399` (5473-5572)
+- **Game**: `BASE_PORT + 500-599` (5673-5772)
+
+For sync tests, add `combinations.length` to avoid port conflicts with persistence tests.
+
+### Performance Optimizations
+
+**Node Modules Handling:**
+
+Use `rename()` instead of `cp()` + `rm()` for instant node_modules backup/restore:
+
+```typescript
+// Backup
+if (existsSync(nodeModulesPath)) {
+  await rename(nodeModulesPath, nodeModulesBackup);
+}
+
+// Restore
+if (existsSync(nodeModulesBackup)) {
+  await rename(nodeModulesBackup, nodeModulesPath);
+}
+```
+
+This provides ~73% speed improvement (e.g., 113s → 30s for chat tests).
+
+### Vitest Configuration
+
+Use workspace configuration for separate unit and e2e test settings:
+
+```typescript
+// vitest.config.ts
+export default defineConfig({
+  test: {
+    projects: [
+      {
+        name: 'unit',
+        test: {exclude: ['**/e2e/**', ...configDefaults.exclude]},
+      },
+      {
+        name: 'e2e',
+        test: {
+          include: ['**/e2e/**/*.test.ts'],
+          fileParallelism: false, // Run test files sequentially
+          retry: 2, // Retry failed tests twice
+        },
+      },
+    ],
+  },
+});
+```
+
+### Test Comments
+
+Add clear comments to test functions explaining:
+
+- What action is being performed
+- What is expected to sync (or not sync)
+- Bidirectional sync behavior
+
+Example:
+
+```typescript
+async function testTodosSync(page1: Page, page2: Page) {
+  // Add a todo in page1 and verify it syncs to page2
+  // ...
+  // Check a todo in page2 and verify it syncs to page1
+  // ...
+}
+```
+
+---
+
 ## Key Principles
 
 1. **Consistency**: React and vanilla versions should follow parallel patterns
@@ -620,6 +997,8 @@ When using schemas, import from the schema-aware paths:
 4. **Clear Naming**: Function/component names clearly indicate their purpose
 5. **Simplicity**: App files should be minimal, delegating logic to components
 6. **Conventions**: Follow established patterns unless there's a compelling reason not to
+7. **Test Coverage**: Every app has basic, persistence, and sync tests
+8. **Test Reliability**: Use proper waits, retries, and error handling for consistent test execution
 
 ---
 
@@ -635,3 +1014,8 @@ When using schemas, import from the schema-aware paths:
 - [ ] Component exports follow patterns (separate export for React)
 - [ ] Store IDs are string constants matching app domain
 - [ ] Schema support uses conditionals consistently
+- [ ] E2E tests cover basic, persistence, and sync scenarios
+- [ ] Sync tests verify what syncs and what doesn't
+- [ ] Multi-store apps have separate stores for settings vs data
+- [ ] Settings stores use `createStore()` (non-mergeable)
+- [ ] Data stores use `createMergeableStore()` for sync support
