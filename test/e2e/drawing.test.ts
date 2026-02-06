@@ -192,6 +192,7 @@ async function testDrawingPersistence(page: Page, persistenceType: string) {
 }
 
 async function testDrawingSync(page1: Page, page2: Page) {
+  // Draw on canvas in page1 and verify it syncs to page2
   await page1.bringToFront();
   const canvas = await page1.waitForSelector('canvas');
   const box = await canvas!.boundingBox();
@@ -222,6 +223,7 @@ async function testDrawingSync(page1: Page, page2: Page) {
   expect(syncedCanvasData).toBe(canvasData);
 
   // Verify that settings (color, size) DON'T sync
+  // Change settings in page2 and confirm page1 keeps original values
   await page2.waitForSelector('.colorBtn');
   const colorButtons = await page2.$$('.colorBtn');
   await colorButtons[1]!.click();

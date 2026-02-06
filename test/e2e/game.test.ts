@@ -199,6 +199,7 @@ async function testGamePersistence(page: Page, persistenceType: string) {
 }
 
 async function testGameSync(page1: Page, page2: Page) {
+  // Make a move in page1 and verify it syncs to page2
   await page1.bringToFront();
   const gameElement = await page1.waitForSelector('#root, #app, main, body');
   const box = await gameElement!.boundingBox();

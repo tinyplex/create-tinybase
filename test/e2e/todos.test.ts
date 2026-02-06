@@ -165,6 +165,7 @@ async function testTodosPersistence(page: Page, persistenceType: string) {
 }
 
 async function testTodosSync(page1: Page, page2: Page) {
+  // Add a todo in page1 and verify it syncs to page2
   const testTodo = 'Synced todo item';
   await page1.bringToFront();
   await page1.waitForSelector('input[type="text"]', {visible: true});
@@ -175,6 +176,7 @@ async function testTodosSync(page1: Page, page2: Page) {
   await page2.bringToFront();
   await waitForTextInPage(page2, testTodo);
 
+  // Check a todo in page2 and verify it syncs to page1
   const checkbox = await page2.waitForSelector('input[type="checkbox"]');
   await checkbox!.click();
   await page2.waitForFunction(() => {

@@ -152,6 +152,7 @@ async function testChatPersistence(page: Page, persistenceType: string) {
 }
 
 async function testChatSync(page1: Page, page2: Page) {
+  // Send a message in page1 and verify it syncs to page2
   await page1.waitForSelector(
     'input[type="text"]:not([placeholder*="name" i])',
   );
@@ -167,6 +168,8 @@ async function testChatSync(page1: Page, page2: Page) {
   await page2.waitForSelector('.message');
   await waitForTextInPage(page2, testMessage);
 
+  // Verify that username fields exist in both windows
+  // (confirming settings store is separate and doesn't sync)
   const hasUsernameInput1 = await page1.evaluate(() => {
     return !!document.querySelector('input[placeholder*="name" i]');
   });
