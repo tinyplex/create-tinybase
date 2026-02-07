@@ -9,8 +9,8 @@ A TinyBase app built with {{#if typescript}}TypeScript{{else}}JavaScript{{/if}} 
 
 ## Getting Started
 
-Alongside this file, you will see a directory called `client`{{#if server}} (and optionally
-one called `server` for your {{#if (eq syncType "node")}}local Node.js server{{else if (eq syncType "durable-objects")}}local Cloudflare Durable Objects server{{/if}}){{/if}}.
+Alongside this file, you will see a directory called `client`{{#if server
+}} (and one called `server` for your {{#if (eq syncType "node")}}local Node.js server{{else if (eq syncType "durable-objects")}}local Cloudflare Durable Objects server{{/if}}){{/if}}.
 
 To start the web client with Vite, run the following commands:
 
@@ -37,6 +37,110 @@ PNPM, Yarn, and Bun should also work. Your app will be available at
 {{/if}}
 After that, start hacking!
 
+## Structure
+
+This project is organized into {{#if server}}two main directories{{else}}a single `client` directory{{/if}}:
+
+### Client
+
+The `client` directory contains your {{#if react}}React-based{{else}}vanilla JavaScript{{/if}} web application,
+built with Vite and {{#if typescript}}TypeScript{{else}}JavaScript{{/if}}.
+
+#### Key Files
+
+- **`index.html`** - The main HTML file that loads your app
+- **`src/index.{{ext}}`** - Entry point that bootstraps the application{{#if react}} and renders the React component tree{{/if}}
+- **`src/{{#if react}}App{{else}}app{{/if}}.{{ext}}`** - {{#if react}}Main React component that renders the {{#if (eq appType "todos")}}todo list{{else if (eq appType "chat")}}chat interface{{else if (eq appType "drawing")}}drawing
+    canvas{{else if (eq appType "game")}}game{{/if}}
+{{else}}Main application logic{{/if}}
+-
+**`src/{{#if react}}{{#if (eq appType "chat")}}ChatStore{{else if (eq appType "drawing")}}CanvasStore{{else}}Store{{/if}}{{else}}{{#if (eq appType "chat")}}chatStore{{else if (eq appType "drawing")}}canvasStore{{else}}store{{/if}}{{/if}}.{{ext}}`**
+- TinyBase {{#if (eq appType "chat")}}chat messages{{else if (eq appType "drawing")}}drawing canvas{{else}}main{{/if}} store configuration
+{{#if (or (eq appType "chat") (eq appType "drawing"))}}
+  - **`src/{{#if react}}SettingsStore{{else}}settingsStore{{/if}}.{{ext}}`** - TinyBase settings store (not synchronized)
+{{/if}}
+- **`src/config.{{ext}}`** - Configuration settings{{#if server}} (including server connection URL){{/if}}
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+{{#if schemas}}Type-safe schemas define the structure of your data, providing autocomplete
+  and compile-time type checking.{{/if}}
+
+{{#if sync}}
+  The store is a **MergeableStore**, which supports real-time synchronization across
+  multiple clients. When you open the app, it generates a unique room ID in the URL
+  path (e.g., `/abc123`). Anyone who visits the same URL will share the same data
+  and see live updates from other users.
+
+{{/if}}
+{{#if persist}}
+  **Persistence** is enabled using {{#if persistLocalStorage}}browser LocalStorage{{else if persistSqlite}}SQLite WASM (running entirely in the browser){{else if persistPglite}}PGlite (Postgres WASM running entirely in the browser){{/if}}.
+  Your data is automatically saved and restored when you reload the page.
+
+{{/if}}
+{{#if sync}}
+  **Synchronization** is powered by TinyBase's WebSocket synchronizer{{#if server}}, connecting
+    to your {{#if (eq syncType "durable-objects")}}Cloudflare Durable Objects{{else}}Node.js{{/if}} server{{else}} (connecting to a demo server at vite.tinybase.org){{/if}}.
+  When data changes locally, it's sent to the server and broadcast to all other
+  clients in the same room. The MergeableStore handles conflict resolution using
+  CRDTs, ensuring all clients converge to the same state.
+
+{{/if}}
+{{#if react}}
+  **React Integration** - TinyBase provides React hooks that automatically subscribe
+  to store changes and trigger re-renders when data updates. This means your UI
+  stays in sync with your data with minimal boilerplate.
+
+  Components like {{#if (eq appType "todos")}}`TodoList` and `TodoItem` use hooks like `useSortedRowIds`, `useRow`, and
+    callback hooks like `useAddRowCallback` and `useDelRowCallback`
+  {{else if (eq appType "chat")}}`MessageList` and `MessageInput` use TinyBase hooks to display and send messages
+  {{else if (eq appType "drawing")}}`Canvas` uses TinyBase hooks to track drawing state across users
+  {{else}}`Game` uses TinyBase hooks to manage game state{{/if}} to interact
+  with the store.
+
+{{/if}}
+{{#if server}}
+  ### Server
+
+  The `server` directory contains your {{#if (eq syncType "durable-objects")}}Cloudflare Durable Objects{{else}}Node.js{{/if}} WebSocket server.
+
+  #### Key Files
+
+  - **`index.{{ext}}`** - Server entry point
+
+  #### How It Works
+
+  {{#if (eq syncType "durable-objects")}}
+    The server uses **Cloudflare Durable Objects** to provide persistent, distributed
+    synchronization. Each room (identified by the URL path) maps to a Durable Object
+    instance that:
+
+    - Maintains the canonical state in SQL storage (using Durable Object SQL Storage)
+    - Handles WebSocket connections from clients
+    - Broadcasts changes to all connected clients in the room
+    - Automatically persists data, ensuring durability across deployments
+
+    The `TinyBaseDurableObject` class extends `WsServerDurableObject` and creates a
+    MergeableStore with a SQL storage persister. Cloudflare's infrastructure ensures
+    that all clients connecting to the same path are routed to the same Durable
+    Object instance.
+
+    To deploy to Cloudflare Workers, you'll need to configure your `wrangler.toml`
+    file with your Durable Object bindings.
+  {{else}}
+    The server runs a **Node.js WebSocket server** using the `ws` library. It acts
+    as a relay between clients, broadcasting state changes to all connected clients
+    in the same room.
+
+    When a client connects to a path (e.g., `/abc123`), the server groups them with
+    other clients on the same path and ensures all changes are synchronized.
+
+    The server logs when clients join or leave rooms, helping you monitor activity
+    during development.
+  {{/if}}
+
+{{/if}}
 ## Learn More
 
 - [TinyBase Documentation](https://tinybase.org)

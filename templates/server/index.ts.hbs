@@ -1,0 +1,43 @@
+{{#if isDurableObject}}
+  {{addImport "import {createMergeableStore} from 'tinybase';"}}
+  {{addImport "import {createDurableObjectSqlStoragePersister} from 'tinybase/persisters/persister-durable-object-sql-storage';"}}
+  {{addImport "import {getWsServerDurableObjectFetch, WsServerDurableObject} from 'tinybase/synchronizers/synchronizer-ws-server-durable-object';"}}
+
+  export class TinyBaseDurableObject extends WsServerDurableObject {
+  createPersister() {
+  const store = createMergeableStore();
+  const persister = createDurableObjectSqlStoragePersister(
+  store,
+  this.ctx.storage.sql,
+  );
+  return persister;
+  }
+
+  onClientId(
+  pathId: string,
+  clientId: string,
+  addedOrRemoved: IdAddedOrRemoved,
+  ) {
+  console.log(
+  `Client ${clientId} ${addedOrRemoved == 1 ? 'joined' : 'left'} /${pathId}`,
+  );
+  }
+  }
+
+  export default {
+  fetch: getWsServerDurableObjectFetch('TinyBaseDurableObjects'),
+  };
+{{else}}
+  {{addImport "import {createWsServer} from 'tinybase/synchronizers/synchronizer-ws-server';"}}
+  {{addImport "import {WebSocketServer} from 'ws';"}}
+
+  const PORT = 8043;
+
+  const wsServer = createWsServer(new WebSocketServer({port: PORT}));
+
+  wsServer.addClientIdsListener(null, (wsServer, pathId, clientId, addedOrRemoved) => {
+  console.log(`Client ${clientId} ${addedOrRemoved == 1 ? 'joined' : 'left'} /${pathId}`);
+  });
+
+  console.log(`WebSocket server running on ws://localhost:${PORT}`);
+{{/if}}
