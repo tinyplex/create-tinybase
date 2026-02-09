@@ -56,7 +56,10 @@ built with Vite and {{#if typescript}}TypeScript{{else}}JavaScript{{/if}}.
 -
 **`src/{{#if react}}{{#if (eq appType "chat")}}ChatStore{{else if (eq appType "drawing")}}CanvasStore{{else}}Store{{/if}}{{else}}{{#if (eq appType "chat")}}chatStore{{else if (eq appType "drawing")}}canvasStore{{else}}store{{/if}}{{/if}}.{{ext}}`**
 - TinyBase {{#if (eq appType "chat")}}chat messages{{else if (eq appType "drawing")}}drawing canvas{{else}}main{{/if}} store configuration
-{{#if (or (eq appType "chat") (eq appType "drawing"))}}
+{{#if (eq appType "chat")}}
+  - **`src/{{#if react}}SettingsStore{{else}}settingsStore{{/if}}.{{ext}}`** - TinyBase settings store (not synchronized)
+{{/if}}
+{{#if (eq appType "drawing")}}
   - **`src/{{#if react}}SettingsStore{{else}}settingsStore{{/if}}.{{ext}}`** - TinyBase settings store (not synchronized)
 {{/if}}
 - **`src/config.{{ext}}`** - Configuration settings{{#if server}} (including server connection URL){{/if}}
@@ -74,8 +77,18 @@ The app uses **TinyBase** to manage application state in a reactive data store.
   and see live updates from other users.
 
 {{/if}}
-{{#if persist}}
-  **Persistence** is enabled using {{#if persistLocalStorage}}browser LocalStorage{{else if persistSqlite}}SQLite WASM (running entirely in the browser){{else if persistPglite}}PGlite (Postgres WASM running entirely in the browser){{/if}}.
+{{#if persistLocalStorage}}
+  **Persistence** is enabled using browser LocalStorage.
+  Your data is automatically saved and restored when you reload the page.
+
+{{/if}}
+{{#if persistSqlite}}
+  **Persistence** is enabled using SQLite WASM (running entirely in the browser).
+  Your data is automatically saved and restored when you reload the page.
+
+{{/if}}
+{{#if persistPglite}}
+  **Persistence** is enabled using PGlite (Postgres WASM running entirely in the browser).
   Your data is automatically saved and restored when you reload the page.
 
 {{/if}}

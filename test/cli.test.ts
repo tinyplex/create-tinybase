@@ -1,3 +1,4 @@
+import {Buffer} from 'buffer';
 import {ChildProcess, spawn} from 'child_process';
 import {mkdir, readdir, readFile, rm} from 'fs/promises';
 import {dirname, join} from 'path';
@@ -11,6 +12,8 @@ interface Combination {
   language: 'javascript' | 'typescript';
   framework: 'vanilla' | 'react';
   appType: 'todos' | 'chat' | 'drawing' | 'game';
+  syncType?: 'none' | 'remote' | 'node' | 'durable-objects';
+  persistenceType?: 'none' | 'local-storage' | 'sqlite' | 'pglite';
   name: string;
 }
 
@@ -19,97 +22,177 @@ const combinations: Combination[] = [
     language: 'javascript',
     framework: 'vanilla',
     appType: 'todos',
+    syncType: 'none',
+    persistenceType: 'local-storage',
     name: 'js-vanilla-todos',
   },
   {
     language: 'javascript',
     framework: 'react',
     appType: 'todos',
+    syncType: 'none',
+    persistenceType: 'local-storage',
     name: 'js-react-todos',
   },
   {
     language: 'typescript',
     framework: 'vanilla',
     appType: 'todos',
+    syncType: 'none',
+    persistenceType: 'local-storage',
     name: 'ts-vanilla-todos',
   },
   {
     language: 'typescript',
     framework: 'react',
     appType: 'todos',
+    syncType: 'none',
+    persistenceType: 'local-storage',
     name: 'ts-react-todos',
   },
   {
     language: 'javascript',
     framework: 'vanilla',
     appType: 'chat',
+    syncType: 'none',
+    persistenceType: 'local-storage',
     name: 'js-vanilla-chat',
   },
   {
     language: 'javascript',
     framework: 'react',
     appType: 'chat',
+    syncType: 'none',
+    persistenceType: 'local-storage',
     name: 'js-react-chat',
   },
   {
     language: 'typescript',
     framework: 'vanilla',
     appType: 'chat',
+    syncType: 'none',
+    persistenceType: 'local-storage',
     name: 'ts-vanilla-chat',
   },
   {
     language: 'typescript',
     framework: 'react',
     appType: 'chat',
+    syncType: 'none',
+    persistenceType: 'local-storage',
     name: 'ts-react-chat',
   },
   {
     language: 'javascript',
     framework: 'vanilla',
     appType: 'drawing',
+    syncType: 'none',
+    persistenceType: 'local-storage',
     name: 'js-vanilla-drawing',
   },
   {
     language: 'javascript',
     framework: 'react',
     appType: 'drawing',
+    syncType: 'none',
+    persistenceType: 'local-storage',
     name: 'js-react-drawing',
   },
   {
     language: 'typescript',
     framework: 'vanilla',
     appType: 'drawing',
+    syncType: 'none',
+    persistenceType: 'local-storage',
     name: 'ts-vanilla-drawing',
   },
   {
     language: 'typescript',
     framework: 'react',
     appType: 'drawing',
+    syncType: 'none',
+    persistenceType: 'local-storage',
     name: 'ts-react-drawing',
   },
   {
     language: 'javascript',
     framework: 'vanilla',
     appType: 'game',
+    syncType: 'none',
+    persistenceType: 'local-storage',
     name: 'js-vanilla-game',
   },
   {
     language: 'javascript',
     framework: 'react',
     appType: 'game',
+    syncType: 'none',
+    persistenceType: 'local-storage',
     name: 'js-react-game',
   },
   {
     language: 'typescript',
     framework: 'vanilla',
     appType: 'game',
+    syncType: 'none',
+    persistenceType: 'local-storage',
     name: 'ts-vanilla-game',
   },
   {
     language: 'typescript',
     framework: 'react',
     appType: 'game',
+    syncType: 'none',
+    persistenceType: 'local-storage',
     name: 'ts-react-game',
+  },
+  {
+    language: 'typescript',
+    framework: 'react',
+    appType: 'todos',
+    syncType: 'remote',
+    persistenceType: 'local-storage',
+    name: 'ts-react-todos-remote-sync',
+  },
+  {
+    language: 'javascript',
+    framework: 'react',
+    appType: 'chat',
+    syncType: 'none',
+    persistenceType: 'sqlite',
+    name: 'js-react-chat-sqlite',
+  },
+  {
+    language: 'typescript',
+    framework: 'vanilla',
+    appType: 'game',
+    syncType: 'none',
+    persistenceType: 'pglite',
+    name: 'ts-vanilla-game-pglite',
+  },
+  {
+    language: 'javascript',
+    framework: 'vanilla',
+    appType: 'drawing',
+    syncType: 'none',
+    persistenceType: 'none',
+    name: 'js-vanilla-drawing-no-persist',
+  },
+  {
+    language: 'typescript',
+    framework: 'react',
+    appType: 'chat',
+    syncType: 'node',
+    persistenceType: 'local-storage',
+    name: 'ts-react-chat-node',
+  },
+  {
+    language: 'javascript',
+    framework: 'react',
+    appType: 'todos',
+    syncType: 'durable-objects',
+    persistenceType: 'sqlite',
+    name: 'js-react-todos-durable-objects',
   },
 ];
 
@@ -121,20 +204,24 @@ interface CLIResult {
 type Language = 'javascript' | 'typescript';
 type Framework = 'vanilla' | 'react';
 type AppType = 'todos' | 'chat' | 'drawing' | 'game';
-type SyncType = 'none' | string;
+type SyncType = 'none' | 'remote' | 'node' | 'durable-objects';
+type PersistenceType = 'none' | 'local-storage' | 'sqlite' | 'pglite';
 
 async function runCLI(
   projectName: string,
   language: Language,
   framework: Framework,
   appType: AppType = 'todos',
+  syncType: SyncType = 'none',
+  persistenceType: PersistenceType = 'local-storage',
 ): Promise<CLIResult> {
   return runCLIWithOptions(
     projectName,
     language,
     framework,
     appType,
-    'none',
+    syncType,
+    persistenceType,
     false,
     false,
   );
@@ -146,6 +233,7 @@ async function runCLIWithOptions(
   framework: Framework,
   appType: AppType,
   syncType: SyncType,
+  persistenceType: PersistenceType,
   prettier: boolean,
   eslint: boolean,
 ): Promise<CLIResult> {
@@ -165,6 +253,8 @@ async function runCLIWithOptions(
         appType,
         '--syncType',
         syncType,
+        '--persistenceType',
+        persistenceType,
         '--prettier',
         prettier.toString(),
         '--eslint',
@@ -249,6 +339,8 @@ describe('create-tinybase', () => {
           combo.language,
           combo.framework,
           combo.appType,
+          combo.syncType || 'none',
+          combo.persistenceType || 'local-storage',
         );
       }, 10000);
 
@@ -256,7 +348,10 @@ describe('create-tinybase', () => {
         const pkgPath = join(projectPath, 'client', 'package.json');
         const pkg: PackageJson = JSON.parse(await readFile(pkgPath, 'utf-8'));
 
-        expect(pkg.name).toBe(projectName);
+        const hasServer =
+          combo.syncType === 'node' || combo.syncType === 'durable-objects';
+        const expectedName = hasServer ? `${projectName}-client` : projectName;
+        expect(pkg.name).toBe(expectedName);
         expect(pkg.dependencies.tinybase).toBeDefined();
         expect(pkg.scripts.dev).toBeDefined();
         expect(pkg.scripts.build).toBeDefined();
@@ -332,6 +427,7 @@ describe('create-tinybase', () => {
         'react',
         'todos',
         'none',
+        'local-storage',
         true,
         true,
       );

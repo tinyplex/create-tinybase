@@ -23,6 +23,41 @@ PNPM, Yarn, and Bun should also work. Your app will be available at
 
 After that, start hacking!
 
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your React-based web application,
+built with Vite and JavaScript.
+
+#### Key Files
+
+- **\`index.html\`** - The main HTML file that loads your app
+- **\`src/index.jsx\`** - Entry point that bootstraps the application and renders the React component tree
+- **\`src/App.jsx\`** - Main React component that renders the chat interface
+
+- **\`src/ChatStore.jsx\`**
+- TinyBase chat messages store configuration
+  - **\`src/SettingsStore.jsx\`** - TinyBase settings store (not synchronized)
+- **\`src/config.jsx\`** - Configuration settings
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
+
+**React Integration** - TinyBase provides React hooks that automatically subscribe
+to store changes and trigger re-renders when data updates. This means your UI
+stays in sync with your data with minimal boilerplate.
+
+Components like \`MessageList\` and \`MessageInput\` use TinyBase hooks to display and send messages
+to interact
+with the store.
+
 ## Learn More
 
 - [TinyBase Documentation](https://tinybase.org)
@@ -291,6 +326,8 @@ import {
   useStore,
 } from 'tinybase/ui-react';
 import {getDefaultContent} from './utils';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+import {useCreatePersister} from 'tinybase/ui-react';
 
 export const STORE_ID = 'chat';
 
@@ -302,6 +339,17 @@ export const ChatStore = ({onReady}) => {
   );
 
   useProvideStore(STORE_ID, store);
+
+  useCreatePersister(
+    store,
+    (store) => createLocalPersister(store, STORE_ID),
+    [],
+    async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      onReady?.();
+    },
+  );
 
   return null;
 };
@@ -418,6 +466,8 @@ import {
   useValueState,
 } from 'tinybase/ui-react';
 import {getRandomName} from './utils';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+import {useCreatePersister} from 'tinybase/ui-react';
 
 export const STORE_ID = 'settings';
 
@@ -429,6 +479,17 @@ export const SettingsStore = ({onReady}) => {
   );
 
   useProvideStore(STORE_ID, store);
+
+  useCreatePersister(
+    store,
+    (store) => createLocalPersister(store, STORE_ID),
+    [],
+    async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      onReady?.();
+    },
+  );
 
   return null;
 };
@@ -620,6 +681,733 @@ export default defineConfig({
 }
 `;
 
+exports[`create-tinybase > js-react-chat-sqlite > should match snapshot 1`] = `
+{
+  "README.md": "# test-js-react-chat-sqlite
+
+A TinyBase app built with JavaScript and React.
+
+## Getting Started
+
+Alongside this file, you will see a directory called \`client\`.
+
+To start the web client with Vite, run the following commands:
+
+\`\`\`bash
+cd client
+npm install
+npm run dev
+\`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your React-based web application,
+built with Vite and JavaScript.
+
+#### Key Files
+
+- **\`index.html\`** - The main HTML file that loads your app
+- **\`src/index.jsx\`** - Entry point that bootstraps the application and renders the React component tree
+- **\`src/App.jsx\`** - Main React component that renders the chat interface
+
+- **\`src/ChatStore.jsx\`**
+- TinyBase chat messages store configuration
+  - **\`src/SettingsStore.jsx\`** - TinyBase settings store (not synchronized)
+- **\`src/config.jsx\`** - Configuration settings
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+**Persistence** is enabled using SQLite WASM (running entirely in the browser).
+Your data is automatically saved and restored when you reload the page.
+
+**React Integration** - TinyBase provides React hooks that automatically subscribe
+to store changes and trigger re-renders when data updates. This means your UI
+stays in sync with your data with minimal boilerplate.
+
+Components like \`MessageList\` and \`MessageInput\` use TinyBase hooks to display and send messages
+to interact
+with the store.
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase Chat</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Chat</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
+            i
+            <div id="infoTooltip">
+              A real-time chat application demonstrating TinyBase's reactive
+              data management.
+              <br /><br />
+              Built with JavaScript and React.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="app"></div>
+    </div>
+
+    <script type="module" src="/src/index.jsx"></script>
+  </body>
+</html>
+",
+  "client/package.json": "{
+  "name": "test-js-react-chat-sqlite",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.3.1",
+    "@vitejs/plugin-react": "^5.1.2",
+    "vite-plugin-static-copy": "^3.2.0"
+  },
+  "dependencies": {
+    "tinybase": "^7.3.2",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "@sqlite.org/sqlite-wasm": "^3.50.4-build1"
+  }
+}
+",
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "client/src/App.jsx": "import {StrictMode, useState} from 'react';
+import {Loading} from './Loading';
+import {Provider} from 'tinybase/ui-react';
+import {Inspector} from 'tinybase/ui-react-inspector';
+import {SettingsStore} from './SettingsStore';
+import {ChatStore} from './ChatStore';
+import {UsernameInput} from './UsernameInput';
+import {Messages} from './Messages';
+import {MessageInput} from './MessageInput';
+
+export const App = () => {
+  const [settingsReady, setSettingsReady] = useState(false);
+  const [chatReady, setChatReady] = useState(false);
+  const loading = !settingsReady || !chatReady;
+
+  return (
+    <StrictMode>
+      <Provider>
+        <SettingsStore onReady={() => setSettingsReady(true)} />
+        <ChatStore onReady={() => setChatReady(true)} />
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            <UsernameInput />
+            <Messages />
+            <MessageInput />
+            <Inspector />
+          </>
+        )}
+      </Provider>
+    </StrictMode>
+  );
+};
+",
+  "client/src/Button.jsx": "import './button.css';
+import {ReactNode} from 'react';
+
+export const Button = ({
+  children,
+  onClick,
+  variant = 'default',
+  type = 'button',
+}) => (
+  <button
+    onClick={onClick}
+    type={type}
+    className={variant === 'primary' ? 'primary' : undefined}
+  >
+    {children}
+  </button>
+);
+",
+  "client/src/ChatStore.jsx": "import {createMergeableStore} from 'tinybase';
+import {
+  useCreateMergeableStore,
+  useProvideStore,
+  useAddRowCallback,
+  useRow,
+  useSortedRowIds,
+  useStore,
+} from 'tinybase/ui-react';
+import {getDefaultContent} from './utils';
+import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';
+import {useCreatePersister} from 'tinybase/ui-react';
+import {getDb} from './sqlite';
+
+export const STORE_ID = 'chat';
+
+export {useAddRowCallback, useRow, useSortedRowIds, useStore};
+
+export const ChatStore = ({onReady}) => {
+  const store = useCreateMergeableStore(() =>
+    createMergeableStore().setDefaultContent(getDefaultContent()),
+  );
+
+  useProvideStore(STORE_ID, store);
+
+  useCreatePersister(
+    store,
+    async (store) => {
+      const {sqlite3, db} = await getDb();
+      return createSqliteWasmPersister(store, sqlite3, db, STORE_ID);
+    },
+    [],
+    async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      onReady?.();
+    },
+  );
+
+  return null;
+};
+",
+  "client/src/Input.jsx": "import './input.css';
+
+export const Input = ({
+  value,
+  onChange,
+  placeholder = '',
+  autoFocus = false,
+}) => (
+  <input
+    type="text"
+    value={value}
+    onChange={(e) => onChange(e.target.value)}
+    placeholder={placeholder}
+    autoFocus={autoFocus}
+  />
+);
+",
+  "client/src/Loading.jsx": "import './loading.css';
+
+export const Loading = () => <div id="loading" />;
+",
+  "client/src/Message.jsx": "import {useRow, STORE_ID} from './ChatStore';
+import './message.css';
+
+export const Message = ({rowId}) => {
+  const {username, text, timestamp} = useRow('messages', rowId, STORE_ID);
+
+  return (
+    <div className="message">
+      <span className="username">{username}:</span>
+      <span className="text">{text}</span>
+      <span className="time">{new Date(timestamp).toLocaleTimeString()}</span>
+    </div>
+  );
+};
+",
+  "client/src/MessageInput.jsx": "import {useState} from 'react';
+import {useAddRowCallback, STORE_ID as CHAT_STORE_ID} from './ChatStore';
+import {useValue, STORE_ID as SETTINGS_STORE_ID} from './SettingsStore';
+import './messageInput.css';
+import {Button} from './Button';
+import {Input} from './Input';
+
+export const MessageInput = () => {
+  const [message, setMessage] = useState('');
+  const username = useValue('username', SETTINGS_STORE_ID) || 'Anonymous';
+
+  const handleSend = useAddRowCallback(
+    'messages',
+    () => ({
+      username,
+      text: message,
+      timestamp: Date.now(),
+    }),
+    [message, username],
+    CHAT_STORE_ID,
+  );
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if (message.trim()) {
+      handleSend();
+      setMessage('');
+    }
+  };
+
+  return (
+    <form onSubmit={onSubmit} id="messageInput">
+      <Input
+        value={message}
+        onChange={setMessage}
+        placeholder="Type a message..."
+        autoFocus
+      />
+      <Button type="submit" variant="primary">
+        Send
+      </Button>
+    </form>
+  );
+};
+",
+  "client/src/Messages.jsx": "import {useSortedRowIds, STORE_ID} from './ChatStore';
+import './messages.css';
+import {Message} from './Message';
+
+export const Messages = () => {
+  const sortedIds = useSortedRowIds(
+    'messages',
+    'timestamp',
+    false,
+    0,
+    undefined,
+    STORE_ID,
+  );
+
+  return (
+    <div id="messages">
+      {sortedIds.map((id) => (
+        <Message key={id} rowId={id} />
+      ))}
+    </div>
+  );
+};
+",
+  "client/src/SettingsStore.jsx": "import {createStore} from 'tinybase';
+import {
+  useCreateStore,
+  useProvideStore,
+  useValue,
+  useValueState,
+} from 'tinybase/ui-react';
+import {getRandomName} from './utils';
+import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';
+import {useCreatePersister} from 'tinybase/ui-react';
+import {getDb} from './sqlite';
+
+export const STORE_ID = 'settings';
+
+export {useValue, useValueState};
+
+export const SettingsStore = ({onReady}) => {
+  const store = useCreateStore(() =>
+    createStore().setValue('username', getRandomName()),
+  );
+
+  useProvideStore(STORE_ID, store);
+
+  useCreatePersister(
+    store,
+    async (store) => {
+      const {sqlite3, db} = await getDb();
+      return createSqliteWasmPersister(store, sqlite3, db, STORE_ID);
+    },
+    [],
+    async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      onReady?.();
+    },
+  );
+
+  return null;
+};
+",
+  "client/src/UsernameInput.jsx": "import {useValueState, STORE_ID} from './SettingsStore';
+import './usernameInput.css';
+import {Input} from './Input';
+
+export const UsernameInput = () => {
+  const [username, setUsername] = useValueState('username', STORE_ID);
+
+  return (
+    <div id="usernameInput">
+      <label>Your name:</label>
+      <Input
+        value={username + ''}
+        onChange={setUsername}
+        placeholder="Enter your name"
+      />
+    </div>
+  );
+};
+",
+  "client/src/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "client/src/index.jsx": "import ReactDOM from 'react-dom/client';
+import {App} from './App';
+
+addEventListener('load', () => {
+  ReactDOM.createRoot(document.getElementById('app')).render(<App />);
+});
+",
+  "client/src/input.css": "input[type='text'] {
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+input[type='text']:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input[type='text']::placeholder {
+  color: var(--fg2);
+}
+",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
+  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
+</svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+",
+  "client/src/message.css": ".message {
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.message .username {
+  font-weight: 800;
+  color: #d81b60;
+}
+
+.message .text {
+  flex: 1;
+}
+
+.message .time {
+  font-size: 0.8rem;
+  color: #666;
+}
+",
+  "client/src/messageInput.css": "#messageInput {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-top: 1px solid var(--border);
+}
+",
+  "client/src/messages.css": "#messages {
+  overflow-y: auto;
+  padding: 1rem 0;
+  height: 400px;
+  margin-bottom: 1rem;
+}
+",
+  "client/src/sqlite.jsx": "import sqlite3InitModule from '@sqlite.org/sqlite-wasm';
+
+let sqlite3Promise = null;
+let db = null;
+
+export const getDb = async () => {
+  if (!sqlite3Promise) {
+    sqlite3Promise = sqlite3InitModule({
+      locateFile: () => '/sqlite3.wasm',
+    });
+  }
+  if (!db) {
+    const sqlite3 = await sqlite3Promise;
+    db = new sqlite3.oo1.DB('file:local?vfs=kvvfs', 'c');
+  }
+  return {sqlite3: await sqlite3Promise, db};
+};
+",
+  "client/src/usernameInput.css": "#usernameInput {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#usernameInput label {
+  white-space: nowrap;
+}
+
+#usernameInput input {
+  flex: 1;
+}
+",
+  "client/src/utils.jsx": "const NAMES = [
+  'Carol',
+  'Charlie',
+  'Casey',
+  'Cameron',
+  'Chris',
+  'Dana',
+  'Dakota',
+  'Drew',
+  'Devon',
+  'Dylan',
+];
+
+export const getRandomName = () =>
+  NAMES[Math.floor(Math.random() * NAMES.length)];
+
+export const getDefaultContent = () => [
+  {
+    messages: {
+      1: {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
+      2: {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
+    },
+  },
+  {},
+];
+",
+  "client/vite.config.js": "import {defineConfig} from 'vite';
+import react from '@vitejs/plugin-react';
+import {viteStaticCopy} from 'vite-plugin-static-copy';
+
+export default defineConfig({
+  plugins: [
+    react({
+      jsxRuntime: 'automatic',
+    }),
+    viteStaticCopy({
+      targets: [
+        {
+          src: 'node_modules/@sqlite.org/sqlite-wasm/sqlite-wasm/jswasm/sqlite3.wasm',
+          dest: '.',
+        },
+      ],
+    }),
+  ],
+  server: {
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+    },
+  },
+  optimizeDeps: {
+    exclude: ['@sqlite.org/sqlite-wasm'],
+  },
+});
+",
+}
+`;
+
 exports[`create-tinybase > js-react-drawing > should match snapshot 1`] = `
 {
   "README.md": "# test-js-react-drawing
@@ -642,6 +1430,42 @@ PNPM, Yarn, and Bun should also work. Your app will be available at
 \`http://localhost:5173\`, or whichever port Vite specifies in the console.
 
 After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your React-based web application,
+built with Vite and JavaScript.
+
+#### Key Files
+
+- **\`index.html\`** - The main HTML file that loads your app
+- **\`src/index.jsx\`** - Entry point that bootstraps the application and renders the React component tree
+- **\`src/App.jsx\`** - Main React component that renders the drawing
+  canvas
+
+- **\`src/CanvasStore.jsx\`**
+- TinyBase drawing canvas store configuration
+  - **\`src/SettingsStore.jsx\`** - TinyBase settings store (not synchronized)
+- **\`src/config.jsx\`** - Configuration settings
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
+
+**React Integration** - TinyBase provides React hooks that automatically subscribe
+to store changes and trigger re-renders when data updates. This means your UI
+stays in sync with your data with minimal boilerplate.
+
+Components like \`Canvas\` uses TinyBase hooks to track drawing state across users
+to interact
+with the store.
 
 ## Learn More
 
@@ -1064,6 +1888,8 @@ import {
   useStore,
   useTable,
 } from 'tinybase/ui-react';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+import {useCreatePersister} from 'tinybase/ui-react';
 
 export const STORE_ID = 'canvas';
 
@@ -1075,6 +1901,17 @@ export const CanvasStore = ({onReady}) => {
   );
 
   useProvideStore(STORE_ID, store);
+
+  useCreatePersister(
+    store,
+    (store) => createLocalPersister(store, STORE_ID),
+    [],
+    async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      onReady?.();
+    },
+  );
 
   return null;
 };
@@ -1138,6 +1975,8 @@ import {
   useValueState,
   useValues,
 } from 'tinybase/ui-react';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+import {useCreatePersister} from 'tinybase/ui-react';
 
 export const STORE_ID = 'settings';
 
@@ -1149,6 +1988,17 @@ export const SettingsStore = ({onReady}) => {
   );
 
   useProvideStore(STORE_ID, store);
+
+  useCreatePersister(
+    store,
+    (store) => createLocalPersister(store, STORE_ID),
+    [],
+    async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      onReady?.();
+    },
+  );
 
   return null;
 };
@@ -1310,6 +2160,39 @@ PNPM, Yarn, and Bun should also work. Your app will be available at
 \`http://localhost:5173\`, or whichever port Vite specifies in the console.
 
 After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your React-based web application,
+built with Vite and JavaScript.
+
+#### Key Files
+
+- **\`index.html\`** - The main HTML file that loads your app
+- **\`src/index.jsx\`** - Entry point that bootstraps the application and renders the React component tree
+- **\`src/App.jsx\`** - Main React component that renders the game
+
+- **\`src/Store.jsx\`**
+- TinyBase main store configuration
+- **\`src/config.jsx\`** - Configuration settings
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
+
+**React Integration** - TinyBase provides React hooks that automatically subscribe
+to store changes and trigger re-renders when data updates. This means your UI
+stays in sync with your data with minimal boilerplate.
+
+Components like \`Game\` uses TinyBase hooks to manage game state to interact
+with the store.
 
 ## Learn More
 
@@ -1732,6 +2615,8 @@ import {
   useCell,
   useValue,
 } from 'tinybase/ui-react';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+import {useCreatePersister} from 'tinybase/ui-react';
 
 export const STORE_ID = 'game';
 
@@ -1756,6 +2641,17 @@ export const Store = ({onReady}) => {
   );
 
   useProvideStore(STORE_ID, store);
+
+  useCreatePersister(
+    store,
+    (store) => createLocalPersister(store, STORE_ID),
+    [],
+    async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      onReady?.();
+    },
+  );
 
   return null;
 };
@@ -1927,6 +2823,41 @@ PNPM, Yarn, and Bun should also work. Your app will be available at
 \`http://localhost:5173\`, or whichever port Vite specifies in the console.
 
 After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your React-based web application,
+built with Vite and JavaScript.
+
+#### Key Files
+
+- **\`index.html\`** - The main HTML file that loads your app
+- **\`src/index.jsx\`** - Entry point that bootstraps the application and renders the React component tree
+- **\`src/App.jsx\`** - Main React component that renders the todo list
+
+- **\`src/Store.jsx\`**
+- TinyBase main store configuration
+- **\`src/config.jsx\`** - Configuration settings
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
+
+**React Integration** - TinyBase provides React hooks that automatically subscribe
+to store changes and trigger re-renders when data updates. This means your UI
+stays in sync with your data with minimal boilerplate.
+
+Components like \`TodoList\` and \`TodoItem\` use hooks like \`useSortedRowIds\`, \`useRow\`, and
+callback hooks like \`useAddRowCallback\` and \`useDelRowCallback\`
+to interact
+with the store.
 
 ## Learn More
 
@@ -2211,6 +3142,8 @@ import {
   useSortedRowIds,
   useSetPartialRowCallback,
 } from 'tinybase/ui-react';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+import {useCreatePersister} from 'tinybase/ui-react';
 
 export {
   useAddRowCallback,
@@ -2236,6 +3169,17 @@ export const Store = ({onReady}) => {
   );
 
   useProvideStore(STORE_ID, store);
+
+  useCreatePersister(
+    store,
+    (store) => createLocalPersister(store, STORE_ID),
+    [],
+    async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      onReady?.();
+    },
+  );
 
   return null;
 };
@@ -2486,6 +3430,813 @@ export default defineConfig({
 }
 `;
 
+exports[`create-tinybase > js-react-todos-durable-objects > should match snapshot 1`] = `
+{
+  "README.md": "# test-js-react-todos-durable-objects
+
+A TinyBase app built with JavaScript and React.
+
+## Getting Started
+
+Alongside this file, you will see a directory called \`client\` (and one called \`server\` for your local Cloudflare Durable Objects server).
+
+To start the web client with Vite, run the following commands:
+
+\`\`\`bash
+cd client
+npm install
+npm run dev
+\`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+If you included server code, start the server in a separate terminal, ideally
+before starting the client:
+
+\`\`\`bash
+# In a separate terminal
+cd server
+npm install
+npm run dev
+\`\`\`
+
+After that, start hacking!
+
+## Structure
+
+This project is organized into two main directories:
+
+### Client
+
+The \`client\` directory contains your React-based web application,
+built with Vite and JavaScript.
+
+#### Key Files
+
+- **\`index.html\`** - The main HTML file that loads your app
+- **\`src/index.jsx\`** - Entry point that bootstraps the application and renders the React component tree
+- **\`src/App.jsx\`** - Main React component that renders the todo list
+
+- **\`src/Store.jsx\`**
+- TinyBase main store configuration
+- **\`src/config.jsx\`** - Configuration settings (including server connection URL)
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+The store is a **MergeableStore**, which supports real-time synchronization across
+multiple clients. When you open the app, it generates a unique room ID in the URL
+path (e.g., \`/abc123\`). Anyone who visits the same URL will share the same data
+and see live updates from other users.
+
+**Persistence** is enabled using SQLite WASM (running entirely in the browser).
+Your data is automatically saved and restored when you reload the page.
+
+**Synchronization** is powered by TinyBase's WebSocket synchronizer, connecting
+to your Cloudflare Durable Objects server.
+When data changes locally, it's sent to the server and broadcast to all other
+clients in the same room. The MergeableStore handles conflict resolution using
+CRDTs, ensuring all clients converge to the same state.
+
+**React Integration** - TinyBase provides React hooks that automatically subscribe
+to store changes and trigger re-renders when data updates. This means your UI
+stays in sync with your data with minimal boilerplate.
+
+Components like \`TodoList\` and \`TodoItem\` use hooks like \`useSortedRowIds\`, \`useRow\`, and
+callback hooks like \`useAddRowCallback\` and \`useDelRowCallback\`
+to interact
+with the store.
+
+### Server
+
+The \`server\` directory contains your Cloudflare Durable Objects WebSocket server.
+
+#### Key Files
+
+- **\`index.jsx\`** - Server entry point
+
+#### How It Works
+
+    The server uses **Cloudflare Durable Objects** to provide persistent, distributed
+    synchronization. Each room (identified by the URL path) maps to a Durable Object
+    instance that:
+
+    - Maintains the canonical state in SQL storage (using Durable Object SQL Storage)
+    - Handles WebSocket connections from clients
+    - Broadcasts changes to all connected clients in the room
+    - Automatically persists data, ensuring durability across deployments
+
+    The \`TinyBaseDurableObject\` class extends \`WsServerDurableObject\` and creates a
+    MergeableStore with a SQL storage persister. Cloudflare's infrastructure ensures
+    that all clients connecting to the same path are routed to the same Durable
+    Object instance.
+
+    To deploy to Cloudflare Workers, you'll need to configure your \`wrangler.toml\`
+    file with your Durable Object bindings.
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase Todos</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Todos</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
+            i
+            <div id="infoTooltip">
+              A simple todo list application demonstrating TinyBase's reactive
+              data management with CRUD operations.
+              <br /><br />
+              Built with JavaScript and React.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="app"></div>
+    </div>
+
+    <script type="module" src="/src/index.jsx"></script>
+  </body>
+</html>
+",
+  "client/package.json": "{
+  "name": "test-js-react-todos-durable-objects-client",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.3.1",
+    "@vitejs/plugin-react": "^5.1.2",
+    "vite-plugin-static-copy": "^3.2.0"
+  },
+  "dependencies": {
+    "tinybase": "^7.3.2",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "reconnecting-websocket": "^4.4.0",
+    "@sqlite.org/sqlite-wasm": "^3.50.4-build1"
+  }
+}
+",
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "client/src/App.jsx": "import {StrictMode, useState} from 'react';
+import {Loading} from './Loading';
+import {Provider} from 'tinybase/ui-react';
+import {Inspector} from 'tinybase/ui-react-inspector';
+import {Store} from './Store';
+import {TodoInput} from './TodoInput';
+import {TodoList} from './TodoList';
+
+export const App = () => {
+  const [loading, setLoading] = useState(true);
+
+  return (
+    <StrictMode>
+      <Provider>
+        <Store onReady={() => setLoading(false)} />
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            <TodoInput />
+            <TodoList />
+            <Inspector />
+          </>
+        )}
+      </Provider>
+    </StrictMode>
+  );
+};
+",
+  "client/src/Button.jsx": "import './button.css';
+import {ReactNode} from 'react';
+
+export const Button = ({
+  children,
+  onClick,
+  variant = 'default',
+  type = 'button',
+}) => (
+  <button
+    onClick={onClick}
+    type={type}
+    className={variant === 'primary' ? 'primary' : undefined}
+  >
+    {children}
+  </button>
+);
+",
+  "client/src/Input.jsx": "import './input.css';
+
+export const Input = ({
+  value,
+  onChange,
+  placeholder = '',
+  autoFocus = false,
+}) => (
+  <input
+    type="text"
+    value={value}
+    onChange={(e) => onChange(e.target.value)}
+    placeholder={placeholder}
+    autoFocus={autoFocus}
+  />
+);
+",
+  "client/src/Loading.jsx": "import './loading.css';
+
+export const Loading = () => <div id="loading" />;
+",
+  "client/src/Store.jsx": "import {createMergeableStore} from 'tinybase';
+import {
+  useCreateMergeableStore,
+  useProvideStore,
+  useAddRowCallback,
+  useDelRowCallback,
+  useRow,
+  useSortedRowIds,
+  useSetPartialRowCallback,
+} from 'tinybase/ui-react';
+import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';
+import {useCreatePersister} from 'tinybase/ui-react';
+import {getDb} from './sqlite';
+import {SERVER} from './config';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+import {useCreateSynchronizer} from 'tinybase/ui-react';
+
+export {
+  useAddRowCallback,
+  useDelRowCallback,
+  useRow,
+  useSortedRowIds,
+  useSetPartialRowCallback,
+};
+
+export const STORE_ID = 'todos';
+
+export const Store = ({onReady}) => {
+  const store = useCreateMergeableStore(() =>
+    createMergeableStore().setDefaultContent([
+      {
+        todos: {
+          1: {text: 'Learn TinyBase', completed: false},
+          2: {text: 'Build an app', completed: false},
+        },
+      },
+      {},
+    ]),
+  );
+
+  useProvideStore(STORE_ID, store);
+
+  useCreatePersister(
+    store,
+    async (store) => {
+      const {sqlite3, db} = await getDb();
+      return createSqliteWasmPersister(store, sqlite3, db, STORE_ID);
+    },
+    [],
+    async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      onReady?.();
+    },
+  );
+
+  useCreateSynchronizer(store, async (store) => {
+    const serverPathId = location.pathname;
+    const synchronizer = await createWsSynchronizer(
+      store,
+      new ReconnectingWebSocket(SERVER + serverPathId),
+    );
+    await synchronizer.startSync();
+
+    synchronizer.getWebSocket().addEventListener('open', () => {
+      synchronizer.load().then(() => {
+        synchronizer.save();
+      });
+    });
+
+    return synchronizer;
+  });
+
+  return null;
+};
+",
+  "client/src/TodoInput.jsx": "import './todoInput.css';
+import {useState} from 'react';
+import {useAddRowCallback, STORE_ID} from './Store';
+import {Button} from './Button';
+import {Input} from './Input';
+
+export const TodoInput = () => {
+  const [text, setText] = useState('');
+  const addRow = useAddRowCallback(
+    'todos',
+    () => ({text, completed: false}),
+    [text],
+    STORE_ID,
+  );
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (text.trim()) {
+      addRow();
+      setText('');
+    }
+  };
+
+  return (
+    <form id="todoInput" onSubmit={handleSubmit}>
+      <Input
+        value={text}
+        onChange={setText}
+        placeholder="What needs to be done?"
+        autoFocus
+      />
+      <Button type="submit" variant="primary">
+        Add
+      </Button>
+    </form>
+  );
+};
+",
+  "client/src/TodoItem.jsx": "import './todoItem.css';
+import {
+  useDelRowCallback,
+  useRow,
+  useSetPartialRowCallback,
+  STORE_ID,
+} from './Store';
+import {Button} from './Button';
+
+export const TodoItem = ({rowId}) => {
+  const todo = useRow('todos', rowId, STORE_ID);
+  const setPartialRow = useSetPartialRowCallback(
+    'todos',
+    rowId,
+    (e) => ({completed: e.target.checked}),
+    [],
+    STORE_ID,
+  );
+  const delRow = useDelRowCallback('todos', rowId, STORE_ID);
+
+  return (
+    <div className={\`todoItem\${todo.completed ? ' completed' : ''}\`}>
+      <input
+        type="checkbox"
+        checked={todo.completed}
+        onChange={setPartialRow}
+        id={\`todo-\${rowId}\`}
+      />
+      <label htmlFor={\`todo-\${rowId}\`}>{todo.text}</label>
+      <Button onClick={delRow}>Delete</Button>
+    </div>
+  );
+};
+",
+  "client/src/TodoList.jsx": "import './todoList.css';
+import {useSortedRowIds, STORE_ID} from './Store';
+import {TodoItem} from './TodoItem';
+
+export const TodoList = () => {
+  const todoIds = useSortedRowIds(
+    'todos',
+    undefined,
+    false,
+    0,
+    undefined,
+    STORE_ID,
+  );
+
+  return (
+    <div id="todoList">
+      {todoIds.map((id) => (
+        <TodoItem key={id} rowId={id} />
+      ))}
+    </div>
+  );
+};
+",
+  "client/src/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "client/src/config.js": "export const SERVER = 'ws://localhost:8787';
+",
+  "client/src/index.jsx": "import {getUniqueId} from 'tinybase';
+import ReactDOM from 'react-dom/client';
+import {App} from './App';
+
+if (location.pathname === '/') {
+  location.assign('/' + getUniqueId());
+}
+
+addEventListener('load', () => {
+  ReactDOM.createRoot(document.getElementById('app')).render(<App />);
+});
+",
+  "client/src/input.css": "input[type='text'] {
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+input[type='text']:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input[type='text']::placeholder {
+  color: var(--fg2);
+}
+",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
+  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
+</svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+",
+  "client/src/sqlite.jsx": "import sqlite3InitModule from '@sqlite.org/sqlite-wasm';
+
+let sqlite3Promise = null;
+let db = null;
+
+export const getDb = async () => {
+  if (!sqlite3Promise) {
+    sqlite3Promise = sqlite3InitModule({
+      locateFile: () => '/sqlite3.wasm',
+    });
+  }
+  if (!db) {
+    const sqlite3 = await sqlite3Promise;
+    db = new sqlite3.oo1.DB('file:local?vfs=kvvfs', 'c');
+  }
+  return {sqlite3: await sqlite3Promise, db};
+};
+",
+  "client/src/todoInput.css": "#todoInput {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+#todoInput input {
+  flex: 1;
+}
+",
+  "client/src/todoItem.css": ".todoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.todoItem:last-child {
+  border-bottom: none;
+}
+
+.todoItem input[type='checkbox'] {
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.todoItem label {
+  flex: 1;
+  cursor: pointer;
+  user-select: none;
+}
+
+.todoItem.completed label {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.todoItem button {
+  flex-shrink: 0;
+}
+",
+  "client/src/todoList.css": "#todoList {
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  overflow: hidden;
+  background: var(--bg2);
+}
+
+#todoList:empty::before {
+  content: 'No todos yet. Add one above!';
+  display: block;
+  padding: 2rem;
+  text-align: center;
+  color: var(--fg2);
+}
+",
+  "client/vite.config.js": "import {defineConfig} from 'vite';
+import react from '@vitejs/plugin-react';
+import {viteStaticCopy} from 'vite-plugin-static-copy';
+
+export default defineConfig({
+  plugins: [
+    react({
+      jsxRuntime: 'automatic',
+    }),
+    viteStaticCopy({
+      targets: [
+        {
+          src: 'node_modules/@sqlite.org/sqlite-wasm/sqlite-wasm/jswasm/sqlite3.wasm',
+          dest: '.',
+        },
+      ],
+    }),
+  ],
+  server: {
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+    },
+  },
+  optimizeDeps: {
+    exclude: ['@sqlite.org/sqlite-wasm'],
+  },
+});
+",
+  "server/index.js": "import {createMergeableStore} from 'tinybase';
+import {createDurableObjectSqlStoragePersister} from 'tinybase/persisters/persister-durable-object-sql-storage';
+import {
+  getWsServerDurableObjectFetch,
+  WsServerDurableObject,
+} from 'tinybase/synchronizers/synchronizer-ws-server-durable-object';
+
+export class TinyBaseDurableObject extends WsServerDurableObject {
+  createPersister() {
+    const store = createMergeableStore();
+    const persister = createDurableObjectSqlStoragePersister(
+      store,
+      this.ctx.storage.sql,
+    );
+    return persister;
+  }
+
+  onClientId(pathId, clientId, addedOrRemoved) {
+    console.log(
+      \`Client \${clientId} \${addedOrRemoved == 1 ? 'joined' : 'left'} /\${pathId}\`,
+    );
+  }
+}
+
+export default {
+  fetch: getWsServerDurableObjectFetch('TinyBaseDurableObjects'),
+};
+",
+  "server/package.json": "{
+  "name": "test-js-react-todos-durable-objects-server",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "start": "wrangler dev"
+  },
+  "dependencies": {
+    "tinybase": "^7.3.2"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260120.0",
+    "wrangler": "^4.59.2"
+  }
+}
+",
+  "server/wrangler.toml": "#:schema node_modules/wrangler/config-schema.json
+name = "test-js-react-todos-durable-objects-server"
+main = "index.ts"
+compatibility_date = "2024-10-11"
+
+[[durable_objects.bindings]]
+name = "TinyBaseDurableObjects"
+class_name = "TinyBaseDurableObject"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["TinyBaseDurableObject"]",
+}
+`;
+
 exports[`create-tinybase > js-vanilla-chat > should match snapshot 1`] = `
 {
   "README.md": "# test-js-vanilla-chat
@@ -2508,6 +4259,32 @@ PNPM, Yarn, and Bun should also work. Your app will be available at
 \`http://localhost:5173\`, or whichever port Vite specifies in the console.
 
 After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your vanilla JavaScript web application,
+built with Vite and JavaScript.
+
+#### Key Files
+
+- **\`index.html\`** - The main HTML file that loads your app
+- **\`src/index.js\`** - Entry point that bootstraps the application
+- **\`src/app.js\`** - Main application logic
+- **\`src/chatStore.js\`**
+- TinyBase chat messages store configuration
+  - **\`src/settingsStore.js\`** - TinyBase settings store (not synchronized)
+- **\`src/config.js\`** - Configuration settings
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
 
 ## Learn More
 
@@ -2780,6 +4557,7 @@ export const createButton = (text, onClick, variant = 'default') => {
 ",
   "client/src/chatStore.js": "import {createMergeableStore} from 'tinybase';
 import {getDefaultContent} from './utils';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 
 export const chatStore =
   createMergeableStore().setDefaultContent(getDefaultContent());
@@ -2787,6 +4565,12 @@ export const chatStore =
 let resolveChatReady;
 export const chatStoreReady = new Promise((resolve) => {
   resolveChatReady = resolve;
+});
+
+const chatPersister = createLocalPersister(chatStore, 'chat');
+chatPersister.load().then(() => {
+  chatPersister.startAutoSave();
+  resolveChatReady();
 });
 ",
   "client/src/index.js": "import {app} from './app';
@@ -2992,12 +4776,19 @@ export const createMessages = (store) => {
 ",
   "client/src/settingsStore.js": "import {createStore} from 'tinybase';
 import {getRandomName} from './utils';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 
 export const settingsStore = createStore();
 
 let resolveSettingsReady;
 export const settingsStoreReady = new Promise((resolve) => {
   resolveSettingsReady = resolve;
+});
+
+const settingsPersister = createLocalPersister(settingsStore, 'settings');
+settingsPersister.load([{}, {username: getRandomName()}]).then(() => {
+  settingsPersister.startAutoSave();
+  resolveSettingsReady();
 });
 ",
   "client/src/usernameInput.css": "#usernameInput {
@@ -3097,6 +4888,32 @@ PNPM, Yarn, and Bun should also work. Your app will be available at
 \`http://localhost:5173\`, or whichever port Vite specifies in the console.
 
 After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your vanilla JavaScript web application,
+built with Vite and JavaScript.
+
+#### Key Files
+
+- **\`index.html\`** - The main HTML file that loads your app
+- **\`src/index.js\`** - Entry point that bootstraps the application
+- **\`src/app.js\`** - Main application logic
+- **\`src/canvasStore.js\`**
+- TinyBase drawing canvas store configuration
+  - **\`src/settingsStore.js\`** - TinyBase settings store (not synchronized)
+- **\`src/config.js\`** - Configuration settings
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
 
 ## Learn More
 
@@ -3543,6 +5360,7 @@ export const createCanvas = (settingsStore, canvasStore) => {
 };
 ",
   "client/src/canvasStore.js": "import {createMergeableStore} from 'tinybase';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 
 export const canvasStore = createMergeableStore().setDefaultContent([
   {strokes: {}},
@@ -3553,6 +5371,672 @@ let resolveCanvasReady;
 export const canvasStoreReady = new Promise((resolve) => {
   resolveCanvasReady = resolve;
 });
+
+const canvasPersister = createLocalPersister(canvasStore, 'canvas');
+canvasPersister.load().then(() => {
+  canvasPersister.startAutoSave();
+  resolveCanvasReady();
+});
+",
+  "client/src/colorPicker.css": "#colorPicker {
+  display: flex;
+  gap: 0;
+  align-items: center;
+}
+
+.colorBtn {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid var(--border);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  margin: 0 0 0 0.5rem;
+  padding: 0;
+}
+
+.colorBtn:hover,
+.colorBtn.active {
+  border-color: var(--accent);
+}
+",
+  "client/src/colorPicker.js": "import './colorPicker.css';
+export const createColorPicker = (store) => {
+  const colors = [
+    '#d81b60',
+    '#1976d2',
+    '#388e3c',
+    '#f57c00',
+    '#7b1fa2',
+    '#fff',
+  ];
+  const container = document.createElement('div');
+  container.id = 'colorPicker';
+
+  const buttons = [];
+
+  colors.forEach((color) => {
+    const btn = document.createElement('button');
+    btn.className = 'colorBtn';
+    btn.style.background = color;
+    btn.addEventListener('click', () => {
+      store.setValue('brushColor', color);
+    });
+    container.appendChild(btn);
+    buttons.push(btn);
+  });
+
+  const updateActive = () => {
+    const currentColor = store.getValue('brushColor');
+    buttons.forEach((btn, i) => {
+      btn.classList.toggle('active', colors[i] === currentColor);
+    });
+  };
+
+  store.addValueListener('brushColor', updateActive);
+  updateActive();
+
+  return container;
+};
+",
+  "client/src/drawingControls.css": "#drawingControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin: 0 auto 1rem;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  justify-content: space-between;
+  max-width: 600px;
+}
+",
+  "client/src/drawingControls.js": "import './drawingControls.css';
+import {createButton} from './button';
+import {createColorPicker} from './colorPicker';
+import {createBrushSize} from './brushSize';
+
+export const createDrawingControls = (settingsStore, canvasStore) => {
+  const controls = document.createElement('div');
+  controls.id = 'drawingControls';
+
+  controls.appendChild(createColorPicker(settingsStore));
+  controls.appendChild(createBrushSize(settingsStore));
+
+  const clearButton = createButton(
+    'Clear',
+    () => canvasStore.delTable('strokes'),
+    'primary',
+  );
+  controls.appendChild(clearButton);
+
+  return controls;
+};
+",
+  "client/src/index.js": "import {app} from './app';
+
+addEventListener('load', () => {
+  app();
+});
+",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
+  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
+</svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+",
+  "client/src/loading.js": "import './loading.css';
+
+export const showLoading = (container) => {
+  const loadingDiv = document.createElement('div');
+  loadingDiv.id = 'loading';
+  container.appendChild(loadingDiv);
+  return loadingDiv;
+};
+
+export const hideLoading = (loadingDiv) => {
+  loadingDiv.remove();
+};
+",
+  "client/src/settingsStore.js": "import {createStore} from 'tinybase';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+
+export const settingsStore = createStore();
+
+let resolveSettingsReady;
+export const settingsStoreReady = new Promise((resolve) => {
+  resolveSettingsReady = resolve;
+});
+
+const settingsPersister = createLocalPersister(settingsStore, 'settings');
+settingsPersister.load([{}, {brushColor: '#d81b60', brushSize: 5}]).then(() => {
+  settingsPersister.startAutoSave();
+  resolveSettingsReady();
+});
+",
+}
+`;
+
+exports[`create-tinybase > js-vanilla-drawing-no-persist > should match snapshot 1`] = `
+{
+  "README.md": "# test-js-vanilla-drawing-no-persist
+
+A TinyBase app built with JavaScript and Vanilla JS.
+
+## Getting Started
+
+Alongside this file, you will see a directory called \`client\`.
+
+To start the web client with Vite, run the following commands:
+
+\`\`\`bash
+cd client
+npm install
+npm run dev
+\`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your vanilla JavaScript web application,
+built with Vite and JavaScript.
+
+#### Key Files
+
+- **\`index.html\`** - The main HTML file that loads your app
+- **\`src/index.js\`** - Entry point that bootstraps the application
+- **\`src/app.js\`** - Main application logic
+- **\`src/canvasStore.js\`**
+- TinyBase drawing canvas store configuration
+  - **\`src/settingsStore.js\`** - TinyBase settings store (not synchronized)
+- **\`src/config.js\`** - Configuration settings
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase Drawing</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Drawing</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
+            i
+            <div id="infoTooltip">
+              A collaborative drawing canvas showcasing TinyBase's state
+              synchronization.
+              <br /><br />
+              Built with JavaScript.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="app"></div>
+    </div>
+
+    <script type="module" src="/src/index.js"></script>
+  </body>
+</html>
+",
+  "client/package.json": "{
+  "name": "test-js-vanilla-drawing-no-persist",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.3.1"
+  },
+  "dependencies": {
+    "tinybase": "^7.3.2"
+  }
+}
+",
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "client/src/app.js": "import {settingsStore, settingsStoreReady} from './settingsStore';
+import {canvasStore, canvasStoreReady} from './canvasStore';
+import {showLoading, hideLoading} from './loading';
+import {createDrawingControls} from './drawingControls';
+import {createCanvas} from './canvas';
+
+export const app = async () => {
+  const appContainer = document.getElementById('app');
+
+  // Show loading spinner
+  const loadingDiv = showLoading(appContainer);
+
+  // Wait for stores to be ready
+  await Promise.all([settingsStoreReady, canvasStoreReady]);
+
+  // Remove loading spinner
+  hideLoading(loadingDiv);
+
+  appContainer.appendChild(createDrawingControls(settingsStore, canvasStore));
+  appContainer.appendChild(createCanvas(settingsStore, canvasStore));
+};
+",
+  "client/src/brushSize.css": "#brushSize {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+#brushSize label {
+  white-space: nowrap;
+}
+
+#brushSize input {
+  width: 100px;
+  vertical-align: middle;
+}
+
+#brushSizeValue {
+  width: 2rem;
+  min-width: 2rem;
+  text-align: center;
+  display: inline-block;
+}
+",
+  "client/src/brushSize.js": "import './brushSize.css';
+export const createBrushSize = (store) => {
+  const container = document.createElement('div');
+  container.id = 'brushSize';
+
+  const label = document.createElement('label');
+  label.textContent = 'Size:';
+
+  const sizeSlider = document.createElement('input');
+  sizeSlider.type = 'range';
+  sizeSlider.min = '1';
+  sizeSlider.max = '50';
+
+  const sizeLabel = document.createElement('span');
+  sizeLabel.id = 'brushSizeValue';
+
+  const updateSize = () => {
+    const size = store.getValue('brushSize') ?? 5;
+    sizeSlider.value = \`\${size}\`;
+    sizeLabel.textContent = \`\${size}\`;
+  };
+
+  sizeSlider.addEventListener('input', () => {
+    const size = parseInt(sizeSlider.value);
+    store.setValue('brushSize', size);
+    sizeLabel.textContent = \`\${size}\`;
+  });
+
+  store.addValueListener('brushSize', updateSize);
+  updateSize();
+
+  container.appendChild(label);
+  container.appendChild(sizeSlider);
+  container.appendChild(sizeLabel);
+
+  return container;
+};
+",
+  "client/src/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "client/src/button.js": "import './button.css';
+
+export const createButton = (text, onClick, variant = 'default') => {
+  const button = document.createElement('button');
+  button.textContent = text;
+  if (variant === 'primary') {
+    button.className = 'primary';
+  }
+  button.addEventListener('click', onClick);
+  return button;
+};
+",
+  "client/src/canvas.css": "#drawingCanvas {
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  cursor: crosshair;
+  display: block;
+  touch-action: none;
+  margin: 0 auto;
+}
+",
+  "client/src/canvas.js": "import './canvas.css';
+import {getHlcFunctions} from 'tinybase';
+const [getNextHlc] = getHlcFunctions();
+
+export const createCanvas = (settingsStore, canvasStore) => {
+  const canvas = document.createElement('canvas');
+  canvas.id = 'drawingCanvas';
+  canvas.width = 600;
+  canvas.height = 400;
+
+  const ctx = canvas.getContext('2d');
+  let isDrawing = false;
+  let currentStrokeId = null;
+
+  const draw = () => {
+    ctx.fillStyle = '#111';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const sortedIds = canvasStore.getSortedRowIds('strokes');
+    sortedIds.forEach((id) => {
+      const stroke = canvasStore.getRow('strokes', id);
+      if (stroke.points) {
+        const pointsArray = JSON.parse(stroke.points);
+        if (pointsArray.length >= 2) {
+          ctx.strokeStyle = stroke.color;
+          ctx.lineWidth = stroke.size * 2;
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+          ctx.beginPath();
+          ctx.moveTo(pointsArray[0], pointsArray[1]);
+          for (let i = 2; i < pointsArray.length; i += 2) {
+            ctx.lineTo(pointsArray[i], pointsArray[i + 1]);
+          }
+          ctx.stroke();
+        }
+      }
+    });
+  };
+  const addPoint = (e) => {
+    if (!currentStrokeId) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+
+    const pointsArray = JSON.parse(
+      canvasStore.getCell('strokes', currentStrokeId, 'points') ?? '[]',
+    );
+    pointsArray.push(clientX - rect.left, clientY - rect.top);
+    canvasStore.setCell(
+      'strokes',
+      currentStrokeId,
+      'points',
+      JSON.stringify(pointsArray),
+    );
+  };
+
+  const startStroke = (e) => {
+    const {brushColor, brushSize} = settingsStore.getValues();
+    currentStrokeId = getNextHlc();
+
+    canvasStore.setRow('strokes', currentStrokeId, {
+      color: brushColor,
+      size: brushSize,
+      points: '[]',
+    });
+
+    addPoint(e);
+  };
+
+  canvas.addEventListener('mousedown', (e) => {
+    isDrawing = true;
+    startStroke(e);
+  });
+
+  canvas.addEventListener('mouseup', () => {
+    isDrawing = false;
+    currentStrokeId = null;
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    isDrawing = false;
+    currentStrokeId = null;
+  });
+
+  canvas.addEventListener('mousemove', (e) => {
+    if (isDrawing) addPoint(e);
+  });
+
+  canvas.addEventListener('touchstart', (e) => {
+    isDrawing = true;
+    startStroke(e);
+    e.preventDefault();
+  });
+
+  canvas.addEventListener('touchmove', (e) => {
+    if (isDrawing) {
+      addPoint(e);
+      e.preventDefault();
+    }
+  });
+
+  canvas.addEventListener('touchend', () => {
+    isDrawing = false;
+    currentStrokeId = null;
+  });
+
+  canvasStore.addTablesListener(draw);
+  draw();
+
+  return canvas;
+};
+",
+  "client/src/canvasStore.js": "import {createMergeableStore} from 'tinybase';
+
+export const canvasStore = createMergeableStore().setDefaultContent([
+  {strokes: {}},
+  {},
+]);
+
+let resolveCanvasReady;
+export const canvasStoreReady = new Promise((resolve) => {
+  resolveCanvasReady = resolve;
+});
+
+resolveCanvasReady();
 ",
   "client/src/colorPicker.css": "#colorPicker {
   display: flex;
@@ -3699,6 +6183,9 @@ let resolveSettingsReady;
 export const settingsStoreReady = new Promise((resolve) => {
   resolveSettingsReady = resolve;
 });
+
+settingsStore.setValue('brushColor', '#d81b60').setValue('brushSize', 5);
+resolveSettingsReady();
 ",
 }
 `;
@@ -3725,6 +6212,31 @@ PNPM, Yarn, and Bun should also work. Your app will be available at
 \`http://localhost:5173\`, or whichever port Vite specifies in the console.
 
 After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your vanilla JavaScript web application,
+built with Vite and JavaScript.
+
+#### Key Files
+
+- **\`index.html\`** - The main HTML file that loads your app
+- **\`src/index.js\`** - Entry point that bootstraps the application
+- **\`src/app.js\`** - Main application logic
+- **\`src/store.js\`**
+- TinyBase main store configuration
+- **\`src/config.js\`** - Configuration settings
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
 
 ## Learn More
 
@@ -4248,6 +6760,7 @@ export const createSquare = (value, onClick, disabled, winning) => {
 };
 ",
   "client/src/store.js": "import {createMergeableStore} from 'tinybase';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 
 export const store = createMergeableStore().setDefaultContent([
   {},
@@ -4260,6 +6773,12 @@ export const store = createMergeableStore().setDefaultContent([
 let resolveReady;
 export const storeReady = new Promise((resolve) => {
   resolveReady = resolve;
+});
+
+const persister = createLocalPersister(store, 'game');
+persister.load().then(() => {
+  persister.startAutoSave();
+  resolveReady();
 });
 ",
 }
@@ -4287,6 +6806,31 @@ PNPM, Yarn, and Bun should also work. Your app will be available at
 \`http://localhost:5173\`, or whichever port Vite specifies in the console.
 
 After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your vanilla JavaScript web application,
+built with Vite and JavaScript.
+
+#### Key Files
+
+- **\`index.html\`** - The main HTML file that loads your app
+- **\`src/index.js\`** - Entry point that bootstraps the application
+- **\`src/app.js\`** - Main application logic
+- **\`src/store.js\`**
+- TinyBase main store configuration
+- **\`src/config.js\`** - Configuration settings
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
 
 ## Learn More
 
@@ -4632,6 +7176,7 @@ export const hideLoading = (loadingDiv) => {
 };
 ",
   "client/src/store.js": "import {createMergeableStore} from 'tinybase';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 
 export const store = createMergeableStore().setDefaultContent([
   {
@@ -4646,6 +7191,12 @@ export const store = createMergeableStore().setDefaultContent([
 let resolveReady;
 export const storeReady = new Promise((resolve) => {
   resolveReady = resolve;
+});
+
+const persister = createLocalPersister(store, 'todos');
+persister.load().then(() => {
+  persister.startAutoSave();
+  resolveReady();
 });
 ",
   "client/src/todoInput.css": "#todoInput {
@@ -4826,6 +7377,41 @@ PNPM, Yarn, and Bun should also work. Your app will be available at
 \`http://localhost:5173\`, or whichever port Vite specifies in the console.
 
 After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your React-based web application,
+built with Vite and TypeScript.
+
+#### Key Files
+
+- **\`index.html\`** - The main HTML file that loads your app
+- **\`src/index.tsx\`** - Entry point that bootstraps the application and renders the React component tree
+- **\`src/App.tsx\`** - Main React component that renders the chat interface
+
+- **\`src/ChatStore.tsx\`**
+- TinyBase chat messages store configuration
+  - **\`src/SettingsStore.tsx\`** - TinyBase settings store (not synchronized)
+- **\`src/config.tsx\`** - Configuration settings
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
+
+**React Integration** - TinyBase provides React hooks that automatically subscribe
+to store changes and trigger re-renders when data updates. This means your UI
+stays in sync with your data with minimal boilerplate.
+
+Components like \`MessageList\` and \`MessageInput\` use TinyBase hooks to display and send messages
+to interact
+with the store.
 
 ## Learn More
 
@@ -5106,6 +7692,8 @@ import {
   useStore,
 } from 'tinybase/ui-react';
 import {getDefaultContent} from './utils';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+import {useCreatePersister} from 'tinybase/ui-react';
 
 export const STORE_ID = 'chat';
 
@@ -5119,6 +7707,17 @@ export const ChatStore = ({onReady}: {onReady?: () => void}) => {
   );
 
   useProvideStore(STORE_ID, store);
+
+  useCreatePersister(
+    store,
+    (store) => createLocalPersister(store, STORE_ID),
+    [],
+    async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      onReady?.();
+    },
+  );
 
   return null;
 };
@@ -5250,6 +7849,8 @@ import {
   useValueState,
 } from 'tinybase/ui-react';
 import {getRandomName} from './utils';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+import {useCreatePersister} from 'tinybase/ui-react';
 
 export const STORE_ID = 'settings';
 
@@ -5261,6 +7862,17 @@ export const SettingsStore = ({onReady}: {onReady?: () => void}) => {
   );
 
   useProvideStore(STORE_ID, store);
+
+  useCreatePersister(
+    store,
+    (store) => createLocalPersister(store, STORE_ID),
+    [],
+    async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      onReady?.();
+    },
+  );
 
   return null;
 };
@@ -5479,6 +8091,850 @@ export default defineConfig({
 }
 `;
 
+exports[`create-tinybase > ts-react-chat-node > should match snapshot 1`] = `
+{
+  "README.md": "# test-ts-react-chat-node
+
+A TinyBase app built with TypeScript and React.
+
+## Getting Started
+
+Alongside this file, you will see a directory called \`client\` (and one called \`server\` for your local Node.js server).
+
+To start the web client with Vite, run the following commands:
+
+\`\`\`bash
+cd client
+npm install
+npm run dev
+\`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+If you included server code, start the server in a separate terminal, ideally
+before starting the client:
+
+\`\`\`bash
+# In a separate terminal
+cd server
+npm install
+npm run dev
+\`\`\`
+
+After that, start hacking!
+
+## Structure
+
+This project is organized into two main directories:
+
+### Client
+
+The \`client\` directory contains your React-based web application,
+built with Vite and TypeScript.
+
+#### Key Files
+
+- **\`index.html\`** - The main HTML file that loads your app
+- **\`src/index.tsx\`** - Entry point that bootstraps the application and renders the React component tree
+- **\`src/App.tsx\`** - Main React component that renders the chat interface
+
+- **\`src/ChatStore.tsx\`**
+- TinyBase chat messages store configuration
+  - **\`src/SettingsStore.tsx\`** - TinyBase settings store (not synchronized)
+- **\`src/config.tsx\`** - Configuration settings (including server connection URL)
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+The store is a **MergeableStore**, which supports real-time synchronization across
+multiple clients. When you open the app, it generates a unique room ID in the URL
+path (e.g., \`/abc123\`). Anyone who visits the same URL will share the same data
+and see live updates from other users.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
+
+**Synchronization** is powered by TinyBase's WebSocket synchronizer, connecting
+to your Node.js server.
+When data changes locally, it's sent to the server and broadcast to all other
+clients in the same room. The MergeableStore handles conflict resolution using
+CRDTs, ensuring all clients converge to the same state.
+
+**React Integration** - TinyBase provides React hooks that automatically subscribe
+to store changes and trigger re-renders when data updates. This means your UI
+stays in sync with your data with minimal boilerplate.
+
+Components like \`MessageList\` and \`MessageInput\` use TinyBase hooks to display and send messages
+to interact
+with the store.
+
+### Server
+
+The \`server\` directory contains your Node.js WebSocket server.
+
+#### Key Files
+
+- **\`index.tsx\`** - Server entry point
+
+#### How It Works
+
+    The server runs a **Node.js WebSocket server** using the \`ws\` library. It acts
+    as a relay between clients, broadcasting state changes to all connected clients
+    in the same room.
+
+    When a client connects to a path (e.g., \`/abc123\`), the server groups them with
+    other clients on the same path and ensures all changes are synchronized.
+
+    The server logs when clients join or leave rooms, helping you monitor activity
+    during development.
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase Chat</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Chat</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
+            i
+            <div id="infoTooltip">
+              A real-time chat application demonstrating TinyBase's reactive
+              data management.
+              <br /><br />
+              Built with TypeScript and React.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="app"></div>
+    </div>
+
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
+</html>
+",
+  "client/package.json": "{
+  "name": "test-ts-react-chat-node-client",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.3.1",
+    "typescript": "^5.9.3",
+    "@types/node": "^25.0.9",
+    "@types/react": "^19.2.8",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.2"
+  },
+  "dependencies": {
+    "tinybase": "^7.3.2",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "reconnecting-websocket": "^4.4.0"
+  }
+}
+",
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "client/src/App.tsx": "import {StrictMode, useState} from 'react';
+import {Loading} from './Loading';
+import {Provider} from 'tinybase/ui-react';
+import {Inspector} from 'tinybase/ui-react-inspector';
+import {SettingsStore} from './SettingsStore';
+import {ChatStore} from './ChatStore';
+import {UsernameInput} from './UsernameInput';
+import {Messages} from './Messages';
+import {MessageInput} from './MessageInput';
+
+export const App = () => {
+  const [settingsReady, setSettingsReady] = useState(false);
+  const [chatReady, setChatReady] = useState(false);
+  const loading = !settingsReady || !chatReady;
+
+  return (
+    <StrictMode>
+      <Provider>
+        <SettingsStore onReady={() => setSettingsReady(true)} />
+        <ChatStore onReady={() => setChatReady(true)} />
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            <UsernameInput />
+            <Messages />
+            <MessageInput />
+            <Inspector />
+          </>
+        )}
+      </Provider>
+    </StrictMode>
+  );
+};
+",
+  "client/src/Button.tsx": "import './button.css';
+import {ReactNode} from 'react';
+
+interface ButtonProps {
+  children: ReactNode;
+  onClick?: () => void;
+  variant?: 'default' | 'primary';
+  type?: 'button' | 'submit';
+}
+
+export const Button = ({
+  children,
+  onClick,
+  variant = 'default',
+  type = 'button',
+}: ButtonProps) => (
+  <button
+    onClick={onClick}
+    type={type}
+    className={variant === 'primary' ? 'primary' : undefined}
+  >
+    {children}
+  </button>
+);
+",
+  "client/src/ChatStore.tsx": "import {createMergeableStore} from 'tinybase';
+import {
+  useCreateMergeableStore,
+  useProvideStore,
+  useAddRowCallback,
+  useRow,
+  useSortedRowIds,
+  useStore,
+} from 'tinybase/ui-react';
+import {getDefaultContent} from './utils';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+import {useCreatePersister} from 'tinybase/ui-react';
+import {SERVER} from './config';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+import {useCreateSynchronizer} from 'tinybase/ui-react';
+
+export const STORE_ID = 'chat';
+
+export type MessageRow = {username: string; text: string; timestamp: number};
+
+export {useAddRowCallback, useRow, useSortedRowIds, useStore};
+
+export const ChatStore = ({onReady}: {onReady?: () => void}) => {
+  const store = useCreateMergeableStore(() =>
+    createMergeableStore().setDefaultContent(getDefaultContent()),
+  );
+
+  useProvideStore(STORE_ID, store);
+
+  useCreatePersister(
+    store,
+    (store) => createLocalPersister(store, STORE_ID),
+    [],
+    async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      onReady?.();
+    },
+  );
+
+  useCreateSynchronizer(store, async (store) => {
+    const serverPathId = location.pathname;
+    const synchronizer = await createWsSynchronizer(
+      store,
+      new ReconnectingWebSocket(SERVER + serverPathId),
+    );
+    await synchronizer.startSync();
+
+    synchronizer.getWebSocket().addEventListener('open', () => {
+      synchronizer.load().then(() => {
+        synchronizer.save();
+      });
+    });
+
+    return synchronizer;
+  });
+
+  return null;
+};
+",
+  "client/src/Input.tsx": "import './input.css';
+
+interface InputProps {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  autoFocus?: boolean;
+}
+
+export const Input = ({
+  value,
+  onChange,
+  placeholder = '',
+  autoFocus = false,
+}: InputProps) => (
+  <input
+    type="text"
+    value={value}
+    onChange={(e) => onChange(e.target.value)}
+    placeholder={placeholder}
+    autoFocus={autoFocus}
+  />
+);
+",
+  "client/src/Loading.tsx": "import './loading.css';
+
+export const Loading = () => <div id="loading" />;
+",
+  "client/src/Message.tsx": "import {useRow, type MessageRow, STORE_ID} from './ChatStore';
+import './message.css';
+
+interface MessageProps {
+  rowId: string;
+}
+
+export const Message = ({rowId}: MessageProps) => {
+  const {username, text, timestamp} = useRow(
+    'messages',
+    rowId,
+    STORE_ID,
+  ) as MessageRow;
+
+  return (
+    <div className="message">
+      <span className="username">{username}:</span>
+      <span className="text">{text}</span>
+      <span className="time">{new Date(timestamp).toLocaleTimeString()}</span>
+    </div>
+  );
+};
+",
+  "client/src/MessageInput.tsx": "import {useState} from 'react';
+import {useAddRowCallback, STORE_ID as CHAT_STORE_ID} from './ChatStore';
+import {useValue, STORE_ID as SETTINGS_STORE_ID} from './SettingsStore';
+import './messageInput.css';
+import {Button} from './Button';
+import {Input} from './Input';
+
+export const MessageInput = () => {
+  const [message, setMessage] = useState('');
+  const username = useValue('username', SETTINGS_STORE_ID) || 'Anonymous';
+
+  const handleSend = useAddRowCallback(
+    'messages',
+    () => ({
+      username,
+      text: message,
+      timestamp: Date.now(),
+    }),
+    [message, username],
+    CHAT_STORE_ID,
+  );
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (message.trim()) {
+      handleSend();
+      setMessage('');
+    }
+  };
+
+  return (
+    <form onSubmit={onSubmit} id="messageInput">
+      <Input
+        value={message}
+        onChange={setMessage}
+        placeholder="Type a message..."
+        autoFocus
+      />
+      <Button type="submit" variant="primary">
+        Send
+      </Button>
+    </form>
+  );
+};
+",
+  "client/src/Messages.tsx": "import {useSortedRowIds, STORE_ID} from './ChatStore';
+import './messages.css';
+import {Message} from './Message';
+
+export const Messages = () => {
+  const sortedIds = useSortedRowIds(
+    'messages',
+    'timestamp',
+    false,
+    0,
+    undefined,
+    STORE_ID,
+  );
+
+  return (
+    <div id="messages">
+      {sortedIds.map((id) => (
+        <Message key={id} rowId={id} />
+      ))}
+    </div>
+  );
+};
+",
+  "client/src/SettingsStore.tsx": "import {createStore} from 'tinybase';
+import {
+  useCreateStore,
+  useProvideStore,
+  useValue,
+  useValueState,
+} from 'tinybase/ui-react';
+import {getRandomName} from './utils';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+import {useCreatePersister} from 'tinybase/ui-react';
+
+export const STORE_ID = 'settings';
+
+export {useValue, useValueState};
+
+export const SettingsStore = ({onReady}: {onReady?: () => void}) => {
+  const store = useCreateStore(() =>
+    createStore().setValue('username', getRandomName()),
+  );
+
+  useProvideStore(STORE_ID, store);
+
+  useCreatePersister(
+    store,
+    (store) => createLocalPersister(store, STORE_ID),
+    [],
+    async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      onReady?.();
+    },
+  );
+
+  return null;
+};
+",
+  "client/src/UsernameInput.tsx": "import {useValueState, STORE_ID} from './SettingsStore';
+import './usernameInput.css';
+import {Input} from './Input';
+
+export const UsernameInput = () => {
+  const [username, setUsername] = useValueState('username', STORE_ID);
+
+  return (
+    <div id="usernameInput">
+      <label>Your name:</label>
+      <Input
+        value={username + ''}
+        onChange={setUsername}
+        placeholder="Enter your name"
+      />
+    </div>
+  );
+};
+",
+  "client/src/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "client/src/config.ts": "export const SERVER = 'ws://localhost:8043';
+",
+  "client/src/index.tsx": "import {getUniqueId} from 'tinybase';
+import ReactDOM from 'react-dom/client';
+import {App} from './App';
+
+if (location.pathname === '/') {
+  location.assign('/' + getUniqueId());
+}
+
+addEventListener('load', () => {
+  ReactDOM.createRoot(document.getElementById('app')!).render(<App />);
+});
+",
+  "client/src/input.css": "input[type='text'] {
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+input[type='text']:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input[type='text']::placeholder {
+  color: var(--fg2);
+}
+",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
+  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
+</svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+",
+  "client/src/message.css": ".message {
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.message .username {
+  font-weight: 800;
+  color: #d81b60;
+}
+
+.message .text {
+  flex: 1;
+}
+
+.message .time {
+  font-size: 0.8rem;
+  color: #666;
+}
+",
+  "client/src/messageInput.css": "#messageInput {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-top: 1px solid var(--border);
+}
+",
+  "client/src/messages.css": "#messages {
+  overflow-y: auto;
+  padding: 1rem 0;
+  height: 400px;
+  margin-bottom: 1rem;
+}
+",
+  "client/src/usernameInput.css": "#usernameInput {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#usernameInput label {
+  white-space: nowrap;
+}
+
+#usernameInput input {
+  flex: 1;
+}
+",
+  "client/src/utils.tsx": "const NAMES = [
+  'Carol',
+  'Charlie',
+  'Casey',
+  'Cameron',
+  'Chris',
+  'Dana',
+  'Dakota',
+  'Drew',
+  'Devon',
+  'Dylan',
+];
+
+export const getRandomName = (): string =>
+  NAMES[Math.floor(Math.random() * NAMES.length)];
+
+export const getDefaultContent = (): [any, any] => [
+  {
+    messages: {
+      '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
+      '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
+    },
+  },
+  {},
+];
+",
+  "client/src/vite-env.d.ts": "declare module '*.css' {
+  const content: string;
+  export default content;
+}
+",
+  "client/tsconfig.json": "{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src"]
+}
+",
+  "client/vite.config.js": "import {defineConfig} from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [
+    react({
+      jsxRuntime: 'automatic',
+    }),
+  ],
+});
+",
+  "server/index.ts": "import {createWsServer} from 'tinybase/synchronizers/synchronizer-ws-server';
+import {WebSocketServer} from 'ws';
+
+const PORT = 8043;
+
+const wsServer = createWsServer(new WebSocketServer({port: PORT}));
+
+wsServer.addClientIdsListener(
+  null,
+  (wsServer, pathId, clientId, addedOrRemoved) => {
+    console.log(
+      \`Client \${clientId} \${addedOrRemoved == 1 ? 'joined' : 'left'} /\${pathId}\`,
+    );
+  },
+);
+
+console.log(\`WebSocket server running on ws://localhost:\${PORT}\`);
+",
+  "server/package.json": "{
+  "name": "test-ts-react-chat-node-server",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "tsx watch index.ts",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "tinybase": "^7.3.2",
+    "ws": "^8.19.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.18.1",
+    "typescript": "^5.9.3",
+    "tsx": "^4.21.0"
+  }
+}
+",
+}
+`;
+
 exports[`create-tinybase > ts-react-drawing > should match snapshot 1`] = `
 {
   "README.md": "# test-ts-react-drawing
@@ -5501,6 +8957,42 @@ PNPM, Yarn, and Bun should also work. Your app will be available at
 \`http://localhost:5173\`, or whichever port Vite specifies in the console.
 
 After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your React-based web application,
+built with Vite and TypeScript.
+
+#### Key Files
+
+- **\`index.html\`** - The main HTML file that loads your app
+- **\`src/index.tsx\`** - Entry point that bootstraps the application and renders the React component tree
+- **\`src/App.tsx\`** - Main React component that renders the drawing
+  canvas
+
+- **\`src/CanvasStore.tsx\`**
+- TinyBase drawing canvas store configuration
+  - **\`src/SettingsStore.tsx\`** - TinyBase settings store (not synchronized)
+- **\`src/config.tsx\`** - Configuration settings
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
+
+**React Integration** - TinyBase provides React hooks that automatically subscribe
+to store changes and trigger re-renders when data updates. This means your UI
+stays in sync with your data with minimal boilerplate.
+
+Components like \`Canvas\` uses TinyBase hooks to track drawing state across users
+to interact
+with the store.
 
 ## Learn More
 
@@ -5939,6 +9431,8 @@ import {
   useStore,
   useTable,
 } from 'tinybase/ui-react';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+import {useCreatePersister} from 'tinybase/ui-react';
 
 export const STORE_ID = 'canvas';
 
@@ -5952,6 +9446,17 @@ export const CanvasStore = ({onReady}: {onReady?: () => void}) => {
   );
 
   useProvideStore(STORE_ID, store);
+
+  useCreatePersister(
+    store,
+    (store) => createLocalPersister(store, STORE_ID),
+    [],
+    async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      onReady?.();
+    },
+  );
 
   return null;
 };
@@ -6015,6 +9520,8 @@ import {
   useValueState,
   useValues,
 } from 'tinybase/ui-react';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+import {useCreatePersister} from 'tinybase/ui-react';
 
 export const STORE_ID = 'settings';
 
@@ -6026,6 +9533,17 @@ export const SettingsStore = ({onReady}: {onReady?: () => void}) => {
   );
 
   useProvideStore(STORE_ID, store);
+
+  useCreatePersister(
+    store,
+    (store) => createLocalPersister(store, STORE_ID),
+    [],
+    async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      onReady?.();
+    },
+  );
 
   return null;
 };
@@ -6214,6 +9732,39 @@ PNPM, Yarn, and Bun should also work. Your app will be available at
 \`http://localhost:5173\`, or whichever port Vite specifies in the console.
 
 After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your React-based web application,
+built with Vite and TypeScript.
+
+#### Key Files
+
+- **\`index.html\`** - The main HTML file that loads your app
+- **\`src/index.tsx\`** - Entry point that bootstraps the application and renders the React component tree
+- **\`src/App.tsx\`** - Main React component that renders the game
+
+- **\`src/Store.tsx\`**
+- TinyBase main store configuration
+- **\`src/config.tsx\`** - Configuration settings
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
+
+**React Integration** - TinyBase provides React hooks that automatically subscribe
+to store changes and trigger re-renders when data updates. This means your UI
+stays in sync with your data with minimal boilerplate.
+
+Components like \`Game\` uses TinyBase hooks to manage game state to interact
+with the store.
 
 ## Learn More
 
@@ -6655,6 +10206,8 @@ import {
   useCell,
   useValue,
 } from 'tinybase/ui-react';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+import {useCreatePersister} from 'tinybase/ui-react';
 
 export const STORE_ID = 'game';
 
@@ -6679,6 +10232,17 @@ export const Store = ({onReady}: {onReady?: () => void}) => {
   );
 
   useProvideStore(STORE_ID, store);
+
+  useCreatePersister(
+    store,
+    (store) => createLocalPersister(store, STORE_ID),
+    [],
+    async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      onReady?.();
+    },
+  );
 
   return null;
 };
@@ -6877,6 +10441,41 @@ PNPM, Yarn, and Bun should also work. Your app will be available at
 \`http://localhost:5173\`, or whichever port Vite specifies in the console.
 
 After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your React-based web application,
+built with Vite and TypeScript.
+
+#### Key Files
+
+- **\`index.html\`** - The main HTML file that loads your app
+- **\`src/index.tsx\`** - Entry point that bootstraps the application and renders the React component tree
+- **\`src/App.tsx\`** - Main React component that renders the todo list
+
+- **\`src/Store.tsx\`**
+- TinyBase main store configuration
+- **\`src/config.tsx\`** - Configuration settings
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
+
+**React Integration** - TinyBase provides React hooks that automatically subscribe
+to store changes and trigger re-renders when data updates. This means your UI
+stays in sync with your data with minimal boilerplate.
+
+Components like \`TodoList\` and \`TodoItem\` use hooks like \`useSortedRowIds\`, \`useRow\`, and
+callback hooks like \`useAddRowCallback\` and \`useDelRowCallback\`
+to interact
+with the store.
 
 ## Learn More
 
@@ -7179,6 +10778,8 @@ import {
   useSortedRowIds,
   useSetPartialRowCallback,
 } from 'tinybase/ui-react';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+import {useCreatePersister} from 'tinybase/ui-react';
 
 export type TodoRow = {text: string; completed: boolean};
 
@@ -7206,6 +10807,17 @@ export const Store = ({onReady}: {onReady?: () => void}) => {
   );
 
   useProvideStore(STORE_ID, store);
+
+  useCreatePersister(
+    store,
+    (store) => createLocalPersister(store, STORE_ID),
+    [],
+    async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      onReady?.();
+    },
+  );
 
   return null;
 };
@@ -7484,6 +11096,722 @@ export default defineConfig({
 }
 `;
 
+exports[`create-tinybase > ts-react-todos-remote-sync > should match snapshot 1`] = `
+{
+  "README.md": "# test-ts-react-todos-remote-sync
+
+A TinyBase app built with TypeScript and React.
+
+## Getting Started
+
+Alongside this file, you will see a directory called \`client\`.
+
+To start the web client with Vite, run the following commands:
+
+\`\`\`bash
+cd client
+npm install
+npm run dev
+\`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your React-based web application,
+built with Vite and TypeScript.
+
+#### Key Files
+
+- **\`index.html\`** - The main HTML file that loads your app
+- **\`src/index.tsx\`** - Entry point that bootstraps the application and renders the React component tree
+- **\`src/App.tsx\`** - Main React component that renders the todo list
+
+- **\`src/Store.tsx\`**
+- TinyBase main store configuration
+- **\`src/config.tsx\`** - Configuration settings
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+The store is a **MergeableStore**, which supports real-time synchronization across
+multiple clients. When you open the app, it generates a unique room ID in the URL
+path (e.g., \`/abc123\`). Anyone who visits the same URL will share the same data
+and see live updates from other users.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
+
+**Synchronization** is powered by TinyBase's WebSocket synchronizer (connecting to a demo server at vite.tinybase.org).
+When data changes locally, it's sent to the server and broadcast to all other
+clients in the same room. The MergeableStore handles conflict resolution using
+CRDTs, ensuring all clients converge to the same state.
+
+**React Integration** - TinyBase provides React hooks that automatically subscribe
+to store changes and trigger re-renders when data updates. This means your UI
+stays in sync with your data with minimal boilerplate.
+
+Components like \`TodoList\` and \`TodoItem\` use hooks like \`useSortedRowIds\`, \`useRow\`, and
+callback hooks like \`useAddRowCallback\` and \`useDelRowCallback\`
+to interact
+with the store.
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase Todos</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Todos</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
+            i
+            <div id="infoTooltip">
+              A simple todo list application demonstrating TinyBase's reactive
+              data management with CRUD operations.
+              <br /><br />
+              Built with TypeScript and React.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="app"></div>
+    </div>
+
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
+</html>
+",
+  "client/package.json": "{
+  "name": "test-ts-react-todos-remote-sync",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.3.1",
+    "typescript": "^5.9.3",
+    "@types/node": "^25.0.9",
+    "@types/react": "^19.2.8",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.2"
+  },
+  "dependencies": {
+    "tinybase": "^7.3.2",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "reconnecting-websocket": "^4.4.0"
+  }
+}
+",
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "client/src/App.tsx": "import {StrictMode, useState} from 'react';
+import {Loading} from './Loading';
+import {Provider} from 'tinybase/ui-react';
+import {Inspector} from 'tinybase/ui-react-inspector';
+import {Store} from './Store';
+import {TodoInput} from './TodoInput';
+import {TodoList} from './TodoList';
+
+export const App = () => {
+  const [loading, setLoading] = useState(true);
+
+  return (
+    <StrictMode>
+      <Provider>
+        <Store onReady={() => setLoading(false)} />
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            <TodoInput />
+            <TodoList />
+            <Inspector />
+          </>
+        )}
+      </Provider>
+    </StrictMode>
+  );
+};
+",
+  "client/src/Button.tsx": "import './button.css';
+import {ReactNode} from 'react';
+
+interface ButtonProps {
+  children: ReactNode;
+  onClick?: () => void;
+  variant?: 'default' | 'primary';
+  type?: 'button' | 'submit';
+}
+
+export const Button = ({
+  children,
+  onClick,
+  variant = 'default',
+  type = 'button',
+}: ButtonProps) => (
+  <button
+    onClick={onClick}
+    type={type}
+    className={variant === 'primary' ? 'primary' : undefined}
+  >
+    {children}
+  </button>
+);
+",
+  "client/src/Input.tsx": "import './input.css';
+
+interface InputProps {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  autoFocus?: boolean;
+}
+
+export const Input = ({
+  value,
+  onChange,
+  placeholder = '',
+  autoFocus = false,
+}: InputProps) => (
+  <input
+    type="text"
+    value={value}
+    onChange={(e) => onChange(e.target.value)}
+    placeholder={placeholder}
+    autoFocus={autoFocus}
+  />
+);
+",
+  "client/src/Loading.tsx": "import './loading.css';
+
+export const Loading = () => <div id="loading" />;
+",
+  "client/src/Store.tsx": "import {createMergeableStore} from 'tinybase';
+import {
+  useCreateMergeableStore,
+  useProvideStore,
+  useAddRowCallback,
+  useDelRowCallback,
+  useRow,
+  useSortedRowIds,
+  useSetPartialRowCallback,
+} from 'tinybase/ui-react';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+import {useCreatePersister} from 'tinybase/ui-react';
+import {SERVER} from './config';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+import {useCreateSynchronizer} from 'tinybase/ui-react';
+
+export type TodoRow = {text: string; completed: boolean};
+
+export {
+  useAddRowCallback,
+  useDelRowCallback,
+  useRow,
+  useSortedRowIds,
+  useSetPartialRowCallback,
+};
+
+export const STORE_ID = 'todos';
+
+export const Store = ({onReady}: {onReady?: () => void}) => {
+  const store = useCreateMergeableStore(() =>
+    createMergeableStore().setDefaultContent([
+      {
+        todos: {
+          '1': {text: 'Learn TinyBase', completed: false},
+          '2': {text: 'Build an app', completed: false},
+        },
+      },
+      {},
+    ]),
+  );
+
+  useProvideStore(STORE_ID, store);
+
+  useCreatePersister(
+    store,
+    (store) => createLocalPersister(store, STORE_ID),
+    [],
+    async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      onReady?.();
+    },
+  );
+
+  useCreateSynchronizer(store, async (store) => {
+    const serverPathId = location.pathname;
+    const synchronizer = await createWsSynchronizer(
+      store,
+      new ReconnectingWebSocket(SERVER + serverPathId),
+    );
+    await synchronizer.startSync();
+
+    synchronizer.getWebSocket().addEventListener('open', () => {
+      synchronizer.load().then(() => {
+        synchronizer.save();
+      });
+    });
+
+    return synchronizer;
+  });
+
+  return null;
+};
+",
+  "client/src/TodoInput.tsx": "import './todoInput.css';
+import {useState} from 'react';
+import {useAddRowCallback, STORE_ID} from './Store';
+import {Button} from './Button';
+import {Input} from './Input';
+
+export const TodoInput = () => {
+  const [text, setText] = useState('');
+  const addRow = useAddRowCallback(
+    'todos',
+    () => ({text, completed: false}),
+    [text],
+    STORE_ID,
+  );
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (text.trim()) {
+      addRow();
+      setText('');
+    }
+  };
+
+  return (
+    <form id="todoInput" onSubmit={handleSubmit}>
+      <Input
+        value={text}
+        onChange={setText}
+        placeholder="What needs to be done?"
+        autoFocus
+      />
+      <Button type="submit" variant="primary">
+        Add
+      </Button>
+    </form>
+  );
+};
+",
+  "client/src/TodoItem.tsx": "import './todoItem.css';
+import {
+  useDelRowCallback,
+  useRow,
+  useSetPartialRowCallback,
+  type TodoRow,
+  STORE_ID,
+} from './Store';
+import {Button} from './Button';
+
+export const TodoItem = ({rowId}: {rowId: string}) => {
+  const todo = useRow('todos', rowId, STORE_ID) as TodoRow;
+  const setPartialRow = useSetPartialRowCallback(
+    'todos',
+    rowId,
+    (e: React.ChangeEvent<HTMLInputElement>) => ({completed: e.target.checked}),
+    [],
+    STORE_ID,
+  );
+  const delRow = useDelRowCallback('todos', rowId, STORE_ID);
+
+  return (
+    <div className={\`todoItem\${todo.completed ? ' completed' : ''}\`}>
+      <input
+        type="checkbox"
+        checked={todo.completed}
+        onChange={setPartialRow}
+        id={\`todo-\${rowId}\`}
+      />
+      <label htmlFor={\`todo-\${rowId}\`}>{todo.text}</label>
+      <Button onClick={delRow}>Delete</Button>
+    </div>
+  );
+};
+",
+  "client/src/TodoList.tsx": "import './todoList.css';
+import {useSortedRowIds, STORE_ID} from './Store';
+import {TodoItem} from './TodoItem';
+
+export const TodoList = () => {
+  const todoIds = useSortedRowIds(
+    'todos',
+    undefined,
+    false,
+    0,
+    undefined,
+    STORE_ID,
+  );
+
+  return (
+    <div id="todoList">
+      {todoIds.map((id) => (
+        <TodoItem key={id} rowId={id} />
+      ))}
+    </div>
+  );
+};
+",
+  "client/src/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "client/src/config.ts": "export const SERVER = 'wss://vite.tinybase.org';
+",
+  "client/src/index.tsx": "import {getUniqueId} from 'tinybase';
+import ReactDOM from 'react-dom/client';
+import {App} from './App';
+
+if (location.pathname === '/') {
+  location.assign('/' + getUniqueId());
+}
+
+addEventListener('load', () => {
+  ReactDOM.createRoot(document.getElementById('app')!).render(<App />);
+});
+",
+  "client/src/input.css": "input[type='text'] {
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+input[type='text']:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input[type='text']::placeholder {
+  color: var(--fg2);
+}
+",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
+  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
+</svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+",
+  "client/src/todoInput.css": "#todoInput {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+#todoInput input {
+  flex: 1;
+}
+",
+  "client/src/todoItem.css": ".todoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.todoItem:last-child {
+  border-bottom: none;
+}
+
+.todoItem input[type='checkbox'] {
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.todoItem label {
+  flex: 1;
+  cursor: pointer;
+  user-select: none;
+}
+
+.todoItem.completed label {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.todoItem button {
+  flex-shrink: 0;
+}
+",
+  "client/src/todoList.css": "#todoList {
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  overflow: hidden;
+  background: var(--bg2);
+}
+
+#todoList:empty::before {
+  content: 'No todos yet. Add one above!';
+  display: block;
+  padding: 2rem;
+  text-align: center;
+  color: var(--fg2);
+}
+",
+  "client/src/vite-env.d.ts": "declare module '*.css' {
+  const content: string;
+  export default content;
+}
+",
+  "client/tsconfig.json": "{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src"]
+}
+",
+  "client/vite.config.js": "import {defineConfig} from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [
+    react({
+      jsxRuntime: 'automatic',
+    }),
+  ],
+});
+",
+}
+`;
+
 exports[`create-tinybase > ts-vanilla-chat > should match snapshot 1`] = `
 {
   "README.md": "# test-ts-vanilla-chat
@@ -7506,6 +11834,32 @@ PNPM, Yarn, and Bun should also work. Your app will be available at
 \`http://localhost:5173\`, or whichever port Vite specifies in the console.
 
 After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your vanilla JavaScript web application,
+built with Vite and TypeScript.
+
+#### Key Files
+
+- **\`index.html\`** - The main HTML file that loads your app
+- **\`src/index.ts\`** - Entry point that bootstraps the application
+- **\`src/app.ts\`** - Main application logic
+- **\`src/chatStore.ts\`**
+- TinyBase chat messages store configuration
+  - **\`src/settingsStore.ts\`** - TinyBase settings store (not synchronized)
+- **\`src/config.ts\`** - Configuration settings
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
 
 ## Learn More
 
@@ -7784,6 +12138,7 @@ export const createButton = (
 ",
   "client/src/chatStore.ts": "import {createMergeableStore} from 'tinybase';
 import {getDefaultContent} from './utils';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 
 export const chatStore =
   createMergeableStore().setDefaultContent(getDefaultContent());
@@ -7793,6 +12148,12 @@ export type MessageRow = {username: string; text: string; timestamp: number};
 let resolveChatReady: () => void;
 export const chatStoreReady = new Promise<void>((resolve) => {
   resolveChatReady = resolve;
+});
+
+const chatPersister = createLocalPersister(chatStore, 'chat');
+chatPersister.load().then(() => {
+  chatPersister.startAutoSave();
+  resolveChatReady();
 });
 
 export type ChatStore = typeof chatStore;
@@ -8013,12 +12374,19 @@ export const createMessages = (store: ChatStore): HTMLDivElement => {
 ",
   "client/src/settingsStore.ts": "import {createStore} from 'tinybase';
 import {getRandomName} from './utils';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 
 export const settingsStore = createStore();
 
 let resolveSettingsReady: () => void;
 export const settingsStoreReady = new Promise<void>((resolve) => {
   resolveSettingsReady = resolve;
+});
+
+const settingsPersister = createLocalPersister(settingsStore, 'settings');
+settingsPersister.load([{}, {username: getRandomName()}]).then(() => {
+  settingsPersister.startAutoSave();
+  resolveSettingsReady();
 });
 
 export type SettingsStore = typeof settingsStore;
@@ -8149,6 +12517,32 @@ PNPM, Yarn, and Bun should also work. Your app will be available at
 \`http://localhost:5173\`, or whichever port Vite specifies in the console.
 
 After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your vanilla JavaScript web application,
+built with Vite and TypeScript.
+
+#### Key Files
+
+- **\`index.html\`** - The main HTML file that loads your app
+- **\`src/index.ts\`** - Entry point that bootstraps the application
+- **\`src/app.ts\`** - Main application logic
+- **\`src/canvasStore.ts\`**
+- TinyBase drawing canvas store configuration
+  - **\`src/settingsStore.ts\`** - TinyBase settings store (not synchronized)
+- **\`src/config.ts\`** - Configuration settings
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
 
 ## Learn More
 
@@ -8610,6 +13004,7 @@ export const createCanvas = (
 };
 ",
   "client/src/canvasStore.ts": "import {createMergeableStore} from 'tinybase';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 
 export const canvasStore = createMergeableStore().setDefaultContent([
   {strokes: {}},
@@ -8621,6 +13016,12 @@ export type StrokeRow = {color: string; size: number; points: string};
 let resolveCanvasReady: () => void;
 export const canvasStoreReady = new Promise<void>((resolve) => {
   resolveCanvasReady = resolve;
+});
+
+const canvasPersister = createLocalPersister(canvasStore, 'canvas');
+canvasPersister.load().then(() => {
+  canvasPersister.startAutoSave();
+  resolveCanvasReady();
 });
 
 export type CanvasStore = typeof canvasStore;
@@ -8770,12 +13171,19 @@ export const hideLoading = (loadingDiv: HTMLElement): void => {
 };
 ",
   "client/src/settingsStore.ts": "import {createStore} from 'tinybase';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 
 export const settingsStore = createStore();
 
 let resolveSettingsReady: () => void;
 export const settingsStoreReady = new Promise<void>((resolve) => {
   resolveSettingsReady = resolve;
+});
+
+const settingsPersister = createLocalPersister(settingsStore, 'settings');
+settingsPersister.load([{}, {brushColor: '#d81b60', brushSize: 5}]).then(() => {
+  settingsPersister.startAutoSave();
+  resolveSettingsReady();
 });
 
 export type SettingsStore = typeof settingsStore;
@@ -8831,6 +13239,31 @@ PNPM, Yarn, and Bun should also work. Your app will be available at
 \`http://localhost:5173\`, or whichever port Vite specifies in the console.
 
 After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your vanilla JavaScript web application,
+built with Vite and TypeScript.
+
+#### Key Files
+
+- **\`index.html\`** - The main HTML file that loads your app
+- **\`src/index.ts\`** - Entry point that bootstraps the application
+- **\`src/app.ts\`** - Main application logic
+- **\`src/store.ts\`**
+- TinyBase main store configuration
+- **\`src/config.ts\`** - Configuration settings
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
 
 ## Learn More
 
@@ -9369,6 +13802,7 @@ export const createSquare = (
 };
 ",
   "client/src/store.ts": "import {createMergeableStore} from 'tinybase';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 
 export const store = createMergeableStore().setDefaultContent([
   {},
@@ -9381,6 +13815,12 @@ export const store = createMergeableStore().setDefaultContent([
 let resolveReady: () => void;
 export const storeReady = new Promise<void>((resolve) => {
   resolveReady = resolve;
+});
+
+const persister = createLocalPersister(store, 'game');
+persister.load().then(() => {
+  persister.startAutoSave();
+  resolveReady();
 });
 
 export type GameStore = typeof store;
@@ -9414,6 +13854,685 @@ export type GameStore = typeof store;
 }
 `;
 
+exports[`create-tinybase > ts-vanilla-game-pglite > should match snapshot 1`] = `
+{
+  "README.md": "# test-ts-vanilla-game-pglite
+
+A TinyBase app built with TypeScript and Vanilla JS.
+
+## Getting Started
+
+Alongside this file, you will see a directory called \`client\`.
+
+To start the web client with Vite, run the following commands:
+
+\`\`\`bash
+cd client
+npm install
+npm run dev
+\`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your vanilla JavaScript web application,
+built with Vite and TypeScript.
+
+#### Key Files
+
+- **\`index.html\`** - The main HTML file that loads your app
+- **\`src/index.ts\`** - Entry point that bootstraps the application
+- **\`src/app.ts\`** - Main application logic
+- **\`src/store.ts\`**
+- TinyBase main store configuration
+- **\`src/config.ts\`** - Configuration settings
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+**Persistence** is enabled using PGlite (Postgres WASM running entirely in the browser).
+Your data is automatically saved and restored when you reload the page.
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase Game</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Game</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
+            i
+            <div id="infoTooltip">
+              A tic-tac-toe game demonstrating turn-based logic and computed
+              game state.
+              <br /><br />
+              Built with TypeScript.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="app"></div>
+    </div>
+
+    <script type="module" src="/src/index.ts"></script>
+  </body>
+</html>
+",
+  "client/package.json": "{
+  "name": "test-ts-vanilla-game-pglite",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.3.1",
+    "typescript": "^5.9.3",
+    "@types/node": "^25.0.9",
+    "vite-plugin-static-copy": "^3.2.0"
+  },
+  "dependencies": {
+    "tinybase": "^7.3.2",
+    "@electric-sql/pglite": "^0.3.15"
+  }
+}
+",
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "client/src/app.ts": "import {store, storeReady} from './store';
+import {showLoading, hideLoading} from './loading';
+import {createGame} from './game';
+
+export const app = async () => {
+  const appContainer = document.getElementById('app')!;
+
+  // Show loading spinner
+  const loadingDiv = showLoading(appContainer);
+
+  // Wait for store to be ready
+  await storeReady;
+
+  // Remove loading spinner
+  hideLoading(loadingDiv);
+
+  appContainer.appendChild(createGame(store));
+};
+",
+  "client/src/board.css": "#board {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+  gap: 1px;
+  background: var(--border);
+  border: 2px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  margin: 0 auto 2rem;
+  width: fit-content;
+  padding: 1px;
+}
+",
+  "client/src/board.ts": "import './board.css';
+import type {GameStore} from './store';
+import {createSquare} from './square';
+
+export const createBoard = (store: GameStore): HTMLDivElement => {
+  const board = document.createElement('div');
+  board.id = 'board';
+
+  const render = () => {
+    const gameStatus = store.getValue('gameStatus');
+    const winningLine = store.getValue('winningLine');
+    const currentPlayer = store.getValue('currentPlayer');
+    const winningPositions = new Set(
+      winningLine && typeof winningLine === 'string'
+        ? winningLine.split(',').map(Number)
+        : [],
+    );
+    const disabled = gameStatus !== 'playing';
+
+    board.innerHTML = '';
+    for (let i = 0; i < 9; i++) {
+      const cell = store.getCell('board', i.toString(), 'value');
+      const square = createSquare(
+        cell as string,
+        () => {
+          if (gameStatus === 'playing' && !cell && currentPlayer) {
+            store.setCell('board', i.toString(), 'value', currentPlayer);
+          }
+        },
+        disabled || !!cell,
+        winningPositions.has(i),
+      );
+      board.appendChild(square);
+    }
+  };
+
+  store.addValuesListener(render);
+  store.addTableListener('board', render);
+  render();
+
+  return board;
+};
+",
+  "client/src/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "client/src/button.ts": "import './button.css';
+
+export const createButton = (
+  text: string,
+  onClick: () => void,
+  variant: 'default' | 'primary' = 'default',
+): HTMLButtonElement => {
+  const button = document.createElement('button');
+  button.textContent = text;
+  if (variant === 'primary') {
+    button.className = 'primary';
+  }
+  button.addEventListener('click', onClick);
+  return button;
+};
+",
+  "client/src/game.ts": "import type {GameStore} from './store';
+import {createButton} from './button';
+import {createBoard} from './board';
+import {createGameStatus} from './gameStatus';
+
+const WINNING_LINES = [
+  ['0', '1', '2'],
+  ['3', '4', '5'],
+  ['6', '7', '8'],
+  ['0', '3', '6'],
+  ['1', '4', '7'],
+  ['2', '5', '8'],
+  ['0', '4', '8'],
+  ['2', '4', '6'],
+];
+
+export const createGame = (store: GameStore): HTMLDivElement => {
+  const checkGameState = () => {
+    const gameStatus = store.getValue('gameStatus');
+    if (gameStatus !== 'playing') return;
+
+    for (const line of WINNING_LINES) {
+      const [a, b, c] = line;
+      const cellA = store.getCell('board', a, 'value');
+      const cellB = store.getCell('board', b, 'value');
+      const cellC = store.getCell('board', c, 'value');
+
+      if (cellA && cellA === cellB && cellA === cellC) {
+        store.setValue('gameStatus', 'won');
+        store.setValue('winner', cellA);
+        store.setValue('winningLine', line.join(','));
+        return;
+      }
+    }
+
+    if (store.getRowCount('board') === 9) {
+      store.setValue('gameStatus', 'draw');
+      return;
+    }
+
+    const currentPlayer = store.getValue('currentPlayer');
+    store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
+  };
+
+  store.addTableListener('board', checkGameState, true);
+
+  const resetGame = () => {
+    store.delTable('board');
+    store.setValues({
+      currentPlayer: 'X',
+      gameStatus: 'playing',
+    });
+  };
+
+  const gameContainer = document.createElement('div');
+
+  gameContainer.appendChild(createGameStatus(store));
+  gameContainer.appendChild(createBoard(store));
+
+  const buttonContainer = document.createElement('div');
+  buttonContainer.style.textAlign = 'center';
+  buttonContainer.style.marginTop = '2rem';
+  buttonContainer.appendChild(createButton('New Game', resetGame, 'primary'));
+  gameContainer.appendChild(buttonContainer);
+
+  return gameContainer;
+};
+",
+  "client/src/gameStatus.css": "#gameStatus {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 2rem 0 1rem;
+  color: var(--accent);
+}
+
+#gameStatus .winner {
+  color: var(--accent);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+",
+  "client/src/gameStatus.ts": "import './gameStatus.css';
+import type {GameStore} from './store';
+
+export const createGameStatus = (store: GameStore): HTMLDivElement => {
+  const status = document.createElement('div');
+  status.id = 'gameStatus';
+
+  const render = () => {
+    const gameStatus = store.getValue('gameStatus');
+    const currentPlayer = store.getValue('currentPlayer');
+    const winner = store.getValue('winner');
+
+    if (gameStatus === 'playing') {
+      status.innerHTML = \`Player <span class="player">\${currentPlayer}</span>'s turn\`;
+    } else if (gameStatus === 'won') {
+      status.innerHTML = \`Player <span class="winner">\${winner}</span> wins!\`;
+    } else if (gameStatus === 'draw') {
+      status.textContent = "It's a draw!";
+    }
+  };
+
+  store.addValuesListener(render);
+  render();
+
+  return status;
+};
+",
+  "client/src/index.ts": "import {app} from './app';
+
+addEventListener('load', () => {
+  app();
+});
+",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
+  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
+</svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+",
+  "client/src/loading.ts": "import './loading.css';
+
+export const showLoading = (container: HTMLElement): HTMLElement => {
+  const loadingDiv = document.createElement('div');
+  loadingDiv.id = 'loading';
+  container.appendChild(loadingDiv);
+  return loadingDiv;
+};
+
+export const hideLoading = (loadingDiv: HTMLElement): void => {
+  loadingDiv.remove();
+};
+",
+  "client/src/pglite.ts": "import {PGlite} from '@electric-sql/pglite';
+
+let pgLitePromise: Promise<PGlite> | null = null;
+
+export const getPgLite = async (): Promise<PGlite> => {
+  if (!pgLitePromise) {
+    pgLitePromise = PGlite.create('idb://local');
+  }
+  return await pgLitePromise;
+};
+",
+  "client/src/square.css": ".square {
+  width: 100px;
+  height: 100px;
+  background: var(--bg2);
+  border: none;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--fg);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+}
+
+.square:hover:not(.square.disabled) {
+  background: var(--bg);
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  z-index: 1;
+  position: relative;
+}
+
+.square:disabled {
+  cursor: not-allowed;
+}
+
+.square.disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.square.winning {
+  background: var(--accent);
+  color: var(--bg);
+}
+",
+  "client/src/square.ts": "import './square.css';
+
+export const createSquare = (
+  value: string | undefined,
+  onClick: () => void,
+  disabled: boolean,
+  winning: boolean,
+): HTMLButtonElement => {
+  const square = document.createElement('button');
+  square.className = \`square\${disabled ? ' disabled' : ''}\${winning ? ' winning' : ''}\`;
+  square.textContent = value ?? '';
+  square.disabled = disabled;
+  square.addEventListener('click', onClick);
+  return square;
+};
+",
+  "client/src/store.ts": "import {createMergeableStore} from 'tinybase';
+import {createPglitePersister} from 'tinybase/persisters/persister-pglite';
+import {getPgLite} from './pglite';
+
+export const store = createMergeableStore().setDefaultContent([
+  {},
+  {
+    currentPlayer: 'X',
+    gameStatus: 'playing',
+  },
+]);
+
+let resolveReady: () => void;
+export const storeReady = new Promise<void>((resolve) => {
+  resolveReady = resolve;
+});
+
+getPgLite().then((pgLite) => {
+  createPglitePersister(store, pgLite, 'game').then((persister) => {
+    persister.load().then(() => {
+      persister.startAutoSave();
+      resolveReady();
+    });
+  });
+});
+
+export type GameStore = typeof store;
+",
+  "client/src/vite-env.d.ts": "declare module '*.css' {
+  const content: string;
+  export default content;
+}
+",
+  "client/tsconfig.json": "{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src"]
+}
+",
+  "client/vite.config.js": "import {defineConfig} from 'vite';
+import {viteStaticCopy} from 'vite-plugin-static-copy';
+
+export default defineConfig({
+  plugins: [
+    viteStaticCopy({
+      targets: [
+        {
+          src: 'node_modules/@electric-sql/pglite/dist/*.wasm',
+          dest: '.',
+        },
+      ],
+    }),
+  ],
+  server: {
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+    },
+  },
+  optimizeDeps: {
+    exclude: ['@electric-sql/pglite'],
+  },
+});
+",
+}
+`;
+
 exports[`create-tinybase > ts-vanilla-todos > should match snapshot 1`] = `
 {
   "README.md": "# test-ts-vanilla-todos
@@ -9436,6 +14555,31 @@ PNPM, Yarn, and Bun should also work. Your app will be available at
 \`http://localhost:5173\`, or whichever port Vite specifies in the console.
 
 After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your vanilla JavaScript web application,
+built with Vite and TypeScript.
+
+#### Key Files
+
+- **\`index.html\`** - The main HTML file that loads your app
+- **\`src/index.ts\`** - Entry point that bootstraps the application
+- **\`src/app.ts\`** - Main application logic
+- **\`src/store.ts\`**
+- TinyBase main store configuration
+- **\`src/config.ts\`** - Configuration settings
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
 
 ## Learn More
 
@@ -9791,6 +14935,7 @@ export const hideLoading = (loadingDiv: HTMLElement): void => {
 };
 ",
   "client/src/store.ts": "import {createMergeableStore} from 'tinybase';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 
 export type TodoRow = {text: string; completed: boolean};
 
@@ -9807,6 +14952,12 @@ export const store = createMergeableStore().setDefaultContent([
 let resolveReady: () => void;
 export const storeReady = new Promise<void>((resolve) => {
   resolveReady = resolve;
+});
+
+const persister = createLocalPersister(store, 'todos');
+persister.load().then(() => {
+  persister.startAutoSave();
+  resolveReady();
 });
 
 export type TodosStore = typeof store;

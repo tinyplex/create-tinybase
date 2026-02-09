@@ -5,12 +5,11 @@
 "main": "index.ts",
 "scripts": {
 {{#list}}
+  {{includeFile template="server/index.ts.hbs" output="server/index.ts"}}
   {{#if (eq serverType "node")}}
-    {{includeFile template="server/index-node.ts.hbs" output="server/index.ts"}}
     "dev": "tsx watch index.ts"
     "start": "node index.js"
   {{else}}
-    {{includeFile template="server/index-do.ts.hbs" output="server/index.ts"}}
     {{includeFile template="server/wrangler.toml.hbs" output="server/wrangler.toml"}}
     {{#if typescript}}
       {{includeFile template="server/tsconfig.json.hbs" output="server/tsconfig.json"}}

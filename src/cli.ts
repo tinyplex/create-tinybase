@@ -145,6 +145,7 @@ const config = {
       normalizedSyncType === 'node' || normalizedSyncType === 'durable-objects';
     const serverType =
       normalizedSyncType === 'durable-objects' ? 'durable-objects' : 'node';
+    const isDurableObject = normalizedSyncType === 'durable-objects';
     const normalizedPersistenceType = persistenceType || 'local-storage';
     const persist = normalizedPersistenceType !== 'none';
     const persistLocalStorage = normalizedPersistenceType === 'local-storage';
@@ -163,6 +164,7 @@ const config = {
       sync,
       server,
       serverType,
+      isDurableObject,
       persistenceType: normalizedPersistenceType,
       persist,
       persistLocalStorage,
