@@ -7,6 +7,8 @@ import {setTimeout as sleep} from 'timers/promises';
 import {fileURLToPath} from 'url';
 import {expect} from 'vitest';
 
+export {sleep};
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 export const TEST_DIR = join(__dirname, '..', '..', 'tmp');
 export const BASE_PORT = 5173;

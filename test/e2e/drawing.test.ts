@@ -11,6 +11,7 @@ import {
   runTypeScriptCheck,
   setupPageErrorHandling,
   setupTestProject,
+  sleep,
   sleepForPersistence,
   startDevServer,
   testBasicApp,
@@ -152,6 +153,10 @@ async function testDrawingPersistence(page: Page, persistenceType: string) {
   await page.reload({waitUntil: 'domcontentloaded'});
   await page.waitForFunction(() => !document.getElementById('loading'));
 
+  if (persistenceType === 'pglite') {
+    await sleep(500);
+  }
+
   const persistedCanvasData = await page.evaluate(() => {
     const cnv = document.querySelector('canvas');
     return cnv ? cnv.toDataURL() : null;
@@ -176,7 +181,12 @@ async function testDrawingPersistence(page: Page, persistenceType: string) {
   await page.reload({waitUntil: 'domcontentloaded'});
   await page.waitForFunction(() => !document.getElementById('loading'));
 
+  if (persistenceType === 'pglite') {
+    await sleep(500);
+  }
+
   await page.waitForSelector('.colorBtn');
+
   const activeColor = await page.evaluate(() => {
     const activeBtn = document.querySelector('.colorBtn.active');
     return activeBtn ? (activeBtn as HTMLElement).style.background : null;

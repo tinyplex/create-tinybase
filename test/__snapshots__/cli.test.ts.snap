@@ -224,7 +224,9 @@ with the store.
               A real-time chat application demonstrating TinyBase's reactive
               data management.
               <br /><br />
-              Built with JavaScript and React.
+              Built with: JavaScript and React.
+              <br /><br />
+              Persistence: Local Storage.
             </div>
           </div>
         </div>
@@ -905,7 +907,9 @@ with the store.
               A real-time chat application demonstrating TinyBase's reactive
               data management.
               <br /><br />
-              Built with JavaScript and React.
+              Built with: JavaScript and React.
+              <br /><br />
+              Persistence: SQLite.
             </div>
           </div>
         </div>
@@ -1633,7 +1637,9 @@ with the store.
               A collaborative drawing canvas showcasing TinyBase's state
               synchronization.
               <br /><br />
-              Built with JavaScript and React.
+              Built with: JavaScript and React.
+              <br /><br />
+              Persistence: Local Storage.
             </div>
           </div>
         </div>
@@ -2360,7 +2366,9 @@ with the store.
               A tic-tac-toe game demonstrating turn-based logic and computed
               game state.
               <br /><br />
-              Built with JavaScript and React.
+              Built with: JavaScript and React.
+              <br /><br />
+              Persistence: Local Storage.
             </div>
           </div>
         </div>
@@ -3025,7 +3033,9 @@ with the store.
               A simple todo list application demonstrating TinyBase's reactive
               data management with CRUD operations.
               <br /><br />
-              Built with JavaScript and React.
+              Built with: JavaScript and React.
+              <br /><br />
+              Persistence: Local Storage.
             </div>
           </div>
         </div>
@@ -3702,7 +3712,11 @@ The \`server\` directory contains your Cloudflare Durable Objects WebSocket serv
               A simple todo list application demonstrating TinyBase's reactive
               data management with CRUD operations.
               <br /><br />
-              Built with JavaScript and React.
+              Built with: JavaScript and React.
+              <br /><br />
+              Persistence: SQLite.
+              <br /><br />
+              Sync: Durable Objects.
             </div>
           </div>
         </div>
@@ -4452,7 +4466,9 @@ Your data is automatically saved and restored when you reload the page.
               A real-time chat application demonstrating TinyBase's reactive
               data management.
               <br /><br />
-              Built with JavaScript.
+              Built with: JavaScript.
+              <br /><br />
+              Persistence: Local Storage.
             </div>
           </div>
         </div>
@@ -5081,7 +5097,9 @@ Your data is automatically saved and restored when you reload the page.
               A collaborative drawing canvas showcasing TinyBase's state
               synchronization.
               <br /><br />
-              Built with JavaScript.
+              Built with: JavaScript.
+              <br /><br />
+              Persistence: Local Storage.
             </div>
           </div>
         </div>
@@ -5746,7 +5764,7 @@ The app uses **TinyBase** to manage application state in a reactive data store.
               A collaborative drawing canvas showcasing TinyBase's state
               synchronization.
               <br /><br />
-              Built with JavaScript.
+              Built with: JavaScript.
             </div>
           </div>
         </div>
@@ -6404,7 +6422,9 @@ Your data is automatically saved and restored when you reload the page.
               A tic-tac-toe game demonstrating turn-based logic and computed
               game state.
               <br /><br />
-              Built with JavaScript.
+              Built with: JavaScript.
+              <br /><br />
+              Persistence: Local Storage.
             </div>
           </div>
         </div>
@@ -6998,7 +7018,9 @@ Your data is automatically saved and restored when you reload the page.
               A simple todo list application demonstrating TinyBase's reactive
               data management with CRUD operations.
               <br /><br />
-              Built with JavaScript.
+              Built with: JavaScript.
+              <br /><br />
+              Persistence: Local Storage.
             </div>
           </div>
         </div>
@@ -7579,7 +7601,9 @@ with the store.
               A real-time chat application demonstrating TinyBase's reactive
               data management.
               <br /><br />
-              Built with TypeScript and React.
+              Built with: TypeScript and React.
+              <br /><br />
+              Persistence: Local Storage.
             </div>
           </div>
         </div>
@@ -8356,7 +8380,11 @@ The \`server\` directory contains your Node.js WebSocket server.
               A real-time chat application demonstrating TinyBase's reactive
               data management.
               <br /><br />
-              Built with TypeScript and React.
+              Built with: TypeScript and React.
+              <br /><br />
+              Persistence: Local Storage.
+              <br /><br />
+              Sync: Node.js Server.
             </div>
           </div>
         </div>
@@ -9160,7 +9188,9 @@ with the store.
               A collaborative drawing canvas showcasing TinyBase's state
               synchronization.
               <br /><br />
-              Built with TypeScript and React.
+              Built with: TypeScript and React.
+              <br /><br />
+              Persistence: Local Storage.
             </div>
           </div>
         </div>
@@ -9932,7 +9962,9 @@ with the store.
               A tic-tac-toe game demonstrating turn-based logic and computed
               game state.
               <br /><br />
-              Built with TypeScript and React.
+              Built with: TypeScript and React.
+              <br /><br />
+              Persistence: Local Storage.
             </div>
           </div>
         </div>
@@ -10643,7 +10675,9 @@ with the store.
               A simple todo list application demonstrating TinyBase's reactive
               data management with CRUD operations.
               <br /><br />
-              Built with TypeScript and React.
+              Built with: TypeScript and React.
+              <br /><br />
+              Persistence: Local Storage.
             </div>
           </div>
         </div>
@@ -11330,7 +11364,11 @@ with the store.
               A simple todo list application demonstrating TinyBase's reactive
               data management with CRUD operations.
               <br /><br />
-              Built with TypeScript and React.
+              Built with: TypeScript and React.
+              <br /><br />
+              Persistence: Local Storage.
+              <br /><br />
+              Sync: Remote.
             </div>
           </div>
         </div>
@@ -12027,7 +12065,9 @@ Your data is automatically saved and restored when you reload the page.
               A real-time chat application demonstrating TinyBase's reactive
               data management.
               <br /><br />
-              Built with TypeScript.
+              Built with: TypeScript.
+              <br /><br />
+              Persistence: Local Storage.
             </div>
           </div>
         </div>
@@ -12710,7 +12750,9 @@ Your data is automatically saved and restored when you reload the page.
               A collaborative drawing canvas showcasing TinyBase's state
               synchronization.
               <br /><br />
-              Built with TypeScript.
+              Built with: TypeScript.
+              <br /><br />
+              Persistence: Local Storage.
             </div>
           </div>
         </div>
@@ -13431,7 +13473,9 @@ Your data is automatically saved and restored when you reload the page.
               A tic-tac-toe game demonstrating turn-based logic and computed
               game state.
               <br /><br />
-              Built with TypeScript.
+              Built with: TypeScript.
+              <br /><br />
+              Persistence: Local Storage.
             </div>
           </div>
         </div>
@@ -14068,7 +14112,9 @@ Your data is automatically saved and restored when you reload the page.
               A tic-tac-toe game demonstrating turn-based logic and computed
               game state.
               <br /><br />
-              Built with TypeScript.
+              Built with: TypeScript.
+              <br /><br />
+              Persistence: PGlite.
             </div>
           </div>
         </div>
@@ -14747,7 +14793,9 @@ Your data is automatically saved and restored when you reload the page.
               A simple todo list application demonstrating TinyBase's reactive
               data management with CRUD operations.
               <br /><br />
-              Built with TypeScript.
+              Built with: TypeScript.
+              <br /><br />
+              Persistence: Local Storage.
             </div>
           </div>
         </div>

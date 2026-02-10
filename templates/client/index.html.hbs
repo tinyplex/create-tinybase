@@ -168,7 +168,11 @@
               A tic-tac-toe game demonstrating turn-based logic and computed game state.
             {{/if}}
             <br><br>
-            Built with {{#if typescript}}TypeScript{{#if schemas}} (using typed store schemas){{/if}}{{else}}JavaScript{{/if}}{{#if react}} and React{{/if}}.
+            Built with: {{#if typescript}}TypeScript{{#if schemas}} (using typed store schemas){{/if}}{{else}}JavaScript{{/if}}{{#if react}} and React{{/if}}.{{#if persist}}
+              <br><br>
+              Persistence: {{#if persistLocalStorage}}Local Storage{{else if persistSqlite}}SQLite{{else if persistPglite}}PGlite{{/if}}.{{/if}}{{#if sync}}
+              <br><br>
+              Sync: {{#if (eq syncType "remote")}}Remote{{else if (eq syncType "node")}}Node.js Server{{else if (eq syncType "durable-objects")}}Durable Objects{{/if}}.{{/if}}
           </div>
         </div>
       </div>

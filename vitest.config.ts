@@ -7,7 +7,7 @@ export default defineConfig({
       {
         test: {
           name: 'unit',
-          exclude: ['**/e2e/**', '**/node_modules/**'],
+          exclude: ['**/e2e/**', '**/node_modules/**', 'tmp/**'],
         },
       },
       {
