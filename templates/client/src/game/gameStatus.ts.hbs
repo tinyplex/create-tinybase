@@ -12,9 +12,9 @@ const currentPlayer = store.getValue('currentPlayer');
 const winner = store.getValue('winner');
 
 if (gameStatus === 'playing') {
-status.innerHTML = `Player <span class="player">${currentPlayer}</span>'s turn`;
+status.innerHTML = `Player <span class="player">${currentPlayer as string}</span>'s turn`;
 } else if (gameStatus === 'won') {
-status.innerHTML = `Player <span class="winner">${winner}</span> wins!`;
+status.innerHTML = `Player <span class="winner">${winner as string}</span> wins!`;
 } else if (gameStatus === 'draw') {
 status.textContent = "It's a draw!";
 }
