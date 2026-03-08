@@ -4,8 +4,8 @@
 
 export const GameStatus = () => {
 const gameStatus = useValue('gameStatus', STORE_ID);
-const currentPlayer = useValue('currentPlayer', STORE_ID);
-const winner = useValue('winner', STORE_ID);
+const currentPlayer = useValue('currentPlayer', STORE_ID) as string;
+const winner = useValue('winner', STORE_ID) as string;
 
 return (
 <div id="gameStatus">

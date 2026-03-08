@@ -3,7 +3,7 @@
 {{addImport "import {useCell, useSetCellCallback, useValue, STORE_ID} from './Store';"}}
 
 export const Square = ({position, disabled, winning}: {position: string; disabled: boolean; winning: boolean}) => {
-const value = useCell('board', position, 'value', STORE_ID);
+const value = useCell('board', position, 'value', STORE_ID) as string;
 const currentPlayer = useValue('currentPlayer', STORE_ID);
 
 const isDisabled = disabled || !!value;
