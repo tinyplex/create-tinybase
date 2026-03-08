@@ -1392,7 +1392,7 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: 'node_modules/@sqlite.org/sqlite-wasm/sqlite-wasm/jswasm/sqlite3.wasm',
+          src: 'node_modules/@sqlite.org/sqlite-wasm/dist/sqlite3.wasm',
           dest: '.',
         },
       ],
@@ -4172,7 +4172,7 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: 'node_modules/@sqlite.org/sqlite-wasm/sqlite-wasm/jswasm/sqlite3.wasm',
+          src: 'node_modules/@sqlite.org/sqlite-wasm/dist/sqlite3.wasm',
           dest: '.',
         },
       ],
@@ -9270,7 +9270,10 @@ export const App = () => {
 import './brushSize.css';
 
 export const BrushSize = () => {
-  const [size, setSize] = useValueState('brushSize', STORE_ID);
+  const [size, setSize] = useValueState('brushSize', STORE_ID) as [
+    number | undefined,
+    (value: number) => void,
+  ];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSize(parseInt(e.target.value));
@@ -9283,7 +9286,7 @@ export const BrushSize = () => {
         type="range"
         min="1"
         max="50"
-        value={(size as number) ?? 5}
+        value={size ?? 5}
         onChange={handleChange}
       />
       <span id="brushSizeValue">{size}</span>
@@ -10166,8 +10169,8 @@ import {useValue, STORE_ID} from './Store';
 
 export const GameStatus = () => {
   const gameStatus = useValue('gameStatus', STORE_ID);
-  const currentPlayer = useValue('currentPlayer', STORE_ID);
-  const winner = useValue('winner', STORE_ID);
+  const currentPlayer = useValue('currentPlayer', STORE_ID) as string;
+  const winner = useValue('winner', STORE_ID) as string;
 
   return (
     <div id="gameStatus">
@@ -10202,7 +10205,7 @@ export const Square = ({
   disabled: boolean;
   winning: boolean;
 }) => {
-  const value = useCell('board', position, 'value', STORE_ID);
+  const value = useCell('board', position, 'value', STORE_ID) as string;
   const currentPlayer = useValue('currentPlayer', STORE_ID);
 
   const isDisabled = disabled || !!value;
@@ -13735,9 +13738,9 @@ export const createGameStatus = (store: GameStore): HTMLDivElement => {
     const winner = store.getValue('winner');
 
     if (gameStatus === 'playing') {
-      status.innerHTML = \`Player <span class="player">\${currentPlayer}</span>'s turn\`;
+      status.innerHTML = \`Player <span class="player">\${currentPlayer as string}</span>'s turn\`;
     } else if (gameStatus === 'won') {
-      status.innerHTML = \`Player <span class="winner">\${winner}</span> wins!\`;
+      status.innerHTML = \`Player <span class="winner">\${winner as string}</span> wins!\`;
     } else if (gameStatus === 'draw') {
       status.textContent = "It's a draw!";
     }
@@ -14376,9 +14379,9 @@ export const createGameStatus = (store: GameStore): HTMLDivElement => {
     const winner = store.getValue('winner');
 
     if (gameStatus === 'playing') {
-      status.innerHTML = \`Player <span class="player">\${currentPlayer}</span>'s turn\`;
+      status.innerHTML = \`Player <span class="player">\${currentPlayer as string}</span>'s turn\`;
     } else if (gameStatus === 'won') {
-      status.innerHTML = \`Player <span class="winner">\${winner}</span> wins!\`;
+      status.innerHTML = \`Player <span class="winner">\${winner as string}</span> wins!\`;
     } else if (gameStatus === 'draw') {
       status.textContent = "It's a draw!";
     }
