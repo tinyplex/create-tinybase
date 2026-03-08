@@ -248,12 +248,12 @@ with the store.
   },
   "devDependencies": {
     "vite": "^7.3.1",
-    "@vitejs/plugin-react": "^5.1.2"
+    "@vitejs/plugin-react": "^5.1.4"
   },
   "dependencies": {
-    "tinybase": "^7.3.2",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "tinybase": "^8.0.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
   }
 }
 ",
@@ -931,14 +931,14 @@ with the store.
   },
   "devDependencies": {
     "vite": "^7.3.1",
-    "@vitejs/plugin-react": "^5.1.2",
+    "@vitejs/plugin-react": "^5.1.4",
     "vite-plugin-static-copy": "^3.2.0"
   },
   "dependencies": {
-    "tinybase": "^7.3.2",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
-    "@sqlite.org/sqlite-wasm": "^3.50.4-build1"
+    "tinybase": "^8.0.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "@sqlite.org/sqlite-wasm": "^3.51.2-build6"
   }
 }
 ",
@@ -1661,12 +1661,12 @@ with the store.
   },
   "devDependencies": {
     "vite": "^7.3.1",
-    "@vitejs/plugin-react": "^5.1.2"
+    "@vitejs/plugin-react": "^5.1.4"
   },
   "dependencies": {
-    "tinybase": "^7.3.2",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "tinybase": "^8.0.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
   }
 }
 ",
@@ -2390,12 +2390,12 @@ with the store.
   },
   "devDependencies": {
     "vite": "^7.3.1",
-    "@vitejs/plugin-react": "^5.1.2"
+    "@vitejs/plugin-react": "^5.1.4"
   },
   "dependencies": {
-    "tinybase": "^7.3.2",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "tinybase": "^8.0.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
   }
 }
 ",
@@ -3057,12 +3057,12 @@ with the store.
   },
   "devDependencies": {
     "vite": "^7.3.1",
-    "@vitejs/plugin-react": "^5.1.2"
+    "@vitejs/plugin-react": "^5.1.4"
   },
   "dependencies": {
-    "tinybase": "^7.3.2",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "tinybase": "^8.0.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
   }
 }
 ",
@@ -3738,15 +3738,15 @@ The \`server\` directory contains your Cloudflare Durable Objects WebSocket serv
   },
   "devDependencies": {
     "vite": "^7.3.1",
-    "@vitejs/plugin-react": "^5.1.2",
+    "@vitejs/plugin-react": "^5.1.4",
     "vite-plugin-static-copy": "^3.2.0"
   },
   "dependencies": {
-    "tinybase": "^7.3.2",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
+    "tinybase": "^8.0.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
     "reconnecting-websocket": "^4.4.0",
-    "@sqlite.org/sqlite-wasm": "^3.50.4-build1"
+    "@sqlite.org/sqlite-wasm": "^3.51.2-build6"
   }
 }
 ",
@@ -4228,11 +4228,11 @@ export default {
     "start": "wrangler dev"
   },
   "dependencies": {
-    "tinybase": "^7.3.2"
+    "tinybase": "^8.0.0"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260120.0",
-    "wrangler": "^4.59.2"
+    "@cloudflare/workers-types": "^4.20260307.1",
+    "wrangler": "^4.71.0"
   }
 }
 ",
@@ -4492,7 +4492,7 @@ Your data is automatically saved and restored when you reload the page.
     "vite": "^7.3.1"
   },
   "dependencies": {
-    "tinybase": "^7.3.2"
+    "tinybase": "^8.0.0"
   }
 }
 ",
@@ -5123,7 +5123,7 @@ Your data is automatically saved and restored when you reload the page.
     "vite": "^7.3.1"
   },
   "dependencies": {
-    "tinybase": "^7.3.2"
+    "tinybase": "^8.0.0"
   }
 }
 ",
@@ -5788,7 +5788,7 @@ The app uses **TinyBase** to manage application state in a reactive data store.
     "vite": "^7.3.1"
   },
   "dependencies": {
-    "tinybase": "^7.3.2"
+    "tinybase": "^8.0.0"
   }
 }
 ",
@@ -6448,7 +6448,7 @@ Your data is automatically saved and restored when you reload the page.
     "vite": "^7.3.1"
   },
   "dependencies": {
-    "tinybase": "^7.3.2"
+    "tinybase": "^8.0.0"
   }
 }
 ",
@@ -7044,7 +7044,7 @@ Your data is automatically saved and restored when you reload the page.
     "vite": "^7.3.1"
   },
   "dependencies": {
-    "tinybase": "^7.3.2"
+    "tinybase": "^8.0.0"
   }
 }
 ",
@@ -7626,15 +7626,15 @@ with the store.
   "devDependencies": {
     "vite": "^7.3.1",
     "typescript": "^5.9.3",
-    "@types/node": "^25.0.9",
-    "@types/react": "^19.2.8",
+    "@types/node": "^25.3.5",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.2"
+    "@vitejs/plugin-react": "^5.1.4"
   },
   "dependencies": {
-    "tinybase": "^7.3.2",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "tinybase": "^8.0.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
   }
 }
 ",
@@ -8407,15 +8407,15 @@ The \`server\` directory contains your Node.js WebSocket server.
   "devDependencies": {
     "vite": "^7.3.1",
     "typescript": "^5.9.3",
-    "@types/node": "^25.0.9",
-    "@types/react": "^19.2.8",
+    "@types/node": "^25.3.5",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.2"
+    "@vitejs/plugin-react": "^5.1.4"
   },
   "dependencies": {
-    "tinybase": "^7.3.2",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
+    "tinybase": "^8.0.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
     "reconnecting-websocket": "^4.4.0"
   }
 }
@@ -8950,7 +8950,7 @@ console.log(\`WebSocket server running on ws://localhost:\${PORT}\`);
     "start": "node index.js"
   },
   "dependencies": {
-    "tinybase": "^7.3.2",
+    "tinybase": "^8.0.0",
     "ws": "^8.19.0"
   },
   "devDependencies": {
@@ -9213,15 +9213,15 @@ with the store.
   "devDependencies": {
     "vite": "^7.3.1",
     "typescript": "^5.9.3",
-    "@types/node": "^25.0.9",
-    "@types/react": "^19.2.8",
+    "@types/node": "^25.3.5",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.2"
+    "@vitejs/plugin-react": "^5.1.4"
   },
   "dependencies": {
-    "tinybase": "^7.3.2",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "tinybase": "^8.0.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
   }
 }
 ",
@@ -9987,15 +9987,15 @@ with the store.
   "devDependencies": {
     "vite": "^7.3.1",
     "typescript": "^5.9.3",
-    "@types/node": "^25.0.9",
-    "@types/react": "^19.2.8",
+    "@types/node": "^25.3.5",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.2"
+    "@vitejs/plugin-react": "^5.1.4"
   },
   "dependencies": {
-    "tinybase": "^7.3.2",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "tinybase": "^8.0.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
   }
 }
 ",
@@ -10700,15 +10700,15 @@ with the store.
   "devDependencies": {
     "vite": "^7.3.1",
     "typescript": "^5.9.3",
-    "@types/node": "^25.0.9",
-    "@types/react": "^19.2.8",
+    "@types/node": "^25.3.5",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.2"
+    "@vitejs/plugin-react": "^5.1.4"
   },
   "dependencies": {
-    "tinybase": "^7.3.2",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "tinybase": "^8.0.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
   }
 }
 ",
@@ -11391,15 +11391,15 @@ with the store.
   "devDependencies": {
     "vite": "^7.3.1",
     "typescript": "^5.9.3",
-    "@types/node": "^25.0.9",
-    "@types/react": "^19.2.8",
+    "@types/node": "^25.3.5",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.2"
+    "@vitejs/plugin-react": "^5.1.4"
   },
   "dependencies": {
-    "tinybase": "^7.3.2",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
+    "tinybase": "^8.0.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
     "reconnecting-websocket": "^4.4.0"
   }
 }
@@ -12090,10 +12090,10 @@ Your data is automatically saved and restored when you reload the page.
   "devDependencies": {
     "vite": "^7.3.1",
     "typescript": "^5.9.3",
-    "@types/node": "^25.0.9"
+    "@types/node": "^25.3.5"
   },
   "dependencies": {
-    "tinybase": "^7.3.2"
+    "tinybase": "^8.0.0"
   }
 }
 ",
@@ -12775,10 +12775,10 @@ Your data is automatically saved and restored when you reload the page.
   "devDependencies": {
     "vite": "^7.3.1",
     "typescript": "^5.9.3",
-    "@types/node": "^25.0.9"
+    "@types/node": "^25.3.5"
   },
   "dependencies": {
-    "tinybase": "^7.3.2"
+    "tinybase": "^8.0.0"
   }
 }
 ",
@@ -13498,10 +13498,10 @@ Your data is automatically saved and restored when you reload the page.
   "devDependencies": {
     "vite": "^7.3.1",
     "typescript": "^5.9.3",
-    "@types/node": "^25.0.9"
+    "@types/node": "^25.3.5"
   },
   "dependencies": {
-    "tinybase": "^7.3.2"
+    "tinybase": "^8.0.0"
   }
 }
 ",
@@ -14137,11 +14137,11 @@ Your data is automatically saved and restored when you reload the page.
   "devDependencies": {
     "vite": "^7.3.1",
     "typescript": "^5.9.3",
-    "@types/node": "^25.0.9",
+    "@types/node": "^25.3.5",
     "vite-plugin-static-copy": "^3.2.0"
   },
   "dependencies": {
-    "tinybase": "^7.3.2",
+    "tinybase": "^8.0.0",
     "@electric-sql/pglite": "^0.3.15"
   }
 }
@@ -14818,10 +14818,10 @@ Your data is automatically saved and restored when you reload the page.
   "devDependencies": {
     "vite": "^7.3.1",
     "typescript": "^5.9.3",
-    "@types/node": "^25.0.9"
+    "@types/node": "^25.3.5"
   },
   "dependencies": {
-    "tinybase": "^7.3.2"
+    "tinybase": "^8.0.0"
   }
 }
 ",
