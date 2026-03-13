@@ -10,7 +10,7 @@ const TEST_DIR = join(__dirname, '.test-output');
 
 interface Combination {
   language: 'javascript' | 'typescript';
-  framework: 'vanilla' | 'react';
+  framework: 'vanilla' | 'react' | 'svelte';
   appType: 'todos' | 'chat' | 'drawing' | 'game';
   syncType?: 'none' | 'remote' | 'node' | 'durable-objects';
   persistenceType?: 'none' | 'local-storage' | 'sqlite' | 'pglite';
@@ -49,6 +49,38 @@ const combinations: Combination[] = [
     syncType: 'none',
     persistenceType: 'local-storage',
     name: 'ts-react-todos',
+  },
+  {
+    language: 'javascript',
+    framework: 'svelte',
+    appType: 'todos',
+    syncType: 'none',
+    persistenceType: 'local-storage',
+    name: 'js-svelte-todos',
+  },
+  {
+    language: 'typescript',
+    framework: 'svelte',
+    appType: 'todos',
+    syncType: 'none',
+    persistenceType: 'local-storage',
+    name: 'ts-svelte-todos',
+  },
+  {
+    language: 'typescript',
+    framework: 'svelte',
+    appType: 'todos',
+    syncType: 'remote',
+    persistenceType: 'local-storage',
+    name: 'ts-svelte-todos-remote-sync',
+  },
+  {
+    language: 'typescript',
+    framework: 'svelte',
+    appType: 'todos',
+    syncType: 'none',
+    persistenceType: 'sqlite',
+    name: 'ts-svelte-todos-sqlite',
   },
   {
     language: 'javascript',
@@ -202,7 +234,7 @@ interface CLIResult {
 }
 
 type Language = 'javascript' | 'typescript';
-type Framework = 'vanilla' | 'react';
+type Framework = 'vanilla' | 'react' | 'svelte';
 type AppType = 'todos' | 'chat' | 'drawing' | 'game';
 type SyncType = 'none' | 'remote' | 'node' | 'durable-objects';
 type PersistenceType = 'none' | 'local-storage' | 'sqlite' | 'pglite';
@@ -360,6 +392,14 @@ describe('create-tinybase', () => {
           expect(pkg.dependencies.react).toBeDefined();
           expect(pkg.dependencies['react-dom']).toBeDefined();
         }
+
+        if (combo.framework === 'svelte') {
+          expect(pkg.dependencies.tinybase).toBe('beta');
+          expect(pkg.devDependencies?.svelte).toBeDefined();
+          expect(
+            pkg.devDependencies?.['@sveltejs/vite-plugin-svelte'],
+          ).toBeDefined();
+        }
       });
 
       it('should have correct file structure', async () => {
@@ -378,8 +418,12 @@ describe('create-tinybase', () => {
           expect(files).toContain('client/tsconfig.json');
         }
 
-        if (combo.framework === 'react') {
+        if (combo.framework === 'react' || combo.framework === 'svelte') {
           expect(files).toContain('client/vite.config.js');
+        }
+
+        if (combo.framework === 'svelte') {
+          expect(files).toContain('client/src/App.svelte');
         }
       });
 

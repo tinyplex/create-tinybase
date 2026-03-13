@@ -62,6 +62,7 @@ const config = {
       choices: [
         {title: 'React', value: 'react'},
         {title: 'Vanilla', value: 'vanilla'},
+        {title: 'Svelte (Todo app only)', value: 'svelte'},
       ],
       initial: 0,
     },
@@ -137,6 +138,11 @@ const config = {
     } = answers;
     const typescript = language === 'typescript';
     const javascript = !typescript;
+    if (framework === 'svelte' && appType !== 'todos') {
+      throw new Error(
+        'Svelte support is currently available only for the Todo app',
+      );
+    }
     const react = framework === 'react';
     const vanilla = framework === 'vanilla';
     const svelte = framework === 'svelte';
@@ -163,6 +169,7 @@ const config = {
     const persistLocalStorage = normalizedPersistenceType === 'local-storage';
     const persistSqlite = normalizedPersistenceType === 'sqlite';
     const persistPglite = normalizedPersistenceType === 'pglite';
+    const needsViteConfig = react || svelte || persistSqlite || persistPglite;
 
     return {
       projectName,
@@ -182,6 +189,7 @@ const config = {
       persistLocalStorage,
       persistSqlite,
       persistPglite,
+      needsViteConfig,
       installAndRun: installAndRun === true || installAndRun === 'true',
       typescript,
       javascript,

@@ -1,4 +1,7 @@
 {
+{{#if svelte}}
+"extends": "@tsconfig/svelte/tsconfig.json",
+{{/if}}
 "compilerOptions": {
 "target": "ES2020",
 "useDefineForClassFields": true,
@@ -8,6 +11,9 @@
 "moduleResolution": "bundler",
 "allowImportingTsExtensions": true,
 "isolatedModules": true,
+{{#if svelte}}
+"verbatimModuleSyntax": true,
+{{/if}}
 "moduleDetection": "force",
 "noEmit": true,
 {{#if react}}

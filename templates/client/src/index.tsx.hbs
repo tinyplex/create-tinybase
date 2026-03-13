@@ -5,6 +5,13 @@
   }
 {{/if}}
 
+{{#if vanilla}}
+  {{addImport "import {app} from './app';"}}
+  {{includeFile template="client/src/{{appType}}/app.ts.hbs" output="client/src/app.{{scriptExt}}"}}
+  addEventListener('load', () => {
+  app();
+  });
+{{/if}}
 {{#if react}}
   {{addImport "import ReactDOM from 'react-dom/client';"}}
   {{addImport "import {App} from './App';"}}
@@ -14,10 +21,13 @@
   <App />);
   });
 {{/if}}
-{{#if vanilla}}
-  {{addImport "import {app} from './app';"}}
-  {{includeFile template="client/src/{{appType}}/app.ts.hbs" output="client/src/app.{{scriptExt}}"}}
+{{#if svelte}}
+  {{addImport "import {mount} from 'svelte';"}}
+  {{addImport "import App from './App.svelte';"}}
+  {{includeFile template="client/src/{{appType}}/App.svelte.hbs" output="client/src/App.{{componentExt}}"}}
   addEventListener('load', () => {
-  app();
+  mount(App, {
+  target: document.getElementById('app')!,
+  });
   });
 {{/if}}

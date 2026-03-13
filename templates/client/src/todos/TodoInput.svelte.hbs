@@ -1,0 +1,41 @@
+{{includeFile template="client/src/shared/button.css.hbs" output="client/src/button.css"}}
+{{includeFile template="client/src/shared/input.css.hbs" output="client/src/input.css"}}
+{{includeFile template="client/src/todos/todoInput.css.hbs" output="client/src/todoInput.css"}}
+
+<script{{#if typescript}} lang="ts"{{/if}}>
+import './button.css';
+import './input.css';
+import './todoInput.css';
+import {store} from './store';
+
+let text = $state('');
+let input{{#if typescript}}: HTMLInputElement | undefined{{/if}};
+
+const addTodo = () => {
+const trimmedText = text.trim();
+if (trimmedText) {
+store.addRow('todos', {text: trimmedText, completed: false});
+text = '';
+input?.focus();
+}
+};
+
+const handleKeyDown = (event{{#if typescript}}: KeyboardEvent{{/if}}) => {
+if (event.key === 'Enter') {
+event.preventDefault();
+addTodo();
+}
+};
+</script>
+
+<div id="todoInput">
+  <input
+    bind:this={input}
+    bind:value={text}
+    type="text"
+    placeholder="What needs to be done?"
+    autofocus
+    onkeydown={handleKeyDown}
+  />
+  <button class="primary" onclick={addTodo}>Add</button>
+</div>

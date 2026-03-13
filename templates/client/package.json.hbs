@@ -6,7 +6,12 @@
   {{includeFile template="client/index.html.hbs" output="client/index.html"}}
   "dev": "vite"
   {{#if typescript}}
-    "build": "tsc && vite build"
+    {{#if svelte}}
+      "build": "svelte-check --tsconfig ./tsconfig.json && vite build"
+      "check": "svelte-check --tsconfig ./tsconfig.json"
+    {{else}}
+      "build": "tsc && vite build"
+    {{/if}}
   {{else}}
     "build": "vite build"
   {{/if}}
@@ -26,6 +31,10 @@
   {{#if typescript}}
     "typescript": "^5.9.3"
     "@types/node": "^25.3.5"
+    {{#if svelte}}
+      "@tsconfig/svelte": "^5.0.5"
+      "svelte-check": "^4.3.1"
+    {{/if}}
     {{#if react}}
       "@types/react": "^19.2.14"
       "@types/react-dom": "^19.2.3"
@@ -33,6 +42,10 @@
   {{/if}}
   {{#if react}}
     "@vitejs/plugin-react": "^5.1.4"
+  {{/if}}
+  {{#if svelte}}
+    "@sveltejs/vite-plugin-svelte": "^6.2.1"
+    "svelte": "^5.53.11"
   {{/if}}
   {{#if persistSqlite}}
     "vite-plugin-static-copy": "^3.2.0"
@@ -55,9 +68,9 @@
   {{/if}}
 {{/list}}
 },
-"dependencies": {
+  "dependencies": {
 {{#list}}
-  "tinybase": "^8.0.0"
+  "tinybase": "{{#if svelte}}beta{{else}}^8.0.0{{/if}}"
   {{#if react}}
     "react": "^19.2.4"
     "react-dom": "^19.2.4"
@@ -80,15 +93,8 @@
 {{#if eslint}}
   {{includeFile template="client/eslint.config.js.hbs" output="client/eslint.config.js"}}
 {{/if}}
-{{#if react}}
+{{#if needsViteConfig}}
   {{includeFile template="client/vite.config.js.hbs" output="client/vite.config.js"}}
-{{else}}
-  {{#if persistSqlite}}
-    {{includeFile template="client/vite.config.js.hbs" output="client/vite.config.js"}}
-  {{/if}}
-  {{#if persistPglite}}
-    {{includeFile template="client/vite.config.js.hbs" output="client/vite.config.js"}}
-  {{/if}}
 {{/if}}
 {{#if typescript}}
   {{includeFile template="client/tsconfig.json.hbs" output="client/tsconfig.json"}}

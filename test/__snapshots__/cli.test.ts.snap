@@ -4251,6 +4251,497 @@ new_sqlite_classes = ["TinyBaseDurableObject"]",
 }
 `;
 
+exports[`create-tinybase > js-svelte-todos > should match snapshot 1`] = `
+{
+  "README.md": "# test-js-svelte-todos
+
+A TinyBase app built with JavaScript and Svelte.
+
+## Getting Started
+
+Alongside this file, you will see a directory called \`client\`.
+
+To start the web client with Vite, run the following commands:
+
+\`\`\`bash
+cd client
+npm install
+npm run dev
+\`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your Svelte-based web application,
+built with Vite and JavaScript.
+
+#### Key Files
+
+- **\`index.html\`** - The main HTML file that loads your app
+- **\`src/index.js\`** - Entry point that bootstraps the application and mounts the Svelte app
+- **\`src/App.svelte\`** - Main Svelte component that renders the todo list
+- **\`src/store.js\`**
+- TinyBase main store configuration
+- **\`src/config.js\`** - Configuration settings
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
+
+**Svelte Integration** - TinyBase provides Svelte stores and helpers that keep the
+UI reactive as data changes. Components subscribe declaratively so the interface
+stays synchronized with the underlying TinyBase store.
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase Todos</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Todos</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
+            i
+            <div id="infoTooltip">
+              A simple todo list application demonstrating TinyBase's reactive
+              data management with CRUD operations.
+              <br /><br />
+              Built with: JavaScript and Svelte.
+              <br /><br />
+              Persistence: Local Storage.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="app"></div>
+    </div>
+
+    <script type="module" src="/src/index.js"></script>
+  </body>
+</html>
+",
+  "client/package.json": "{
+  "name": "test-js-svelte-todos",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.3.1",
+    "@sveltejs/vite-plugin-svelte": "^6.2.1",
+    "svelte": "^5.53.11"
+  },
+  "dependencies": {
+    "tinybase": "beta"
+  }
+}
+",
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "client/src/App.svelte": "
+
+
+
+
+<script>
+import {onMount} from 'svelte';
+import Loading from './Loading.svelte';
+import TodoInput from './TodoInput.svelte';
+import TodoList from './TodoList.svelte';
+import {storeReady} from './store';
+
+let loading = $state(true);
+
+onMount(async () => {
+await storeReady;
+loading = false;
+});
+</script>
+
+{#if loading}
+  <Loading />
+{:else}
+  <TodoInput />
+  <TodoList />
+{/if}
+",
+  "client/src/Loading.svelte": "<script>
+import './loading.css';
+</script>
+
+
+
+<div id="loading"></div>
+",
+  "client/src/TodoInput.svelte": "
+
+
+
+<script>
+import './button.css';
+import './input.css';
+import './todoInput.css';
+import {store} from './store';
+
+let text = $state('');
+let input;
+
+const addTodo = () => {
+const trimmedText = text.trim();
+if (trimmedText) {
+store.addRow('todos', {text: trimmedText, completed: false});
+text = '';
+input?.focus();
+}
+};
+
+const handleKeyDown = (event) => {
+if (event.key === 'Enter') {
+event.preventDefault();
+addTodo();
+}
+};
+</script>
+
+<div id="todoInput">
+  <input
+    bind:this={input}
+    bind:value={text}
+    type="text"
+    placeholder="What needs to be done?"
+    autofocus
+    onkeydown={handleKeyDown}
+  />
+  <button class="primary" onclick={addTodo}>Add</button>
+</div>
+",
+  "client/src/TodoList.svelte": "
+
+<script>
+import './todoList.css';
+import {useSortedRowIds} from 'tinybase/ui-svelte';
+import TodoItem from './TodoItem.svelte';
+import {store} from './store';
+
+const todoIds = useSortedRowIds('todos', undefined, false, 0, undefined, store);
+</script>
+
+<div id="todoList">
+  {#each todoIds.current as rowId (rowId)}
+    <TodoItem {rowId} />
+  {/each}
+</div>
+",
+  "client/src/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "client/src/index.js": "import {mount} from 'svelte';
+import App from './App.svelte';
+
+addEventListener('load', () => {
+  mount(App, {
+    target: document.getElementById('app'),
+  });
+});
+",
+  "client/src/input.css": "input[type='text'] {
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+input[type='text']:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input[type='text']::placeholder {
+  color: var(--fg2);
+}
+",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
+  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
+</svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+",
+  "client/src/store.js": "import {createMergeableStore} from 'tinybase';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+
+export const store = createMergeableStore().setDefaultContent([
+  {
+    todos: {
+      1: {text: 'Learn TinyBase', completed: false},
+      2: {text: 'Build an app', completed: false},
+    },
+  },
+  {},
+]);
+
+let resolveReady;
+export const storeReady = new Promise((resolve) => {
+  resolveReady = resolve;
+});
+
+const persister = createLocalPersister(store, 'todos');
+persister.load().then(() => {
+  persister.startAutoSave();
+  resolveReady();
+});
+",
+  "client/src/todoInput.css": "#todoInput {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+#todoInput input {
+  flex: 1;
+}
+",
+  "client/src/todoList.css": "#todoList {
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  overflow: hidden;
+  background: var(--bg2);
+}
+
+#todoList:empty::before {
+  content: 'No todos yet. Add one above!';
+  display: block;
+  padding: 2rem;
+  text-align: center;
+  color: var(--fg2);
+}
+",
+  "client/vite.config.js": "import {defineConfig} from 'vite';
+import {svelte} from '@sveltejs/vite-plugin-svelte';
+
+export default defineConfig({
+  plugins: [svelte()],
+});
+",
+}
+`;
+
 exports[`create-tinybase > js-vanilla-chat > should match snapshot 1`] = `
 {
   "README.md": "# test-js-vanilla-chat
@@ -11848,6 +12339,1682 @@ export default defineConfig({
       jsxRuntime: 'automatic',
     }),
   ],
+});
+",
+}
+`;
+
+exports[`create-tinybase > ts-svelte-todos > should match snapshot 1`] = `
+{
+  "README.md": "# test-ts-svelte-todos
+
+A TinyBase app built with TypeScript and Svelte.
+
+## Getting Started
+
+Alongside this file, you will see a directory called \`client\`.
+
+To start the web client with Vite, run the following commands:
+
+\`\`\`bash
+cd client
+npm install
+npm run dev
+\`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your Svelte-based web application,
+built with Vite and TypeScript.
+
+#### Key Files
+
+- **\`index.html\`** - The main HTML file that loads your app
+- **\`src/index.ts\`** - Entry point that bootstraps the application and mounts the Svelte app
+- **\`src/App.svelte\`** - Main Svelte component that renders the todo list
+- **\`src/store.ts\`**
+- TinyBase main store configuration
+- **\`src/config.ts\`** - Configuration settings
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
+
+**Svelte Integration** - TinyBase provides Svelte stores and helpers that keep the
+UI reactive as data changes. Components subscribe declaratively so the interface
+stays synchronized with the underlying TinyBase store.
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase Todos</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Todos</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
+            i
+            <div id="infoTooltip">
+              A simple todo list application demonstrating TinyBase's reactive
+              data management with CRUD operations.
+              <br /><br />
+              Built with: TypeScript and Svelte.
+              <br /><br />
+              Persistence: Local Storage.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="app"></div>
+    </div>
+
+    <script type="module" src="/src/index.ts"></script>
+  </body>
+</html>
+",
+  "client/package.json": "{
+  "name": "test-ts-svelte-todos",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "svelte-check --tsconfig ./tsconfig.json && vite build",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.3.1",
+    "typescript": "^5.9.3",
+    "@types/node": "^25.3.5",
+    "@tsconfig/svelte": "^5.0.5",
+    "svelte-check": "^4.3.1",
+    "@sveltejs/vite-plugin-svelte": "^6.2.1",
+    "svelte": "^5.53.11"
+  },
+  "dependencies": {
+    "tinybase": "beta"
+  }
+}
+",
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "client/src/App.svelte": "
+
+
+
+
+<script lang="ts">
+import {onMount} from 'svelte';
+import Loading from './Loading.svelte';
+import TodoInput from './TodoInput.svelte';
+import TodoList from './TodoList.svelte';
+import {storeReady} from './store';
+
+let loading = $state(true);
+
+onMount(async () => {
+await storeReady;
+loading = false;
+});
+</script>
+
+{#if loading}
+  <Loading />
+{:else}
+  <TodoInput />
+  <TodoList />
+{/if}
+",
+  "client/src/Loading.svelte": "<script>
+import './loading.css';
+</script>
+
+
+
+<div id="loading"></div>
+",
+  "client/src/TodoInput.svelte": "
+
+
+
+<script lang="ts">
+import './button.css';
+import './input.css';
+import './todoInput.css';
+import {store} from './store';
+
+let text = $state('');
+let input: HTMLInputElement | undefined;
+
+const addTodo = () => {
+const trimmedText = text.trim();
+if (trimmedText) {
+store.addRow('todos', {text: trimmedText, completed: false});
+text = '';
+input?.focus();
+}
+};
+
+const handleKeyDown = (event: KeyboardEvent) => {
+if (event.key === 'Enter') {
+event.preventDefault();
+addTodo();
+}
+};
+</script>
+
+<div id="todoInput">
+  <input
+    bind:this={input}
+    bind:value={text}
+    type="text"
+    placeholder="What needs to be done?"
+    autofocus
+    onkeydown={handleKeyDown}
+  />
+  <button class="primary" onclick={addTodo}>Add</button>
+</div>
+",
+  "client/src/TodoList.svelte": "
+
+<script lang="ts">
+import './todoList.css';
+import {useSortedRowIds} from 'tinybase/ui-svelte';
+import TodoItem from './TodoItem.svelte';
+import {store} from './store';
+
+const todoIds = useSortedRowIds('todos', undefined, false, 0, undefined, store);
+</script>
+
+<div id="todoList">
+  {#each todoIds.current as rowId (rowId)}
+    <TodoItem {rowId} />
+  {/each}
+</div>
+",
+  "client/src/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "client/src/index.ts": "import {mount} from 'svelte';
+import App from './App.svelte';
+
+addEventListener('load', () => {
+  mount(App, {
+    target: document.getElementById('app')!,
+  });
+});
+",
+  "client/src/input.css": "input[type='text'] {
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+input[type='text']:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input[type='text']::placeholder {
+  color: var(--fg2);
+}
+",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
+  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
+</svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+",
+  "client/src/store.ts": "import {createMergeableStore} from 'tinybase';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+
+export type TodoRow = {text: string; completed: boolean};
+
+export const store = createMergeableStore().setDefaultContent([
+  {
+    todos: {
+      '1': {text: 'Learn TinyBase', completed: false},
+      '2': {text: 'Build an app', completed: false},
+    },
+  },
+  {},
+]);
+
+let resolveReady: () => void;
+export const storeReady = new Promise<void>((resolve) => {
+  resolveReady = resolve;
+});
+
+const persister = createLocalPersister(store, 'todos');
+persister.load().then(() => {
+  persister.startAutoSave();
+  resolveReady();
+});
+
+export type TodosStore = typeof store;
+",
+  "client/src/todoInput.css": "#todoInput {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+#todoInput input {
+  flex: 1;
+}
+",
+  "client/src/todoList.css": "#todoList {
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  overflow: hidden;
+  background: var(--bg2);
+}
+
+#todoList:empty::before {
+  content: 'No todos yet. Add one above!';
+  display: block;
+  padding: 2rem;
+  text-align: center;
+  color: var(--fg2);
+}
+",
+  "client/src/vite-env.d.ts": "/// <reference types="svelte" />
+/// <reference types="vite/client" />
+
+declare module '*.css' {
+  const content: string;
+  export default content;
+}
+",
+  "client/tsconfig.json": "{
+  "extends": "@tsconfig/svelte/tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src"]
+}
+",
+  "client/vite.config.js": "import {defineConfig} from 'vite';
+import {svelte} from '@sveltejs/vite-plugin-svelte';
+
+export default defineConfig({
+  plugins: [svelte()],
+});
+",
+}
+`;
+
+exports[`create-tinybase > ts-svelte-todos-remote-sync > should match snapshot 1`] = `
+{
+  "README.md": "# test-ts-svelte-todos-remote-sync
+
+A TinyBase app built with TypeScript and Svelte.
+
+## Getting Started
+
+Alongside this file, you will see a directory called \`client\`.
+
+To start the web client with Vite, run the following commands:
+
+\`\`\`bash
+cd client
+npm install
+npm run dev
+\`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your Svelte-based web application,
+built with Vite and TypeScript.
+
+#### Key Files
+
+- **\`index.html\`** - The main HTML file that loads your app
+- **\`src/index.ts\`** - Entry point that bootstraps the application and mounts the Svelte app
+- **\`src/App.svelte\`** - Main Svelte component that renders the todo list
+- **\`src/store.ts\`**
+- TinyBase main store configuration
+- **\`src/config.ts\`** - Configuration settings
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+The store is a **MergeableStore**, which supports real-time synchronization across
+multiple clients. When you open the app, it generates a unique room ID in the URL
+path (e.g., \`/abc123\`). Anyone who visits the same URL will share the same data
+and see live updates from other users.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
+
+**Synchronization** is powered by TinyBase's WebSocket synchronizer (connecting to a demo server at vite.tinybase.org).
+When data changes locally, it's sent to the server and broadcast to all other
+clients in the same room. The MergeableStore handles conflict resolution using
+CRDTs, ensuring all clients converge to the same state.
+
+**Svelte Integration** - TinyBase provides Svelte stores and helpers that keep the
+UI reactive as data changes. Components subscribe declaratively so the interface
+stays synchronized with the underlying TinyBase store.
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase Todos</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Todos</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
+            i
+            <div id="infoTooltip">
+              A simple todo list application demonstrating TinyBase's reactive
+              data management with CRUD operations.
+              <br /><br />
+              Built with: TypeScript and Svelte.
+              <br /><br />
+              Persistence: Local Storage.
+              <br /><br />
+              Sync: Remote.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="app"></div>
+    </div>
+
+    <script type="module" src="/src/index.ts"></script>
+  </body>
+</html>
+",
+  "client/package.json": "{
+  "name": "test-ts-svelte-todos-remote-sync",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "svelte-check --tsconfig ./tsconfig.json && vite build",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.3.1",
+    "typescript": "^5.9.3",
+    "@types/node": "^25.3.5",
+    "@tsconfig/svelte": "^5.0.5",
+    "svelte-check": "^4.3.1",
+    "@sveltejs/vite-plugin-svelte": "^6.2.1",
+    "svelte": "^5.53.11"
+  },
+  "dependencies": {
+    "tinybase": "beta",
+    "reconnecting-websocket": "^4.4.0"
+  }
+}
+",
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "client/src/App.svelte": "
+
+
+
+
+<script lang="ts">
+import {onMount} from 'svelte';
+import Loading from './Loading.svelte';
+import TodoInput from './TodoInput.svelte';
+import TodoList from './TodoList.svelte';
+import {storeReady} from './store';
+
+let loading = $state(true);
+
+onMount(async () => {
+await storeReady;
+loading = false;
+});
+</script>
+
+{#if loading}
+  <Loading />
+{:else}
+  <TodoInput />
+  <TodoList />
+{/if}
+",
+  "client/src/Loading.svelte": "<script>
+import './loading.css';
+</script>
+
+
+
+<div id="loading"></div>
+",
+  "client/src/TodoInput.svelte": "
+
+
+
+<script lang="ts">
+import './button.css';
+import './input.css';
+import './todoInput.css';
+import {store} from './store';
+
+let text = $state('');
+let input: HTMLInputElement | undefined;
+
+const addTodo = () => {
+const trimmedText = text.trim();
+if (trimmedText) {
+store.addRow('todos', {text: trimmedText, completed: false});
+text = '';
+input?.focus();
+}
+};
+
+const handleKeyDown = (event: KeyboardEvent) => {
+if (event.key === 'Enter') {
+event.preventDefault();
+addTodo();
+}
+};
+</script>
+
+<div id="todoInput">
+  <input
+    bind:this={input}
+    bind:value={text}
+    type="text"
+    placeholder="What needs to be done?"
+    autofocus
+    onkeydown={handleKeyDown}
+  />
+  <button class="primary" onclick={addTodo}>Add</button>
+</div>
+",
+  "client/src/TodoList.svelte": "
+
+<script lang="ts">
+import './todoList.css';
+import {useSortedRowIds} from 'tinybase/ui-svelte';
+import TodoItem from './TodoItem.svelte';
+import {store} from './store';
+
+const todoIds = useSortedRowIds('todos', undefined, false, 0, undefined, store);
+</script>
+
+<div id="todoList">
+  {#each todoIds.current as rowId (rowId)}
+    <TodoItem {rowId} />
+  {/each}
+</div>
+",
+  "client/src/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "client/src/config.ts": "export const SERVER = 'wss://vite.tinybase.org';
+",
+  "client/src/index.ts": "import {getUniqueId} from 'tinybase';
+import {mount} from 'svelte';
+import App from './App.svelte';
+
+if (location.pathname === '/') {
+  location.assign('/' + getUniqueId());
+}
+
+addEventListener('load', () => {
+  mount(App, {
+    target: document.getElementById('app')!,
+  });
+});
+",
+  "client/src/input.css": "input[type='text'] {
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+input[type='text']:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input[type='text']::placeholder {
+  color: var(--fg2);
+}
+",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
+  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
+</svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+",
+  "client/src/store.ts": "import {createMergeableStore} from 'tinybase';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+import {SERVER} from './config';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
+
+export type TodoRow = {text: string; completed: boolean};
+
+export const store = createMergeableStore().setDefaultContent([
+  {
+    todos: {
+      '1': {text: 'Learn TinyBase', completed: false},
+      '2': {text: 'Build an app', completed: false},
+    },
+  },
+  {},
+]);
+
+let resolveReady: () => void;
+export const storeReady = new Promise<void>((resolve) => {
+  resolveReady = resolve;
+});
+
+const persister = createLocalPersister(store, 'todos');
+persister.load().then(() => {
+  persister.startAutoSave();
+  resolveReady();
+});
+
+const serverPathId = location.pathname;
+createWsSynchronizer(
+  store,
+  new ReconnectingWebSocket(SERVER + serverPathId),
+).then(async (synchronizer) => {
+  await synchronizer.startSync();
+
+  synchronizer.getWebSocket().addEventListener('open', () => {
+    synchronizer.load().then(() => {
+      synchronizer.save();
+    });
+  });
+});
+
+export type TodosStore = typeof store;
+",
+  "client/src/todoInput.css": "#todoInput {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+#todoInput input {
+  flex: 1;
+}
+",
+  "client/src/todoList.css": "#todoList {
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  overflow: hidden;
+  background: var(--bg2);
+}
+
+#todoList:empty::before {
+  content: 'No todos yet. Add one above!';
+  display: block;
+  padding: 2rem;
+  text-align: center;
+  color: var(--fg2);
+}
+",
+  "client/src/vite-env.d.ts": "/// <reference types="svelte" />
+/// <reference types="vite/client" />
+
+declare module '*.css' {
+  const content: string;
+  export default content;
+}
+",
+  "client/tsconfig.json": "{
+  "extends": "@tsconfig/svelte/tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src"]
+}
+",
+  "client/vite.config.js": "import {defineConfig} from 'vite';
+import {svelte} from '@sveltejs/vite-plugin-svelte';
+
+export default defineConfig({
+  plugins: [svelte()],
+});
+",
+}
+`;
+
+exports[`create-tinybase > ts-svelte-todos-sqlite > should match snapshot 1`] = `
+{
+  "README.md": "# test-ts-svelte-todos-sqlite
+
+A TinyBase app built with TypeScript and Svelte.
+
+## Getting Started
+
+Alongside this file, you will see a directory called \`client\`.
+
+To start the web client with Vite, run the following commands:
+
+\`\`\`bash
+cd client
+npm install
+npm run dev
+\`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your Svelte-based web application,
+built with Vite and TypeScript.
+
+#### Key Files
+
+- **\`index.html\`** - The main HTML file that loads your app
+- **\`src/index.ts\`** - Entry point that bootstraps the application and mounts the Svelte app
+- **\`src/App.svelte\`** - Main Svelte component that renders the todo list
+- **\`src/store.ts\`**
+- TinyBase main store configuration
+- **\`src/config.ts\`** - Configuration settings
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+**Persistence** is enabled using SQLite WASM (running entirely in the browser).
+Your data is automatically saved and restored when you reload the page.
+
+**Svelte Integration** - TinyBase provides Svelte stores and helpers that keep the
+UI reactive as data changes. Components subscribe declaratively so the interface
+stays synchronized with the underlying TinyBase store.
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase Todos</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #appContainer {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #topBar {
+        background: var(--bg-header);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 #0007;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+      }
+
+      #topBarLogo {
+        height: 2rem;
+        width: 2rem;
+        flex-shrink: 0;
+      }
+
+      #topBarTitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+
+      #topBarInfo {
+        position: relative;
+      }
+
+      #infoIcon {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid var(--fg2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--fg2);
+        cursor: help;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      #infoIcon:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      #infoIcon:hover #infoTooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      #infoTooltip {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        width: 20rem;
+        white-space: normal;
+        color: var(--fg);
+        line-height: 1.5;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.25rem);
+        transition: all 0.2s;
+        pointer-events: none;
+        box-shadow: 0 1px 2px 0 #0007;
+      }
+
+      #infoTooltip a {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+
+      #infoTooltip::before {
+        content: '';
+        position: absolute;
+        right: 0.75rem;
+        top: -0.375rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        background: var(--bg2);
+        border-left: 1px solid var(--border);
+        border-top: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="appContainer">
+      <div id="topBar">
+        <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+        <div id="topBarTitle">TinyBase Todos</div>
+        <div id="topBarInfo">
+          <div id="infoIcon">
+            i
+            <div id="infoTooltip">
+              A simple todo list application demonstrating TinyBase's reactive
+              data management with CRUD operations.
+              <br /><br />
+              Built with: TypeScript and Svelte.
+              <br /><br />
+              Persistence: SQLite.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="app"></div>
+    </div>
+
+    <script type="module" src="/src/index.ts"></script>
+  </body>
+</html>
+",
+  "client/package.json": "{
+  "name": "test-ts-svelte-todos-sqlite",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "svelte-check --tsconfig ./tsconfig.json && vite build",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.3.1",
+    "typescript": "^5.9.3",
+    "@types/node": "^25.3.5",
+    "@tsconfig/svelte": "^5.0.5",
+    "svelte-check": "^4.3.1",
+    "@sveltejs/vite-plugin-svelte": "^6.2.1",
+    "svelte": "^5.53.11",
+    "vite-plugin-static-copy": "^3.2.0"
+  },
+  "dependencies": {
+    "tinybase": "beta",
+    "@sqlite.org/sqlite-wasm": "^3.51.2-build6"
+  }
+}
+",
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "client/src/App.svelte": "
+
+
+
+
+<script lang="ts">
+import {onMount} from 'svelte';
+import Loading from './Loading.svelte';
+import TodoInput from './TodoInput.svelte';
+import TodoList from './TodoList.svelte';
+import {storeReady} from './store';
+
+let loading = $state(true);
+
+onMount(async () => {
+await storeReady;
+loading = false;
+});
+</script>
+
+{#if loading}
+  <Loading />
+{:else}
+  <TodoInput />
+  <TodoList />
+{/if}
+",
+  "client/src/Loading.svelte": "<script>
+import './loading.css';
+</script>
+
+
+
+<div id="loading"></div>
+",
+  "client/src/TodoInput.svelte": "
+
+
+
+<script lang="ts">
+import './button.css';
+import './input.css';
+import './todoInput.css';
+import {store} from './store';
+
+let text = $state('');
+let input: HTMLInputElement | undefined;
+
+const addTodo = () => {
+const trimmedText = text.trim();
+if (trimmedText) {
+store.addRow('todos', {text: trimmedText, completed: false});
+text = '';
+input?.focus();
+}
+};
+
+const handleKeyDown = (event: KeyboardEvent) => {
+if (event.key === 'Enter') {
+event.preventDefault();
+addTodo();
+}
+};
+</script>
+
+<div id="todoInput">
+  <input
+    bind:this={input}
+    bind:value={text}
+    type="text"
+    placeholder="What needs to be done?"
+    autofocus
+    onkeydown={handleKeyDown}
+  />
+  <button class="primary" onclick={addTodo}>Add</button>
+</div>
+",
+  "client/src/TodoList.svelte": "
+
+<script lang="ts">
+import './todoList.css';
+import {useSortedRowIds} from 'tinybase/ui-svelte';
+import TodoItem from './TodoItem.svelte';
+import {store} from './store';
+
+const todoIds = useSortedRowIds('todos', undefined, false, 0, undefined, store);
+</script>
+
+<div id="todoList">
+  {#each todoIds.current as rowId (rowId)}
+    <TodoItem {rowId} />
+  {/each}
+</div>
+",
+  "client/src/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "client/src/index.ts": "import {mount} from 'svelte';
+import App from './App.svelte';
+
+addEventListener('load', () => {
+  mount(App, {
+    target: document.getElementById('app')!,
+  });
+});
+",
+  "client/src/input.css": "input[type='text'] {
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+input[type='text']:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input[type='text']::placeholder {
+  color: var(--fg2);
+}
+",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
+  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
+</svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+",
+  "client/src/sqlite.ts": "import sqlite3InitModule, {
+  type Database,
+  type Sqlite3Static,
+} from '@sqlite.org/sqlite-wasm';
+
+let sqlite3Promise: Promise<Sqlite3Static> | null = null;
+let db: Database | null = null;
+
+export const getDb = async () => {
+  if (!sqlite3Promise) {
+    sqlite3Promise = sqlite3InitModule({
+      locateFile: () => '/sqlite3.wasm',
+    });
+  }
+  if (!db) {
+    const sqlite3 = await sqlite3Promise;
+    db = new sqlite3.oo1.DB('file:local?vfs=kvvfs', 'c');
+  }
+  return {sqlite3: await sqlite3Promise, db};
+};
+",
+  "client/src/store.ts": "import {createMergeableStore} from 'tinybase';
+import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';
+import {getDb} from './sqlite';
+
+export type TodoRow = {text: string; completed: boolean};
+
+export const store = createMergeableStore().setDefaultContent([
+  {
+    todos: {
+      '1': {text: 'Learn TinyBase', completed: false},
+      '2': {text: 'Build an app', completed: false},
+    },
+  },
+  {},
+]);
+
+let resolveReady: () => void;
+export const storeReady = new Promise<void>((resolve) => {
+  resolveReady = resolve;
+});
+
+getDb().then(({sqlite3, db}) => {
+  const persister = createSqliteWasmPersister(store, sqlite3, db, 'todos');
+  persister.load().then(() => {
+    persister.startAutoSave();
+    resolveReady();
+  });
+});
+
+export type TodosStore = typeof store;
+",
+  "client/src/todoInput.css": "#todoInput {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+#todoInput input {
+  flex: 1;
+}
+",
+  "client/src/todoList.css": "#todoList {
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  overflow: hidden;
+  background: var(--bg2);
+}
+
+#todoList:empty::before {
+  content: 'No todos yet. Add one above!';
+  display: block;
+  padding: 2rem;
+  text-align: center;
+  color: var(--fg2);
+}
+",
+  "client/src/vite-env.d.ts": "/// <reference types="svelte" />
+/// <reference types="vite/client" />
+
+declare module '*.css' {
+  const content: string;
+  export default content;
+}
+",
+  "client/tsconfig.json": "{
+  "extends": "@tsconfig/svelte/tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src"]
+}
+",
+  "client/vite.config.js": "import {defineConfig} from 'vite';
+import {svelte} from '@sveltejs/vite-plugin-svelte';
+import {viteStaticCopy} from 'vite-plugin-static-copy';
+
+export default defineConfig({
+  plugins: [
+    svelte(),
+    viteStaticCopy({
+      targets: [
+        {
+          src: 'node_modules/@sqlite.org/sqlite-wasm/dist/sqlite3.wasm',
+          dest: '.',
+        },
+      ],
+    }),
+  ],
+  server: {
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+    },
+  },
+  optimizeDeps: {
+    exclude: ['@sqlite.org/sqlite-wasm'],
+  },
 });
 ",
 }

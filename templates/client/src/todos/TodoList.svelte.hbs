@@ -1,0 +1,16 @@
+{{includeFile template="client/src/todos/todoList.css.hbs" output="client/src/todoList.css"}}
+
+<script{{#if typescript}} lang="ts"{{/if}}>
+import './todoList.css';
+import {useSortedRowIds} from 'tinybase/ui-svelte{{#if schemas}}/with-schemas{{/if}}';
+import TodoItem from './TodoItem.svelte';
+import {store} from './store';
+
+const todoIds = useSortedRowIds('todos', undefined, false, 0, undefined, store);
+</script>
+
+<div id="todoList">
+  {#each todoIds.current as rowId (rowId)}
+    <TodoItem {rowId} />
+  {/each}
+</div>

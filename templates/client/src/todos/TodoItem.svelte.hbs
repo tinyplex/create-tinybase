@@ -1,0 +1,37 @@
+{{includeFile template="client/src/shared/button.css.hbs" output="client/src/button.css"}}
+{{includeFile template="client/src/todos/todoItem.css.hbs" output="client/src/todoItem.css"}}
+
+<script{{#if typescript}} lang="ts"{{/if}}>
+import './button.css';
+import './todoItem.css';
+import {useRow} from 'tinybase/ui-svelte{{#if schemas}}/with-schemas{{/if}}';
+import {store{{#if typescript}}, type TodoRow{{/if}}} from './store';
+
+let {rowId}{{#if typescript}}: {rowId: string}{{/if}} = $props();
+
+const todo = useRow('todos', () => rowId, store){{#if typescript}} as {readonly current: TodoRow}{{/if}};
+
+const toggleTodo = (event{{#if typescript}}: Event{{/if}}) => {
+  {{#if typescript}}
+    const input = event.currentTarget as HTMLInputElement;
+    store.setPartialRow('todos', rowId, {completed: input.checked});
+  {{else}}
+    store.setPartialRow('todos', rowId, {completed: event.currentTarget.checked});
+  {{/if}}
+};
+
+const deleteTodo = () => {
+store.delRow('todos', rowId);
+};
+</script>
+
+<div class="todoItem" class:completed={todo.current.completed}>
+  <input
+    id={`todo-${rowId}`}
+    type="checkbox"
+    checked={todo.current.completed}
+    onchange={toggleTodo}
+  />
+  <label for={`todo-${rowId}`}>{todo.current.text}</label>
+  <button onclick={deleteTodo}>Delete</button>
+</div>
