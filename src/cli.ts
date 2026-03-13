@@ -138,7 +138,19 @@ const config = {
     const typescript = language === 'typescript';
     const javascript = !typescript;
     const react = framework === 'react';
-    const ext = typescript ? (react ? 'tsx' : 'ts') : react ? 'jsx' : 'js';
+    const vanilla = framework === 'vanilla';
+    const svelte = framework === 'svelte';
+    const scriptExt = typescript ? 'ts' : 'js';
+    const componentExt = svelte
+      ? 'svelte'
+      : typescript
+        ? react
+          ? 'tsx'
+          : 'ts'
+        : react
+          ? 'jsx'
+          : 'js';
+    const entryExt = svelte ? scriptExt : componentExt;
     const normalizedSyncType = syncType || 'remote';
     const sync = normalizedSyncType !== 'none';
     const server =
@@ -174,7 +186,12 @@ const config = {
       typescript,
       javascript,
       react,
-      ext,
+      vanilla,
+      svelte,
+      scriptExt,
+      componentExt,
+      entryExt,
+      ext: entryExt,
     };
   },
 

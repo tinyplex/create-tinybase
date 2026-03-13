@@ -5,7 +5,7 @@
 
 # {{projectName}}
 
-A TinyBase app built with {{#if typescript}}TypeScript{{else}}JavaScript{{/if}} and {{#if react}}React{{else}}Vanilla JS{{/if}}.
+A TinyBase app built with {{#if typescript}}TypeScript{{else}}JavaScript{{/if}} and {{#if react}}React{{/if}}{{#if vanilla}}Vanilla JS{{/if}}{{#if svelte}}Svelte{{/if}}.
 
 ## Getting Started
 
@@ -43,26 +43,26 @@ This project is organized into {{#if server}}two main directories{{else}}a singl
 
 ### Client
 
-The `client` directory contains your {{#if react}}React-based{{else}}vanilla JavaScript{{/if}} web application,
+The `client` directory contains your {{#if react}}React-based{{/if}}{{#if vanilla}}vanilla JavaScript{{/if}}{{#if svelte}}Svelte-based{{/if}} web application,
 built with Vite and {{#if typescript}}TypeScript{{else}}JavaScript{{/if}}.
 
 #### Key Files
 
 - **`index.html`** - The main HTML file that loads your app
-- **`src/index.{{ext}}`** - Entry point that bootstraps the application{{#if react}} and renders the React component tree{{/if}}
-- **`src/{{#if react}}App{{else}}app{{/if}}.{{ext}}`** - {{#if react}}Main React component that renders the {{#if (eq appType "todos")}}todo list{{else if (eq appType "chat")}}chat interface{{else if (eq appType "drawing")}}drawing
+- **`src/index.{{entryExt}}`** - Entry point that bootstraps the application{{#if react}} and renders the React component tree{{/if}}{{#if svelte}} and mounts the Svelte app{{/if}}
+- **`src/{{#if react}}App{{/if}}{{#if vanilla}}app{{/if}}{{#if svelte}}App{{/if}}.{{#if vanilla}}{{scriptExt}}{{else}}{{componentExt}}{{/if}}`** - {{#if react}}Main React component that renders the {{#if (eq appType "todos")}}todo list{{else if (eq appType "chat")}}chat interface{{else if (eq appType "drawing")}}drawing
     canvas{{else if (eq appType "game")}}game{{/if}}
-{{else}}Main application logic{{/if}}
+{{/if}}{{#if vanilla}}Main application logic{{/if}}{{#if svelte}}Main Svelte component that renders the {{#if (eq appType "todos")}}todo list{{else if (eq appType "chat")}}chat interface{{else if (eq appType "drawing")}}drawing canvas{{else if (eq appType "game")}}game{{/if}}{{/if}}
 -
-**`src/{{#if react}}{{#if (eq appType "chat")}}ChatStore{{else if (eq appType "drawing")}}CanvasStore{{else}}Store{{/if}}{{else}}{{#if (eq appType "chat")}}chatStore{{else if (eq appType "drawing")}}canvasStore{{else}}store{{/if}}{{/if}}.{{ext}}`**
+**`src/{{#if react}}{{#if (eq appType "chat")}}ChatStore{{else if (eq appType "drawing")}}CanvasStore{{else}}Store{{/if}}{{/if}}{{#if vanilla}}{{#if (eq appType "chat")}}chatStore{{else if (eq appType "drawing")}}canvasStore{{else}}store{{/if}}{{/if}}{{#if svelte}}{{#if (eq appType "chat")}}chatStore{{else if (eq appType "drawing")}}canvasStore{{else}}store{{/if}}{{/if}}.{{#if react}}{{componentExt}}{{else}}{{scriptExt}}{{/if}}`**
 - TinyBase {{#if (eq appType "chat")}}chat messages{{else if (eq appType "drawing")}}drawing canvas{{else}}main{{/if}} store configuration
 {{#if (eq appType "chat")}}
-  - **`src/{{#if react}}SettingsStore{{else}}settingsStore{{/if}}.{{ext}}`** - TinyBase settings store (not synchronized)
+  - **`src/{{#if react}}SettingsStore{{/if}}{{#if vanilla}}settingsStore{{/if}}{{#if svelte}}settingsStore{{/if}}.{{#if react}}{{componentExt}}{{else}}{{scriptExt}}{{/if}}`** - TinyBase settings store (not synchronized)
 {{/if}}
 {{#if (eq appType "drawing")}}
-  - **`src/{{#if react}}SettingsStore{{else}}settingsStore{{/if}}.{{ext}}`** - TinyBase settings store (not synchronized)
+  - **`src/{{#if react}}SettingsStore{{/if}}{{#if vanilla}}settingsStore{{/if}}{{#if svelte}}settingsStore{{/if}}.{{#if react}}{{componentExt}}{{else}}{{scriptExt}}{{/if}}`** - TinyBase settings store (not synchronized)
 {{/if}}
-- **`src/config.{{ext}}`** - Configuration settings{{#if server}} (including server connection URL){{/if}}
+- **`src/config.{{#if react}}{{componentExt}}{{else}}{{scriptExt}}{{/if}}`** - Configuration settings{{#if server}} (including server connection URL){{/if}}
 
 #### How It Works
 
@@ -111,6 +111,12 @@ The app uses **TinyBase** to manage application state in a reactive data store.
   {{else if (eq appType "drawing")}}`Canvas` uses TinyBase hooks to track drawing state across users
   {{else}}`Game` uses TinyBase hooks to manage game state{{/if}} to interact
   with the store.
+
+{{/if}}
+{{#if svelte}}
+  **Svelte Integration** - TinyBase provides Svelte stores and helpers that keep the
+  UI reactive as data changes. Components subscribe declaratively so the interface
+  stays synchronized with the underlying TinyBase store.
 
 {{/if}}
 {{#if server}}

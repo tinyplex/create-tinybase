@@ -8,14 +8,15 @@
 {{#if react}}
   {{addImport "import ReactDOM from 'react-dom/client';"}}
   {{addImport "import {App} from './App';"}}
-  {{includeFile template="client/src/{{appType}}/App.tsx.hbs" output="client/src/App.{{ext}}"}}
+  {{includeFile template="client/src/{{appType}}/App.tsx.hbs" output="client/src/App.{{componentExt}}"}}
   addEventListener('load', () => {
   ReactDOM.createRoot(document.getElementById('app')!).render(
   <App />);
   });
-{{else}}
+{{/if}}
+{{#if vanilla}}
   {{addImport "import {app} from './app';"}}
-  {{includeFile template="client/src/{{appType}}/app.ts.hbs" output="client/src/app.{{ext}}"}}
+  {{includeFile template="client/src/{{appType}}/app.ts.hbs" output="client/src/app.{{scriptExt}}"}}
   addEventListener('load', () => {
   app();
   });
