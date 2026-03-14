@@ -1,0 +1,39 @@
+{{includeFile template="client/src/drawing/colorPicker.css.hbs" output="client/src/colorPicker.css"}}
+
+<script{{#if typescript}} lang="ts"{{/if}}>
+import './colorPicker.css';
+import {onMount} from 'svelte';
+import {settingsStore} from './settingsStore';
+
+const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];
+const getCurrentColor = () =>
+  {{#if typescript}}(settingsStore.getValue('brushColor') as string | undefined) ?? '#d81b60'{{else}}settingsStore.getValue('brushColor') ?? '#d81b60'{{/if}};
+
+let currentColor = $state(getCurrentColor());
+
+const updateActive = () => {
+currentColor = getCurrentColor();
+};
+
+const setColor = (color{{#if typescript}}: string{{/if}}) => {
+settingsStore.setValue('brushColor', color);
+};
+
+onMount(() => {
+settingsStore.addValueListener('brushColor', updateActive);
+updateActive();
+});
+</script>
+
+<div id="colorPicker">
+  {#each colors as color (color)}
+    <button
+      class="colorBtn"
+      class:active={currentColor === color}
+      style={`background: ${color}`}
+      onclick={() => setColor(color)}
+      aria-label={`Select ${color} brush`}
+      title={color}
+    ></button>
+  {/each}
+</div>

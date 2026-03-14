@@ -43,6 +43,18 @@ const combinations = [
     name: 'ts-react-drawing',
   },
   {
+    language: 'javascript',
+    framework: 'svelte',
+    appType: 'drawing',
+    name: 'js-svelte-drawing',
+  },
+  {
+    language: 'typescript',
+    framework: 'svelte',
+    appType: 'drawing',
+    name: 'ts-svelte-drawing',
+  },
+  {
     language: 'typescript',
     framework: 'vanilla',
     appType: 'drawing',
@@ -54,6 +66,13 @@ const combinations = [
     framework: 'react',
     appType: 'drawing',
     name: 'ts-react-drawing-schemas',
+    schemas: true,
+  },
+  {
+    language: 'typescript',
+    framework: 'svelte',
+    appType: 'drawing',
+    name: 'ts-svelte-drawing-schemas',
     schemas: true,
   },
 ];
@@ -87,6 +106,20 @@ const persistenceCombinations = [
     persistenceType: 'pglite',
     name: 'ts-react-drawing-persist-pglite',
   },
+  {
+    language: 'typescript',
+    framework: 'svelte',
+    appType: 'drawing',
+    persistenceType: 'sqlite',
+    name: 'ts-svelte-drawing-persist-sqlite',
+  },
+  {
+    language: 'typescript',
+    framework: 'svelte',
+    appType: 'drawing',
+    persistenceType: 'pglite',
+    name: 'ts-svelte-drawing-persist-pglite',
+  },
 ];
 
 const syncCombinations = [
@@ -101,6 +134,12 @@ const syncCombinations = [
     framework: 'react',
     appType: 'drawing',
     name: 'js-react-drawing-sync',
+  },
+  {
+    language: 'javascript',
+    framework: 'svelte',
+    appType: 'drawing',
+    name: 'js-svelte-drawing-sync',
   },
 ];
 

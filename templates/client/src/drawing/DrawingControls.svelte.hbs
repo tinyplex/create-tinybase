@@ -1,0 +1,22 @@
+{{includeFile template="client/src/shared/button.css.hbs" output="client/src/button.css"}}
+{{includeFile template="client/src/drawing/drawingControls.css.hbs" output="client/src/drawingControls.css"}}
+{{includeFile template="client/src/drawing/ColorPicker.svelte.hbs" output="client/src/ColorPicker.svelte"}}
+{{includeFile template="client/src/drawing/BrushSize.svelte.hbs" output="client/src/BrushSize.svelte"}}
+
+<script>
+import './button.css';
+import './drawingControls.css';
+import BrushSize from './BrushSize.svelte';
+import ColorPicker from './ColorPicker.svelte';
+import {canvasStore} from './canvasStore';
+
+const clearStrokes = () => {
+canvasStore.delTable('strokes');
+};
+</script>
+
+<div id="drawingControls">
+  <ColorPicker />
+  <BrushSize />
+  <button class="primary" onclick={clearStrokes}>Clear</button>
+</div>

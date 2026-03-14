@@ -1,0 +1,145 @@
+{{includeFile template="client/src/drawing/canvas.css.hbs" output="client/src/canvas.css"}}
+
+<script{{#if typescript}} lang="ts"{{/if}}>
+import './canvas.css';
+import {onMount} from 'svelte';
+import {getHlcFunctions} from 'tinybase';
+import {canvasStore} from './canvasStore';
+{{#if typescript}}import type {StrokeRow} from './canvasStore';{{/if}}
+import {settingsStore} from './settingsStore';
+
+const [getNextHlc] = getHlcFunctions();
+
+let canvas{{#if typescript}}: HTMLCanvasElement | undefined{{/if}};
+let isDrawing = false;
+let currentStrokeId{{#if typescript}}: string | null{{/if}} = null;
+
+const getPoint = (event{{#if typescript}}: MouseEvent | TouchEvent{{/if}}) => {
+if (!canvas) {
+return null;
+}
+
+const rect = canvas.getBoundingClientRect();
+const clientX = 'touches' in event ? event.touches[0]?.clientX : event.clientX;
+const clientY = 'touches' in event ? event.touches[0]?.clientY : event.clientY;
+
+if (clientX == null || clientY == null) {
+return null;
+}
+
+return {
+x: clientX - rect.left,
+y: clientY - rect.top,
+};
+};
+
+const startStroke = (event{{#if typescript}}: MouseEvent | TouchEvent{{/if}}) => {
+isDrawing = true;
+currentStrokeId = getNextHlc();
+
+const point = getPoint(event);
+if (!point || !currentStrokeId) {
+return;
+}
+
+const brushColor =
+  {{#if typescript}}(settingsStore.getValue('brushColor') as string | undefined) ?? '#d81b60'{{else}}settingsStore.getValue('brushColor') ?? '#d81b60'{{/if}};
+const brushSize =
+  {{#if typescript}}(settingsStore.getValue('brushSize') as number | undefined) ?? 5{{else}}settingsStore.getValue('brushSize') ?? 5{{/if}};
+
+canvasStore.setRow('strokes', currentStrokeId, {
+color: brushColor,
+size: brushSize,
+points: JSON.stringify([point.x, point.y]),
+});
+};
+
+const extendStroke = (event{{#if typescript}}: MouseEvent | TouchEvent{{/if}}) => {
+if (!isDrawing || !currentStrokeId) {
+return;
+}
+
+const point = getPoint(event);
+if (!point) {
+return;
+}
+
+const pointsArray = JSON.parse(
+  {{#if typescript}}(canvasStore.getCell('strokes', currentStrokeId, 'points') as string | undefined) ?? '[]'{{else}}canvasStore.getCell('strokes', currentStrokeId, 'points') ?? '[]'{{/if}},
+){{#if typescript}} as number[]{{/if}};
+pointsArray.push(point.x, point.y);
+canvasStore.setCell('strokes', currentStrokeId, 'points', JSON.stringify(pointsArray));
+};
+
+const endStroke = () => {
+isDrawing = false;
+currentStrokeId = null;
+};
+
+const handleTouchStart = (event{{#if typescript}}: TouchEvent{{/if}}) => {
+event.preventDefault();
+startStroke(event);
+};
+
+const handleTouchMove = (event{{#if typescript}}: TouchEvent{{/if}}) => {
+event.preventDefault();
+extendStroke(event);
+};
+
+onMount(() => {
+const draw = () => {
+if (!canvas) {
+return;
+}
+
+const ctx = canvas.getContext('2d');
+if (!ctx) {
+return;
+}
+
+ctx.fillStyle = '#111';
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+canvasStore.getSortedRowIds('strokes').forEach((id) => {
+const stroke =
+  {{#if typescript}}canvasStore.getRow('strokes', id) as StrokeRow{{else}}canvasStore.getRow('strokes', id){{/if}};
+if (!stroke?.points) {
+return;
+}
+
+const pointsArray = JSON.parse(stroke.points){{#if typescript}} as number[]{{/if}};
+if (pointsArray.length < 2) {
+return;
+}
+
+ctx.strokeStyle = stroke.color;
+ctx.lineWidth = stroke.size * 2;
+ctx.lineCap = 'round';
+ctx.lineJoin = 'round';
+ctx.beginPath();
+ctx.moveTo(pointsArray[0], pointsArray[1]);
+for (let i = 2; i < pointsArray.length; i += 2) {
+ctx.lineTo(pointsArray[i], pointsArray[i + 1]);
+}
+ctx.stroke();
+});
+};
+
+canvasStore.addTablesListener(draw);
+draw();
+});
+</script>
+
+<canvas
+  bind:this={canvas}
+  id="drawingCanvas"
+  width="600"
+  height="400"
+  onmousedown={startStroke}
+  onmousemove={extendStroke}
+  onmouseup={endStroke}
+  onmouseleave={endStroke}
+  ontouchstart={handleTouchStart}
+  ontouchmove={handleTouchMove}
+  ontouchend={endStroke}
+></canvas>

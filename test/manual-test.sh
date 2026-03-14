@@ -119,6 +119,11 @@ declare -a all_projects=(
   "test-ts-react-drawing-schemas:typescript:react:drawing:5200:true"
   "test-ts-react-drawing-persist-sqlite:typescript:react:drawing:5201:false:sqlite"
   "test-ts-react-drawing-persist-pglite:typescript:react:drawing:5202:false:pglite"
+  "test-js-svelte-drawing:javascript:svelte:drawing:5218:false"
+  "test-ts-svelte-drawing:typescript:svelte:drawing:5219:false"
+  "test-ts-svelte-drawing-schemas:typescript:svelte:drawing:5220:true"
+  "test-ts-svelte-drawing-persist-sqlite:typescript:svelte:drawing:5221:false:sqlite"
+  "test-ts-svelte-drawing-persist-pglite:typescript:svelte:drawing:5222:false:pglite"
 
   "test-js-vanilla-game:javascript:vanilla:game:5203:false"
   "test-ts-vanilla-game:typescript:vanilla:game:5204:false"
