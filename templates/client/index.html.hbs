@@ -8,6 +8,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap" />
   {{includeFile template="client/public/favicon.svg" output="client/public/favicon.svg"}}
+  {{#if typescript}}{{includeFile template="client/public/ts.svg" output="client/public/ts.svg"}}{{else}}{{includeFile template="client/public/js.svg" output="client/public/js.svg"}}{{/if}}
+  {{#if react}}{{includeFile template="client/public/react.svg" output="client/public/react.svg"}}{{/if}}
+  {{#if svelte}}{{includeFile template="client/public/svelte.svg" output="client/public/svelte.svg"}}{{/if}}
+  {{#if persistSqlite}}{{includeFile template="client/public/sqlite.svg" output="client/public/sqlite.svg"}}{{/if}}
+  {{#if persistPglite}}{{includeFile template="client/public/pglite.svg" output="client/public/pglite.svg"}}{{/if}}
+  {{#if sync}}{{includeFile template="client/public/sync.svg" output="client/public/sync.svg"}}{{/if}}
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <title>
     TinyBase {{#if (eq appType "chat")}}Chat{{else if (eq appType "drawing")}}Drawing{{else if (eq appType "game")}}Game{{else}}Todos{{/if}}
@@ -69,6 +75,22 @@
 
     #topBarInfo {
       position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    #topBarTech {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .topBarTechIcon {
+      width: 1.25rem;
+      height: 1.25rem;
+      display: block;
+      flex-shrink: 0;
     }
 
     #infoIcon {
@@ -155,6 +177,27 @@
         TinyBase {{#if (eq appType "chat")}}Chat{{else if (eq appType "drawing")}}Drawing{{else if (eq appType "game")}}Game{{else}}Todos{{/if}}
       </div>
       <div id="topBarInfo">
+        <div id="topBarTech">
+          {{#if typescript}}
+            <img src="/ts.svg" class="topBarTechIcon" title="Written in TypeScript" />
+          {{else}}
+            <img src="/js.svg" class="topBarTechIcon" title="Written in JavaScript" />
+          {{/if}}
+          {{#if react}}
+            <img src="/react.svg" class="topBarTechIcon" title="Built with React" />
+          {{/if}}
+          {{#if svelte}}
+            <img src="/svelte.svg" class="topBarTechIcon" title="Built with Svelte" />
+          {{/if}}
+          {{#if persistSqlite}}
+            <img src="/sqlite.svg" class="topBarTechIcon" title="Persists data to SQLite" />
+          {{else if persistPglite}}
+            <img src="/pglite.svg" class="topBarTechIcon" title="Persists data to PGlite" />
+          {{/if}}
+          {{#if sync}}
+            <img src="/sync.svg" class="topBarTechIcon" title="Data synchronization enabled" />
+          {{/if}}
+        </div>
         <div id="infoIcon">
           i
           <div id="infoTooltip">
@@ -165,14 +208,8 @@
             {{else if (eq appType "drawing")}}
               A collaborative drawing canvas showcasing TinyBase's state synchronization.
             {{else if (eq appType "game")}}
-              A tic-tac-toe game demonstrating turn-based logic and computed game state.
+              A tic-tac-toe game demonstrating turn-based logic and computed game state using TinyBase.
             {{/if}}
-            <br><br>
-            Built with: {{#if typescript}}TypeScript{{#if schemas}} (using typed store schemas){{/if}}{{else}}JavaScript{{/if}}{{#if react}} and React{{/if}}{{#if svelte}} and Svelte{{/if}}.{{#if persist}}
-              <br><br>
-              Persistence: {{#if persistLocalStorage}}Local Storage{{else if persistSqlite}}SQLite{{else if persistPglite}}PGlite{{/if}}.{{/if}}{{#if sync}}
-              <br><br>
-              Sync: {{#if (eq syncType "remote")}}Remote{{else if (eq syncType "node")}}Node.js Server{{else if (eq syncType "durable-objects")}}Durable Objects{{/if}}.{{/if}}
           </div>
         </div>
       </div>
