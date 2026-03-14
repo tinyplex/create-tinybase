@@ -1,0 +1,34 @@
+{{includeFile template="client/src/chat/messages.css.hbs" output="client/src/messages.css"}}
+{{includeFile template="client/src/chat/Message.svelte.hbs" output="client/src/Message.svelte"}}
+
+<script{{#if typescript}} lang="ts"{{/if}}>
+import './messages.css';
+import {onMount} from 'svelte';
+import Message from './Message.svelte';
+import {chatStore} from './chatStore';
+{{#if typescript}}import type {MessageRow} from './chatStore';{{/if}}
+
+const getMessages = () =>
+  chatStore.getSortedRowIds('messages', 'timestamp').map((id) => ({
+    id,
+    row:
+      {{#if typescript}}chatStore.getRow('messages', id) as MessageRow{{else}}chatStore.getRow('messages', id){{/if}},
+  }));
+
+let messages = $state(getMessages());
+
+const updateMessages = () => {
+messages = getMessages();
+};
+
+onMount(() => {
+chatStore.addTablesListener(updateMessages);
+updateMessages();
+});
+</script>
+
+<div id="messages">
+  {#each messages as message (message.id)}
+    <Message message={message.row} />
+  {/each}
+</div>

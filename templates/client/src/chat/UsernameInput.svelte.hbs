@@ -1,0 +1,45 @@
+{{includeFile template="client/src/shared/input.css.hbs" output="client/src/input.css"}}
+{{includeFile template="client/src/chat/usernameInput.css.hbs" output="client/src/usernameInput.css"}}
+
+<script{{#if typescript}} lang="ts"{{/if}}>
+import './input.css';
+import './usernameInput.css';
+import {onMount} from 'svelte';
+import {settingsStore} from './settingsStore';
+
+const getUsername = () =>
+  {{#if typescript}}(settingsStore.getValue('username') as string | undefined) ?? ''{{else}}settingsStore.getValue('username') ?? ''{{/if}};
+
+let username = $state(getUsername());
+
+const updateUsername = () => {
+username = getUsername();
+};
+
+const handleInput = (event{{#if typescript}}: Event{{/if}}) => {
+  {{#if typescript}}
+    const input = event.currentTarget as HTMLInputElement;
+    const nextUsername = input.value;
+  {{else}}
+    const nextUsername = event.currentTarget.value;
+  {{/if}}
+  settingsStore.setValue('username', nextUsername);
+  username = nextUsername;
+};
+
+onMount(() => {
+settingsStore.addValueListener('username', updateUsername);
+updateUsername();
+});
+</script>
+
+<div id="usernameInput">
+  <label for="usernameInputField">Your name:</label>
+  <input
+    id="usernameInputField"
+    type="text"
+    value={username}
+    placeholder="Enter your name"
+    oninput={handleInput}
+  />
+</div>

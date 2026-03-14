@@ -1,0 +1,17 @@
+{{includeFile template="client/src/chat/message.css.hbs" output="client/src/message.css"}}
+
+<script{{#if typescript}} lang="ts"{{/if}}>
+import './message.css';
+{{#if typescript}}import type {MessageRow} from './chatStore';{{/if}}
+
+let {message}{{#if typescript}}: {message: MessageRow}{{/if}} = $props();
+
+const getTime = (timestamp{{#if typescript}}: number{{/if}}) =>
+  new Date(timestamp).toLocaleTimeString();
+</script>
+
+<div class="message">
+  <span class="username">{message.username}:</span>
+  <span class="text">{message.text}</span>
+  <span class="time">{getTime(message.timestamp)}</span>
+</div>

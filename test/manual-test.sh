@@ -108,6 +108,11 @@ declare -a all_projects=(
   "test-ts-react-chat-schemas:typescript:react:chat:5190:true"
   "test-ts-react-chat-persist-sqlite:typescript:react:chat:5191:false:sqlite"
   "test-ts-react-chat-persist-pglite:typescript:react:chat:5192:false:pglite"
+  "test-js-svelte-chat:javascript:svelte:chat:5223:false"
+  "test-ts-svelte-chat:typescript:svelte:chat:5224:false"
+  "test-ts-svelte-chat-schemas:typescript:svelte:chat:5225:true"
+  "test-ts-svelte-chat-persist-sqlite:typescript:svelte:chat:5226:false:sqlite"
+  "test-ts-svelte-chat-persist-pglite:typescript:svelte:chat:5227:false:pglite"
 
   "test-js-vanilla-drawing:javascript:vanilla:drawing:5193:false"
   "test-ts-vanilla-drawing:typescript:vanilla:drawing:5194:false"

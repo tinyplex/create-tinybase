@@ -1,0 +1,53 @@
+{{includeFile template="client/src/shared/button.css.hbs" output="client/src/button.css"}}
+{{includeFile template="client/src/shared/input.css.hbs" output="client/src/input.css"}}
+{{includeFile template="client/src/chat/messageInput.css.hbs" output="client/src/messageInput.css"}}
+
+<script{{#if typescript}} lang="ts"{{/if}}>
+import './button.css';
+import './input.css';
+import './messageInput.css';
+import {onMount} from 'svelte';
+import {chatStore} from './chatStore';
+import {settingsStore} from './settingsStore';
+
+let message = $state('');
+let input{{#if typescript}}: HTMLInputElement | undefined{{/if}};
+
+const sendMessage = () => {
+const text = message.trim();
+if (!text) {
+return;
+}
+
+const username =
+  {{#if typescript}}(settingsStore.getValue('username') as string | undefined) ?? 'Anonymous'{{else}}settingsStore.getValue('username') ?? 'Anonymous'{{/if}};
+
+chatStore.addRow('messages', {
+username,
+text,
+timestamp: Date.now(),
+});
+
+message = '';
+input?.focus();
+};
+
+const handleSubmit = (event{{#if typescript}}: SubmitEvent{{/if}}) => {
+event.preventDefault();
+sendMessage();
+};
+
+onMount(() => {
+input?.focus();
+});
+</script>
+
+<form id="messageInput" onsubmit={handleSubmit}>
+  <input
+    bind:this={input}
+    bind:value={message}
+    type="text"
+    placeholder="Type a message..."
+  />
+  <button class="primary" type="submit">Send</button>
+</form>

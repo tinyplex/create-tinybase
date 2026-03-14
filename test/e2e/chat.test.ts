@@ -43,6 +43,18 @@ const combinations = [
     name: 'ts-react-chat',
   },
   {
+    language: 'javascript',
+    framework: 'svelte',
+    appType: 'chat',
+    name: 'js-svelte-chat',
+  },
+  {
+    language: 'typescript',
+    framework: 'svelte',
+    appType: 'chat',
+    name: 'ts-svelte-chat',
+  },
+  {
     language: 'typescript',
     framework: 'vanilla',
     appType: 'chat',
@@ -54,6 +66,13 @@ const combinations = [
     framework: 'react',
     appType: 'chat',
     name: 'ts-react-chat-schemas',
+    schemas: true,
+  },
+  {
+    language: 'typescript',
+    framework: 'svelte',
+    appType: 'chat',
+    name: 'ts-svelte-chat-schemas',
     schemas: true,
   },
 ];
@@ -87,6 +106,20 @@ const persistenceCombinations = [
     persistenceType: 'pglite',
     name: 'ts-react-chat-persist-pglite',
   },
+  {
+    language: 'typescript',
+    framework: 'svelte',
+    appType: 'chat',
+    persistenceType: 'sqlite',
+    name: 'ts-svelte-chat-persist-sqlite',
+  },
+  {
+    language: 'typescript',
+    framework: 'svelte',
+    appType: 'chat',
+    persistenceType: 'pglite',
+    name: 'ts-svelte-chat-persist-pglite',
+  },
 ];
 
 const syncCombinations = [
@@ -101,6 +134,12 @@ const syncCombinations = [
     framework: 'react',
     appType: 'chat',
     name: 'js-react-chat-sync',
+  },
+  {
+    language: 'javascript',
+    framework: 'svelte',
+    appType: 'chat',
+    name: 'js-svelte-chat-sync',
   },
 ];
 
