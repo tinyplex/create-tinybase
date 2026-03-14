@@ -42,6 +42,18 @@ const combinations = [
     name: 'ts-react-game',
   },
   {
+    language: 'javascript',
+    framework: 'svelte',
+    appType: 'game',
+    name: 'js-svelte-game',
+  },
+  {
+    language: 'typescript',
+    framework: 'svelte',
+    appType: 'game',
+    name: 'ts-svelte-game',
+  },
+  {
     language: 'typescript',
     framework: 'vanilla',
     appType: 'game',
@@ -53,6 +65,13 @@ const combinations = [
     framework: 'react',
     appType: 'game',
     name: 'ts-react-game-schemas',
+    schemas: true,
+  },
+  {
+    language: 'typescript',
+    framework: 'svelte',
+    appType: 'game',
+    name: 'ts-svelte-game-schemas',
     schemas: true,
   },
 ];
@@ -86,6 +105,20 @@ const persistenceCombinations = [
     persistenceType: 'pglite',
     name: 'ts-react-game-persist-pglite',
   },
+  {
+    language: 'typescript',
+    framework: 'svelte',
+    appType: 'game',
+    persistenceType: 'sqlite',
+    name: 'ts-svelte-game-persist-sqlite',
+  },
+  {
+    language: 'typescript',
+    framework: 'svelte',
+    appType: 'game',
+    persistenceType: 'pglite',
+    name: 'ts-svelte-game-persist-pglite',
+  },
 ];
 
 const syncCombinations = [
@@ -100,6 +133,12 @@ const syncCombinations = [
     framework: 'react',
     appType: 'game',
     name: 'js-react-game-sync',
+  },
+  {
+    language: 'javascript',
+    framework: 'svelte',
+    appType: 'game',
+    name: 'js-svelte-game-sync',
   },
 ];
 

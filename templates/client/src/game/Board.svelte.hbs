@@ -1,0 +1,71 @@
+{{includeFile template="client/src/game/board.css.hbs" output="client/src/board.css"}}
+{{includeFile template="client/src/game/Square.svelte.hbs" output="client/src/Square.svelte"}}
+
+<script{{#if typescript}} lang="ts"{{/if}}>
+import './board.css';
+import {onMount} from 'svelte';
+import Square from './Square.svelte';
+import {store} from './store';
+
+const getSquares = () => {
+const gameStatus =
+  {{#if typescript}}(store.getValue('gameStatus') as string | undefined) ?? 'playing'{{else}}store.getValue('gameStatus') ?? 'playing'{{/if}};
+const winningLine =
+  {{#if typescript}}(store.getValue('winningLine') as string | undefined) ?? ''{{else}}store.getValue('winningLine') ?? ''{{/if}};
+const currentPlayer =
+  {{#if typescript}}(store.getValue('currentPlayer') as string | undefined) ?? 'X'{{else}}store.getValue('currentPlayer') ?? 'X'{{/if}};
+const winningPositions = new Set(
+winningLine ? winningLine.split(',') : [],
+);
+const disabled = gameStatus !== 'playing';
+
+return Array.from({length: 9}, (_, i) => {
+const position = i.toString();
+const value =
+  {{#if typescript}}(store.getCell('board', position, 'value') as string | undefined) ?? ''{{else}}store.getCell('board', position, 'value') ?? ''{{/if}};
+
+return {
+position,
+value,
+disabled: disabled || !!value,
+winning: winningPositions.has(position),
+currentPlayer,
+};
+});
+};
+
+let squares = $state(getSquares());
+
+const updateBoard = () => {
+squares = getSquares();
+};
+
+const handleSquareClick = (position{{#if typescript}}: string{{/if}}) => {
+const gameStatus =
+  {{#if typescript}}(store.getValue('gameStatus') as string | undefined) ?? 'playing'{{else}}store.getValue('gameStatus') ?? 'playing'{{/if}};
+const currentPlayer =
+  {{#if typescript}}(store.getValue('currentPlayer') as string | undefined) ?? 'X'{{else}}store.getValue('currentPlayer') ?? 'X'{{/if}};
+const value = store.getCell('board', position, 'value');
+
+if (gameStatus === 'playing' && !value && currentPlayer) {
+store.setCell('board', position, 'value', currentPlayer);
+}
+};
+
+onMount(() => {
+store.addValuesListener(updateBoard);
+store.addTableListener('board', updateBoard);
+updateBoard();
+});
+</script>
+
+<div id="board">
+  {#each squares as square (square.position)}
+    <Square
+      value={square.value}
+      disabled={square.disabled}
+      winning={square.winning}
+      handleClick={() => handleSquareClick(square.position)}
+    />
+  {/each}
+</div>

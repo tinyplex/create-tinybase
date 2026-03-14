@@ -1,0 +1,23 @@
+{{includeFile template="client/src/game/store.ts.hbs" output="client/src/store.ts"}}
+{{includeFile template="client/src/shared/Loading.svelte.hbs" output="client/src/Loading.svelte"}}
+{{includeFile template="client/src/game/Game.svelte.hbs" output="client/src/Game.svelte"}}
+
+<script{{#if typescript}} lang="ts"{{/if}}>
+import {onMount} from 'svelte';
+import Game from './Game.svelte';
+import Loading from './Loading.svelte';
+import {storeReady} from './store';
+
+let loading = $state(true);
+
+onMount(async () => {
+await storeReady;
+loading = false;
+});
+</script>
+
+{#if loading}
+  <Loading />
+{:else}
+  <Game />
+{/if}

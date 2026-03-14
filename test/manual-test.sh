@@ -70,14 +70,14 @@ cleanup() {
   echo "Stopping servers..."
   pkill -P $$ 2>/dev/null || true
   kill ${PIDS[@]} 2>/dev/null || true
-  pkill -f "vite.*--port.*(51[7-9][0-9]|52[0-2][0-9])" 2>/dev/null || true
+  pkill -f "vite.*--port.*(51[7-9][0-9]|52[0-3][0-9])" 2>/dev/null || true
   exit 0
 }
 
 trap cleanup INT TERM EXIT
 
 echo "Cleaning up any previous servers..."
-pkill -f "vite.*--port.*(51[7-9][0-9]|52[0-2][0-9])" 2>/dev/null || true
+pkill -f "vite.*--port.*(51[7-9][0-9]|52[0-3][0-9])" 2>/dev/null || true
 
 mkdir -p "$TEST_DIR"
 
@@ -140,6 +140,11 @@ declare -a all_projects=(
   "test-ts-react-game-schemas:typescript:react:game:5210:true"
   "test-ts-react-game-persist-sqlite:typescript:react:game:5211:false:sqlite"
   "test-ts-react-game-persist-pglite:typescript:react:game:5212:false:pglite"
+  "test-js-svelte-game:javascript:svelte:game:5228:false"
+  "test-ts-svelte-game:typescript:svelte:game:5229:false"
+  "test-ts-svelte-game-schemas:typescript:svelte:game:5230:true"
+  "test-ts-svelte-game-persist-sqlite:typescript:svelte:game:5231:false:sqlite"
+  "test-ts-svelte-game-persist-pglite:typescript:svelte:game:5232:false:pglite"
 )
 
 # Filter projects if requested

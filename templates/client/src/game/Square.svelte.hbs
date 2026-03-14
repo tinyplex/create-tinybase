@@ -1,0 +1,25 @@
+{{includeFile template="client/src/game/square.css.hbs" output="client/src/square.css"}}
+
+<script{{#if typescript}} lang="ts"{{/if}}>
+import './square.css';
+
+let {
+value,
+disabled,
+winning,
+handleClick,
+}{{#if typescript}}: {
+value: string;
+disabled: boolean;
+winning: boolean;
+handleClick: () => void;
+}{{/if}} = $props();
+</script>
+
+<button
+  class={`square${disabled ? ' disabled' : ''}${winning ? ' winning' : ''}`}
+  onclick={handleClick}
+  disabled={disabled}
+>
+  {value}
+</button>

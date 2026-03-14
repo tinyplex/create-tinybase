@@ -1,0 +1,37 @@
+{{includeFile template="client/src/game/gameStatus.css.hbs" output="client/src/gameStatus.css"}}
+
+<script{{#if typescript}} lang="ts"{{/if}}>
+import './gameStatus.css';
+import {onMount} from 'svelte';
+import {store} from './store';
+
+const getStatus = () => ({
+gameStatus:
+  {{#if typescript}}(store.getValue('gameStatus') as string | undefined) ?? 'playing'{{else}}store.getValue('gameStatus') ?? 'playing'{{/if}},
+currentPlayer:
+  {{#if typescript}}(store.getValue('currentPlayer') as string | undefined) ?? 'X'{{else}}store.getValue('currentPlayer') ?? 'X'{{/if}},
+winner:
+  {{#if typescript}}(store.getValue('winner') as string | undefined) ?? ''{{else}}store.getValue('winner') ?? ''{{/if}},
+});
+
+let status = $state(getStatus());
+
+const updateStatus = () => {
+status = getStatus();
+};
+
+onMount(() => {
+store.addValuesListener(updateStatus);
+updateStatus();
+});
+</script>
+
+<div id="gameStatus">
+  {#if status.gameStatus === 'playing'}
+    Player <span class="player">{status.currentPlayer}</span>'s turn
+  {:else if status.gameStatus === 'won'}
+    Player <span class="winner">{status.winner}</span> wins!
+  {:else if status.gameStatus === 'draw'}
+    It's a draw!
+  {/if}
+</div>
