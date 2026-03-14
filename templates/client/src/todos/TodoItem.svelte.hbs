@@ -4,12 +4,22 @@
 <script{{#if typescript}} lang="ts"{{/if}}>
 import './button.css';
 import './todoItem.css';
-import {useRow} from 'tinybase/ui-svelte{{#if schemas}}/with-schemas{{/if}}';
-import {store{{#if typescript}}, type TodoRow{{/if}}} from './store';
+import {useRow} from 'tinybase/ui-svelte';
+import {store} from './store';
+{{#if typescript}}
+  {{#if schemas}}
+    import type {Store as TinyBaseStore} from 'tinybase';
+  {{/if}}
+  import type {TodoRow} from './store';
+{{/if}}
 
 let {rowId}{{#if typescript}}: {rowId: string}{{/if}} = $props();
 
-const todo = useRow('todos', () => rowId, store){{#if typescript}} as {readonly current: TodoRow}{{/if}};
+const todo = useRow(
+'todos',
+() => rowId,
+{{#if schemas}}store as unknown as TinyBaseStore{{else}}store{{/if}},
+){{#if typescript}} as {readonly current: TodoRow}{{/if}};
 
 const toggleTodo = (event{{#if typescript}}: Event{{/if}}) => {
   {{#if typescript}}

@@ -2,10 +2,13 @@
 
 let sqlite3Promise: Promise<Sqlite3Static> | null = null;
   let db: Database | null = null;
+  const initSqlite = sqlite3InitModule as (config?: {
+  locateFile?: () => string;
+  }) => Promise<Sqlite3Static>;
 
   export const getDb = async () => {
   if (!sqlite3Promise) {
-  sqlite3Promise = sqlite3InitModule({
+  sqlite3Promise = initSqlite({
   locateFile: () => '/sqlite3.wasm',
   });
   }

@@ -90,6 +90,9 @@
 {{#if prettier}}
   {{includeFile template="client/.prettierrc.json.hbs" output="client/.prettierrc.json"}}
 {{/if}}
+{{#if svelte}}
+  {{includeFile template="client/.npmrc.hbs" output="client/.npmrc"}}
+{{/if}}
 {{#if eslint}}
   {{includeFile template="client/eslint.config.js.hbs" output="client/eslint.config.js"}}
 {{/if}}

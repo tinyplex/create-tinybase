@@ -43,6 +43,18 @@ const combinations = [
     name: 'ts-react-todos',
   },
   {
+    language: 'javascript',
+    framework: 'svelte',
+    appType: 'todos',
+    name: 'js-svelte-todos',
+  },
+  {
+    language: 'typescript',
+    framework: 'svelte',
+    appType: 'todos',
+    name: 'ts-svelte-todos',
+  },
+  {
     language: 'typescript',
     framework: 'vanilla',
     appType: 'todos',
@@ -54,6 +66,13 @@ const combinations = [
     framework: 'react',
     appType: 'todos',
     name: 'ts-react-todos-schemas',
+    schemas: true,
+  },
+  {
+    language: 'typescript',
+    framework: 'svelte',
+    appType: 'todos',
+    name: 'ts-svelte-todos-schemas',
     schemas: true,
   },
 ];
@@ -87,6 +106,20 @@ const persistenceCombinations = [
     persistenceType: 'pglite',
     name: 'ts-react-todos-persist-pglite',
   },
+  {
+    language: 'typescript',
+    framework: 'svelte',
+    appType: 'todos',
+    persistenceType: 'sqlite',
+    name: 'ts-svelte-todos-persist-sqlite',
+  },
+  {
+    language: 'typescript',
+    framework: 'svelte',
+    appType: 'todos',
+    persistenceType: 'pglite',
+    name: 'ts-svelte-todos-persist-pglite',
+  },
 ];
 
 const syncCombinations = [
@@ -101,6 +134,12 @@ const syncCombinations = [
     framework: 'react',
     appType: 'todos',
     name: 'js-react-todos-sync',
+  },
+  {
+    language: 'javascript',
+    framework: 'svelte',
+    appType: 'todos',
+    name: 'js-svelte-todos-sync',
   },
 ];
 

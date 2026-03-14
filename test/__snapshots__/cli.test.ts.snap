@@ -1321,10 +1321,11 @@ input[type='text']::placeholder {
 
 let sqlite3Promise = null;
 let db = null;
+const initSqlite = sqlite3InitModule;
 
 export const getDb = async () => {
   if (!sqlite3Promise) {
-    sqlite3Promise = sqlite3InitModule({
+    sqlite3Promise = initSqlite({
       locateFile: () => '/sqlite3.wasm',
     });
   }
@@ -4074,10 +4075,11 @@ input[type='text']::placeholder {
 
 let sqlite3Promise = null;
 let db = null;
+const initSqlite = sqlite3InitModule;
 
 export const getDb = async () => {
   if (!sqlite3Promise) {
-    sqlite3Promise = sqlite3InitModule({
+    sqlite3Promise = initSqlite({
       locateFile: () => '/sqlite3.wasm',
     });
   }
@@ -4293,6 +4295,8 @@ stays synchronized with the underlying TinyBase store.
 
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/.npmrc": "legacy-peer-deps=true
 ",
   "client/index.html": "<!doctype html>
 <html lang="en">
@@ -4538,6 +4542,7 @@ import './loading.css';
 import './button.css';
 import './input.css';
 import './todoInput.css';
+import {onMount} from 'svelte';
 import {store} from './store';
 
 let text = $state('');
@@ -4558,6 +4563,10 @@ event.preventDefault();
 addTodo();
 }
 };
+
+onMount(() => {
+input?.focus();
+});
 </script>
 
 <div id="todoInput">
@@ -4566,13 +4575,50 @@ addTodo();
     bind:value={text}
     type="text"
     placeholder="What needs to be done?"
-    autofocus
     onkeydown={handleKeyDown}
   />
   <button class="primary" onclick={addTodo}>Add</button>
 </div>
 ",
+  "client/src/TodoItem.svelte": "
+
+
+<script>
+import './button.css';
+import './todoItem.css';
+import {useRow} from 'tinybase/ui-svelte';
+import {store} from './store';
+
+let {rowId} = $props();
+
+const todo = useRow(
+'todos',
+() => rowId,
+store,
+);
+
+const toggleTodo = (event) => {
+    store.setPartialRow('todos', rowId, {completed: event.currentTarget.checked});
+};
+
+const deleteTodo = () => {
+store.delRow('todos', rowId);
+};
+</script>
+
+<div class="todoItem" class:completed={todo.current.completed}>
+  <input
+    id={\`todo-\${rowId}\`}
+    type="checkbox"
+    checked={todo.current.completed}
+    onchange={toggleTodo}
+  />
+  <label for={\`todo-\${rowId}\`}>{todo.current.text}</label>
+  <button onclick={deleteTodo}>Delete</button>
+</div>
+",
   "client/src/TodoList.svelte": "
+
 
 <script>
 import './todoList.css';
@@ -4580,7 +4626,14 @@ import {useSortedRowIds} from 'tinybase/ui-svelte';
 import TodoItem from './TodoItem.svelte';
 import {store} from './store';
 
-const todoIds = useSortedRowIds('todos', undefined, false, 0, undefined, store);
+const todoIds = useSortedRowIds(
+'todos',
+undefined,
+false,
+0,
+undefined,
+store,
+);
 </script>
 
 <div id="todoList">
@@ -4701,6 +4754,40 @@ persister.load().then(() => {
 
 #todoInput input {
   flex: 1;
+}
+",
+  "client/src/todoItem.css": ".todoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.todoItem:last-child {
+  border-bottom: none;
+}
+
+.todoItem input[type='checkbox'] {
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.todoItem label {
+  flex: 1;
+  cursor: pointer;
+  user-select: none;
+}
+
+.todoItem.completed label {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.todoItem button {
+  flex-shrink: 0;
 }
 ",
   "client/src/todoList.css": "#todoList {
@@ -12368,6 +12455,8 @@ stays synchronized with the underlying TinyBase store.
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
+  "client/.npmrc": "legacy-peer-deps=true
+",
   "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
@@ -12617,6 +12706,7 @@ import './loading.css';
 import './button.css';
 import './input.css';
 import './todoInput.css';
+import {onMount} from 'svelte';
 import {store} from './store';
 
 let text = $state('');
@@ -12637,6 +12727,10 @@ event.preventDefault();
 addTodo();
 }
 };
+
+onMount(() => {
+input?.focus();
+});
 </script>
 
 <div id="todoInput">
@@ -12645,13 +12739,52 @@ addTodo();
     bind:value={text}
     type="text"
     placeholder="What needs to be done?"
-    autofocus
     onkeydown={handleKeyDown}
   />
   <button class="primary" onclick={addTodo}>Add</button>
 </div>
 ",
+  "client/src/TodoItem.svelte": "
+
+
+<script lang="ts">
+import './button.css';
+import './todoItem.css';
+import {useRow} from 'tinybase/ui-svelte';
+import {store} from './store';
+  import type {TodoRow} from './store';
+
+let {rowId}: {rowId: string} = $props();
+
+const todo = useRow(
+'todos',
+() => rowId,
+store,
+) as {readonly current: TodoRow};
+
+const toggleTodo = (event: Event) => {
+    const input = event.currentTarget as HTMLInputElement;
+    store.setPartialRow('todos', rowId, {completed: input.checked});
+};
+
+const deleteTodo = () => {
+store.delRow('todos', rowId);
+};
+</script>
+
+<div class="todoItem" class:completed={todo.current.completed}>
+  <input
+    id={\`todo-\${rowId}\`}
+    type="checkbox"
+    checked={todo.current.completed}
+    onchange={toggleTodo}
+  />
+  <label for={\`todo-\${rowId}\`}>{todo.current.text}</label>
+  <button onclick={deleteTodo}>Delete</button>
+</div>
+",
   "client/src/TodoList.svelte": "
+
 
 <script lang="ts">
 import './todoList.css';
@@ -12659,7 +12792,14 @@ import {useSortedRowIds} from 'tinybase/ui-svelte';
 import TodoItem from './TodoItem.svelte';
 import {store} from './store';
 
-const todoIds = useSortedRowIds('todos', undefined, false, 0, undefined, store);
+const todoIds = useSortedRowIds(
+'todos',
+undefined,
+false,
+0,
+undefined,
+store,
+);
 </script>
 
 <div id="todoList">
@@ -12786,6 +12926,40 @@ export type TodosStore = typeof store;
   flex: 1;
 }
 ",
+  "client/src/todoItem.css": ".todoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.todoItem:last-child {
+  border-bottom: none;
+}
+
+.todoItem input[type='checkbox'] {
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.todoItem label {
+  flex: 1;
+  cursor: pointer;
+  user-select: none;
+}
+
+.todoItem.completed label {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.todoItem button {
+  flex-shrink: 0;
+}
+",
   "client/src/todoList.css": "#todoList {
   border: 1px solid var(--border);
   border-radius: 0.375rem;
@@ -12801,8 +12975,13 @@ export type TodosStore = typeof store;
   color: var(--fg2);
 }
 ",
-  "client/src/vite-env.d.ts": "/// <reference types="svelte" />
-/// <reference types="vite/client" />
+  "client/src/vite-env.d.ts": "/// <reference types="vite/client" />
+
+declare module '*.svelte' {
+  import type {Component} from 'svelte';
+  const component: Component<Record<string, never>>;
+  export default component;
+}
 
 declare module '*.css' {
   const content: string;
@@ -12907,6 +13086,8 @@ stays synchronized with the underlying TinyBase store.
 
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/.npmrc": "legacy-peer-deps=true
 ",
   "client/index.html": "<!doctype html>
 <html lang="en">
@@ -13160,6 +13341,7 @@ import './loading.css';
 import './button.css';
 import './input.css';
 import './todoInput.css';
+import {onMount} from 'svelte';
 import {store} from './store';
 
 let text = $state('');
@@ -13180,6 +13362,10 @@ event.preventDefault();
 addTodo();
 }
 };
+
+onMount(() => {
+input?.focus();
+});
 </script>
 
 <div id="todoInput">
@@ -13188,13 +13374,52 @@ addTodo();
     bind:value={text}
     type="text"
     placeholder="What needs to be done?"
-    autofocus
     onkeydown={handleKeyDown}
   />
   <button class="primary" onclick={addTodo}>Add</button>
 </div>
 ",
+  "client/src/TodoItem.svelte": "
+
+
+<script lang="ts">
+import './button.css';
+import './todoItem.css';
+import {useRow} from 'tinybase/ui-svelte';
+import {store} from './store';
+  import type {TodoRow} from './store';
+
+let {rowId}: {rowId: string} = $props();
+
+const todo = useRow(
+'todos',
+() => rowId,
+store,
+) as {readonly current: TodoRow};
+
+const toggleTodo = (event: Event) => {
+    const input = event.currentTarget as HTMLInputElement;
+    store.setPartialRow('todos', rowId, {completed: input.checked});
+};
+
+const deleteTodo = () => {
+store.delRow('todos', rowId);
+};
+</script>
+
+<div class="todoItem" class:completed={todo.current.completed}>
+  <input
+    id={\`todo-\${rowId}\`}
+    type="checkbox"
+    checked={todo.current.completed}
+    onchange={toggleTodo}
+  />
+  <label for={\`todo-\${rowId}\`}>{todo.current.text}</label>
+  <button onclick={deleteTodo}>Delete</button>
+</div>
+",
   "client/src/TodoList.svelte": "
+
 
 <script lang="ts">
 import './todoList.css';
@@ -13202,7 +13427,14 @@ import {useSortedRowIds} from 'tinybase/ui-svelte';
 import TodoItem from './TodoItem.svelte';
 import {store} from './store';
 
-const todoIds = useSortedRowIds('todos', undefined, false, 0, undefined, store);
+const todoIds = useSortedRowIds(
+'todos',
+undefined,
+false,
+0,
+undefined,
+store,
+);
 </script>
 
 <div id="todoList">
@@ -13353,6 +13585,40 @@ export type TodosStore = typeof store;
   flex: 1;
 }
 ",
+  "client/src/todoItem.css": ".todoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.todoItem:last-child {
+  border-bottom: none;
+}
+
+.todoItem input[type='checkbox'] {
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.todoItem label {
+  flex: 1;
+  cursor: pointer;
+  user-select: none;
+}
+
+.todoItem.completed label {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.todoItem button {
+  flex-shrink: 0;
+}
+",
   "client/src/todoList.css": "#todoList {
   border: 1px solid var(--border);
   border-radius: 0.375rem;
@@ -13368,8 +13634,13 @@ export type TodosStore = typeof store;
   color: var(--fg2);
 }
 ",
-  "client/src/vite-env.d.ts": "/// <reference types="svelte" />
-/// <reference types="vite/client" />
+  "client/src/vite-env.d.ts": "/// <reference types="vite/client" />
+
+declare module '*.svelte' {
+  import type {Component} from 'svelte';
+  const component: Component<Record<string, never>>;
+  export default component;
+}
 
 declare module '*.css' {
   const content: string;
@@ -13464,6 +13735,8 @@ stays synchronized with the underlying TinyBase store.
 
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/.npmrc": "legacy-peer-deps=true
 ",
   "client/index.html": "<!doctype html>
 <html lang="en">
@@ -13716,6 +13989,7 @@ import './loading.css';
 import './button.css';
 import './input.css';
 import './todoInput.css';
+import {onMount} from 'svelte';
 import {store} from './store';
 
 let text = $state('');
@@ -13736,6 +14010,10 @@ event.preventDefault();
 addTodo();
 }
 };
+
+onMount(() => {
+input?.focus();
+});
 </script>
 
 <div id="todoInput">
@@ -13744,13 +14022,52 @@ addTodo();
     bind:value={text}
     type="text"
     placeholder="What needs to be done?"
-    autofocus
     onkeydown={handleKeyDown}
   />
   <button class="primary" onclick={addTodo}>Add</button>
 </div>
 ",
+  "client/src/TodoItem.svelte": "
+
+
+<script lang="ts">
+import './button.css';
+import './todoItem.css';
+import {useRow} from 'tinybase/ui-svelte';
+import {store} from './store';
+  import type {TodoRow} from './store';
+
+let {rowId}: {rowId: string} = $props();
+
+const todo = useRow(
+'todos',
+() => rowId,
+store,
+) as {readonly current: TodoRow};
+
+const toggleTodo = (event: Event) => {
+    const input = event.currentTarget as HTMLInputElement;
+    store.setPartialRow('todos', rowId, {completed: input.checked});
+};
+
+const deleteTodo = () => {
+store.delRow('todos', rowId);
+};
+</script>
+
+<div class="todoItem" class:completed={todo.current.completed}>
+  <input
+    id={\`todo-\${rowId}\`}
+    type="checkbox"
+    checked={todo.current.completed}
+    onchange={toggleTodo}
+  />
+  <label for={\`todo-\${rowId}\`}>{todo.current.text}</label>
+  <button onclick={deleteTodo}>Delete</button>
+</div>
+",
   "client/src/TodoList.svelte": "
+
 
 <script lang="ts">
 import './todoList.css';
@@ -13758,7 +14075,14 @@ import {useSortedRowIds} from 'tinybase/ui-svelte';
 import TodoItem from './TodoItem.svelte';
 import {store} from './store';
 
-const todoIds = useSortedRowIds('todos', undefined, false, 0, undefined, store);
+const todoIds = useSortedRowIds(
+'todos',
+undefined,
+false,
+0,
+undefined,
+store,
+);
 </script>
 
 <div id="todoList">
@@ -13854,10 +14178,13 @@ input[type='text']::placeholder {
 
 let sqlite3Promise: Promise<Sqlite3Static> | null = null;
 let db: Database | null = null;
+const initSqlite = sqlite3InitModule as (config?: {
+  locateFile?: () => string;
+}) => Promise<Sqlite3Static>;
 
 export const getDb = async () => {
   if (!sqlite3Promise) {
-    sqlite3Promise = sqlite3InitModule({
+    sqlite3Promise = initSqlite({
       locateFile: () => '/sqlite3.wasm',
     });
   }
@@ -13909,6 +14236,40 @@ export type TodosStore = typeof store;
   flex: 1;
 }
 ",
+  "client/src/todoItem.css": ".todoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.todoItem:last-child {
+  border-bottom: none;
+}
+
+.todoItem input[type='checkbox'] {
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.todoItem label {
+  flex: 1;
+  cursor: pointer;
+  user-select: none;
+}
+
+.todoItem.completed label {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.todoItem button {
+  flex-shrink: 0;
+}
+",
   "client/src/todoList.css": "#todoList {
   border: 1px solid var(--border);
   border-radius: 0.375rem;
@@ -13924,8 +14285,13 @@ export type TodosStore = typeof store;
   color: var(--fg2);
 }
 ",
-  "client/src/vite-env.d.ts": "/// <reference types="svelte" />
-/// <reference types="vite/client" />
+  "client/src/vite-env.d.ts": "/// <reference types="vite/client" />
+
+declare module '*.svelte' {
+  import type {Component} from 'svelte';
+  const component: Component<Record<string, never>>;
+  export default component;
+}
 
 declare module '*.css' {
   const content: string;

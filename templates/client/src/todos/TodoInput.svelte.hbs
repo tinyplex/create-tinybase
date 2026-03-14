@@ -6,6 +6,7 @@
 import './button.css';
 import './input.css';
 import './todoInput.css';
+import {onMount} from 'svelte';
 import {store} from './store';
 
 let text = $state('');
@@ -26,6 +27,10 @@ event.preventDefault();
 addTodo();
 }
 };
+
+onMount(() => {
+input?.focus();
+});
 </script>
 
 <div id="todoInput">
@@ -34,7 +39,6 @@ addTodo();
     bind:value={text}
     type="text"
     placeholder="What needs to be done?"
-    autofocus
     onkeydown={handleKeyDown}
   />
   <button class="primary" onclick={addTodo}>Add</button>

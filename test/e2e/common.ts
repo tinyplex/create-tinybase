@@ -214,10 +214,49 @@ async function npmInstall(projectPath: string, force = false) {
 export async function runTypeScriptCheck(projectPath: string) {
   const clientPath = join(projectPath, 'client');
   const tsconfigPath = join(clientPath, 'tsconfig.json');
+  const packageJsonPath = join(clientPath, 'package.json');
 
   if (!existsSync(tsconfigPath)) {
     return {passed: true, output: 'No TypeScript config found, skipping'};
   }
+
+  try {
+    const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf-8'));
+    if (packageJson.scripts?.check) {
+      return new Promise((resolve, reject) => {
+        const checker = spawn('npm', ['run', 'check'], {
+          cwd: clientPath,
+          stdio: 'pipe',
+        });
+
+        let output = '';
+        let errorOutput = '';
+
+        checker.stdout?.on('data', (data) => {
+          output += data.toString();
+        });
+
+        checker.stderr?.on('data', (data) => {
+          errorOutput += data.toString();
+        });
+
+        checker.on('close', (code) => {
+          if (code !== 0) {
+            resolve({
+              passed: false,
+              output,
+              errorOutput,
+              errors: errorOutput + output,
+            });
+          } else {
+            resolve({passed: true, output, errorOutput});
+          }
+        });
+
+        checker.on('error', reject);
+      });
+    }
+  } catch (err) {}
 
   return new Promise((resolve, reject) => {
     const tsc = spawn('npx', ['tsc', '--noEmit'], {
