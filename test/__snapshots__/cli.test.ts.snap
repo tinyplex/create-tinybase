@@ -34,14 +34,12 @@ built with Vite and JavaScript.
 
 #### Key Files
 
-- **\`index.html\`** - The main HTML file that loads your app
-- **\`src/index.jsx\`** - Entry point that bootstraps the application and renders the React component tree
-- **\`src/App.jsx\`** - Main React component that renders the chat interface
-
-- **\`src/ChatStore.jsx\`**
-- TinyBase chat messages store configuration
-  - **\`src/SettingsStore.jsx\`** - TinyBase settings store (not synchronized)
-- **\`src/config.jsx\`** - Configuration settings
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.jsx\`**: Entry point that bootstraps and renders the React app
+- **\`src/App.jsx\`**: Main React component that renders the chat interface
+- **\`src/ChatStore.jsx\`**: TinyBase chat messages store configuration
+  - **\`src/SettingsStore.jsx\`**: TinyBase settings store (not synchronized)
+- **\`src/config.jsx\`**: Configuration settings
 
 #### How It Works
 
@@ -50,7 +48,7 @@ The app uses **TinyBase** to manage application state in a reactive data store.
 **Persistence** is enabled using browser LocalStorage.
 Your data is automatically saved and restored when you reload the page.
 
-**React Integration** - TinyBase provides React hooks that automatically subscribe
+**React Integration**: TinyBase provides React hooks that automatically subscribe
 to store changes and trigger re-renders when data updates. This means your UI
 stays in sync with your data with minimal boilerplate.
 
@@ -717,14 +715,12 @@ built with Vite and JavaScript.
 
 #### Key Files
 
-- **\`index.html\`** - The main HTML file that loads your app
-- **\`src/index.jsx\`** - Entry point that bootstraps the application and renders the React component tree
-- **\`src/App.jsx\`** - Main React component that renders the chat interface
-
-- **\`src/ChatStore.jsx\`**
-- TinyBase chat messages store configuration
-  - **\`src/SettingsStore.jsx\`** - TinyBase settings store (not synchronized)
-- **\`src/config.jsx\`** - Configuration settings
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.jsx\`**: Entry point that bootstraps and renders the React app
+- **\`src/App.jsx\`**: Main React component that renders the chat interface
+- **\`src/ChatStore.jsx\`**: TinyBase chat messages store configuration
+  - **\`src/SettingsStore.jsx\`**: TinyBase settings store (not synchronized)
+- **\`src/config.jsx\`**: Configuration settings
 
 #### How It Works
 
@@ -733,7 +729,7 @@ The app uses **TinyBase** to manage application state in a reactive data store.
 **Persistence** is enabled using SQLite WASM (running entirely in the browser).
 Your data is automatically saved and restored when you reload the page.
 
-**React Integration** - TinyBase provides React hooks that automatically subscribe
+**React Integration**: TinyBase provides React hooks that automatically subscribe
 to store changes and trigger re-renders when data updates. This means your UI
 stays in sync with your data with minimal boilerplate.
 
@@ -1446,15 +1442,12 @@ built with Vite and JavaScript.
 
 #### Key Files
 
-- **\`index.html\`** - The main HTML file that loads your app
-- **\`src/index.jsx\`** - Entry point that bootstraps the application and renders the React component tree
-- **\`src/App.jsx\`** - Main React component that renders the drawing
-  canvas
-
-- **\`src/CanvasStore.jsx\`**
-- TinyBase drawing canvas store configuration
-  - **\`src/SettingsStore.jsx\`** - TinyBase settings store (not synchronized)
-- **\`src/config.jsx\`** - Configuration settings
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.jsx\`**: Entry point that bootstraps and renders the React app
+- **\`src/App.jsx\`**: Main React component that renders the drawing canvas
+- **\`src/CanvasStore.jsx\`**: TinyBase drawing canvas store configuration
+  - **\`src/SettingsStore.jsx\`**: TinyBase settings store (not synchronized)
+- **\`src/config.jsx\`**: Configuration settings
 
 #### How It Works
 
@@ -1463,7 +1456,7 @@ The app uses **TinyBase** to manage application state in a reactive data store.
 **Persistence** is enabled using browser LocalStorage.
 Your data is automatically saved and restored when you reload the page.
 
-**React Integration** - TinyBase provides React hooks that automatically subscribe
+**React Integration**: TinyBase provides React hooks that automatically subscribe
 to store changes and trigger re-renders when data updates. This means your UI
 stays in sync with your data with minimal boilerplate.
 
@@ -2178,13 +2171,11 @@ built with Vite and JavaScript.
 
 #### Key Files
 
-- **\`index.html\`** - The main HTML file that loads your app
-- **\`src/index.jsx\`** - Entry point that bootstraps the application and renders the React component tree
-- **\`src/App.jsx\`** - Main React component that renders the game
-
-- **\`src/Store.jsx\`**
-- TinyBase main store configuration
-- **\`src/config.jsx\`** - Configuration settings
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.jsx\`**: Entry point that bootstraps and renders the React app
+- **\`src/App.jsx\`**: Main React component that renders the game
+- **\`src/Store.jsx\`**: TinyBase main store configuration
+- **\`src/config.jsx\`**: Configuration settings
 
 #### How It Works
 
@@ -2193,7 +2184,7 @@ The app uses **TinyBase** to manage application state in a reactive data store.
 **Persistence** is enabled using browser LocalStorage.
 Your data is automatically saved and restored when you reload the page.
 
-**React Integration** - TinyBase provides React hooks that automatically subscribe
+**React Integration**: TinyBase provides React hooks that automatically subscribe
 to store changes and trigger re-renders when data updates. This means your UI
 stays in sync with your data with minimal boilerplate.
 
@@ -2843,13 +2834,11 @@ built with Vite and JavaScript.
 
 #### Key Files
 
-- **\`index.html\`** - The main HTML file that loads your app
-- **\`src/index.jsx\`** - Entry point that bootstraps the application and renders the React component tree
-- **\`src/App.jsx\`** - Main React component that renders the todo list
-
-- **\`src/Store.jsx\`**
-- TinyBase main store configuration
-- **\`src/config.jsx\`** - Configuration settings
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.jsx\`**: Entry point that bootstraps and renders the React app
+- **\`src/App.jsx\`**: Main React component that renders the todo list
+- **\`src/Store.jsx\`**: TinyBase main store configuration
+- **\`src/config.jsx\`**: Configuration settings
 
 #### How It Works
 
@@ -2858,7 +2847,7 @@ The app uses **TinyBase** to manage application state in a reactive data store.
 **Persistence** is enabled using browser LocalStorage.
 Your data is automatically saved and restored when you reload the page.
 
-**React Integration** - TinyBase provides React hooks that automatically subscribe
+**React Integration**: TinyBase provides React hooks that automatically subscribe
 to store changes and trigger re-renders when data updates. This means your UI
 stays in sync with your data with minimal boilerplate.
 
@@ -3484,13 +3473,11 @@ built with Vite and JavaScript.
 
 #### Key Files
 
-- **\`index.html\`** - The main HTML file that loads your app
-- **\`src/index.jsx\`** - Entry point that bootstraps the application and renders the React component tree
-- **\`src/App.jsx\`** - Main React component that renders the todo list
-
-- **\`src/Store.jsx\`**
-- TinyBase main store configuration
-- **\`src/config.jsx\`** - Configuration settings (including server connection URL)
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.jsx\`**: Entry point that bootstraps and renders the React app
+- **\`src/App.jsx\`**: Main React component that renders the todo list
+- **\`src/Store.jsx\`**: TinyBase main store configuration
+- **\`src/config.jsx\`**: Configuration settings (including server connection URL)
 
 #### How It Works
 
@@ -3510,7 +3497,7 @@ When data changes locally, it's sent to the server and broadcast to all other
 clients in the same room. The MergeableStore handles conflict resolution using
 CRDTs, ensuring all clients converge to the same state.
 
-**React Integration** - TinyBase provides React hooks that automatically subscribe
+**React Integration**: TinyBase provides React hooks that automatically subscribe
 to store changes and trigger re-renders when data updates. This means your UI
 stays in sync with your data with minimal boilerplate.
 
@@ -3525,7 +3512,7 @@ The \`server\` directory contains your Cloudflare Durable Objects WebSocket serv
 
 #### Key Files
 
-- **\`index.jsx\`** - Server entry point
+- **\`index.jsx\`**: Server entry point
 
 #### How It Works
 
@@ -4285,12 +4272,11 @@ built with Vite and JavaScript.
 
 #### Key Files
 
-- **\`index.html\`** - The main HTML file that loads your app
-- **\`src/index.js\`** - Entry point that bootstraps the application and mounts the Svelte app
-- **\`src/App.svelte\`** - Main Svelte component that renders the todo list
-- **\`src/store.js\`**
-- TinyBase main store configuration
-- **\`src/config.js\`** - Configuration settings
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.js\`**: Entry point that bootstraps and mounts the Svelte app
+- **\`src/App.svelte\`**: Main Svelte component that renders the todo list
+- **\`src/store.js\`**: TinyBase main store configuration
+- **\`src/config.js\`**: Configuration settings
 
 #### How It Works
 
@@ -4299,7 +4285,7 @@ The app uses **TinyBase** to manage application state in a reactive data store.
 **Persistence** is enabled using browser LocalStorage.
 Your data is automatically saved and restored when you reload the page.
 
-**Svelte Integration** - TinyBase provides Svelte stores and helpers that keep the
+**Svelte Integration**: TinyBase provides Svelte stores and helpers that keep the
 UI reactive as data changes. Components subscribe declaratively so the interface
 stays synchronized with the underlying TinyBase store.
 
@@ -4776,13 +4762,12 @@ built with Vite and JavaScript.
 
 #### Key Files
 
-- **\`index.html\`** - The main HTML file that loads your app
-- **\`src/index.js\`** - Entry point that bootstraps the application
-- **\`src/app.js\`** - Main application logic
-- **\`src/chatStore.js\`**
-- TinyBase chat messages store configuration
-  - **\`src/settingsStore.js\`** - TinyBase settings store (not synchronized)
-- **\`src/config.js\`** - Configuration settings
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.js\`**: Entry point that bootstraps the app
+- **\`src/app.js\`**: Main application logic
+- **\`src/chatStore.js\`**: TinyBase chat messages store configuration
+  - **\`src/settingsStore.js\`**: TinyBase settings store (not synchronized)
+- **\`src/config.js\`**: Configuration settings
 
 #### How It Works
 
@@ -5407,13 +5392,12 @@ built with Vite and JavaScript.
 
 #### Key Files
 
-- **\`index.html\`** - The main HTML file that loads your app
-- **\`src/index.js\`** - Entry point that bootstraps the application
-- **\`src/app.js\`** - Main application logic
-- **\`src/canvasStore.js\`**
-- TinyBase drawing canvas store configuration
-  - **\`src/settingsStore.js\`** - TinyBase settings store (not synchronized)
-- **\`src/config.js\`** - Configuration settings
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.js\`**: Entry point that bootstraps the app
+- **\`src/app.js\`**: Main application logic
+- **\`src/canvasStore.js\`**: TinyBase drawing canvas store configuration
+  - **\`src/settingsStore.js\`**: TinyBase settings store (not synchronized)
+- **\`src/config.js\`**: Configuration settings
 
 #### How It Works
 
@@ -6077,13 +6061,12 @@ built with Vite and JavaScript.
 
 #### Key Files
 
-- **\`index.html\`** - The main HTML file that loads your app
-- **\`src/index.js\`** - Entry point that bootstraps the application
-- **\`src/app.js\`** - Main application logic
-- **\`src/canvasStore.js\`**
-- TinyBase drawing canvas store configuration
-  - **\`src/settingsStore.js\`** - TinyBase settings store (not synchronized)
-- **\`src/config.js\`** - Configuration settings
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.js\`**: Entry point that bootstraps the app
+- **\`src/app.js\`**: Main application logic
+- **\`src/canvasStore.js\`**: TinyBase drawing canvas store configuration
+  - **\`src/settingsStore.js\`**: TinyBase settings store (not synchronized)
+- **\`src/config.js\`**: Configuration settings
 
 #### How It Works
 
@@ -6733,12 +6716,11 @@ built with Vite and JavaScript.
 
 #### Key Files
 
-- **\`index.html\`** - The main HTML file that loads your app
-- **\`src/index.js\`** - Entry point that bootstraps the application
-- **\`src/app.js\`** - Main application logic
-- **\`src/store.js\`**
-- TinyBase main store configuration
-- **\`src/config.js\`** - Configuration settings
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.js\`**: Entry point that bootstraps the app
+- **\`src/app.js\`**: Main application logic
+- **\`src/store.js\`**: TinyBase main store configuration
+- **\`src/config.js\`**: Configuration settings
 
 #### How It Works
 
@@ -7329,12 +7311,11 @@ built with Vite and JavaScript.
 
 #### Key Files
 
-- **\`index.html\`** - The main HTML file that loads your app
-- **\`src/index.js\`** - Entry point that bootstraps the application
-- **\`src/app.js\`** - Main application logic
-- **\`src/store.js\`**
-- TinyBase main store configuration
-- **\`src/config.js\`** - Configuration settings
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.js\`**: Entry point that bootstraps the app
+- **\`src/app.js\`**: Main application logic
+- **\`src/store.js\`**: TinyBase main store configuration
+- **\`src/config.js\`**: Configuration settings
 
 #### How It Works
 
@@ -7902,14 +7883,12 @@ built with Vite and TypeScript.
 
 #### Key Files
 
-- **\`index.html\`** - The main HTML file that loads your app
-- **\`src/index.tsx\`** - Entry point that bootstraps the application and renders the React component tree
-- **\`src/App.tsx\`** - Main React component that renders the chat interface
-
-- **\`src/ChatStore.tsx\`**
-- TinyBase chat messages store configuration
-  - **\`src/SettingsStore.tsx\`** - TinyBase settings store (not synchronized)
-- **\`src/config.tsx\`** - Configuration settings
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.tsx\`**: Entry point that bootstraps and renders the React app
+- **\`src/App.tsx\`**: Main React component that renders the chat interface
+- **\`src/ChatStore.tsx\`**: TinyBase chat messages store configuration
+  - **\`src/SettingsStore.tsx\`**: TinyBase settings store (not synchronized)
+- **\`src/config.tsx\`**: Configuration settings
 
 #### How It Works
 
@@ -7918,7 +7897,7 @@ The app uses **TinyBase** to manage application state in a reactive data store.
 **Persistence** is enabled using browser LocalStorage.
 Your data is automatically saved and restored when you reload the page.
 
-**React Integration** - TinyBase provides React hooks that automatically subscribe
+**React Integration**: TinyBase provides React hooks that automatically subscribe
 to store changes and trigger re-renders when data updates. This means your UI
 stays in sync with your data with minimal boilerplate.
 
@@ -8650,14 +8629,12 @@ built with Vite and TypeScript.
 
 #### Key Files
 
-- **\`index.html\`** - The main HTML file that loads your app
-- **\`src/index.tsx\`** - Entry point that bootstraps the application and renders the React component tree
-- **\`src/App.tsx\`** - Main React component that renders the chat interface
-
-- **\`src/ChatStore.tsx\`**
-- TinyBase chat messages store configuration
-  - **\`src/SettingsStore.tsx\`** - TinyBase settings store (not synchronized)
-- **\`src/config.tsx\`** - Configuration settings (including server connection URL)
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.tsx\`**: Entry point that bootstraps and renders the React app
+- **\`src/App.tsx\`**: Main React component that renders the chat interface
+- **\`src/ChatStore.tsx\`**: TinyBase chat messages store configuration
+  - **\`src/SettingsStore.tsx\`**: TinyBase settings store (not synchronized)
+- **\`src/config.tsx\`**: Configuration settings (including server connection URL)
 
 #### How It Works
 
@@ -8677,7 +8654,7 @@ When data changes locally, it's sent to the server and broadcast to all other
 clients in the same room. The MergeableStore handles conflict resolution using
 CRDTs, ensuring all clients converge to the same state.
 
-**React Integration** - TinyBase provides React hooks that automatically subscribe
+**React Integration**: TinyBase provides React hooks that automatically subscribe
 to store changes and trigger re-renders when data updates. This means your UI
 stays in sync with your data with minimal boilerplate.
 
@@ -8691,7 +8668,7 @@ The \`server\` directory contains your Node.js WebSocket server.
 
 #### Key Files
 
-- **\`index.tsx\`** - Server entry point
+- **\`index.tsx\`**: Server entry point
 
 #### How It Works
 
@@ -9488,15 +9465,12 @@ built with Vite and TypeScript.
 
 #### Key Files
 
-- **\`index.html\`** - The main HTML file that loads your app
-- **\`src/index.tsx\`** - Entry point that bootstraps the application and renders the React component tree
-- **\`src/App.tsx\`** - Main React component that renders the drawing
-  canvas
-
-- **\`src/CanvasStore.tsx\`**
-- TinyBase drawing canvas store configuration
-  - **\`src/SettingsStore.tsx\`** - TinyBase settings store (not synchronized)
-- **\`src/config.tsx\`** - Configuration settings
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.tsx\`**: Entry point that bootstraps and renders the React app
+- **\`src/App.tsx\`**: Main React component that renders the drawing canvas
+- **\`src/CanvasStore.tsx\`**: TinyBase drawing canvas store configuration
+  - **\`src/SettingsStore.tsx\`**: TinyBase settings store (not synchronized)
+- **\`src/config.tsx\`**: Configuration settings
 
 #### How It Works
 
@@ -9505,7 +9479,7 @@ The app uses **TinyBase** to manage application state in a reactive data store.
 **Persistence** is enabled using browser LocalStorage.
 Your data is automatically saved and restored when you reload the page.
 
-**React Integration** - TinyBase provides React hooks that automatically subscribe
+**React Integration**: TinyBase provides React hooks that automatically subscribe
 to store changes and trigger re-renders when data updates. This means your UI
 stays in sync with your data with minimal boilerplate.
 
@@ -10268,13 +10242,11 @@ built with Vite and TypeScript.
 
 #### Key Files
 
-- **\`index.html\`** - The main HTML file that loads your app
-- **\`src/index.tsx\`** - Entry point that bootstraps the application and renders the React component tree
-- **\`src/App.tsx\`** - Main React component that renders the game
-
-- **\`src/Store.tsx\`**
-- TinyBase main store configuration
-- **\`src/config.tsx\`** - Configuration settings
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.tsx\`**: Entry point that bootstraps and renders the React app
+- **\`src/App.tsx\`**: Main React component that renders the game
+- **\`src/Store.tsx\`**: TinyBase main store configuration
+- **\`src/config.tsx\`**: Configuration settings
 
 #### How It Works
 
@@ -10283,7 +10255,7 @@ The app uses **TinyBase** to manage application state in a reactive data store.
 **Persistence** is enabled using browser LocalStorage.
 Your data is automatically saved and restored when you reload the page.
 
-**React Integration** - TinyBase provides React hooks that automatically subscribe
+**React Integration**: TinyBase provides React hooks that automatically subscribe
 to store changes and trigger re-renders when data updates. This means your UI
 stays in sync with your data with minimal boilerplate.
 
@@ -10979,13 +10951,11 @@ built with Vite and TypeScript.
 
 #### Key Files
 
-- **\`index.html\`** - The main HTML file that loads your app
-- **\`src/index.tsx\`** - Entry point that bootstraps the application and renders the React component tree
-- **\`src/App.tsx\`** - Main React component that renders the todo list
-
-- **\`src/Store.tsx\`**
-- TinyBase main store configuration
-- **\`src/config.tsx\`** - Configuration settings
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.tsx\`**: Entry point that bootstraps and renders the React app
+- **\`src/App.tsx\`**: Main React component that renders the todo list
+- **\`src/Store.tsx\`**: TinyBase main store configuration
+- **\`src/config.tsx\`**: Configuration settings
 
 #### How It Works
 
@@ -10994,7 +10964,7 @@ The app uses **TinyBase** to manage application state in a reactive data store.
 **Persistence** is enabled using browser LocalStorage.
 Your data is automatically saved and restored when you reload the page.
 
-**React Integration** - TinyBase provides React hooks that automatically subscribe
+**React Integration**: TinyBase provides React hooks that automatically subscribe
 to store changes and trigger re-renders when data updates. This means your UI
 stays in sync with your data with minimal boilerplate.
 
@@ -11658,13 +11628,11 @@ built with Vite and TypeScript.
 
 #### Key Files
 
-- **\`index.html\`** - The main HTML file that loads your app
-- **\`src/index.tsx\`** - Entry point that bootstraps the application and renders the React component tree
-- **\`src/App.tsx\`** - Main React component that renders the todo list
-
-- **\`src/Store.tsx\`**
-- TinyBase main store configuration
-- **\`src/config.tsx\`** - Configuration settings
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.tsx\`**: Entry point that bootstraps and renders the React app
+- **\`src/App.tsx\`**: Main React component that renders the todo list
+- **\`src/Store.tsx\`**: TinyBase main store configuration
+- **\`src/config.tsx\`**: Configuration settings
 
 #### How It Works
 
@@ -11683,7 +11651,7 @@ When data changes locally, it's sent to the server and broadcast to all other
 clients in the same room. The MergeableStore handles conflict resolution using
 CRDTs, ensuring all clients converge to the same state.
 
-**React Integration** - TinyBase provides React hooks that automatically subscribe
+**React Integration**: TinyBase provides React hooks that automatically subscribe
 to store changes and trigger re-renders when data updates. This means your UI
 stays in sync with your data with minimal boilerplate.
 
@@ -12378,12 +12346,11 @@ built with Vite and TypeScript.
 
 #### Key Files
 
-- **\`index.html\`** - The main HTML file that loads your app
-- **\`src/index.ts\`** - Entry point that bootstraps the application and mounts the Svelte app
-- **\`src/App.svelte\`** - Main Svelte component that renders the todo list
-- **\`src/store.ts\`**
-- TinyBase main store configuration
-- **\`src/config.ts\`** - Configuration settings
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.ts\`**: Entry point that bootstraps and mounts the Svelte app
+- **\`src/App.svelte\`**: Main Svelte component that renders the todo list
+- **\`src/store.ts\`**: TinyBase main store configuration
+- **\`src/config.ts\`**: Configuration settings
 
 #### How It Works
 
@@ -12392,7 +12359,7 @@ The app uses **TinyBase** to manage application state in a reactive data store.
 **Persistence** is enabled using browser LocalStorage.
 Your data is automatically saved and restored when you reload the page.
 
-**Svelte Integration** - TinyBase provides Svelte stores and helpers that keep the
+**Svelte Integration**: TinyBase provides Svelte stores and helpers that keep the
 UI reactive as data changes. Components subscribe declaratively so the interface
 stays synchronized with the underlying TinyBase store.
 
@@ -12909,12 +12876,11 @@ built with Vite and TypeScript.
 
 #### Key Files
 
-- **\`index.html\`** - The main HTML file that loads your app
-- **\`src/index.ts\`** - Entry point that bootstraps the application and mounts the Svelte app
-- **\`src/App.svelte\`** - Main Svelte component that renders the todo list
-- **\`src/store.ts\`**
-- TinyBase main store configuration
-- **\`src/config.ts\`** - Configuration settings
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.ts\`**: Entry point that bootstraps and mounts the Svelte app
+- **\`src/App.svelte\`**: Main Svelte component that renders the todo list
+- **\`src/store.ts\`**: TinyBase main store configuration
+- **\`src/config.ts\`**: Configuration settings
 
 #### How It Works
 
@@ -12933,7 +12899,7 @@ When data changes locally, it's sent to the server and broadcast to all other
 clients in the same room. The MergeableStore handles conflict resolution using
 CRDTs, ensuring all clients converge to the same state.
 
-**Svelte Integration** - TinyBase provides Svelte stores and helpers that keep the
+**Svelte Integration**: TinyBase provides Svelte stores and helpers that keep the
 UI reactive as data changes. Components subscribe declaratively so the interface
 stays synchronized with the underlying TinyBase store.
 
@@ -13477,12 +13443,11 @@ built with Vite and TypeScript.
 
 #### Key Files
 
-- **\`index.html\`** - The main HTML file that loads your app
-- **\`src/index.ts\`** - Entry point that bootstraps the application and mounts the Svelte app
-- **\`src/App.svelte\`** - Main Svelte component that renders the todo list
-- **\`src/store.ts\`**
-- TinyBase main store configuration
-- **\`src/config.ts\`** - Configuration settings
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.ts\`**: Entry point that bootstraps and mounts the Svelte app
+- **\`src/App.svelte\`**: Main Svelte component that renders the todo list
+- **\`src/store.ts\`**: TinyBase main store configuration
+- **\`src/config.ts\`**: Configuration settings
 
 #### How It Works
 
@@ -13491,7 +13456,7 @@ The app uses **TinyBase** to manage application state in a reactive data store.
 **Persistence** is enabled using SQLite WASM (running entirely in the browser).
 Your data is automatically saved and restored when you reload the page.
 
-**Svelte Integration** - TinyBase provides Svelte stores and helpers that keep the
+**Svelte Integration**: TinyBase provides Svelte stores and helpers that keep the
 UI reactive as data changes. Components subscribe declaratively so the interface
 stays synchronized with the underlying TinyBase store.
 
@@ -14054,13 +14019,12 @@ built with Vite and TypeScript.
 
 #### Key Files
 
-- **\`index.html\`** - The main HTML file that loads your app
-- **\`src/index.ts\`** - Entry point that bootstraps the application
-- **\`src/app.ts\`** - Main application logic
-- **\`src/chatStore.ts\`**
-- TinyBase chat messages store configuration
-  - **\`src/settingsStore.ts\`** - TinyBase settings store (not synchronized)
-- **\`src/config.ts\`** - Configuration settings
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.ts\`**: Entry point that bootstraps the app
+- **\`src/app.ts\`**: Main application logic
+- **\`src/chatStore.ts\`**: TinyBase chat messages store configuration
+  - **\`src/settingsStore.ts\`**: TinyBase settings store (not synchronized)
+- **\`src/config.ts\`**: Configuration settings
 
 #### How It Works
 
@@ -14739,13 +14703,12 @@ built with Vite and TypeScript.
 
 #### Key Files
 
-- **\`index.html\`** - The main HTML file that loads your app
-- **\`src/index.ts\`** - Entry point that bootstraps the application
-- **\`src/app.ts\`** - Main application logic
-- **\`src/canvasStore.ts\`**
-- TinyBase drawing canvas store configuration
-  - **\`src/settingsStore.ts\`** - TinyBase settings store (not synchronized)
-- **\`src/config.ts\`** - Configuration settings
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.ts\`**: Entry point that bootstraps the app
+- **\`src/app.ts\`**: Main application logic
+- **\`src/canvasStore.ts\`**: TinyBase drawing canvas store configuration
+  - **\`src/settingsStore.ts\`**: TinyBase settings store (not synchronized)
+- **\`src/config.ts\`**: Configuration settings
 
 #### How It Works
 
@@ -15463,12 +15426,11 @@ built with Vite and TypeScript.
 
 #### Key Files
 
-- **\`index.html\`** - The main HTML file that loads your app
-- **\`src/index.ts\`** - Entry point that bootstraps the application
-- **\`src/app.ts\`** - Main application logic
-- **\`src/store.ts\`**
-- TinyBase main store configuration
-- **\`src/config.ts\`** - Configuration settings
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.ts\`**: Entry point that bootstraps the app
+- **\`src/app.ts\`**: Main application logic
+- **\`src/store.ts\`**: TinyBase main store configuration
+- **\`src/config.ts\`**: Configuration settings
 
 #### How It Works
 
@@ -16102,12 +16064,11 @@ built with Vite and TypeScript.
 
 #### Key Files
 
-- **\`index.html\`** - The main HTML file that loads your app
-- **\`src/index.ts\`** - Entry point that bootstraps the application
-- **\`src/app.ts\`** - Main application logic
-- **\`src/store.ts\`**
-- TinyBase main store configuration
-- **\`src/config.ts\`** - Configuration settings
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.ts\`**: Entry point that bootstraps the app
+- **\`src/app.ts\`**: Main application logic
+- **\`src/store.ts\`**: TinyBase main store configuration
+- **\`src/config.ts\`**: Configuration settings
 
 #### How It Works
 
@@ -16783,12 +16744,11 @@ built with Vite and TypeScript.
 
 #### Key Files
 
-- **\`index.html\`** - The main HTML file that loads your app
-- **\`src/index.ts\`** - Entry point that bootstraps the application
-- **\`src/app.ts\`** - Main application logic
-- **\`src/store.ts\`**
-- TinyBase main store configuration
-- **\`src/config.ts\`** - Configuration settings
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.ts\`**: Entry point that bootstraps the app
+- **\`src/app.ts\`**: Main application logic
+- **\`src/store.ts\`**: TinyBase main store configuration
+- **\`src/config.ts\`**: Configuration settings
 
 #### How It Works
 

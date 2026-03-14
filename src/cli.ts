@@ -170,6 +170,55 @@ const config = {
     const persistSqlite = normalizedPersistenceType === 'sqlite';
     const persistPglite = normalizedPersistenceType === 'pglite';
     const needsViteConfig = react || svelte || persistSqlite || persistPglite;
+    const appSurface =
+      appType === 'chat'
+        ? 'chat interface'
+        : appType === 'drawing'
+          ? 'drawing canvas'
+          : appType === 'game'
+            ? 'game'
+            : 'todo list';
+    const frameworkName = react ? 'React' : vanilla ? 'Vanilla JS' : 'Svelte';
+    const clientFrameworkDescription = react
+      ? 'React-based'
+      : vanilla
+        ? 'vanilla JavaScript'
+        : 'Svelte-based';
+    const entryFileDescription = react
+      ? 'Entry point that bootstraps and renders the React app'
+      : svelte
+        ? 'Entry point that bootstraps and mounts the Svelte app'
+        : 'Entry point that bootstraps the app';
+    const appFileStem = vanilla ? 'app' : 'App';
+    const appFileExt = vanilla ? scriptExt : componentExt;
+    const appFileDescription = react
+      ? `Main React component that renders the ${appSurface}`
+      : vanilla
+        ? 'Main application logic'
+        : `Main Svelte component that renders the ${appSurface}`;
+    const primaryStoreStem = react
+      ? appType === 'chat'
+        ? 'ChatStore'
+        : appType === 'drawing'
+          ? 'CanvasStore'
+          : 'Store'
+      : appType === 'chat'
+        ? 'chatStore'
+        : appType === 'drawing'
+          ? 'canvasStore'
+          : 'store';
+    const primaryStoreExt = react ? componentExt : scriptExt;
+    const primaryStoreDescription = `TinyBase ${
+      appType === 'chat'
+        ? 'chat messages'
+        : appType === 'drawing'
+          ? 'drawing canvas'
+          : 'main'
+    } store configuration`;
+    const needsSettingsStore = appType === 'chat' || appType === 'drawing';
+    const settingsStoreStem = react ? 'SettingsStore' : 'settingsStore';
+    const settingsStoreExt = react ? componentExt : scriptExt;
+    const configExt = react ? componentExt : scriptExt;
 
     return {
       projectName,
@@ -190,6 +239,19 @@ const config = {
       persistSqlite,
       persistPglite,
       needsViteConfig,
+      frameworkName,
+      clientFrameworkDescription,
+      entryFileDescription,
+      appFileStem,
+      appFileExt,
+      appFileDescription,
+      primaryStoreStem,
+      primaryStoreExt,
+      primaryStoreDescription,
+      needsSettingsStore,
+      settingsStoreStem,
+      settingsStoreExt,
+      configExt,
       installAndRun: installAndRun === true || installAndRun === 'true',
       typescript,
       javascript,
