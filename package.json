@@ -38,23 +38,23 @@
     "prePublishPackage": "npm run ts && npm run prettier && npm run lint && npm run test && npm run test:e2e"
   },
   "dependencies": {
-    "tinycreate": "^1.0.4"
+    "tinycreate": "^1.0.5"
   },
   "engines": {
     "node": ">=18.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
-    "@types/node": "^25.3.5",
-    "esbuild": "^0.27.3",
+    "@types/node": "^25.5.0",
+    "esbuild": "^0.27.4",
     "eslint": "^9.39.2",
     "eslint-plugin-import": "^2.32.0",
     "globals": "^17.4.0",
     "prettier": "^3.8.1",
     "prettier-plugin-organize-imports": "^4.3.0",
-    "puppeteer": "^24.38.0",
+    "puppeteer": "^24.39.1",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.56.1",
-    "vitest": "^4.0.18"
+    "typescript-eslint": "^8.57.1",
+    "vitest": "^4.1.0"
   }
 }
