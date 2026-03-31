@@ -27036,7 +27036,7 @@ Your data is automatically saved and restored when you reload the page.
   },
   "dependencies": {
     "tinybase": "^8.0.2",
-    "@electric-sql/pglite": "^0.4.2"
+    "@electric-sql/pglite": "^0.3.16"
   }
 }
 ",
