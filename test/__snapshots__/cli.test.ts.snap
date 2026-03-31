@@ -994,8 +994,7 @@ with the store.
   },
   "devDependencies": {
     "vite": "^8.0.3",
-    "@vitejs/plugin-react": "^6.0.1",
-    "vite-plugin-static-copy": "^4.0.0"
+    "@vitejs/plugin-react": "^6.0.1"
   },
   "dependencies": {
     "tinybase": "^8.0.2",
@@ -1464,9 +1463,7 @@ const initSqlite = sqlite3InitModule;
 
 export const getDb = async () => {
   if (!sqlite3Promise) {
-    sqlite3Promise = initSqlite({
-      locateFile: () => '/sqlite3.wasm',
-    });
+    sqlite3Promise = initSqlite();
   }
   if (!db) {
     const sqlite3 = await sqlite3Promise;
@@ -1518,20 +1515,11 @@ export const getDefaultContent = () => [
 ",
   "client/vite.config.js": "import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
-import {viteStaticCopy} from 'vite-plugin-static-copy';
 
 export default defineConfig({
   plugins: [
     react({
       jsxRuntime: 'automatic',
-    }),
-    viteStaticCopy({
-      targets: [
-        {
-          src: 'node_modules/@sqlite.org/sqlite-wasm/dist/sqlite3.wasm',
-          dest: '.',
-        },
-      ],
     }),
   ],
   server: {
@@ -4011,8 +3999,7 @@ The \`server\` directory contains your Cloudflare Durable Objects WebSocket serv
   },
   "devDependencies": {
     "vite": "^8.0.3",
-    "@vitejs/plugin-react": "^6.0.1",
-    "vite-plugin-static-copy": "^4.0.0"
+    "@vitejs/plugin-react": "^6.0.1"
   },
   "dependencies": {
     "tinybase": "^8.0.2",
@@ -4440,9 +4427,7 @@ const initSqlite = sqlite3InitModule;
 
 export const getDb = async () => {
   if (!sqlite3Promise) {
-    sqlite3Promise = initSqlite({
-      locateFile: () => '/sqlite3.wasm',
-    });
+    sqlite3Promise = initSqlite();
   }
   if (!db) {
     const sqlite3 = await sqlite3Promise;
@@ -4512,20 +4497,11 @@ export const getDb = async () => {
 ",
   "client/vite.config.js": "import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
-import {viteStaticCopy} from 'vite-plugin-static-copy';
 
 export default defineConfig({
   plugins: [
     react({
       jsxRuntime: 'automatic',
-    }),
-    viteStaticCopy({
-      targets: [
-        {
-          src: 'node_modules/@sqlite.org/sqlite-wasm/dist/sqlite3.wasm',
-          dest: '.',
-        },
-      ],
     }),
   ],
   server: {
@@ -17074,8 +17050,7 @@ stays synchronized with the underlying TinyBase store.
     "@tsconfig/svelte": "^5.0.8",
     "svelte-check": "^4.4.6",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "svelte": "^5.55.1",
-    "vite-plugin-static-copy": "^4.0.0"
+    "svelte": "^5.55.1"
   },
   "dependencies": {
     "tinybase": "beta",
@@ -17530,15 +17505,11 @@ export type SettingsStore = typeof settingsStore;
 
 let sqlite3Promise: Promise<Sqlite3Static> | null = null;
 let db: Database | null = null;
-const initSqlite = sqlite3InitModule as (config?: {
-  locateFile?: () => string;
-}) => Promise<Sqlite3Static>;
+const initSqlite = sqlite3InitModule as () => Promise<Sqlite3Static>;
 
 export const getDb = async () => {
   if (!sqlite3Promise) {
-    sqlite3Promise = initSqlite({
-      locateFile: () => '/sqlite3.wasm',
-    });
+    sqlite3Promise = initSqlite();
   }
   if (!db) {
     const sqlite3 = await sqlite3Promise;
@@ -17626,20 +17597,9 @@ declare module '*.css' {
 ",
   "client/vite.config.js": "import {defineConfig} from 'vite';
 import {svelte} from '@sveltejs/vite-plugin-svelte';
-import {viteStaticCopy} from 'vite-plugin-static-copy';
 
 export default defineConfig({
-  plugins: [
-    svelte(),
-    viteStaticCopy({
-      targets: [
-        {
-          src: 'node_modules/@sqlite.org/sqlite-wasm/dist/sqlite3.wasm',
-          dest: '.',
-        },
-      ],
-    }),
-  ],
+  plugins: [svelte()],
   server: {
     headers: {
       'Cross-Origin-Opener-Policy': 'same-origin',
@@ -19557,8 +19517,7 @@ stays synchronized with the underlying TinyBase store.
     "@tsconfig/svelte": "^5.0.8",
     "svelte-check": "^4.4.6",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "svelte": "^5.55.1",
-    "vite-plugin-static-copy": "^4.0.0"
+    "svelte": "^5.55.1"
   },
   "dependencies": {
     "tinybase": "beta",
@@ -20112,15 +20071,11 @@ export type SettingsStore = typeof settingsStore;
 
 let sqlite3Promise: Promise<Sqlite3Static> | null = null;
 let db: Database | null = null;
-const initSqlite = sqlite3InitModule as (config?: {
-  locateFile?: () => string;
-}) => Promise<Sqlite3Static>;
+const initSqlite = sqlite3InitModule as () => Promise<Sqlite3Static>;
 
 export const getDb = async () => {
   if (!sqlite3Promise) {
-    sqlite3Promise = initSqlite({
-      locateFile: () => '/sqlite3.wasm',
-    });
+    sqlite3Promise = initSqlite();
   }
   if (!db) {
     const sqlite3 = await sqlite3Promise;
@@ -20167,20 +20122,9 @@ declare module '*.css' {
 ",
   "client/vite.config.js": "import {defineConfig} from 'vite';
 import {svelte} from '@sveltejs/vite-plugin-svelte';
-import {viteStaticCopy} from 'vite-plugin-static-copy';
 
 export default defineConfig({
-  plugins: [
-    svelte(),
-    viteStaticCopy({
-      targets: [
-        {
-          src: 'node_modules/@sqlite.org/sqlite-wasm/dist/sqlite3.wasm',
-          dest: '.',
-        },
-      ],
-    }),
-  ],
+  plugins: [svelte()],
   server: {
     headers: {
       'Cross-Origin-Opener-Policy': 'same-origin',
@@ -21987,8 +21931,7 @@ stays synchronized with the underlying TinyBase store.
     "@tsconfig/svelte": "^5.0.8",
     "svelte-check": "^4.4.6",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "svelte": "^5.55.1",
-    "vite-plugin-static-copy": "^4.0.0"
+    "svelte": "^5.55.1"
   },
   "dependencies": {
     "tinybase": "beta",
@@ -22407,15 +22350,11 @@ addEventListener('load', () => {
 
 let sqlite3Promise: Promise<Sqlite3Static> | null = null;
 let db: Database | null = null;
-const initSqlite = sqlite3InitModule as (config?: {
-  locateFile?: () => string;
-}) => Promise<Sqlite3Static>;
+const initSqlite = sqlite3InitModule as () => Promise<Sqlite3Static>;
 
 export const getDb = async () => {
   if (!sqlite3Promise) {
-    sqlite3Promise = initSqlite({
-      locateFile: () => '/sqlite3.wasm',
-    });
+    sqlite3Promise = initSqlite();
   }
   if (!db) {
     const sqlite3 = await sqlite3Promise;
@@ -22528,20 +22467,9 @@ declare module '*.css' {
 ",
   "client/vite.config.js": "import {defineConfig} from 'vite';
 import {svelte} from '@sveltejs/vite-plugin-svelte';
-import {viteStaticCopy} from 'vite-plugin-static-copy';
 
 export default defineConfig({
-  plugins: [
-    svelte(),
-    viteStaticCopy({
-      targets: [
-        {
-          src: 'node_modules/@sqlite.org/sqlite-wasm/dist/sqlite3.wasm',
-          dest: '.',
-        },
-      ],
-    }),
-  ],
+  plugins: [svelte()],
   server: {
     headers: {
       'Cross-Origin-Opener-Policy': 'same-origin',
@@ -24228,8 +24156,7 @@ stays synchronized with the underlying TinyBase store.
     "@tsconfig/svelte": "^5.0.8",
     "svelte-check": "^4.4.6",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "svelte": "^5.55.1",
-    "vite-plugin-static-copy": "^4.0.0"
+    "svelte": "^5.55.1"
   },
   "dependencies": {
     "tinybase": "beta",
@@ -24564,15 +24491,11 @@ input[type='text']::placeholder {
 
 let sqlite3Promise: Promise<Sqlite3Static> | null = null;
 let db: Database | null = null;
-const initSqlite = sqlite3InitModule as (config?: {
-  locateFile?: () => string;
-}) => Promise<Sqlite3Static>;
+const initSqlite = sqlite3InitModule as () => Promise<Sqlite3Static>;
 
 export const getDb = async () => {
   if (!sqlite3Promise) {
-    sqlite3Promise = initSqlite({
-      locateFile: () => '/sqlite3.wasm',
-    });
+    sqlite3Promise = initSqlite();
   }
   if (!db) {
     const sqlite3 = await sqlite3Promise;
@@ -24709,20 +24632,9 @@ declare module '*.css' {
 ",
   "client/vite.config.js": "import {defineConfig} from 'vite';
 import {svelte} from '@sveltejs/vite-plugin-svelte';
-import {viteStaticCopy} from 'vite-plugin-static-copy';
 
 export default defineConfig({
-  plugins: [
-    svelte(),
-    viteStaticCopy({
-      targets: [
-        {
-          src: 'node_modules/@sqlite.org/sqlite-wasm/dist/sqlite3.wasm',
-          dest: '.',
-        },
-      ],
-    }),
-  ],
+  plugins: [svelte()],
   server: {
     headers: {
       'Cross-Origin-Opener-Policy': 'same-origin',
