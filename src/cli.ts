@@ -288,7 +288,8 @@ const config = {
     const {javascript} = context;
 
     const prettier =
-      file.prettier ?? /\.(js|jsx|ts|tsx|css|json|html|md)$/.test(file.output);
+      file.prettier ??
+      /\.(js|jsx|ts|tsx|css|json|html|md|svelte)$/.test(file.output);
     const transpile =
       file.transpile ??
       (/\.(ts|tsx)\.hbs$/.test(file.template) && javascript === true);

@@ -52,6 +52,9 @@
   {{/if}}
   {{#if prettier}}
     "prettier": "^3.8.1"
+    {{#if svelte}}
+      "prettier-plugin-svelte": "^3.5.1"
+    {{/if}}
   {{/if}}
   {{#if eslint}}
     "eslint": "^9.39.2"

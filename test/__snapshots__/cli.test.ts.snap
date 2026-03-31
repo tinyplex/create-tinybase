@@ -4889,28 +4889,21 @@ stays synchronized with the underlying TinyBase store.
 	c-1.4,0.9-2.3,2.2-2.6,3.8s0.1,3.3,1,4.6c1.6,2.3,4.4,3.3,7.1,2.6c0.6-0.2,1.2-0.4,1.7-0.7l10.5-6.7c1.7-1.1,3.6-1.9,5.6-2.5
 	c8.9-2.3,18.2,1.2,23.4,8.7c3.2,4.4,4.4,9.9,3.5,15.3c-0.9,5.2-4.1,9.9-8.6,12.7l-27.5,17.5C44.8,102.5,42.9,103.3,40.9,103.9" />
 </svg>",
-  "client/src/App.svelte": "
+  "client/src/App.svelte": "<script>
+  import {onMount} from 'svelte';
+  import Loading from './Loading.svelte';
+  import MessageInput from './MessageInput.svelte';
+  import Messages from './Messages.svelte';
+  import UsernameInput from './UsernameInput.svelte';
+  import {chatStoreReady} from './chatStore';
+  import {settingsStoreReady} from './settingsStore';
 
+  let loading = $state(true);
 
-
-
-
-
-<script>
-import {onMount} from 'svelte';
-import Loading from './Loading.svelte';
-import MessageInput from './MessageInput.svelte';
-import Messages from './Messages.svelte';
-import UsernameInput from './UsernameInput.svelte';
-import {chatStoreReady} from './chatStore';
-import {settingsStoreReady} from './settingsStore';
-
-let loading = $state(true);
-
-onMount(async () => {
-await Promise.all([settingsStoreReady, chatStoreReady]);
-loading = false;
-});
+  onMount(async () => {
+    await Promise.all([settingsStoreReady, chatStoreReady]);
+    loading = false;
+  });
 </script>
 
 {#if loading}
@@ -4922,30 +4915,21 @@ loading = false;
 {/if}
 ",
   "client/src/Loading.svelte": "<script>
-import './loading.css';
+  import './loading.css';
 </script>
-
-
 
 <div id="loading"></div>
 ",
-  "client/src/Message.svelte": "
+  "client/src/Message.svelte": "<script>
+  import './message.css';
+  import {getRow} from 'tinybase/ui-svelte';
+  import {chatStore} from './chatStore';
 
-<script>
-import './message.css';
-import {getRow} from 'tinybase/ui-svelte';
-import {chatStore} from './chatStore';
+  let {rowId} = $props();
 
-let {rowId} = $props();
+  const message = getRow('messages', () => rowId, chatStore);
 
-const message = getRow(
-'messages',
-() => rowId,
-chatStore,
-);
-
-const getTime = (timestamp) =>
-  new Date(timestamp).toLocaleTimeString();
+  const getTime = (timestamp) => new Date(timestamp).toLocaleTimeString();
 </script>
 
 <div class="message">
@@ -4954,51 +4938,44 @@ const getTime = (timestamp) =>
   <span class="time">{getTime(message.current.timestamp)}</span>
 </div>
 ",
-  "client/src/MessageInput.svelte": "
+  "client/src/MessageInput.svelte": "<script>
+  import './button.css';
+  import './input.css';
+  import './messageInput.css';
+  import {getValue} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
+  import {chatStore} from './chatStore';
+  import {settingsStore} from './settingsStore';
 
+  let message = $state('');
+  let input;
 
+  const username = getValue('username', settingsStore);
 
-<script>
-import './button.css';
-import './input.css';
-import './messageInput.css';
-import {getValue} from 'tinybase/ui-svelte';
-import {onMount} from 'svelte';
-import {chatStore} from './chatStore';
-import {settingsStore} from './settingsStore';
+  const sendMessage = () => {
+    const text = message.trim();
+    if (!text) {
+      return;
+    }
 
-let message = $state('');
-let input;
+    chatStore.addRow('messages', {
+      username: username.current || 'Anonymous',
+      text,
+      timestamp: Date.now(),
+    });
 
-const username = getValue(
-'username',
-settingsStore,
-);
+    message = '';
+    input?.focus();
+  };
 
-const sendMessage = () => {
-const text = message.trim();
-if (!text) {
-return;
-}
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    sendMessage();
+  };
 
-chatStore.addRow('messages', {
-username: username.current || 'Anonymous',
-text,
-timestamp: Date.now(),
-});
-
-message = '';
-input?.focus();
-};
-
-const handleSubmit = (event) => {
-event.preventDefault();
-sendMessage();
-};
-
-onMount(() => {
-input?.focus();
-});
+  onMount(() => {
+    input?.focus();
+  });
 </script>
 
 <form id="messageInput" onsubmit={handleSubmit}>
@@ -5011,23 +4988,20 @@ input?.focus();
   <button class="primary" type="submit">Send</button>
 </form>
 ",
-  "client/src/Messages.svelte": "
+  "client/src/Messages.svelte": "<script>
+  import './messages.css';
+  import {getSortedRowIds} from 'tinybase/ui-svelte';
+  import Message from './Message.svelte';
+  import {chatStore} from './chatStore';
 
-
-<script>
-import './messages.css';
-import {getSortedRowIds} from 'tinybase/ui-svelte';
-import Message from './Message.svelte';
-import {chatStore} from './chatStore';
-
-const messageIds = getSortedRowIds(
-'messages',
-'timestamp',
-false,
-0,
-undefined,
-chatStore,
-);
+  const messageIds = getSortedRowIds(
+    'messages',
+    'timestamp',
+    false,
+    0,
+    undefined,
+    chatStore,
+  );
 </script>
 
 <div id="messages">
@@ -5036,19 +5010,13 @@ chatStore,
   {/each}
 </div>
 ",
-  "client/src/UsernameInput.svelte": "
+  "client/src/UsernameInput.svelte": "<script>
+  import './input.css';
+  import './usernameInput.css';
+  import {getValue} from 'tinybase/ui-svelte';
+  import {settingsStore} from './settingsStore';
 
-
-<script>
-import './input.css';
-import './usernameInput.css';
-import {getValue} from 'tinybase/ui-svelte';
-import {settingsStore} from './settingsStore';
-
-const username = getValue(
-'username',
-settingsStore,
-);
+  const username = getValue('username', settingsStore);
 </script>
 
 <div id="usernameInput">
@@ -5574,26 +5542,20 @@ stays synchronized with the underlying TinyBase store.
 	c-1.4,0.9-2.3,2.2-2.6,3.8s0.1,3.3,1,4.6c1.6,2.3,4.4,3.3,7.1,2.6c0.6-0.2,1.2-0.4,1.7-0.7l10.5-6.7c1.7-1.1,3.6-1.9,5.6-2.5
 	c8.9-2.3,18.2,1.2,23.4,8.7c3.2,4.4,4.4,9.9,3.5,15.3c-0.9,5.2-4.1,9.9-8.6,12.7l-27.5,17.5C44.8,102.5,42.9,103.3,40.9,103.9" />
 </svg>",
-  "client/src/App.svelte": "
+  "client/src/App.svelte": "<script>
+  import {onMount} from 'svelte';
+  import Canvas from './Canvas.svelte';
+  import DrawingControls from './DrawingControls.svelte';
+  import Loading from './Loading.svelte';
+  import {canvasStoreReady} from './canvasStore';
+  import {settingsStoreReady} from './settingsStore';
 
+  let loading = $state(true);
 
-
-
-
-<script>
-import {onMount} from 'svelte';
-import Canvas from './Canvas.svelte';
-import DrawingControls from './DrawingControls.svelte';
-import Loading from './Loading.svelte';
-import {canvasStoreReady} from './canvasStore';
-import {settingsStoreReady} from './settingsStore';
-
-let loading = $state(true);
-
-onMount(async () => {
-await Promise.all([settingsStoreReady, canvasStoreReady]);
-loading = false;
-});
+  onMount(async () => {
+    await Promise.all([settingsStoreReady, canvasStoreReady]);
+    loading = false;
+  });
 </script>
 
 {#if loading}
@@ -5603,17 +5565,12 @@ loading = false;
   <Canvas />
 {/if}
 ",
-  "client/src/BrushSize.svelte": "
+  "client/src/BrushSize.svelte": "<script>
+  import './brushSize.css';
+  import {getValue} from 'tinybase/ui-svelte';
+  import {settingsStore} from './settingsStore';
 
-<script>
-import './brushSize.css';
-import {getValue} from 'tinybase/ui-svelte';
-import {settingsStore} from './settingsStore';
-
-const size = getValue(
-'brushSize',
-settingsStore,
-);
+  const size = getValue('brushSize', settingsStore);
 </script>
 
 <div id="brushSize">
@@ -5628,136 +5585,138 @@ settingsStore,
   <span id="brushSizeValue">{size.current}</span>
 </div>
 ",
-  "client/src/Canvas.svelte": "
+  "client/src/Canvas.svelte": "<script>
+  import './canvas.css';
+  import {onMount} from 'svelte';
+  import {getHlcFunctions} from 'tinybase';
+  import {canvasStore} from './canvasStore';
 
-<script>
-import './canvas.css';
-import {onMount} from 'svelte';
-import {getHlcFunctions} from 'tinybase';
-import {canvasStore} from './canvasStore';
+  import {settingsStore} from './settingsStore';
 
-import {settingsStore} from './settingsStore';
+  const [getNextHlc] = getHlcFunctions();
 
-const [getNextHlc] = getHlcFunctions();
+  let canvas;
+  let isDrawing = false;
+  let currentStrokeId = null;
 
-let canvas;
-let isDrawing = false;
-let currentStrokeId = null;
+  const getPoint = (event) => {
+    if (!canvas) {
+      return null;
+    }
 
-const getPoint = (event) => {
-if (!canvas) {
-return null;
-}
+    const rect = canvas.getBoundingClientRect();
+    const clientX =
+      'touches' in event ? event.touches[0]?.clientX : event.clientX;
+    const clientY =
+      'touches' in event ? event.touches[0]?.clientY : event.clientY;
 
-const rect = canvas.getBoundingClientRect();
-const clientX = 'touches' in event ? event.touches[0]?.clientX : event.clientX;
-const clientY = 'touches' in event ? event.touches[0]?.clientY : event.clientY;
+    if (clientX == null || clientY == null) {
+      return null;
+    }
 
-if (clientX == null || clientY == null) {
-return null;
-}
+    return {
+      x: clientX - rect.left,
+      y: clientY - rect.top,
+    };
+  };
 
-return {
-x: clientX - rect.left,
-y: clientY - rect.top,
-};
-};
+  const startStroke = (event) => {
+    isDrawing = true;
+    currentStrokeId = getNextHlc();
 
-const startStroke = (event) => {
-isDrawing = true;
-currentStrokeId = getNextHlc();
+    const point = getPoint(event);
+    if (!point || !currentStrokeId) {
+      return;
+    }
 
-const point = getPoint(event);
-if (!point || !currentStrokeId) {
-return;
-}
+    const brushColor = settingsStore.getValue('brushColor') ?? '#d81b60';
+    const brushSize = settingsStore.getValue('brushSize') ?? 5;
 
-const brushColor =
-  settingsStore.getValue('brushColor') ?? '#d81b60';
-const brushSize =
-  settingsStore.getValue('brushSize') ?? 5;
+    canvasStore.setRow('strokes', currentStrokeId, {
+      color: brushColor,
+      size: brushSize,
+      points: JSON.stringify([point.x, point.y]),
+    });
+  };
 
-canvasStore.setRow('strokes', currentStrokeId, {
-color: brushColor,
-size: brushSize,
-points: JSON.stringify([point.x, point.y]),
-});
-};
+  const extendStroke = (event) => {
+    if (!isDrawing || !currentStrokeId) {
+      return;
+    }
 
-const extendStroke = (event) => {
-if (!isDrawing || !currentStrokeId) {
-return;
-}
+    const point = getPoint(event);
+    if (!point) {
+      return;
+    }
 
-const point = getPoint(event);
-if (!point) {
-return;
-}
+    const pointsArray = JSON.parse(
+      canvasStore.getCell('strokes', currentStrokeId, 'points') ?? '[]',
+    );
+    pointsArray.push(point.x, point.y);
+    canvasStore.setCell(
+      'strokes',
+      currentStrokeId,
+      'points',
+      JSON.stringify(pointsArray),
+    );
+  };
 
-const pointsArray = JSON.parse(
-  canvasStore.getCell('strokes', currentStrokeId, 'points') ?? '[]',
-);
-pointsArray.push(point.x, point.y);
-canvasStore.setCell('strokes', currentStrokeId, 'points', JSON.stringify(pointsArray));
-};
+  const endStroke = () => {
+    isDrawing = false;
+    currentStrokeId = null;
+  };
 
-const endStroke = () => {
-isDrawing = false;
-currentStrokeId = null;
-};
+  const handleTouchStart = (event) => {
+    event.preventDefault();
+    startStroke(event);
+  };
 
-const handleTouchStart = (event) => {
-event.preventDefault();
-startStroke(event);
-};
+  const handleTouchMove = (event) => {
+    event.preventDefault();
+    extendStroke(event);
+  };
 
-const handleTouchMove = (event) => {
-event.preventDefault();
-extendStroke(event);
-};
+  onMount(() => {
+    const draw = () => {
+      if (!canvas) {
+        return;
+      }
 
-onMount(() => {
-const draw = () => {
-if (!canvas) {
-return;
-}
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        return;
+      }
 
-const ctx = canvas.getContext('2d');
-if (!ctx) {
-return;
-}
+      ctx.fillStyle = '#111';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-ctx.fillStyle = '#111';
-ctx.fillRect(0, 0, canvas.width, canvas.height);
+      canvasStore.getSortedRowIds('strokes').forEach((id) => {
+        const stroke = canvasStore.getRow('strokes', id);
+        if (!stroke?.points) {
+          return;
+        }
 
-canvasStore.getSortedRowIds('strokes').forEach((id) => {
-const stroke =
-  canvasStore.getRow('strokes', id);
-if (!stroke?.points) {
-return;
-}
+        const pointsArray = JSON.parse(stroke.points);
+        if (pointsArray.length < 2) {
+          return;
+        }
 
-const pointsArray = JSON.parse(stroke.points);
-if (pointsArray.length < 2) {
-return;
-}
+        ctx.strokeStyle = stroke.color;
+        ctx.lineWidth = stroke.size * 2;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+        ctx.moveTo(pointsArray[0], pointsArray[1]);
+        for (let i = 2; i < pointsArray.length; i += 2) {
+          ctx.lineTo(pointsArray[i], pointsArray[i + 1]);
+        }
+        ctx.stroke();
+      });
+    };
 
-ctx.strokeStyle = stroke.color;
-ctx.lineWidth = stroke.size * 2;
-ctx.lineCap = 'round';
-ctx.lineJoin = 'round';
-ctx.beginPath();
-ctx.moveTo(pointsArray[0], pointsArray[1]);
-for (let i = 2; i < pointsArray.length; i += 2) {
-ctx.lineTo(pointsArray[i], pointsArray[i + 1]);
-}
-ctx.stroke();
-});
-};
-
-canvasStore.addTablesListener(draw);
-draw();
-});
+    canvasStore.addTablesListener(draw);
+    draw();
+  });
 </script>
 
 <canvas
@@ -5774,22 +5733,24 @@ draw();
   ontouchend={endStroke}
 ></canvas>
 ",
-  "client/src/ColorPicker.svelte": "
+  "client/src/ColorPicker.svelte": "<script>
+  import './colorPicker.css';
+  import {getValue} from 'tinybase/ui-svelte';
+  import {settingsStore} from './settingsStore';
 
-<script>
-import './colorPicker.css';
-import {getValue} from 'tinybase/ui-svelte';
-import {settingsStore} from './settingsStore';
+  const colors = [
+    '#d81b60',
+    '#1976d2',
+    '#388e3c',
+    '#f57c00',
+    '#7b1fa2',
+    '#fff',
+  ];
+  const currentColor = getValue('brushColor', settingsStore);
 
-const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];
-const currentColor = getValue(
-'brushColor',
-settingsStore,
-);
-
-const setColor = (color) => {
-currentColor.current = color;
-};
+  const setColor = (color) => {
+    currentColor.current = color;
+  };
 </script>
 
 <div id="colorPicker">
@@ -5805,21 +5766,16 @@ currentColor.current = color;
   {/each}
 </div>
 ",
-  "client/src/DrawingControls.svelte": "
+  "client/src/DrawingControls.svelte": "<script>
+  import './button.css';
+  import './drawingControls.css';
+  import BrushSize from './BrushSize.svelte';
+  import ColorPicker from './ColorPicker.svelte';
+  import {canvasStore} from './canvasStore';
 
-
-
-
-<script>
-import './button.css';
-import './drawingControls.css';
-import BrushSize from './BrushSize.svelte';
-import ColorPicker from './ColorPicker.svelte';
-import {canvasStore} from './canvasStore';
-
-const clearStrokes = () => {
-canvasStore.delTable('strokes');
-};
+  const clearStrokes = () => {
+    canvasStore.delTable('strokes');
+  };
 </script>
 
 <div id="drawingControls">
@@ -5829,10 +5785,8 @@ canvasStore.delTable('strokes');
 </div>
 ",
   "client/src/Loading.svelte": "<script>
-import './loading.css';
+  import './loading.css';
 </script>
-
-
 
 <div id="loading"></div>
 ",
@@ -6315,22 +6269,18 @@ stays synchronized with the underlying TinyBase store.
 	c-1.4,0.9-2.3,2.2-2.6,3.8s0.1,3.3,1,4.6c1.6,2.3,4.4,3.3,7.1,2.6c0.6-0.2,1.2-0.4,1.7-0.7l10.5-6.7c1.7-1.1,3.6-1.9,5.6-2.5
 	c8.9-2.3,18.2,1.2,23.4,8.7c3.2,4.4,4.4,9.9,3.5,15.3c-0.9,5.2-4.1,9.9-8.6,12.7l-27.5,17.5C44.8,102.5,42.9,103.3,40.9,103.9" />
 </svg>",
-  "client/src/App.svelte": "
+  "client/src/App.svelte": "<script>
+  import {onMount} from 'svelte';
+  import Game from './Game.svelte';
+  import Loading from './Loading.svelte';
+  import {storeReady} from './store';
 
+  let loading = $state(true);
 
-
-<script>
-import {onMount} from 'svelte';
-import Game from './Game.svelte';
-import Loading from './Loading.svelte';
-import {storeReady} from './store';
-
-let loading = $state(true);
-
-onMount(async () => {
-await storeReady;
-loading = false;
-});
+  onMount(async () => {
+    await storeReady;
+    loading = false;
+  });
 </script>
 
 {#if loading}
@@ -6339,50 +6289,40 @@ loading = false;
   <Game />
 {/if}
 ",
-  "client/src/Board.svelte": "
+  "client/src/Board.svelte": "<script>
+  import './board.css';
+  import {getTable, getValues} from 'tinybase/ui-svelte';
+  import Square from './Square.svelte';
+  import {store} from './store';
 
+  const positions = Array.from({length: 9}, (_, i) => i.toString());
 
-<script>
-import './board.css';
-import {getTable, getValues} from 'tinybase/ui-svelte';
-import Square from './Square.svelte';
-import {store} from './store';
+  const board = getTable('board', store);
 
-const positions = Array.from({length: 9}, (_, i) => i.toString());
+  const gameState = getValues(store);
 
-const board = getTable(
-'board',
-store,
-);
+  const getSquare = (position) => {
+    const gameStatus = gameState.current.gameStatus ?? 'playing';
+    const winningLine = gameState.current.winningLine ?? '';
+    const winningPositions = new Set(winningLine ? winningLine.split(',') : []);
+    const value = board.current[position]?.value ?? '';
 
-const gameState = getValues(
-store,
-);
+    return {
+      value,
+      disabled: gameStatus !== 'playing' || !!value,
+      winning: winningPositions.has(position),
+    };
+  };
 
-const getSquare = (position) => {
-const gameStatus = gameState.current.gameStatus ?? 'playing';
-const winningLine = gameState.current.winningLine ?? '';
-const winningPositions = new Set(
-winningLine ? winningLine.split(',') : [],
-);
-const value = board.current[position]?.value ?? '';
+  const handleSquareClick = (position) => {
+    const gameStatus = gameState.current.gameStatus ?? 'playing';
+    const currentPlayer = gameState.current.currentPlayer ?? 'X';
+    const value = board.current[position]?.value;
 
-return {
-value,
-disabled: gameStatus !== 'playing' || !!value,
-winning: winningPositions.has(position),
-};
-};
-
-const handleSquareClick = (position) => {
-const gameStatus = gameState.current.gameStatus ?? 'playing';
-const currentPlayer = gameState.current.currentPlayer ?? 'X';
-const value = board.current[position]?.value;
-
-if (gameStatus === 'playing' && !value && currentPlayer) {
-store.setCell('board', position, 'value', currentPlayer);
-}
-};
+    if (gameStatus === 'playing' && !value && currentPlayer) {
+      store.setCell('board', position, 'value', currentPlayer);
+    }
+  };
 </script>
 
 <div id="board">
@@ -6397,63 +6337,64 @@ store.setCell('board', position, 'value', currentPlayer);
   {/each}
 </div>
 ",
-  "client/src/Game.svelte": "
+  "client/src/Game.svelte": "<script>
+  import './button.css';
+  import {onMount} from 'svelte';
+  import Board from './Board.svelte';
+  import GameStatus from './GameStatus.svelte';
+  import {store} from './store';
 
+  const WINNING_LINES = [
+    ['0', '1', '2'],
+    ['3', '4', '5'],
+    ['6', '7', '8'],
+    ['0', '3', '6'],
+    ['1', '4', '7'],
+    ['2', '5', '8'],
+    ['0', '4', '8'],
+    ['2', '4', '6'],
+  ];
 
+  const checkGameState = () => {
+    const gameStatus = store.getValue('gameStatus');
+    if (gameStatus !== 'playing') {
+      return;
+    }
 
-<script>
-import './button.css';
-import {onMount} from 'svelte';
-import Board from './Board.svelte';
-import GameStatus from './GameStatus.svelte';
-import {store} from './store';
+    for (const line of WINNING_LINES) {
+      const [a, b, c] = line;
+      const cellA = store.getCell('board', a, 'value');
+      const cellB = store.getCell('board', b, 'value');
+      const cellC = store.getCell('board', c, 'value');
 
-const WINNING_LINES = [
-['0', '1', '2'], ['3', '4', '5'], ['6', '7', '8'],
-['0', '3', '6'], ['1', '4', '7'], ['2', '5', '8'],
-['0', '4', '8'], ['2', '4', '6'],
-];
+      if (cellA && cellA === cellB && cellA === cellC) {
+        store.setValue('gameStatus', 'won');
+        store.setValue('winner', cellA);
+        store.setValue('winningLine', line.join(','));
+        return;
+      }
+    }
 
-const checkGameState = () => {
-const gameStatus = store.getValue('gameStatus');
-if (gameStatus !== 'playing') {
-return;
-}
+    if (store.getRowCount('board') === 9) {
+      store.setValue('gameStatus', 'draw');
+      return;
+    }
 
-for (const line of WINNING_LINES) {
-const [a, b, c] = line;
-const cellA = store.getCell('board', a, 'value');
-const cellB = store.getCell('board', b, 'value');
-const cellC = store.getCell('board', c, 'value');
+    const currentPlayer = store.getValue('currentPlayer');
+    store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
+  };
 
-if (cellA && cellA === cellB && cellA === cellC) {
-store.setValue('gameStatus', 'won');
-store.setValue('winner', cellA);
-store.setValue('winningLine', line.join(','));
-return;
-}
-}
+  const resetGame = () => {
+    store.delTable('board');
+    store.setValues({
+      currentPlayer: 'X',
+      gameStatus: 'playing',
+    });
+  };
 
-if (store.getRowCount('board') === 9) {
-store.setValue('gameStatus', 'draw');
-return;
-}
-
-const currentPlayer = store.getValue('currentPlayer');
-store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
-};
-
-const resetGame = () => {
-store.delTable('board');
-store.setValues({
-currentPlayer: 'X',
-gameStatus: 'playing',
-});
-};
-
-onMount(() => {
-store.addTableListener('board', checkGameState, true);
-});
+  onMount(() => {
+    store.addTableListener('board', checkGameState, true);
+  });
 </script>
 
 <GameStatus />
@@ -6462,16 +6403,12 @@ store.addTableListener('board', checkGameState, true);
   <button class="primary" onclick={resetGame}>New Game</button>
 </div>
 ",
-  "client/src/GameStatus.svelte": "
+  "client/src/GameStatus.svelte": "<script>
+  import './gameStatus.css';
+  import {getValues} from 'tinybase/ui-svelte';
+  import {store} from './store';
 
-<script>
-import './gameStatus.css';
-import {getValues} from 'tinybase/ui-svelte';
-import {store} from './store';
-
-const status = getValues(
-store,
-);
+  const status = getValues(store);
 </script>
 
 <div id="gameStatus">
@@ -6485,30 +6422,21 @@ store,
 </div>
 ",
   "client/src/Loading.svelte": "<script>
-import './loading.css';
+  import './loading.css';
 </script>
-
-
 
 <div id="loading"></div>
 ",
-  "client/src/Square.svelte": "
+  "client/src/Square.svelte": "<script>
+  import './square.css';
 
-<script>
-import './square.css';
-
-let {
-value,
-disabled,
-winning,
-handleClick,
-} = $props();
+  let {value, disabled, winning, handleClick} = $props();
 </script>
 
 <button
   class={\`square\${disabled ? ' disabled' : ''}\${winning ? ' winning' : ''}\`}
   onclick={handleClick}
-  disabled={disabled}
+  {disabled}
 >
   {value}
 </button>
@@ -6989,24 +6917,19 @@ stays synchronized with the underlying TinyBase store.
 	c-1.4,0.9-2.3,2.2-2.6,3.8s0.1,3.3,1,4.6c1.6,2.3,4.4,3.3,7.1,2.6c0.6-0.2,1.2-0.4,1.7-0.7l10.5-6.7c1.7-1.1,3.6-1.9,5.6-2.5
 	c8.9-2.3,18.2,1.2,23.4,8.7c3.2,4.4,4.4,9.9,3.5,15.3c-0.9,5.2-4.1,9.9-8.6,12.7l-27.5,17.5C44.8,102.5,42.9,103.3,40.9,103.9" />
 </svg>",
-  "client/src/App.svelte": "
+  "client/src/App.svelte": "<script>
+  import {onMount} from 'svelte';
+  import Loading from './Loading.svelte';
+  import TodoInput from './TodoInput.svelte';
+  import TodoList from './TodoList.svelte';
+  import {storeReady} from './store';
 
+  let loading = $state(true);
 
-
-
-<script>
-import {onMount} from 'svelte';
-import Loading from './Loading.svelte';
-import TodoInput from './TodoInput.svelte';
-import TodoList from './TodoList.svelte';
-import {storeReady} from './store';
-
-let loading = $state(true);
-
-onMount(async () => {
-await storeReady;
-loading = false;
-});
+  onMount(async () => {
+    await storeReady;
+    loading = false;
+  });
 </script>
 
 {#if loading}
@@ -7017,46 +6940,40 @@ loading = false;
 {/if}
 ",
   "client/src/Loading.svelte": "<script>
-import './loading.css';
+  import './loading.css';
 </script>
-
-
 
 <div id="loading"></div>
 ",
-  "client/src/TodoInput.svelte": "
+  "client/src/TodoInput.svelte": "<script>
+  import './button.css';
+  import './input.css';
+  import './todoInput.css';
+  import {onMount} from 'svelte';
+  import {store} from './store';
 
+  let text = $state('');
+  let input;
 
+  const addTodo = () => {
+    const trimmedText = text.trim();
+    if (trimmedText) {
+      store.addRow('todos', {text: trimmedText, completed: false});
+      text = '';
+      input?.focus();
+    }
+  };
 
-<script>
-import './button.css';
-import './input.css';
-import './todoInput.css';
-import {onMount} from 'svelte';
-import {store} from './store';
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      addTodo();
+    }
+  };
 
-let text = $state('');
-let input;
-
-const addTodo = () => {
-const trimmedText = text.trim();
-if (trimmedText) {
-store.addRow('todos', {text: trimmedText, completed: false});
-text = '';
-input?.focus();
-}
-};
-
-const handleKeyDown = (event) => {
-if (event.key === 'Enter') {
-event.preventDefault();
-addTodo();
-}
-};
-
-onMount(() => {
-input?.focus();
-});
+  onMount(() => {
+    input?.focus();
+  });
 </script>
 
 <div id="todoInput">
@@ -7070,30 +6987,25 @@ input?.focus();
   <button class="primary" onclick={addTodo}>Add</button>
 </div>
 ",
-  "client/src/TodoItem.svelte": "
+  "client/src/TodoItem.svelte": "<script>
+  import './button.css';
+  import './todoItem.css';
+  import {getRow} from 'tinybase/ui-svelte';
+  import {store} from './store';
 
+  let {rowId} = $props();
 
-<script>
-import './button.css';
-import './todoItem.css';
-import {getRow} from 'tinybase/ui-svelte';
-import {store} from './store';
+  const todo = getRow('todos', () => rowId, store);
 
-let {rowId} = $props();
+  const toggleTodo = (event) => {
+    store.setPartialRow('todos', rowId, {
+      completed: event.currentTarget.checked,
+    });
+  };
 
-const todo = getRow(
-'todos',
-() => rowId,
-store,
-);
-
-const toggleTodo = (event) => {
-    store.setPartialRow('todos', rowId, {completed: event.currentTarget.checked});
-};
-
-const deleteTodo = () => {
-store.delRow('todos', rowId);
-};
+  const deleteTodo = () => {
+    store.delRow('todos', rowId);
+  };
 </script>
 
 <div class="todoItem" class:completed={todo.current.completed}>
@@ -7107,23 +7019,20 @@ store.delRow('todos', rowId);
   <button onclick={deleteTodo}>Delete</button>
 </div>
 ",
-  "client/src/TodoList.svelte": "
+  "client/src/TodoList.svelte": "<script>
+  import './todoList.css';
+  import {getSortedRowIds} from 'tinybase/ui-svelte';
+  import TodoItem from './TodoItem.svelte';
+  import {store} from './store';
 
-
-<script>
-import './todoList.css';
-import {getSortedRowIds} from 'tinybase/ui-svelte';
-import TodoItem from './TodoItem.svelte';
-import {store} from './store';
-
-const todoIds = getSortedRowIds(
-'todos',
-undefined,
-false,
-0,
-undefined,
-store,
-);
+  const todoIds = getSortedRowIds(
+    'todos',
+    undefined,
+    false,
+    0,
+    undefined,
+    store,
+  );
 </script>
 
 <div id="todoList">
@@ -15577,28 +15486,21 @@ stays synchronized with the underlying TinyBase store.
     d="m316.939 407.424v50.061c8.138 4.172 17.763 7.3 28.875 9.386s22.823 3.129 35.135 3.129c11.999 0 23.397-1.147 34.196-3.442 10.799-2.294 20.268-6.075 28.406-11.342 8.138-5.266 14.581-12.15 19.328-20.65s7.121-19.007 7.121-31.522c0-9.074-1.356-17.026-4.069-23.857s-6.625-12.906-11.738-18.225c-5.112-5.319-11.242-10.091-18.389-14.315s-15.207-8.213-24.18-11.967c-6.573-2.712-12.468-5.345-17.685-7.9-5.217-2.556-9.651-5.163-13.303-7.822-3.652-2.66-6.469-5.476-8.451-8.448-1.982-2.973-2.974-6.336-2.974-10.091 0-3.441.887-6.544 2.661-9.308s4.278-5.136 7.512-7.118c3.235-1.981 7.199-3.52 11.894-4.615 4.696-1.095 9.912-1.642 15.651-1.642 4.173 0 8.581.313 13.224.938 4.643.626 9.312 1.591 14.008 2.894 4.695 1.304 9.259 2.947 13.694 4.928 4.434 1.982 8.529 4.276 12.285 6.884v-46.776c-7.616-2.92-15.937-5.084-24.962-6.492s-19.381-2.112-31.066-2.112c-11.895 0-23.163 1.278-33.805 3.833s-20.006 6.544-28.093 11.967c-8.086 5.424-14.476 12.333-19.171 20.729-4.695 8.395-7.043 18.433-7.043 30.114 0 14.914 4.304 27.638 12.912 38.172 8.607 10.533 21.675 19.45 39.204 26.751 6.886 2.816 13.303 5.579 19.25 8.291s11.086 5.528 15.415 8.448c4.33 2.92 7.747 6.101 10.252 9.543 2.504 3.441 3.756 7.352 3.756 11.733 0 3.233-.783 6.231-2.348 8.995s-3.939 5.162-7.121 7.196-7.147 3.624-11.894 4.771c-4.748 1.148-10.303 1.721-16.668 1.721-10.851 0-21.597-1.903-32.24-5.71-10.642-3.806-20.502-9.516-29.579-17.13zm-84.159-123.342h64.22v-41.082h-179v41.082h63.906v182.918h50.874z"
     fill="#fff" fill-rule="evenodd" />
 </svg>",
-  "client/src/App.svelte": "
+  "client/src/App.svelte": "<script lang="ts">
+  import {onMount} from 'svelte';
+  import Loading from './Loading.svelte';
+  import MessageInput from './MessageInput.svelte';
+  import Messages from './Messages.svelte';
+  import UsernameInput from './UsernameInput.svelte';
+  import {chatStoreReady} from './chatStore';
+  import {settingsStoreReady} from './settingsStore';
 
+  let loading = $state(true);
 
-
-
-
-
-<script lang="ts">
-import {onMount} from 'svelte';
-import Loading from './Loading.svelte';
-import MessageInput from './MessageInput.svelte';
-import Messages from './Messages.svelte';
-import UsernameInput from './UsernameInput.svelte';
-import {chatStoreReady} from './chatStore';
-import {settingsStoreReady} from './settingsStore';
-
-let loading = $state(true);
-
-onMount(async () => {
-await Promise.all([settingsStoreReady, chatStoreReady]);
-loading = false;
-});
+  onMount(async () => {
+    await Promise.all([settingsStoreReady, chatStoreReady]);
+    loading = false;
+  });
 </script>
 
 {#if loading}
@@ -15610,31 +15512,25 @@ loading = false;
 {/if}
 ",
   "client/src/Loading.svelte": "<script>
-import './loading.css';
+  import './loading.css';
 </script>
-
-
 
 <div id="loading"></div>
 ",
-  "client/src/Message.svelte": "
-
-<script lang="ts">
-import './message.css';
-import {getRow} from 'tinybase/ui-svelte';
-import {chatStore} from './chatStore';
+  "client/src/Message.svelte": "<script lang="ts">
+  import './message.css';
+  import {getRow} from 'tinybase/ui-svelte';
+  import {chatStore} from './chatStore';
   import type {MessageRow} from './chatStore';
 
-let {rowId}: {rowId: string} = $props();
+  let {rowId}: {rowId: string} = $props();
 
-const message = getRow(
-'messages',
-() => rowId,
-chatStore,
-) as {readonly current: MessageRow};
+  const message = getRow('messages', () => rowId, chatStore) as {
+    readonly current: MessageRow;
+  };
 
-const getTime = (timestamp: number) =>
-  new Date(timestamp).toLocaleTimeString();
+  const getTime = (timestamp: number) =>
+    new Date(timestamp).toLocaleTimeString();
 </script>
 
 <div class="message">
@@ -15643,51 +15539,46 @@ const getTime = (timestamp: number) =>
   <span class="time">{getTime(message.current.timestamp)}</span>
 </div>
 ",
-  "client/src/MessageInput.svelte": "
+  "client/src/MessageInput.svelte": "<script lang="ts">
+  import './button.css';
+  import './input.css';
+  import './messageInput.css';
+  import {getValue} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
+  import {chatStore} from './chatStore';
+  import {settingsStore} from './settingsStore';
 
+  let message = $state('');
+  let input: HTMLInputElement | undefined;
 
+  const username = getValue('username', settingsStore) as {
+    current: string | undefined;
+  };
 
-<script lang="ts">
-import './button.css';
-import './input.css';
-import './messageInput.css';
-import {getValue} from 'tinybase/ui-svelte';
-import {onMount} from 'svelte';
-import {chatStore} from './chatStore';
-import {settingsStore} from './settingsStore';
+  const sendMessage = () => {
+    const text = message.trim();
+    if (!text) {
+      return;
+    }
 
-let message = $state('');
-let input: HTMLInputElement | undefined;
+    chatStore.addRow('messages', {
+      username: username.current || 'Anonymous',
+      text,
+      timestamp: Date.now(),
+    });
 
-const username = getValue(
-'username',
-settingsStore,
-) as {current: string | undefined};
+    message = '';
+    input?.focus();
+  };
 
-const sendMessage = () => {
-const text = message.trim();
-if (!text) {
-return;
-}
+  const handleSubmit = (event: SubmitEvent) => {
+    event.preventDefault();
+    sendMessage();
+  };
 
-chatStore.addRow('messages', {
-username: username.current || 'Anonymous',
-text,
-timestamp: Date.now(),
-});
-
-message = '';
-input?.focus();
-};
-
-const handleSubmit = (event: SubmitEvent) => {
-event.preventDefault();
-sendMessage();
-};
-
-onMount(() => {
-input?.focus();
-});
+  onMount(() => {
+    input?.focus();
+  });
 </script>
 
 <form id="messageInput" onsubmit={handleSubmit}>
@@ -15700,23 +15591,20 @@ input?.focus();
   <button class="primary" type="submit">Send</button>
 </form>
 ",
-  "client/src/Messages.svelte": "
+  "client/src/Messages.svelte": "<script lang="ts">
+  import './messages.css';
+  import {getSortedRowIds} from 'tinybase/ui-svelte';
+  import Message from './Message.svelte';
+  import {chatStore} from './chatStore';
 
-
-<script lang="ts">
-import './messages.css';
-import {getSortedRowIds} from 'tinybase/ui-svelte';
-import Message from './Message.svelte';
-import {chatStore} from './chatStore';
-
-const messageIds = getSortedRowIds(
-'messages',
-'timestamp',
-false,
-0,
-undefined,
-chatStore,
-) as {readonly current: string[]};
+  const messageIds = getSortedRowIds(
+    'messages',
+    'timestamp',
+    false,
+    0,
+    undefined,
+    chatStore,
+  ) as {readonly current: string[]};
 </script>
 
 <div id="messages">
@@ -15725,19 +15613,15 @@ chatStore,
   {/each}
 </div>
 ",
-  "client/src/UsernameInput.svelte": "
+  "client/src/UsernameInput.svelte": "<script lang="ts">
+  import './input.css';
+  import './usernameInput.css';
+  import {getValue} from 'tinybase/ui-svelte';
+  import {settingsStore} from './settingsStore';
 
-
-<script lang="ts">
-import './input.css';
-import './usernameInput.css';
-import {getValue} from 'tinybase/ui-svelte';
-import {settingsStore} from './settingsStore';
-
-const username = getValue(
-'username',
-settingsStore,
-) as {current: string | undefined};
+  const username = getValue('username', settingsStore) as {
+    current: string | undefined;
+  };
 </script>
 
 <div id="usernameInput">
@@ -16331,28 +16215,21 @@ stays synchronized with the underlying TinyBase store.
     d="m316.939 407.424v50.061c8.138 4.172 17.763 7.3 28.875 9.386s22.823 3.129 35.135 3.129c11.999 0 23.397-1.147 34.196-3.442 10.799-2.294 20.268-6.075 28.406-11.342 8.138-5.266 14.581-12.15 19.328-20.65s7.121-19.007 7.121-31.522c0-9.074-1.356-17.026-4.069-23.857s-6.625-12.906-11.738-18.225c-5.112-5.319-11.242-10.091-18.389-14.315s-15.207-8.213-24.18-11.967c-6.573-2.712-12.468-5.345-17.685-7.9-5.217-2.556-9.651-5.163-13.303-7.822-3.652-2.66-6.469-5.476-8.451-8.448-1.982-2.973-2.974-6.336-2.974-10.091 0-3.441.887-6.544 2.661-9.308s4.278-5.136 7.512-7.118c3.235-1.981 7.199-3.52 11.894-4.615 4.696-1.095 9.912-1.642 15.651-1.642 4.173 0 8.581.313 13.224.938 4.643.626 9.312 1.591 14.008 2.894 4.695 1.304 9.259 2.947 13.694 4.928 4.434 1.982 8.529 4.276 12.285 6.884v-46.776c-7.616-2.92-15.937-5.084-24.962-6.492s-19.381-2.112-31.066-2.112c-11.895 0-23.163 1.278-33.805 3.833s-20.006 6.544-28.093 11.967c-8.086 5.424-14.476 12.333-19.171 20.729-4.695 8.395-7.043 18.433-7.043 30.114 0 14.914 4.304 27.638 12.912 38.172 8.607 10.533 21.675 19.45 39.204 26.751 6.886 2.816 13.303 5.579 19.25 8.291s11.086 5.528 15.415 8.448c4.33 2.92 7.747 6.101 10.252 9.543 2.504 3.441 3.756 7.352 3.756 11.733 0 3.233-.783 6.231-2.348 8.995s-3.939 5.162-7.121 7.196-7.147 3.624-11.894 4.771c-4.748 1.148-10.303 1.721-16.668 1.721-10.851 0-21.597-1.903-32.24-5.71-10.642-3.806-20.502-9.516-29.579-17.13zm-84.159-123.342h64.22v-41.082h-179v41.082h63.906v182.918h50.874z"
     fill="#fff" fill-rule="evenodd" />
 </svg>",
-  "client/src/App.svelte": "
+  "client/src/App.svelte": "<script lang="ts">
+  import {onMount} from 'svelte';
+  import Loading from './Loading.svelte';
+  import MessageInput from './MessageInput.svelte';
+  import Messages from './Messages.svelte';
+  import UsernameInput from './UsernameInput.svelte';
+  import {chatStoreReady} from './chatStore';
+  import {settingsStoreReady} from './settingsStore';
 
+  let loading = $state(true);
 
-
-
-
-
-<script lang="ts">
-import {onMount} from 'svelte';
-import Loading from './Loading.svelte';
-import MessageInput from './MessageInput.svelte';
-import Messages from './Messages.svelte';
-import UsernameInput from './UsernameInput.svelte';
-import {chatStoreReady} from './chatStore';
-import {settingsStoreReady} from './settingsStore';
-
-let loading = $state(true);
-
-onMount(async () => {
-await Promise.all([settingsStoreReady, chatStoreReady]);
-loading = false;
-});
+  onMount(async () => {
+    await Promise.all([settingsStoreReady, chatStoreReady]);
+    loading = false;
+  });
 </script>
 
 {#if loading}
@@ -16364,31 +16241,25 @@ loading = false;
 {/if}
 ",
   "client/src/Loading.svelte": "<script>
-import './loading.css';
+  import './loading.css';
 </script>
-
-
 
 <div id="loading"></div>
 ",
-  "client/src/Message.svelte": "
-
-<script lang="ts">
-import './message.css';
-import {getRow} from 'tinybase/ui-svelte';
-import {chatStore} from './chatStore';
+  "client/src/Message.svelte": "<script lang="ts">
+  import './message.css';
+  import {getRow} from 'tinybase/ui-svelte';
+  import {chatStore} from './chatStore';
   import type {MessageRow} from './chatStore';
 
-let {rowId}: {rowId: string} = $props();
+  let {rowId}: {rowId: string} = $props();
 
-const message = getRow(
-'messages',
-() => rowId,
-chatStore,
-) as {readonly current: MessageRow};
+  const message = getRow('messages', () => rowId, chatStore) as {
+    readonly current: MessageRow;
+  };
 
-const getTime = (timestamp: number) =>
-  new Date(timestamp).toLocaleTimeString();
+  const getTime = (timestamp: number) =>
+    new Date(timestamp).toLocaleTimeString();
 </script>
 
 <div class="message">
@@ -16397,51 +16268,46 @@ const getTime = (timestamp: number) =>
   <span class="time">{getTime(message.current.timestamp)}</span>
 </div>
 ",
-  "client/src/MessageInput.svelte": "
+  "client/src/MessageInput.svelte": "<script lang="ts">
+  import './button.css';
+  import './input.css';
+  import './messageInput.css';
+  import {getValue} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
+  import {chatStore} from './chatStore';
+  import {settingsStore} from './settingsStore';
 
+  let message = $state('');
+  let input: HTMLInputElement | undefined;
 
+  const username = getValue('username', settingsStore) as {
+    current: string | undefined;
+  };
 
-<script lang="ts">
-import './button.css';
-import './input.css';
-import './messageInput.css';
-import {getValue} from 'tinybase/ui-svelte';
-import {onMount} from 'svelte';
-import {chatStore} from './chatStore';
-import {settingsStore} from './settingsStore';
+  const sendMessage = () => {
+    const text = message.trim();
+    if (!text) {
+      return;
+    }
 
-let message = $state('');
-let input: HTMLInputElement | undefined;
+    chatStore.addRow('messages', {
+      username: username.current || 'Anonymous',
+      text,
+      timestamp: Date.now(),
+    });
 
-const username = getValue(
-'username',
-settingsStore,
-) as {current: string | undefined};
+    message = '';
+    input?.focus();
+  };
 
-const sendMessage = () => {
-const text = message.trim();
-if (!text) {
-return;
-}
+  const handleSubmit = (event: SubmitEvent) => {
+    event.preventDefault();
+    sendMessage();
+  };
 
-chatStore.addRow('messages', {
-username: username.current || 'Anonymous',
-text,
-timestamp: Date.now(),
-});
-
-message = '';
-input?.focus();
-};
-
-const handleSubmit = (event: SubmitEvent) => {
-event.preventDefault();
-sendMessage();
-};
-
-onMount(() => {
-input?.focus();
-});
+  onMount(() => {
+    input?.focus();
+  });
 </script>
 
 <form id="messageInput" onsubmit={handleSubmit}>
@@ -16454,23 +16320,20 @@ input?.focus();
   <button class="primary" type="submit">Send</button>
 </form>
 ",
-  "client/src/Messages.svelte": "
+  "client/src/Messages.svelte": "<script lang="ts">
+  import './messages.css';
+  import {getSortedRowIds} from 'tinybase/ui-svelte';
+  import Message from './Message.svelte';
+  import {chatStore} from './chatStore';
 
-
-<script lang="ts">
-import './messages.css';
-import {getSortedRowIds} from 'tinybase/ui-svelte';
-import Message from './Message.svelte';
-import {chatStore} from './chatStore';
-
-const messageIds = getSortedRowIds(
-'messages',
-'timestamp',
-false,
-0,
-undefined,
-chatStore,
-) as {readonly current: string[]};
+  const messageIds = getSortedRowIds(
+    'messages',
+    'timestamp',
+    false,
+    0,
+    undefined,
+    chatStore,
+  ) as {readonly current: string[]};
 </script>
 
 <div id="messages">
@@ -16479,19 +16342,15 @@ chatStore,
   {/each}
 </div>
 ",
-  "client/src/UsernameInput.svelte": "
+  "client/src/UsernameInput.svelte": "<script lang="ts">
+  import './input.css';
+  import './usernameInput.css';
+  import {getValue} from 'tinybase/ui-svelte';
+  import {settingsStore} from './settingsStore';
 
-
-<script lang="ts">
-import './input.css';
-import './usernameInput.css';
-import {getValue} from 'tinybase/ui-svelte';
-import {settingsStore} from './settingsStore';
-
-const username = getValue(
-'username',
-settingsStore,
-) as {current: string | undefined};
+  const username = getValue('username', settingsStore) as {
+    current: string | undefined;
+  };
 </script>
 
 <div id="usernameInput">
@@ -17153,28 +17012,21 @@ stays synchronized with the underlying TinyBase store.
     d="m316.939 407.424v50.061c8.138 4.172 17.763 7.3 28.875 9.386s22.823 3.129 35.135 3.129c11.999 0 23.397-1.147 34.196-3.442 10.799-2.294 20.268-6.075 28.406-11.342 8.138-5.266 14.581-12.15 19.328-20.65s7.121-19.007 7.121-31.522c0-9.074-1.356-17.026-4.069-23.857s-6.625-12.906-11.738-18.225c-5.112-5.319-11.242-10.091-18.389-14.315s-15.207-8.213-24.18-11.967c-6.573-2.712-12.468-5.345-17.685-7.9-5.217-2.556-9.651-5.163-13.303-7.822-3.652-2.66-6.469-5.476-8.451-8.448-1.982-2.973-2.974-6.336-2.974-10.091 0-3.441.887-6.544 2.661-9.308s4.278-5.136 7.512-7.118c3.235-1.981 7.199-3.52 11.894-4.615 4.696-1.095 9.912-1.642 15.651-1.642 4.173 0 8.581.313 13.224.938 4.643.626 9.312 1.591 14.008 2.894 4.695 1.304 9.259 2.947 13.694 4.928 4.434 1.982 8.529 4.276 12.285 6.884v-46.776c-7.616-2.92-15.937-5.084-24.962-6.492s-19.381-2.112-31.066-2.112c-11.895 0-23.163 1.278-33.805 3.833s-20.006 6.544-28.093 11.967c-8.086 5.424-14.476 12.333-19.171 20.729-4.695 8.395-7.043 18.433-7.043 30.114 0 14.914 4.304 27.638 12.912 38.172 8.607 10.533 21.675 19.45 39.204 26.751 6.886 2.816 13.303 5.579 19.25 8.291s11.086 5.528 15.415 8.448c4.33 2.92 7.747 6.101 10.252 9.543 2.504 3.441 3.756 7.352 3.756 11.733 0 3.233-.783 6.231-2.348 8.995s-3.939 5.162-7.121 7.196-7.147 3.624-11.894 4.771c-4.748 1.148-10.303 1.721-16.668 1.721-10.851 0-21.597-1.903-32.24-5.71-10.642-3.806-20.502-9.516-29.579-17.13zm-84.159-123.342h64.22v-41.082h-179v41.082h63.906v182.918h50.874z"
     fill="#fff" fill-rule="evenodd" />
 </svg>",
-  "client/src/App.svelte": "
+  "client/src/App.svelte": "<script lang="ts">
+  import {onMount} from 'svelte';
+  import Loading from './Loading.svelte';
+  import MessageInput from './MessageInput.svelte';
+  import Messages from './Messages.svelte';
+  import UsernameInput from './UsernameInput.svelte';
+  import {chatStoreReady} from './chatStore';
+  import {settingsStoreReady} from './settingsStore';
 
+  let loading = $state(true);
 
-
-
-
-
-<script lang="ts">
-import {onMount} from 'svelte';
-import Loading from './Loading.svelte';
-import MessageInput from './MessageInput.svelte';
-import Messages from './Messages.svelte';
-import UsernameInput from './UsernameInput.svelte';
-import {chatStoreReady} from './chatStore';
-import {settingsStoreReady} from './settingsStore';
-
-let loading = $state(true);
-
-onMount(async () => {
-await Promise.all([settingsStoreReady, chatStoreReady]);
-loading = false;
-});
+  onMount(async () => {
+    await Promise.all([settingsStoreReady, chatStoreReady]);
+    loading = false;
+  });
 </script>
 
 {#if loading}
@@ -17186,31 +17038,25 @@ loading = false;
 {/if}
 ",
   "client/src/Loading.svelte": "<script>
-import './loading.css';
+  import './loading.css';
 </script>
-
-
 
 <div id="loading"></div>
 ",
-  "client/src/Message.svelte": "
-
-<script lang="ts">
-import './message.css';
-import {getRow} from 'tinybase/ui-svelte';
-import {chatStore} from './chatStore';
+  "client/src/Message.svelte": "<script lang="ts">
+  import './message.css';
+  import {getRow} from 'tinybase/ui-svelte';
+  import {chatStore} from './chatStore';
   import type {MessageRow} from './chatStore';
 
-let {rowId}: {rowId: string} = $props();
+  let {rowId}: {rowId: string} = $props();
 
-const message = getRow(
-'messages',
-() => rowId,
-chatStore,
-) as {readonly current: MessageRow};
+  const message = getRow('messages', () => rowId, chatStore) as {
+    readonly current: MessageRow;
+  };
 
-const getTime = (timestamp: number) =>
-  new Date(timestamp).toLocaleTimeString();
+  const getTime = (timestamp: number) =>
+    new Date(timestamp).toLocaleTimeString();
 </script>
 
 <div class="message">
@@ -17219,51 +17065,46 @@ const getTime = (timestamp: number) =>
   <span class="time">{getTime(message.current.timestamp)}</span>
 </div>
 ",
-  "client/src/MessageInput.svelte": "
+  "client/src/MessageInput.svelte": "<script lang="ts">
+  import './button.css';
+  import './input.css';
+  import './messageInput.css';
+  import {getValue} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
+  import {chatStore} from './chatStore';
+  import {settingsStore} from './settingsStore';
 
+  let message = $state('');
+  let input: HTMLInputElement | undefined;
 
+  const username = getValue('username', settingsStore) as {
+    current: string | undefined;
+  };
 
-<script lang="ts">
-import './button.css';
-import './input.css';
-import './messageInput.css';
-import {getValue} from 'tinybase/ui-svelte';
-import {onMount} from 'svelte';
-import {chatStore} from './chatStore';
-import {settingsStore} from './settingsStore';
+  const sendMessage = () => {
+    const text = message.trim();
+    if (!text) {
+      return;
+    }
 
-let message = $state('');
-let input: HTMLInputElement | undefined;
+    chatStore.addRow('messages', {
+      username: username.current || 'Anonymous',
+      text,
+      timestamp: Date.now(),
+    });
 
-const username = getValue(
-'username',
-settingsStore,
-) as {current: string | undefined};
+    message = '';
+    input?.focus();
+  };
 
-const sendMessage = () => {
-const text = message.trim();
-if (!text) {
-return;
-}
+  const handleSubmit = (event: SubmitEvent) => {
+    event.preventDefault();
+    sendMessage();
+  };
 
-chatStore.addRow('messages', {
-username: username.current || 'Anonymous',
-text,
-timestamp: Date.now(),
-});
-
-message = '';
-input?.focus();
-};
-
-const handleSubmit = (event: SubmitEvent) => {
-event.preventDefault();
-sendMessage();
-};
-
-onMount(() => {
-input?.focus();
-});
+  onMount(() => {
+    input?.focus();
+  });
 </script>
 
 <form id="messageInput" onsubmit={handleSubmit}>
@@ -17276,23 +17117,20 @@ input?.focus();
   <button class="primary" type="submit">Send</button>
 </form>
 ",
-  "client/src/Messages.svelte": "
+  "client/src/Messages.svelte": "<script lang="ts">
+  import './messages.css';
+  import {getSortedRowIds} from 'tinybase/ui-svelte';
+  import Message from './Message.svelte';
+  import {chatStore} from './chatStore';
 
-
-<script lang="ts">
-import './messages.css';
-import {getSortedRowIds} from 'tinybase/ui-svelte';
-import Message from './Message.svelte';
-import {chatStore} from './chatStore';
-
-const messageIds = getSortedRowIds(
-'messages',
-'timestamp',
-false,
-0,
-undefined,
-chatStore,
-) as {readonly current: string[]};
+  const messageIds = getSortedRowIds(
+    'messages',
+    'timestamp',
+    false,
+    0,
+    undefined,
+    chatStore,
+  ) as {readonly current: string[]};
 </script>
 
 <div id="messages">
@@ -17301,19 +17139,15 @@ chatStore,
   {/each}
 </div>
 ",
-  "client/src/UsernameInput.svelte": "
+  "client/src/UsernameInput.svelte": "<script lang="ts">
+  import './input.css';
+  import './usernameInput.css';
+  import {getValue} from 'tinybase/ui-svelte';
+  import {settingsStore} from './settingsStore';
 
-
-<script lang="ts">
-import './input.css';
-import './usernameInput.css';
-import {getValue} from 'tinybase/ui-svelte';
-import {settingsStore} from './settingsStore';
-
-const username = getValue(
-'username',
-settingsStore,
-) as {current: string | undefined};
+  const username = getValue('username', settingsStore) as {
+    current: string | undefined;
+  };
 </script>
 
 <div id="usernameInput">
@@ -17932,26 +17766,20 @@ stays synchronized with the underlying TinyBase store.
     d="m316.939 407.424v50.061c8.138 4.172 17.763 7.3 28.875 9.386s22.823 3.129 35.135 3.129c11.999 0 23.397-1.147 34.196-3.442 10.799-2.294 20.268-6.075 28.406-11.342 8.138-5.266 14.581-12.15 19.328-20.65s7.121-19.007 7.121-31.522c0-9.074-1.356-17.026-4.069-23.857s-6.625-12.906-11.738-18.225c-5.112-5.319-11.242-10.091-18.389-14.315s-15.207-8.213-24.18-11.967c-6.573-2.712-12.468-5.345-17.685-7.9-5.217-2.556-9.651-5.163-13.303-7.822-3.652-2.66-6.469-5.476-8.451-8.448-1.982-2.973-2.974-6.336-2.974-10.091 0-3.441.887-6.544 2.661-9.308s4.278-5.136 7.512-7.118c3.235-1.981 7.199-3.52 11.894-4.615 4.696-1.095 9.912-1.642 15.651-1.642 4.173 0 8.581.313 13.224.938 4.643.626 9.312 1.591 14.008 2.894 4.695 1.304 9.259 2.947 13.694 4.928 4.434 1.982 8.529 4.276 12.285 6.884v-46.776c-7.616-2.92-15.937-5.084-24.962-6.492s-19.381-2.112-31.066-2.112c-11.895 0-23.163 1.278-33.805 3.833s-20.006 6.544-28.093 11.967c-8.086 5.424-14.476 12.333-19.171 20.729-4.695 8.395-7.043 18.433-7.043 30.114 0 14.914 4.304 27.638 12.912 38.172 8.607 10.533 21.675 19.45 39.204 26.751 6.886 2.816 13.303 5.579 19.25 8.291s11.086 5.528 15.415 8.448c4.33 2.92 7.747 6.101 10.252 9.543 2.504 3.441 3.756 7.352 3.756 11.733 0 3.233-.783 6.231-2.348 8.995s-3.939 5.162-7.121 7.196-7.147 3.624-11.894 4.771c-4.748 1.148-10.303 1.721-16.668 1.721-10.851 0-21.597-1.903-32.24-5.71-10.642-3.806-20.502-9.516-29.579-17.13zm-84.159-123.342h64.22v-41.082h-179v41.082h63.906v182.918h50.874z"
     fill="#fff" fill-rule="evenodd" />
 </svg>",
-  "client/src/App.svelte": "
+  "client/src/App.svelte": "<script lang="ts">
+  import {onMount} from 'svelte';
+  import Canvas from './Canvas.svelte';
+  import DrawingControls from './DrawingControls.svelte';
+  import Loading from './Loading.svelte';
+  import {canvasStoreReady} from './canvasStore';
+  import {settingsStoreReady} from './settingsStore';
 
+  let loading = $state(true);
 
-
-
-
-<script lang="ts">
-import {onMount} from 'svelte';
-import Canvas from './Canvas.svelte';
-import DrawingControls from './DrawingControls.svelte';
-import Loading from './Loading.svelte';
-import {canvasStoreReady} from './canvasStore';
-import {settingsStoreReady} from './settingsStore';
-
-let loading = $state(true);
-
-onMount(async () => {
-await Promise.all([settingsStoreReady, canvasStoreReady]);
-loading = false;
-});
+  onMount(async () => {
+    await Promise.all([settingsStoreReady, canvasStoreReady]);
+    loading = false;
+  });
 </script>
 
 {#if loading}
@@ -17961,17 +17789,14 @@ loading = false;
   <Canvas />
 {/if}
 ",
-  "client/src/BrushSize.svelte": "
+  "client/src/BrushSize.svelte": "<script lang="ts">
+  import './brushSize.css';
+  import {getValue} from 'tinybase/ui-svelte';
+  import {settingsStore} from './settingsStore';
 
-<script lang="ts">
-import './brushSize.css';
-import {getValue} from 'tinybase/ui-svelte';
-import {settingsStore} from './settingsStore';
-
-const size = getValue(
-'brushSize',
-settingsStore,
-) as {current: number | undefined};
+  const size = getValue('brushSize', settingsStore) as {
+    current: number | undefined;
+  };
 </script>
 
 <div id="brushSize">
@@ -17986,136 +17811,142 @@ settingsStore,
   <span id="brushSizeValue">{size.current}</span>
 </div>
 ",
-  "client/src/Canvas.svelte": "
+  "client/src/Canvas.svelte": "<script lang="ts">
+  import './canvas.css';
+  import {onMount} from 'svelte';
+  import {getHlcFunctions} from 'tinybase';
+  import {canvasStore} from './canvasStore';
+  import type {StrokeRow} from './canvasStore';
+  import {settingsStore} from './settingsStore';
 
-<script lang="ts">
-import './canvas.css';
-import {onMount} from 'svelte';
-import {getHlcFunctions} from 'tinybase';
-import {canvasStore} from './canvasStore';
-import type {StrokeRow} from './canvasStore';
-import {settingsStore} from './settingsStore';
+  const [getNextHlc] = getHlcFunctions();
 
-const [getNextHlc] = getHlcFunctions();
+  let canvas: HTMLCanvasElement | undefined;
+  let isDrawing = false;
+  let currentStrokeId: string | null = null;
 
-let canvas: HTMLCanvasElement | undefined;
-let isDrawing = false;
-let currentStrokeId: string | null = null;
+  const getPoint = (event: MouseEvent | TouchEvent) => {
+    if (!canvas) {
+      return null;
+    }
 
-const getPoint = (event: MouseEvent | TouchEvent) => {
-if (!canvas) {
-return null;
-}
+    const rect = canvas.getBoundingClientRect();
+    const clientX =
+      'touches' in event ? event.touches[0]?.clientX : event.clientX;
+    const clientY =
+      'touches' in event ? event.touches[0]?.clientY : event.clientY;
 
-const rect = canvas.getBoundingClientRect();
-const clientX = 'touches' in event ? event.touches[0]?.clientX : event.clientX;
-const clientY = 'touches' in event ? event.touches[0]?.clientY : event.clientY;
+    if (clientX == null || clientY == null) {
+      return null;
+    }
 
-if (clientX == null || clientY == null) {
-return null;
-}
+    return {
+      x: clientX - rect.left,
+      y: clientY - rect.top,
+    };
+  };
 
-return {
-x: clientX - rect.left,
-y: clientY - rect.top,
-};
-};
+  const startStroke = (event: MouseEvent | TouchEvent) => {
+    isDrawing = true;
+    currentStrokeId = getNextHlc();
 
-const startStroke = (event: MouseEvent | TouchEvent) => {
-isDrawing = true;
-currentStrokeId = getNextHlc();
+    const point = getPoint(event);
+    if (!point || !currentStrokeId) {
+      return;
+    }
 
-const point = getPoint(event);
-if (!point || !currentStrokeId) {
-return;
-}
+    const brushColor =
+      (settingsStore.getValue('brushColor') as string | undefined) ?? '#d81b60';
+    const brushSize =
+      (settingsStore.getValue('brushSize') as number | undefined) ?? 5;
 
-const brushColor =
-  (settingsStore.getValue('brushColor') as string | undefined) ?? '#d81b60';
-const brushSize =
-  (settingsStore.getValue('brushSize') as number | undefined) ?? 5;
+    canvasStore.setRow('strokes', currentStrokeId, {
+      color: brushColor,
+      size: brushSize,
+      points: JSON.stringify([point.x, point.y]),
+    });
+  };
 
-canvasStore.setRow('strokes', currentStrokeId, {
-color: brushColor,
-size: brushSize,
-points: JSON.stringify([point.x, point.y]),
-});
-};
+  const extendStroke = (event: MouseEvent | TouchEvent) => {
+    if (!isDrawing || !currentStrokeId) {
+      return;
+    }
 
-const extendStroke = (event: MouseEvent | TouchEvent) => {
-if (!isDrawing || !currentStrokeId) {
-return;
-}
+    const point = getPoint(event);
+    if (!point) {
+      return;
+    }
 
-const point = getPoint(event);
-if (!point) {
-return;
-}
+    const pointsArray = JSON.parse(
+      (canvasStore.getCell('strokes', currentStrokeId, 'points') as
+        | string
+        | undefined) ?? '[]',
+    ) as number[];
+    pointsArray.push(point.x, point.y);
+    canvasStore.setCell(
+      'strokes',
+      currentStrokeId,
+      'points',
+      JSON.stringify(pointsArray),
+    );
+  };
 
-const pointsArray = JSON.parse(
-  (canvasStore.getCell('strokes', currentStrokeId, 'points') as string | undefined) ?? '[]',
-) as number[];
-pointsArray.push(point.x, point.y);
-canvasStore.setCell('strokes', currentStrokeId, 'points', JSON.stringify(pointsArray));
-};
+  const endStroke = () => {
+    isDrawing = false;
+    currentStrokeId = null;
+  };
 
-const endStroke = () => {
-isDrawing = false;
-currentStrokeId = null;
-};
+  const handleTouchStart = (event: TouchEvent) => {
+    event.preventDefault();
+    startStroke(event);
+  };
 
-const handleTouchStart = (event: TouchEvent) => {
-event.preventDefault();
-startStroke(event);
-};
+  const handleTouchMove = (event: TouchEvent) => {
+    event.preventDefault();
+    extendStroke(event);
+  };
 
-const handleTouchMove = (event: TouchEvent) => {
-event.preventDefault();
-extendStroke(event);
-};
+  onMount(() => {
+    const draw = () => {
+      if (!canvas) {
+        return;
+      }
 
-onMount(() => {
-const draw = () => {
-if (!canvas) {
-return;
-}
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        return;
+      }
 
-const ctx = canvas.getContext('2d');
-if (!ctx) {
-return;
-}
+      ctx.fillStyle = '#111';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-ctx.fillStyle = '#111';
-ctx.fillRect(0, 0, canvas.width, canvas.height);
+      canvasStore.getSortedRowIds('strokes').forEach((id) => {
+        const stroke = canvasStore.getRow('strokes', id) as StrokeRow;
+        if (!stroke?.points) {
+          return;
+        }
 
-canvasStore.getSortedRowIds('strokes').forEach((id) => {
-const stroke =
-  canvasStore.getRow('strokes', id) as StrokeRow;
-if (!stroke?.points) {
-return;
-}
+        const pointsArray = JSON.parse(stroke.points) as number[];
+        if (pointsArray.length < 2) {
+          return;
+        }
 
-const pointsArray = JSON.parse(stroke.points) as number[];
-if (pointsArray.length < 2) {
-return;
-}
+        ctx.strokeStyle = stroke.color;
+        ctx.lineWidth = stroke.size * 2;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+        ctx.moveTo(pointsArray[0], pointsArray[1]);
+        for (let i = 2; i < pointsArray.length; i += 2) {
+          ctx.lineTo(pointsArray[i], pointsArray[i + 1]);
+        }
+        ctx.stroke();
+      });
+    };
 
-ctx.strokeStyle = stroke.color;
-ctx.lineWidth = stroke.size * 2;
-ctx.lineCap = 'round';
-ctx.lineJoin = 'round';
-ctx.beginPath();
-ctx.moveTo(pointsArray[0], pointsArray[1]);
-for (let i = 2; i < pointsArray.length; i += 2) {
-ctx.lineTo(pointsArray[i], pointsArray[i + 1]);
-}
-ctx.stroke();
-});
-};
-
-canvasStore.addTablesListener(draw);
-draw();
-});
+    canvasStore.addTablesListener(draw);
+    draw();
+  });
 </script>
 
 <canvas
@@ -18132,22 +17963,26 @@ draw();
   ontouchend={endStroke}
 ></canvas>
 ",
-  "client/src/ColorPicker.svelte": "
+  "client/src/ColorPicker.svelte": "<script lang="ts">
+  import './colorPicker.css';
+  import {getValue} from 'tinybase/ui-svelte';
+  import {settingsStore} from './settingsStore';
 
-<script lang="ts">
-import './colorPicker.css';
-import {getValue} from 'tinybase/ui-svelte';
-import {settingsStore} from './settingsStore';
+  const colors = [
+    '#d81b60',
+    '#1976d2',
+    '#388e3c',
+    '#f57c00',
+    '#7b1fa2',
+    '#fff',
+  ];
+  const currentColor = getValue('brushColor', settingsStore) as {
+    current: string | undefined;
+  };
 
-const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];
-const currentColor = getValue(
-'brushColor',
-settingsStore,
-) as {current: string | undefined};
-
-const setColor = (color: string) => {
-currentColor.current = color;
-};
+  const setColor = (color: string) => {
+    currentColor.current = color;
+  };
 </script>
 
 <div id="colorPicker">
@@ -18163,21 +17998,16 @@ currentColor.current = color;
   {/each}
 </div>
 ",
-  "client/src/DrawingControls.svelte": "
+  "client/src/DrawingControls.svelte": "<script>
+  import './button.css';
+  import './drawingControls.css';
+  import BrushSize from './BrushSize.svelte';
+  import ColorPicker from './ColorPicker.svelte';
+  import {canvasStore} from './canvasStore';
 
-
-
-
-<script>
-import './button.css';
-import './drawingControls.css';
-import BrushSize from './BrushSize.svelte';
-import ColorPicker from './ColorPicker.svelte';
-import {canvasStore} from './canvasStore';
-
-const clearStrokes = () => {
-canvasStore.delTable('strokes');
-};
+  const clearStrokes = () => {
+    canvasStore.delTable('strokes');
+  };
 </script>
 
 <div id="drawingControls">
@@ -18187,10 +18017,8 @@ canvasStore.delTable('strokes');
 </div>
 ",
   "client/src/Loading.svelte": "<script>
-import './loading.css';
+  import './loading.css';
 </script>
-
-
 
 <div id="loading"></div>
 ",
@@ -18742,26 +18570,20 @@ stays synchronized with the underlying TinyBase store.
     d="m316.939 407.424v50.061c8.138 4.172 17.763 7.3 28.875 9.386s22.823 3.129 35.135 3.129c11.999 0 23.397-1.147 34.196-3.442 10.799-2.294 20.268-6.075 28.406-11.342 8.138-5.266 14.581-12.15 19.328-20.65s7.121-19.007 7.121-31.522c0-9.074-1.356-17.026-4.069-23.857s-6.625-12.906-11.738-18.225c-5.112-5.319-11.242-10.091-18.389-14.315s-15.207-8.213-24.18-11.967c-6.573-2.712-12.468-5.345-17.685-7.9-5.217-2.556-9.651-5.163-13.303-7.822-3.652-2.66-6.469-5.476-8.451-8.448-1.982-2.973-2.974-6.336-2.974-10.091 0-3.441.887-6.544 2.661-9.308s4.278-5.136 7.512-7.118c3.235-1.981 7.199-3.52 11.894-4.615 4.696-1.095 9.912-1.642 15.651-1.642 4.173 0 8.581.313 13.224.938 4.643.626 9.312 1.591 14.008 2.894 4.695 1.304 9.259 2.947 13.694 4.928 4.434 1.982 8.529 4.276 12.285 6.884v-46.776c-7.616-2.92-15.937-5.084-24.962-6.492s-19.381-2.112-31.066-2.112c-11.895 0-23.163 1.278-33.805 3.833s-20.006 6.544-28.093 11.967c-8.086 5.424-14.476 12.333-19.171 20.729-4.695 8.395-7.043 18.433-7.043 30.114 0 14.914 4.304 27.638 12.912 38.172 8.607 10.533 21.675 19.45 39.204 26.751 6.886 2.816 13.303 5.579 19.25 8.291s11.086 5.528 15.415 8.448c4.33 2.92 7.747 6.101 10.252 9.543 2.504 3.441 3.756 7.352 3.756 11.733 0 3.233-.783 6.231-2.348 8.995s-3.939 5.162-7.121 7.196-7.147 3.624-11.894 4.771c-4.748 1.148-10.303 1.721-16.668 1.721-10.851 0-21.597-1.903-32.24-5.71-10.642-3.806-20.502-9.516-29.579-17.13zm-84.159-123.342h64.22v-41.082h-179v41.082h63.906v182.918h50.874z"
     fill="#fff" fill-rule="evenodd" />
 </svg>",
-  "client/src/App.svelte": "
+  "client/src/App.svelte": "<script lang="ts">
+  import {onMount} from 'svelte';
+  import Canvas from './Canvas.svelte';
+  import DrawingControls from './DrawingControls.svelte';
+  import Loading from './Loading.svelte';
+  import {canvasStoreReady} from './canvasStore';
+  import {settingsStoreReady} from './settingsStore';
 
+  let loading = $state(true);
 
-
-
-
-<script lang="ts">
-import {onMount} from 'svelte';
-import Canvas from './Canvas.svelte';
-import DrawingControls from './DrawingControls.svelte';
-import Loading from './Loading.svelte';
-import {canvasStoreReady} from './canvasStore';
-import {settingsStoreReady} from './settingsStore';
-
-let loading = $state(true);
-
-onMount(async () => {
-await Promise.all([settingsStoreReady, canvasStoreReady]);
-loading = false;
-});
+  onMount(async () => {
+    await Promise.all([settingsStoreReady, canvasStoreReady]);
+    loading = false;
+  });
 </script>
 
 {#if loading}
@@ -18771,17 +18593,14 @@ loading = false;
   <Canvas />
 {/if}
 ",
-  "client/src/BrushSize.svelte": "
+  "client/src/BrushSize.svelte": "<script lang="ts">
+  import './brushSize.css';
+  import {getValue} from 'tinybase/ui-svelte';
+  import {settingsStore} from './settingsStore';
 
-<script lang="ts">
-import './brushSize.css';
-import {getValue} from 'tinybase/ui-svelte';
-import {settingsStore} from './settingsStore';
-
-const size = getValue(
-'brushSize',
-settingsStore,
-) as {current: number | undefined};
+  const size = getValue('brushSize', settingsStore) as {
+    current: number | undefined;
+  };
 </script>
 
 <div id="brushSize">
@@ -18796,136 +18615,142 @@ settingsStore,
   <span id="brushSizeValue">{size.current}</span>
 </div>
 ",
-  "client/src/Canvas.svelte": "
+  "client/src/Canvas.svelte": "<script lang="ts">
+  import './canvas.css';
+  import {onMount} from 'svelte';
+  import {getHlcFunctions} from 'tinybase';
+  import {canvasStore} from './canvasStore';
+  import type {StrokeRow} from './canvasStore';
+  import {settingsStore} from './settingsStore';
 
-<script lang="ts">
-import './canvas.css';
-import {onMount} from 'svelte';
-import {getHlcFunctions} from 'tinybase';
-import {canvasStore} from './canvasStore';
-import type {StrokeRow} from './canvasStore';
-import {settingsStore} from './settingsStore';
+  const [getNextHlc] = getHlcFunctions();
 
-const [getNextHlc] = getHlcFunctions();
+  let canvas: HTMLCanvasElement | undefined;
+  let isDrawing = false;
+  let currentStrokeId: string | null = null;
 
-let canvas: HTMLCanvasElement | undefined;
-let isDrawing = false;
-let currentStrokeId: string | null = null;
+  const getPoint = (event: MouseEvent | TouchEvent) => {
+    if (!canvas) {
+      return null;
+    }
 
-const getPoint = (event: MouseEvent | TouchEvent) => {
-if (!canvas) {
-return null;
-}
+    const rect = canvas.getBoundingClientRect();
+    const clientX =
+      'touches' in event ? event.touches[0]?.clientX : event.clientX;
+    const clientY =
+      'touches' in event ? event.touches[0]?.clientY : event.clientY;
 
-const rect = canvas.getBoundingClientRect();
-const clientX = 'touches' in event ? event.touches[0]?.clientX : event.clientX;
-const clientY = 'touches' in event ? event.touches[0]?.clientY : event.clientY;
+    if (clientX == null || clientY == null) {
+      return null;
+    }
 
-if (clientX == null || clientY == null) {
-return null;
-}
+    return {
+      x: clientX - rect.left,
+      y: clientY - rect.top,
+    };
+  };
 
-return {
-x: clientX - rect.left,
-y: clientY - rect.top,
-};
-};
+  const startStroke = (event: MouseEvent | TouchEvent) => {
+    isDrawing = true;
+    currentStrokeId = getNextHlc();
 
-const startStroke = (event: MouseEvent | TouchEvent) => {
-isDrawing = true;
-currentStrokeId = getNextHlc();
+    const point = getPoint(event);
+    if (!point || !currentStrokeId) {
+      return;
+    }
 
-const point = getPoint(event);
-if (!point || !currentStrokeId) {
-return;
-}
+    const brushColor =
+      (settingsStore.getValue('brushColor') as string | undefined) ?? '#d81b60';
+    const brushSize =
+      (settingsStore.getValue('brushSize') as number | undefined) ?? 5;
 
-const brushColor =
-  (settingsStore.getValue('brushColor') as string | undefined) ?? '#d81b60';
-const brushSize =
-  (settingsStore.getValue('brushSize') as number | undefined) ?? 5;
+    canvasStore.setRow('strokes', currentStrokeId, {
+      color: brushColor,
+      size: brushSize,
+      points: JSON.stringify([point.x, point.y]),
+    });
+  };
 
-canvasStore.setRow('strokes', currentStrokeId, {
-color: brushColor,
-size: brushSize,
-points: JSON.stringify([point.x, point.y]),
-});
-};
+  const extendStroke = (event: MouseEvent | TouchEvent) => {
+    if (!isDrawing || !currentStrokeId) {
+      return;
+    }
 
-const extendStroke = (event: MouseEvent | TouchEvent) => {
-if (!isDrawing || !currentStrokeId) {
-return;
-}
+    const point = getPoint(event);
+    if (!point) {
+      return;
+    }
 
-const point = getPoint(event);
-if (!point) {
-return;
-}
+    const pointsArray = JSON.parse(
+      (canvasStore.getCell('strokes', currentStrokeId, 'points') as
+        | string
+        | undefined) ?? '[]',
+    ) as number[];
+    pointsArray.push(point.x, point.y);
+    canvasStore.setCell(
+      'strokes',
+      currentStrokeId,
+      'points',
+      JSON.stringify(pointsArray),
+    );
+  };
 
-const pointsArray = JSON.parse(
-  (canvasStore.getCell('strokes', currentStrokeId, 'points') as string | undefined) ?? '[]',
-) as number[];
-pointsArray.push(point.x, point.y);
-canvasStore.setCell('strokes', currentStrokeId, 'points', JSON.stringify(pointsArray));
-};
+  const endStroke = () => {
+    isDrawing = false;
+    currentStrokeId = null;
+  };
 
-const endStroke = () => {
-isDrawing = false;
-currentStrokeId = null;
-};
+  const handleTouchStart = (event: TouchEvent) => {
+    event.preventDefault();
+    startStroke(event);
+  };
 
-const handleTouchStart = (event: TouchEvent) => {
-event.preventDefault();
-startStroke(event);
-};
+  const handleTouchMove = (event: TouchEvent) => {
+    event.preventDefault();
+    extendStroke(event);
+  };
 
-const handleTouchMove = (event: TouchEvent) => {
-event.preventDefault();
-extendStroke(event);
-};
+  onMount(() => {
+    const draw = () => {
+      if (!canvas) {
+        return;
+      }
 
-onMount(() => {
-const draw = () => {
-if (!canvas) {
-return;
-}
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        return;
+      }
 
-const ctx = canvas.getContext('2d');
-if (!ctx) {
-return;
-}
+      ctx.fillStyle = '#111';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-ctx.fillStyle = '#111';
-ctx.fillRect(0, 0, canvas.width, canvas.height);
+      canvasStore.getSortedRowIds('strokes').forEach((id) => {
+        const stroke = canvasStore.getRow('strokes', id) as StrokeRow;
+        if (!stroke?.points) {
+          return;
+        }
 
-canvasStore.getSortedRowIds('strokes').forEach((id) => {
-const stroke =
-  canvasStore.getRow('strokes', id) as StrokeRow;
-if (!stroke?.points) {
-return;
-}
+        const pointsArray = JSON.parse(stroke.points) as number[];
+        if (pointsArray.length < 2) {
+          return;
+        }
 
-const pointsArray = JSON.parse(stroke.points) as number[];
-if (pointsArray.length < 2) {
-return;
-}
+        ctx.strokeStyle = stroke.color;
+        ctx.lineWidth = stroke.size * 2;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+        ctx.moveTo(pointsArray[0], pointsArray[1]);
+        for (let i = 2; i < pointsArray.length; i += 2) {
+          ctx.lineTo(pointsArray[i], pointsArray[i + 1]);
+        }
+        ctx.stroke();
+      });
+    };
 
-ctx.strokeStyle = stroke.color;
-ctx.lineWidth = stroke.size * 2;
-ctx.lineCap = 'round';
-ctx.lineJoin = 'round';
-ctx.beginPath();
-ctx.moveTo(pointsArray[0], pointsArray[1]);
-for (let i = 2; i < pointsArray.length; i += 2) {
-ctx.lineTo(pointsArray[i], pointsArray[i + 1]);
-}
-ctx.stroke();
-});
-};
-
-canvasStore.addTablesListener(draw);
-draw();
-});
+    canvasStore.addTablesListener(draw);
+    draw();
+  });
 </script>
 
 <canvas
@@ -18942,22 +18767,26 @@ draw();
   ontouchend={endStroke}
 ></canvas>
 ",
-  "client/src/ColorPicker.svelte": "
+  "client/src/ColorPicker.svelte": "<script lang="ts">
+  import './colorPicker.css';
+  import {getValue} from 'tinybase/ui-svelte';
+  import {settingsStore} from './settingsStore';
 
-<script lang="ts">
-import './colorPicker.css';
-import {getValue} from 'tinybase/ui-svelte';
-import {settingsStore} from './settingsStore';
+  const colors = [
+    '#d81b60',
+    '#1976d2',
+    '#388e3c',
+    '#f57c00',
+    '#7b1fa2',
+    '#fff',
+  ];
+  const currentColor = getValue('brushColor', settingsStore) as {
+    current: string | undefined;
+  };
 
-const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];
-const currentColor = getValue(
-'brushColor',
-settingsStore,
-) as {current: string | undefined};
-
-const setColor = (color: string) => {
-currentColor.current = color;
-};
+  const setColor = (color: string) => {
+    currentColor.current = color;
+  };
 </script>
 
 <div id="colorPicker">
@@ -18973,21 +18802,16 @@ currentColor.current = color;
   {/each}
 </div>
 ",
-  "client/src/DrawingControls.svelte": "
+  "client/src/DrawingControls.svelte": "<script>
+  import './button.css';
+  import './drawingControls.css';
+  import BrushSize from './BrushSize.svelte';
+  import ColorPicker from './ColorPicker.svelte';
+  import {canvasStore} from './canvasStore';
 
-
-
-
-<script>
-import './button.css';
-import './drawingControls.css';
-import BrushSize from './BrushSize.svelte';
-import ColorPicker from './ColorPicker.svelte';
-import {canvasStore} from './canvasStore';
-
-const clearStrokes = () => {
-canvasStore.delTable('strokes');
-};
+  const clearStrokes = () => {
+    canvasStore.delTable('strokes');
+  };
 </script>
 
 <div id="drawingControls">
@@ -18997,10 +18821,8 @@ canvasStore.delTable('strokes');
 </div>
 ",
   "client/src/Loading.svelte": "<script>
-import './loading.css';
+  import './loading.css';
 </script>
-
-
 
 <div id="loading"></div>
 ",
@@ -19620,26 +19442,20 @@ stays synchronized with the underlying TinyBase store.
     d="m316.939 407.424v50.061c8.138 4.172 17.763 7.3 28.875 9.386s22.823 3.129 35.135 3.129c11.999 0 23.397-1.147 34.196-3.442 10.799-2.294 20.268-6.075 28.406-11.342 8.138-5.266 14.581-12.15 19.328-20.65s7.121-19.007 7.121-31.522c0-9.074-1.356-17.026-4.069-23.857s-6.625-12.906-11.738-18.225c-5.112-5.319-11.242-10.091-18.389-14.315s-15.207-8.213-24.18-11.967c-6.573-2.712-12.468-5.345-17.685-7.9-5.217-2.556-9.651-5.163-13.303-7.822-3.652-2.66-6.469-5.476-8.451-8.448-1.982-2.973-2.974-6.336-2.974-10.091 0-3.441.887-6.544 2.661-9.308s4.278-5.136 7.512-7.118c3.235-1.981 7.199-3.52 11.894-4.615 4.696-1.095 9.912-1.642 15.651-1.642 4.173 0 8.581.313 13.224.938 4.643.626 9.312 1.591 14.008 2.894 4.695 1.304 9.259 2.947 13.694 4.928 4.434 1.982 8.529 4.276 12.285 6.884v-46.776c-7.616-2.92-15.937-5.084-24.962-6.492s-19.381-2.112-31.066-2.112c-11.895 0-23.163 1.278-33.805 3.833s-20.006 6.544-28.093 11.967c-8.086 5.424-14.476 12.333-19.171 20.729-4.695 8.395-7.043 18.433-7.043 30.114 0 14.914 4.304 27.638 12.912 38.172 8.607 10.533 21.675 19.45 39.204 26.751 6.886 2.816 13.303 5.579 19.25 8.291s11.086 5.528 15.415 8.448c4.33 2.92 7.747 6.101 10.252 9.543 2.504 3.441 3.756 7.352 3.756 11.733 0 3.233-.783 6.231-2.348 8.995s-3.939 5.162-7.121 7.196-7.147 3.624-11.894 4.771c-4.748 1.148-10.303 1.721-16.668 1.721-10.851 0-21.597-1.903-32.24-5.71-10.642-3.806-20.502-9.516-29.579-17.13zm-84.159-123.342h64.22v-41.082h-179v41.082h63.906v182.918h50.874z"
     fill="#fff" fill-rule="evenodd" />
 </svg>",
-  "client/src/App.svelte": "
+  "client/src/App.svelte": "<script lang="ts">
+  import {onMount} from 'svelte';
+  import Canvas from './Canvas.svelte';
+  import DrawingControls from './DrawingControls.svelte';
+  import Loading from './Loading.svelte';
+  import {canvasStoreReady} from './canvasStore';
+  import {settingsStoreReady} from './settingsStore';
 
+  let loading = $state(true);
 
-
-
-
-<script lang="ts">
-import {onMount} from 'svelte';
-import Canvas from './Canvas.svelte';
-import DrawingControls from './DrawingControls.svelte';
-import Loading from './Loading.svelte';
-import {canvasStoreReady} from './canvasStore';
-import {settingsStoreReady} from './settingsStore';
-
-let loading = $state(true);
-
-onMount(async () => {
-await Promise.all([settingsStoreReady, canvasStoreReady]);
-loading = false;
-});
+  onMount(async () => {
+    await Promise.all([settingsStoreReady, canvasStoreReady]);
+    loading = false;
+  });
 </script>
 
 {#if loading}
@@ -19649,17 +19465,14 @@ loading = false;
   <Canvas />
 {/if}
 ",
-  "client/src/BrushSize.svelte": "
+  "client/src/BrushSize.svelte": "<script lang="ts">
+  import './brushSize.css';
+  import {getValue} from 'tinybase/ui-svelte';
+  import {settingsStore} from './settingsStore';
 
-<script lang="ts">
-import './brushSize.css';
-import {getValue} from 'tinybase/ui-svelte';
-import {settingsStore} from './settingsStore';
-
-const size = getValue(
-'brushSize',
-settingsStore,
-) as {current: number | undefined};
+  const size = getValue('brushSize', settingsStore) as {
+    current: number | undefined;
+  };
 </script>
 
 <div id="brushSize">
@@ -19674,136 +19487,142 @@ settingsStore,
   <span id="brushSizeValue">{size.current}</span>
 </div>
 ",
-  "client/src/Canvas.svelte": "
+  "client/src/Canvas.svelte": "<script lang="ts">
+  import './canvas.css';
+  import {onMount} from 'svelte';
+  import {getHlcFunctions} from 'tinybase';
+  import {canvasStore} from './canvasStore';
+  import type {StrokeRow} from './canvasStore';
+  import {settingsStore} from './settingsStore';
 
-<script lang="ts">
-import './canvas.css';
-import {onMount} from 'svelte';
-import {getHlcFunctions} from 'tinybase';
-import {canvasStore} from './canvasStore';
-import type {StrokeRow} from './canvasStore';
-import {settingsStore} from './settingsStore';
+  const [getNextHlc] = getHlcFunctions();
 
-const [getNextHlc] = getHlcFunctions();
+  let canvas: HTMLCanvasElement | undefined;
+  let isDrawing = false;
+  let currentStrokeId: string | null = null;
 
-let canvas: HTMLCanvasElement | undefined;
-let isDrawing = false;
-let currentStrokeId: string | null = null;
+  const getPoint = (event: MouseEvent | TouchEvent) => {
+    if (!canvas) {
+      return null;
+    }
 
-const getPoint = (event: MouseEvent | TouchEvent) => {
-if (!canvas) {
-return null;
-}
+    const rect = canvas.getBoundingClientRect();
+    const clientX =
+      'touches' in event ? event.touches[0]?.clientX : event.clientX;
+    const clientY =
+      'touches' in event ? event.touches[0]?.clientY : event.clientY;
 
-const rect = canvas.getBoundingClientRect();
-const clientX = 'touches' in event ? event.touches[0]?.clientX : event.clientX;
-const clientY = 'touches' in event ? event.touches[0]?.clientY : event.clientY;
+    if (clientX == null || clientY == null) {
+      return null;
+    }
 
-if (clientX == null || clientY == null) {
-return null;
-}
+    return {
+      x: clientX - rect.left,
+      y: clientY - rect.top,
+    };
+  };
 
-return {
-x: clientX - rect.left,
-y: clientY - rect.top,
-};
-};
+  const startStroke = (event: MouseEvent | TouchEvent) => {
+    isDrawing = true;
+    currentStrokeId = getNextHlc();
 
-const startStroke = (event: MouseEvent | TouchEvent) => {
-isDrawing = true;
-currentStrokeId = getNextHlc();
+    const point = getPoint(event);
+    if (!point || !currentStrokeId) {
+      return;
+    }
 
-const point = getPoint(event);
-if (!point || !currentStrokeId) {
-return;
-}
+    const brushColor =
+      (settingsStore.getValue('brushColor') as string | undefined) ?? '#d81b60';
+    const brushSize =
+      (settingsStore.getValue('brushSize') as number | undefined) ?? 5;
 
-const brushColor =
-  (settingsStore.getValue('brushColor') as string | undefined) ?? '#d81b60';
-const brushSize =
-  (settingsStore.getValue('brushSize') as number | undefined) ?? 5;
+    canvasStore.setRow('strokes', currentStrokeId, {
+      color: brushColor,
+      size: brushSize,
+      points: JSON.stringify([point.x, point.y]),
+    });
+  };
 
-canvasStore.setRow('strokes', currentStrokeId, {
-color: brushColor,
-size: brushSize,
-points: JSON.stringify([point.x, point.y]),
-});
-};
+  const extendStroke = (event: MouseEvent | TouchEvent) => {
+    if (!isDrawing || !currentStrokeId) {
+      return;
+    }
 
-const extendStroke = (event: MouseEvent | TouchEvent) => {
-if (!isDrawing || !currentStrokeId) {
-return;
-}
+    const point = getPoint(event);
+    if (!point) {
+      return;
+    }
 
-const point = getPoint(event);
-if (!point) {
-return;
-}
+    const pointsArray = JSON.parse(
+      (canvasStore.getCell('strokes', currentStrokeId, 'points') as
+        | string
+        | undefined) ?? '[]',
+    ) as number[];
+    pointsArray.push(point.x, point.y);
+    canvasStore.setCell(
+      'strokes',
+      currentStrokeId,
+      'points',
+      JSON.stringify(pointsArray),
+    );
+  };
 
-const pointsArray = JSON.parse(
-  (canvasStore.getCell('strokes', currentStrokeId, 'points') as string | undefined) ?? '[]',
-) as number[];
-pointsArray.push(point.x, point.y);
-canvasStore.setCell('strokes', currentStrokeId, 'points', JSON.stringify(pointsArray));
-};
+  const endStroke = () => {
+    isDrawing = false;
+    currentStrokeId = null;
+  };
 
-const endStroke = () => {
-isDrawing = false;
-currentStrokeId = null;
-};
+  const handleTouchStart = (event: TouchEvent) => {
+    event.preventDefault();
+    startStroke(event);
+  };
 
-const handleTouchStart = (event: TouchEvent) => {
-event.preventDefault();
-startStroke(event);
-};
+  const handleTouchMove = (event: TouchEvent) => {
+    event.preventDefault();
+    extendStroke(event);
+  };
 
-const handleTouchMove = (event: TouchEvent) => {
-event.preventDefault();
-extendStroke(event);
-};
+  onMount(() => {
+    const draw = () => {
+      if (!canvas) {
+        return;
+      }
 
-onMount(() => {
-const draw = () => {
-if (!canvas) {
-return;
-}
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        return;
+      }
 
-const ctx = canvas.getContext('2d');
-if (!ctx) {
-return;
-}
+      ctx.fillStyle = '#111';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-ctx.fillStyle = '#111';
-ctx.fillRect(0, 0, canvas.width, canvas.height);
+      canvasStore.getSortedRowIds('strokes').forEach((id) => {
+        const stroke = canvasStore.getRow('strokes', id) as StrokeRow;
+        if (!stroke?.points) {
+          return;
+        }
 
-canvasStore.getSortedRowIds('strokes').forEach((id) => {
-const stroke =
-  canvasStore.getRow('strokes', id) as StrokeRow;
-if (!stroke?.points) {
-return;
-}
+        const pointsArray = JSON.parse(stroke.points) as number[];
+        if (pointsArray.length < 2) {
+          return;
+        }
 
-const pointsArray = JSON.parse(stroke.points) as number[];
-if (pointsArray.length < 2) {
-return;
-}
+        ctx.strokeStyle = stroke.color;
+        ctx.lineWidth = stroke.size * 2;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+        ctx.moveTo(pointsArray[0], pointsArray[1]);
+        for (let i = 2; i < pointsArray.length; i += 2) {
+          ctx.lineTo(pointsArray[i], pointsArray[i + 1]);
+        }
+        ctx.stroke();
+      });
+    };
 
-ctx.strokeStyle = stroke.color;
-ctx.lineWidth = stroke.size * 2;
-ctx.lineCap = 'round';
-ctx.lineJoin = 'round';
-ctx.beginPath();
-ctx.moveTo(pointsArray[0], pointsArray[1]);
-for (let i = 2; i < pointsArray.length; i += 2) {
-ctx.lineTo(pointsArray[i], pointsArray[i + 1]);
-}
-ctx.stroke();
-});
-};
-
-canvasStore.addTablesListener(draw);
-draw();
-});
+    canvasStore.addTablesListener(draw);
+    draw();
+  });
 </script>
 
 <canvas
@@ -19820,22 +19639,26 @@ draw();
   ontouchend={endStroke}
 ></canvas>
 ",
-  "client/src/ColorPicker.svelte": "
+  "client/src/ColorPicker.svelte": "<script lang="ts">
+  import './colorPicker.css';
+  import {getValue} from 'tinybase/ui-svelte';
+  import {settingsStore} from './settingsStore';
 
-<script lang="ts">
-import './colorPicker.css';
-import {getValue} from 'tinybase/ui-svelte';
-import {settingsStore} from './settingsStore';
+  const colors = [
+    '#d81b60',
+    '#1976d2',
+    '#388e3c',
+    '#f57c00',
+    '#7b1fa2',
+    '#fff',
+  ];
+  const currentColor = getValue('brushColor', settingsStore) as {
+    current: string | undefined;
+  };
 
-const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];
-const currentColor = getValue(
-'brushColor',
-settingsStore,
-) as {current: string | undefined};
-
-const setColor = (color: string) => {
-currentColor.current = color;
-};
+  const setColor = (color: string) => {
+    currentColor.current = color;
+  };
 </script>
 
 <div id="colorPicker">
@@ -19851,21 +19674,16 @@ currentColor.current = color;
   {/each}
 </div>
 ",
-  "client/src/DrawingControls.svelte": "
+  "client/src/DrawingControls.svelte": "<script>
+  import './button.css';
+  import './drawingControls.css';
+  import BrushSize from './BrushSize.svelte';
+  import ColorPicker from './ColorPicker.svelte';
+  import {canvasStore} from './canvasStore';
 
-
-
-
-<script>
-import './button.css';
-import './drawingControls.css';
-import BrushSize from './BrushSize.svelte';
-import ColorPicker from './ColorPicker.svelte';
-import {canvasStore} from './canvasStore';
-
-const clearStrokes = () => {
-canvasStore.delTable('strokes');
-};
+  const clearStrokes = () => {
+    canvasStore.delTable('strokes');
+  };
 </script>
 
 <div id="drawingControls">
@@ -19875,10 +19693,8 @@ canvasStore.delTable('strokes');
 </div>
 ",
   "client/src/Loading.svelte": "<script>
-import './loading.css';
+  import './loading.css';
 </script>
-
-
 
 <div id="loading"></div>
 ",
@@ -20456,22 +20272,18 @@ stays synchronized with the underlying TinyBase store.
     d="m316.939 407.424v50.061c8.138 4.172 17.763 7.3 28.875 9.386s22.823 3.129 35.135 3.129c11.999 0 23.397-1.147 34.196-3.442 10.799-2.294 20.268-6.075 28.406-11.342 8.138-5.266 14.581-12.15 19.328-20.65s7.121-19.007 7.121-31.522c0-9.074-1.356-17.026-4.069-23.857s-6.625-12.906-11.738-18.225c-5.112-5.319-11.242-10.091-18.389-14.315s-15.207-8.213-24.18-11.967c-6.573-2.712-12.468-5.345-17.685-7.9-5.217-2.556-9.651-5.163-13.303-7.822-3.652-2.66-6.469-5.476-8.451-8.448-1.982-2.973-2.974-6.336-2.974-10.091 0-3.441.887-6.544 2.661-9.308s4.278-5.136 7.512-7.118c3.235-1.981 7.199-3.52 11.894-4.615 4.696-1.095 9.912-1.642 15.651-1.642 4.173 0 8.581.313 13.224.938 4.643.626 9.312 1.591 14.008 2.894 4.695 1.304 9.259 2.947 13.694 4.928 4.434 1.982 8.529 4.276 12.285 6.884v-46.776c-7.616-2.92-15.937-5.084-24.962-6.492s-19.381-2.112-31.066-2.112c-11.895 0-23.163 1.278-33.805 3.833s-20.006 6.544-28.093 11.967c-8.086 5.424-14.476 12.333-19.171 20.729-4.695 8.395-7.043 18.433-7.043 30.114 0 14.914 4.304 27.638 12.912 38.172 8.607 10.533 21.675 19.45 39.204 26.751 6.886 2.816 13.303 5.579 19.25 8.291s11.086 5.528 15.415 8.448c4.33 2.92 7.747 6.101 10.252 9.543 2.504 3.441 3.756 7.352 3.756 11.733 0 3.233-.783 6.231-2.348 8.995s-3.939 5.162-7.121 7.196-7.147 3.624-11.894 4.771c-4.748 1.148-10.303 1.721-16.668 1.721-10.851 0-21.597-1.903-32.24-5.71-10.642-3.806-20.502-9.516-29.579-17.13zm-84.159-123.342h64.22v-41.082h-179v41.082h63.906v182.918h50.874z"
     fill="#fff" fill-rule="evenodd" />
 </svg>",
-  "client/src/App.svelte": "
+  "client/src/App.svelte": "<script lang="ts">
+  import {onMount} from 'svelte';
+  import Game from './Game.svelte';
+  import Loading from './Loading.svelte';
+  import {storeReady} from './store';
 
+  let loading = $state(true);
 
-
-<script lang="ts">
-import {onMount} from 'svelte';
-import Game from './Game.svelte';
-import Loading from './Loading.svelte';
-import {storeReady} from './store';
-
-let loading = $state(true);
-
-onMount(async () => {
-await storeReady;
-loading = false;
-});
+  onMount(async () => {
+    await storeReady;
+    loading = false;
+  });
 </script>
 
 {#if loading}
@@ -20480,56 +20292,48 @@ loading = false;
   <Game />
 {/if}
 ",
-  "client/src/Board.svelte": "
+  "client/src/Board.svelte": "<script lang="ts">
+  import './board.css';
+  import {getTable, getValues} from 'tinybase/ui-svelte';
+  import Square from './Square.svelte';
+  import {store} from './store';
 
+  const positions = Array.from({length: 9}, (_, i) => i.toString());
 
-<script lang="ts">
-import './board.css';
-import {getTable, getValues} from 'tinybase/ui-svelte';
-import Square from './Square.svelte';
-import {store} from './store';
-
-const positions = Array.from({length: 9}, (_, i) => i.toString());
-
-const board = getTable(
-'board',
-store,
-) as {readonly current: Record<string, {value?: string}>};
-
-const gameState = getValues(
-store,
-) as {
-  readonly current: {
-    currentPlayer?: string;
-    gameStatus?: string;
-    winningLine?: string;
+  const board = getTable('board', store) as {
+    readonly current: Record<string, {value?: string}>;
   };
-};
 
-const getSquare = (position: string) => {
-const gameStatus = gameState.current.gameStatus ?? 'playing';
-const winningLine = gameState.current.winningLine ?? '';
-const winningPositions = new Set(
-winningLine ? winningLine.split(',') : [],
-);
-const value = board.current[position]?.value ?? '';
+  const gameState = getValues(store) as {
+    readonly current: {
+      currentPlayer?: string;
+      gameStatus?: string;
+      winningLine?: string;
+    };
+  };
 
-return {
-value,
-disabled: gameStatus !== 'playing' || !!value,
-winning: winningPositions.has(position),
-};
-};
+  const getSquare = (position: string) => {
+    const gameStatus = gameState.current.gameStatus ?? 'playing';
+    const winningLine = gameState.current.winningLine ?? '';
+    const winningPositions = new Set(winningLine ? winningLine.split(',') : []);
+    const value = board.current[position]?.value ?? '';
 
-const handleSquareClick = (position: string) => {
-const gameStatus = gameState.current.gameStatus ?? 'playing';
-const currentPlayer = gameState.current.currentPlayer ?? 'X';
-const value = board.current[position]?.value;
+    return {
+      value,
+      disabled: gameStatus !== 'playing' || !!value,
+      winning: winningPositions.has(position),
+    };
+  };
 
-if (gameStatus === 'playing' && !value && currentPlayer) {
-store.setCell('board', position, 'value', currentPlayer);
-}
-};
+  const handleSquareClick = (position: string) => {
+    const gameStatus = gameState.current.gameStatus ?? 'playing';
+    const currentPlayer = gameState.current.currentPlayer ?? 'X';
+    const value = board.current[position]?.value;
+
+    if (gameStatus === 'playing' && !value && currentPlayer) {
+      store.setCell('board', position, 'value', currentPlayer);
+    }
+  };
 </script>
 
 <div id="board">
@@ -20544,63 +20348,64 @@ store.setCell('board', position, 'value', currentPlayer);
   {/each}
 </div>
 ",
-  "client/src/Game.svelte": "
+  "client/src/Game.svelte": "<script>
+  import './button.css';
+  import {onMount} from 'svelte';
+  import Board from './Board.svelte';
+  import GameStatus from './GameStatus.svelte';
+  import {store} from './store';
 
+  const WINNING_LINES = [
+    ['0', '1', '2'],
+    ['3', '4', '5'],
+    ['6', '7', '8'],
+    ['0', '3', '6'],
+    ['1', '4', '7'],
+    ['2', '5', '8'],
+    ['0', '4', '8'],
+    ['2', '4', '6'],
+  ];
 
+  const checkGameState = () => {
+    const gameStatus = store.getValue('gameStatus');
+    if (gameStatus !== 'playing') {
+      return;
+    }
 
-<script>
-import './button.css';
-import {onMount} from 'svelte';
-import Board from './Board.svelte';
-import GameStatus from './GameStatus.svelte';
-import {store} from './store';
+    for (const line of WINNING_LINES) {
+      const [a, b, c] = line;
+      const cellA = store.getCell('board', a, 'value');
+      const cellB = store.getCell('board', b, 'value');
+      const cellC = store.getCell('board', c, 'value');
 
-const WINNING_LINES = [
-['0', '1', '2'], ['3', '4', '5'], ['6', '7', '8'],
-['0', '3', '6'], ['1', '4', '7'], ['2', '5', '8'],
-['0', '4', '8'], ['2', '4', '6'],
-];
+      if (cellA && cellA === cellB && cellA === cellC) {
+        store.setValue('gameStatus', 'won');
+        store.setValue('winner', cellA);
+        store.setValue('winningLine', line.join(','));
+        return;
+      }
+    }
 
-const checkGameState = () => {
-const gameStatus = store.getValue('gameStatus');
-if (gameStatus !== 'playing') {
-return;
-}
+    if (store.getRowCount('board') === 9) {
+      store.setValue('gameStatus', 'draw');
+      return;
+    }
 
-for (const line of WINNING_LINES) {
-const [a, b, c] = line;
-const cellA = store.getCell('board', a, 'value');
-const cellB = store.getCell('board', b, 'value');
-const cellC = store.getCell('board', c, 'value');
+    const currentPlayer = store.getValue('currentPlayer');
+    store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
+  };
 
-if (cellA && cellA === cellB && cellA === cellC) {
-store.setValue('gameStatus', 'won');
-store.setValue('winner', cellA);
-store.setValue('winningLine', line.join(','));
-return;
-}
-}
+  const resetGame = () => {
+    store.delTable('board');
+    store.setValues({
+      currentPlayer: 'X',
+      gameStatus: 'playing',
+    });
+  };
 
-if (store.getRowCount('board') === 9) {
-store.setValue('gameStatus', 'draw');
-return;
-}
-
-const currentPlayer = store.getValue('currentPlayer');
-store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
-};
-
-const resetGame = () => {
-store.delTable('board');
-store.setValues({
-currentPlayer: 'X',
-gameStatus: 'playing',
-});
-};
-
-onMount(() => {
-store.addTableListener('board', checkGameState, true);
-});
+  onMount(() => {
+    store.addTableListener('board', checkGameState, true);
+  });
 </script>
 
 <GameStatus />
@@ -20609,22 +20414,18 @@ store.addTableListener('board', checkGameState, true);
   <button class="primary" onclick={resetGame}>New Game</button>
 </div>
 ",
-  "client/src/GameStatus.svelte": "
+  "client/src/GameStatus.svelte": "<script lang="ts">
+  import './gameStatus.css';
+  import {getValues} from 'tinybase/ui-svelte';
+  import {store} from './store';
 
-<script lang="ts">
-import './gameStatus.css';
-import {getValues} from 'tinybase/ui-svelte';
-import {store} from './store';
-
-const status = getValues(
-store,
-) as {
-  readonly current: {
-    currentPlayer?: string;
-    gameStatus?: string;
-    winner?: string;
+  const status = getValues(store) as {
+    readonly current: {
+      currentPlayer?: string;
+      gameStatus?: string;
+      winner?: string;
+    };
   };
-};
 </script>
 
 <div id="gameStatus">
@@ -20638,35 +20439,31 @@ store,
 </div>
 ",
   "client/src/Loading.svelte": "<script>
-import './loading.css';
+  import './loading.css';
 </script>
-
-
 
 <div id="loading"></div>
 ",
-  "client/src/Square.svelte": "
+  "client/src/Square.svelte": "<script lang="ts">
+  import './square.css';
 
-<script lang="ts">
-import './square.css';
-
-let {
-value,
-disabled,
-winning,
-handleClick,
-}: {
-value: string;
-disabled: boolean;
-winning: boolean;
-handleClick: () => void;
-} = $props();
+  let {
+    value,
+    disabled,
+    winning,
+    handleClick,
+  }: {
+    value: string;
+    disabled: boolean;
+    winning: boolean;
+    handleClick: () => void;
+  } = $props();
 </script>
 
 <button
   class={\`square\${disabled ? ' disabled' : ''}\${winning ? ' winning' : ''}\`}
   onclick={handleClick}
-  disabled={disabled}
+  {disabled}
 >
   {value}
 </button>
@@ -21211,22 +21008,18 @@ stays synchronized with the underlying TinyBase store.
     d="m316.939 407.424v50.061c8.138 4.172 17.763 7.3 28.875 9.386s22.823 3.129 35.135 3.129c11.999 0 23.397-1.147 34.196-3.442 10.799-2.294 20.268-6.075 28.406-11.342 8.138-5.266 14.581-12.15 19.328-20.65s7.121-19.007 7.121-31.522c0-9.074-1.356-17.026-4.069-23.857s-6.625-12.906-11.738-18.225c-5.112-5.319-11.242-10.091-18.389-14.315s-15.207-8.213-24.18-11.967c-6.573-2.712-12.468-5.345-17.685-7.9-5.217-2.556-9.651-5.163-13.303-7.822-3.652-2.66-6.469-5.476-8.451-8.448-1.982-2.973-2.974-6.336-2.974-10.091 0-3.441.887-6.544 2.661-9.308s4.278-5.136 7.512-7.118c3.235-1.981 7.199-3.52 11.894-4.615 4.696-1.095 9.912-1.642 15.651-1.642 4.173 0 8.581.313 13.224.938 4.643.626 9.312 1.591 14.008 2.894 4.695 1.304 9.259 2.947 13.694 4.928 4.434 1.982 8.529 4.276 12.285 6.884v-46.776c-7.616-2.92-15.937-5.084-24.962-6.492s-19.381-2.112-31.066-2.112c-11.895 0-23.163 1.278-33.805 3.833s-20.006 6.544-28.093 11.967c-8.086 5.424-14.476 12.333-19.171 20.729-4.695 8.395-7.043 18.433-7.043 30.114 0 14.914 4.304 27.638 12.912 38.172 8.607 10.533 21.675 19.45 39.204 26.751 6.886 2.816 13.303 5.579 19.25 8.291s11.086 5.528 15.415 8.448c4.33 2.92 7.747 6.101 10.252 9.543 2.504 3.441 3.756 7.352 3.756 11.733 0 3.233-.783 6.231-2.348 8.995s-3.939 5.162-7.121 7.196-7.147 3.624-11.894 4.771c-4.748 1.148-10.303 1.721-16.668 1.721-10.851 0-21.597-1.903-32.24-5.71-10.642-3.806-20.502-9.516-29.579-17.13zm-84.159-123.342h64.22v-41.082h-179v41.082h63.906v182.918h50.874z"
     fill="#fff" fill-rule="evenodd" />
 </svg>",
-  "client/src/App.svelte": "
+  "client/src/App.svelte": "<script lang="ts">
+  import {onMount} from 'svelte';
+  import Game from './Game.svelte';
+  import Loading from './Loading.svelte';
+  import {storeReady} from './store';
 
+  let loading = $state(true);
 
-
-<script lang="ts">
-import {onMount} from 'svelte';
-import Game from './Game.svelte';
-import Loading from './Loading.svelte';
-import {storeReady} from './store';
-
-let loading = $state(true);
-
-onMount(async () => {
-await storeReady;
-loading = false;
-});
+  onMount(async () => {
+    await storeReady;
+    loading = false;
+  });
 </script>
 
 {#if loading}
@@ -21235,56 +21028,48 @@ loading = false;
   <Game />
 {/if}
 ",
-  "client/src/Board.svelte": "
+  "client/src/Board.svelte": "<script lang="ts">
+  import './board.css';
+  import {getTable, getValues} from 'tinybase/ui-svelte';
+  import Square from './Square.svelte';
+  import {store} from './store';
 
+  const positions = Array.from({length: 9}, (_, i) => i.toString());
 
-<script lang="ts">
-import './board.css';
-import {getTable, getValues} from 'tinybase/ui-svelte';
-import Square from './Square.svelte';
-import {store} from './store';
-
-const positions = Array.from({length: 9}, (_, i) => i.toString());
-
-const board = getTable(
-'board',
-store,
-) as {readonly current: Record<string, {value?: string}>};
-
-const gameState = getValues(
-store,
-) as {
-  readonly current: {
-    currentPlayer?: string;
-    gameStatus?: string;
-    winningLine?: string;
+  const board = getTable('board', store) as {
+    readonly current: Record<string, {value?: string}>;
   };
-};
 
-const getSquare = (position: string) => {
-const gameStatus = gameState.current.gameStatus ?? 'playing';
-const winningLine = gameState.current.winningLine ?? '';
-const winningPositions = new Set(
-winningLine ? winningLine.split(',') : [],
-);
-const value = board.current[position]?.value ?? '';
+  const gameState = getValues(store) as {
+    readonly current: {
+      currentPlayer?: string;
+      gameStatus?: string;
+      winningLine?: string;
+    };
+  };
 
-return {
-value,
-disabled: gameStatus !== 'playing' || !!value,
-winning: winningPositions.has(position),
-};
-};
+  const getSquare = (position: string) => {
+    const gameStatus = gameState.current.gameStatus ?? 'playing';
+    const winningLine = gameState.current.winningLine ?? '';
+    const winningPositions = new Set(winningLine ? winningLine.split(',') : []);
+    const value = board.current[position]?.value ?? '';
 
-const handleSquareClick = (position: string) => {
-const gameStatus = gameState.current.gameStatus ?? 'playing';
-const currentPlayer = gameState.current.currentPlayer ?? 'X';
-const value = board.current[position]?.value;
+    return {
+      value,
+      disabled: gameStatus !== 'playing' || !!value,
+      winning: winningPositions.has(position),
+    };
+  };
 
-if (gameStatus === 'playing' && !value && currentPlayer) {
-store.setCell('board', position, 'value', currentPlayer);
-}
-};
+  const handleSquareClick = (position: string) => {
+    const gameStatus = gameState.current.gameStatus ?? 'playing';
+    const currentPlayer = gameState.current.currentPlayer ?? 'X';
+    const value = board.current[position]?.value;
+
+    if (gameStatus === 'playing' && !value && currentPlayer) {
+      store.setCell('board', position, 'value', currentPlayer);
+    }
+  };
 </script>
 
 <div id="board">
@@ -21299,63 +21084,64 @@ store.setCell('board', position, 'value', currentPlayer);
   {/each}
 </div>
 ",
-  "client/src/Game.svelte": "
+  "client/src/Game.svelte": "<script>
+  import './button.css';
+  import {onMount} from 'svelte';
+  import Board from './Board.svelte';
+  import GameStatus from './GameStatus.svelte';
+  import {store} from './store';
 
+  const WINNING_LINES = [
+    ['0', '1', '2'],
+    ['3', '4', '5'],
+    ['6', '7', '8'],
+    ['0', '3', '6'],
+    ['1', '4', '7'],
+    ['2', '5', '8'],
+    ['0', '4', '8'],
+    ['2', '4', '6'],
+  ];
 
+  const checkGameState = () => {
+    const gameStatus = store.getValue('gameStatus');
+    if (gameStatus !== 'playing') {
+      return;
+    }
 
-<script>
-import './button.css';
-import {onMount} from 'svelte';
-import Board from './Board.svelte';
-import GameStatus from './GameStatus.svelte';
-import {store} from './store';
+    for (const line of WINNING_LINES) {
+      const [a, b, c] = line;
+      const cellA = store.getCell('board', a, 'value');
+      const cellB = store.getCell('board', b, 'value');
+      const cellC = store.getCell('board', c, 'value');
 
-const WINNING_LINES = [
-['0', '1', '2'], ['3', '4', '5'], ['6', '7', '8'],
-['0', '3', '6'], ['1', '4', '7'], ['2', '5', '8'],
-['0', '4', '8'], ['2', '4', '6'],
-];
+      if (cellA && cellA === cellB && cellA === cellC) {
+        store.setValue('gameStatus', 'won');
+        store.setValue('winner', cellA);
+        store.setValue('winningLine', line.join(','));
+        return;
+      }
+    }
 
-const checkGameState = () => {
-const gameStatus = store.getValue('gameStatus');
-if (gameStatus !== 'playing') {
-return;
-}
+    if (store.getRowCount('board') === 9) {
+      store.setValue('gameStatus', 'draw');
+      return;
+    }
 
-for (const line of WINNING_LINES) {
-const [a, b, c] = line;
-const cellA = store.getCell('board', a, 'value');
-const cellB = store.getCell('board', b, 'value');
-const cellC = store.getCell('board', c, 'value');
+    const currentPlayer = store.getValue('currentPlayer');
+    store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
+  };
 
-if (cellA && cellA === cellB && cellA === cellC) {
-store.setValue('gameStatus', 'won');
-store.setValue('winner', cellA);
-store.setValue('winningLine', line.join(','));
-return;
-}
-}
+  const resetGame = () => {
+    store.delTable('board');
+    store.setValues({
+      currentPlayer: 'X',
+      gameStatus: 'playing',
+    });
+  };
 
-if (store.getRowCount('board') === 9) {
-store.setValue('gameStatus', 'draw');
-return;
-}
-
-const currentPlayer = store.getValue('currentPlayer');
-store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
-};
-
-const resetGame = () => {
-store.delTable('board');
-store.setValues({
-currentPlayer: 'X',
-gameStatus: 'playing',
-});
-};
-
-onMount(() => {
-store.addTableListener('board', checkGameState, true);
-});
+  onMount(() => {
+    store.addTableListener('board', checkGameState, true);
+  });
 </script>
 
 <GameStatus />
@@ -21364,22 +21150,18 @@ store.addTableListener('board', checkGameState, true);
   <button class="primary" onclick={resetGame}>New Game</button>
 </div>
 ",
-  "client/src/GameStatus.svelte": "
+  "client/src/GameStatus.svelte": "<script lang="ts">
+  import './gameStatus.css';
+  import {getValues} from 'tinybase/ui-svelte';
+  import {store} from './store';
 
-<script lang="ts">
-import './gameStatus.css';
-import {getValues} from 'tinybase/ui-svelte';
-import {store} from './store';
-
-const status = getValues(
-store,
-) as {
-  readonly current: {
-    currentPlayer?: string;
-    gameStatus?: string;
-    winner?: string;
+  const status = getValues(store) as {
+    readonly current: {
+      currentPlayer?: string;
+      gameStatus?: string;
+      winner?: string;
+    };
   };
-};
 </script>
 
 <div id="gameStatus">
@@ -21393,35 +21175,31 @@ store,
 </div>
 ",
   "client/src/Loading.svelte": "<script>
-import './loading.css';
+  import './loading.css';
 </script>
-
-
 
 <div id="loading"></div>
 ",
-  "client/src/Square.svelte": "
+  "client/src/Square.svelte": "<script lang="ts">
+  import './square.css';
 
-<script lang="ts">
-import './square.css';
-
-let {
-value,
-disabled,
-winning,
-handleClick,
-}: {
-value: string;
-disabled: boolean;
-winning: boolean;
-handleClick: () => void;
-} = $props();
+  let {
+    value,
+    disabled,
+    winning,
+    handleClick,
+  }: {
+    value: string;
+    disabled: boolean;
+    winning: boolean;
+    handleClick: () => void;
+  } = $props();
 </script>
 
 <button
   class={\`square\${disabled ? ' disabled' : ''}\${winning ? ' winning' : ''}\`}
   onclick={handleClick}
-  disabled={disabled}
+  {disabled}
 >
   {value}
 </button>
@@ -22034,22 +21812,18 @@ stays synchronized with the underlying TinyBase store.
     d="m316.939 407.424v50.061c8.138 4.172 17.763 7.3 28.875 9.386s22.823 3.129 35.135 3.129c11.999 0 23.397-1.147 34.196-3.442 10.799-2.294 20.268-6.075 28.406-11.342 8.138-5.266 14.581-12.15 19.328-20.65s7.121-19.007 7.121-31.522c0-9.074-1.356-17.026-4.069-23.857s-6.625-12.906-11.738-18.225c-5.112-5.319-11.242-10.091-18.389-14.315s-15.207-8.213-24.18-11.967c-6.573-2.712-12.468-5.345-17.685-7.9-5.217-2.556-9.651-5.163-13.303-7.822-3.652-2.66-6.469-5.476-8.451-8.448-1.982-2.973-2.974-6.336-2.974-10.091 0-3.441.887-6.544 2.661-9.308s4.278-5.136 7.512-7.118c3.235-1.981 7.199-3.52 11.894-4.615 4.696-1.095 9.912-1.642 15.651-1.642 4.173 0 8.581.313 13.224.938 4.643.626 9.312 1.591 14.008 2.894 4.695 1.304 9.259 2.947 13.694 4.928 4.434 1.982 8.529 4.276 12.285 6.884v-46.776c-7.616-2.92-15.937-5.084-24.962-6.492s-19.381-2.112-31.066-2.112c-11.895 0-23.163 1.278-33.805 3.833s-20.006 6.544-28.093 11.967c-8.086 5.424-14.476 12.333-19.171 20.729-4.695 8.395-7.043 18.433-7.043 30.114 0 14.914 4.304 27.638 12.912 38.172 8.607 10.533 21.675 19.45 39.204 26.751 6.886 2.816 13.303 5.579 19.25 8.291s11.086 5.528 15.415 8.448c4.33 2.92 7.747 6.101 10.252 9.543 2.504 3.441 3.756 7.352 3.756 11.733 0 3.233-.783 6.231-2.348 8.995s-3.939 5.162-7.121 7.196-7.147 3.624-11.894 4.771c-4.748 1.148-10.303 1.721-16.668 1.721-10.851 0-21.597-1.903-32.24-5.71-10.642-3.806-20.502-9.516-29.579-17.13zm-84.159-123.342h64.22v-41.082h-179v41.082h63.906v182.918h50.874z"
     fill="#fff" fill-rule="evenodd" />
 </svg>",
-  "client/src/App.svelte": "
+  "client/src/App.svelte": "<script lang="ts">
+  import {onMount} from 'svelte';
+  import Game from './Game.svelte';
+  import Loading from './Loading.svelte';
+  import {storeReady} from './store';
 
+  let loading = $state(true);
 
-
-<script lang="ts">
-import {onMount} from 'svelte';
-import Game from './Game.svelte';
-import Loading from './Loading.svelte';
-import {storeReady} from './store';
-
-let loading = $state(true);
-
-onMount(async () => {
-await storeReady;
-loading = false;
-});
+  onMount(async () => {
+    await storeReady;
+    loading = false;
+  });
 </script>
 
 {#if loading}
@@ -22058,56 +21832,48 @@ loading = false;
   <Game />
 {/if}
 ",
-  "client/src/Board.svelte": "
+  "client/src/Board.svelte": "<script lang="ts">
+  import './board.css';
+  import {getTable, getValues} from 'tinybase/ui-svelte';
+  import Square from './Square.svelte';
+  import {store} from './store';
 
+  const positions = Array.from({length: 9}, (_, i) => i.toString());
 
-<script lang="ts">
-import './board.css';
-import {getTable, getValues} from 'tinybase/ui-svelte';
-import Square from './Square.svelte';
-import {store} from './store';
-
-const positions = Array.from({length: 9}, (_, i) => i.toString());
-
-const board = getTable(
-'board',
-store,
-) as {readonly current: Record<string, {value?: string}>};
-
-const gameState = getValues(
-store,
-) as {
-  readonly current: {
-    currentPlayer?: string;
-    gameStatus?: string;
-    winningLine?: string;
+  const board = getTable('board', store) as {
+    readonly current: Record<string, {value?: string}>;
   };
-};
 
-const getSquare = (position: string) => {
-const gameStatus = gameState.current.gameStatus ?? 'playing';
-const winningLine = gameState.current.winningLine ?? '';
-const winningPositions = new Set(
-winningLine ? winningLine.split(',') : [],
-);
-const value = board.current[position]?.value ?? '';
+  const gameState = getValues(store) as {
+    readonly current: {
+      currentPlayer?: string;
+      gameStatus?: string;
+      winningLine?: string;
+    };
+  };
 
-return {
-value,
-disabled: gameStatus !== 'playing' || !!value,
-winning: winningPositions.has(position),
-};
-};
+  const getSquare = (position: string) => {
+    const gameStatus = gameState.current.gameStatus ?? 'playing';
+    const winningLine = gameState.current.winningLine ?? '';
+    const winningPositions = new Set(winningLine ? winningLine.split(',') : []);
+    const value = board.current[position]?.value ?? '';
 
-const handleSquareClick = (position: string) => {
-const gameStatus = gameState.current.gameStatus ?? 'playing';
-const currentPlayer = gameState.current.currentPlayer ?? 'X';
-const value = board.current[position]?.value;
+    return {
+      value,
+      disabled: gameStatus !== 'playing' || !!value,
+      winning: winningPositions.has(position),
+    };
+  };
 
-if (gameStatus === 'playing' && !value && currentPlayer) {
-store.setCell('board', position, 'value', currentPlayer);
-}
-};
+  const handleSquareClick = (position: string) => {
+    const gameStatus = gameState.current.gameStatus ?? 'playing';
+    const currentPlayer = gameState.current.currentPlayer ?? 'X';
+    const value = board.current[position]?.value;
+
+    if (gameStatus === 'playing' && !value && currentPlayer) {
+      store.setCell('board', position, 'value', currentPlayer);
+    }
+  };
 </script>
 
 <div id="board">
@@ -22122,63 +21888,64 @@ store.setCell('board', position, 'value', currentPlayer);
   {/each}
 </div>
 ",
-  "client/src/Game.svelte": "
+  "client/src/Game.svelte": "<script>
+  import './button.css';
+  import {onMount} from 'svelte';
+  import Board from './Board.svelte';
+  import GameStatus from './GameStatus.svelte';
+  import {store} from './store';
 
+  const WINNING_LINES = [
+    ['0', '1', '2'],
+    ['3', '4', '5'],
+    ['6', '7', '8'],
+    ['0', '3', '6'],
+    ['1', '4', '7'],
+    ['2', '5', '8'],
+    ['0', '4', '8'],
+    ['2', '4', '6'],
+  ];
 
+  const checkGameState = () => {
+    const gameStatus = store.getValue('gameStatus');
+    if (gameStatus !== 'playing') {
+      return;
+    }
 
-<script>
-import './button.css';
-import {onMount} from 'svelte';
-import Board from './Board.svelte';
-import GameStatus from './GameStatus.svelte';
-import {store} from './store';
+    for (const line of WINNING_LINES) {
+      const [a, b, c] = line;
+      const cellA = store.getCell('board', a, 'value');
+      const cellB = store.getCell('board', b, 'value');
+      const cellC = store.getCell('board', c, 'value');
 
-const WINNING_LINES = [
-['0', '1', '2'], ['3', '4', '5'], ['6', '7', '8'],
-['0', '3', '6'], ['1', '4', '7'], ['2', '5', '8'],
-['0', '4', '8'], ['2', '4', '6'],
-];
+      if (cellA && cellA === cellB && cellA === cellC) {
+        store.setValue('gameStatus', 'won');
+        store.setValue('winner', cellA);
+        store.setValue('winningLine', line.join(','));
+        return;
+      }
+    }
 
-const checkGameState = () => {
-const gameStatus = store.getValue('gameStatus');
-if (gameStatus !== 'playing') {
-return;
-}
+    if (store.getRowCount('board') === 9) {
+      store.setValue('gameStatus', 'draw');
+      return;
+    }
 
-for (const line of WINNING_LINES) {
-const [a, b, c] = line;
-const cellA = store.getCell('board', a, 'value');
-const cellB = store.getCell('board', b, 'value');
-const cellC = store.getCell('board', c, 'value');
+    const currentPlayer = store.getValue('currentPlayer');
+    store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
+  };
 
-if (cellA && cellA === cellB && cellA === cellC) {
-store.setValue('gameStatus', 'won');
-store.setValue('winner', cellA);
-store.setValue('winningLine', line.join(','));
-return;
-}
-}
+  const resetGame = () => {
+    store.delTable('board');
+    store.setValues({
+      currentPlayer: 'X',
+      gameStatus: 'playing',
+    });
+  };
 
-if (store.getRowCount('board') === 9) {
-store.setValue('gameStatus', 'draw');
-return;
-}
-
-const currentPlayer = store.getValue('currentPlayer');
-store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
-};
-
-const resetGame = () => {
-store.delTable('board');
-store.setValues({
-currentPlayer: 'X',
-gameStatus: 'playing',
-});
-};
-
-onMount(() => {
-store.addTableListener('board', checkGameState, true);
-});
+  onMount(() => {
+    store.addTableListener('board', checkGameState, true);
+  });
 </script>
 
 <GameStatus />
@@ -22187,22 +21954,18 @@ store.addTableListener('board', checkGameState, true);
   <button class="primary" onclick={resetGame}>New Game</button>
 </div>
 ",
-  "client/src/GameStatus.svelte": "
+  "client/src/GameStatus.svelte": "<script lang="ts">
+  import './gameStatus.css';
+  import {getValues} from 'tinybase/ui-svelte';
+  import {store} from './store';
 
-<script lang="ts">
-import './gameStatus.css';
-import {getValues} from 'tinybase/ui-svelte';
-import {store} from './store';
-
-const status = getValues(
-store,
-) as {
-  readonly current: {
-    currentPlayer?: string;
-    gameStatus?: string;
-    winner?: string;
+  const status = getValues(store) as {
+    readonly current: {
+      currentPlayer?: string;
+      gameStatus?: string;
+      winner?: string;
+    };
   };
-};
 </script>
 
 <div id="gameStatus">
@@ -22216,35 +21979,31 @@ store,
 </div>
 ",
   "client/src/Loading.svelte": "<script>
-import './loading.css';
+  import './loading.css';
 </script>
-
-
 
 <div id="loading"></div>
 ",
-  "client/src/Square.svelte": "
+  "client/src/Square.svelte": "<script lang="ts">
+  import './square.css';
 
-<script lang="ts">
-import './square.css';
-
-let {
-value,
-disabled,
-winning,
-handleClick,
-}: {
-value: string;
-disabled: boolean;
-winning: boolean;
-handleClick: () => void;
-} = $props();
+  let {
+    value,
+    disabled,
+    winning,
+    handleClick,
+  }: {
+    value: string;
+    disabled: boolean;
+    winning: boolean;
+    handleClick: () => void;
+  } = $props();
 </script>
 
 <button
   class={\`square\${disabled ? ' disabled' : ''}\${winning ? ' winning' : ''}\`}
   onclick={handleClick}
-  disabled={disabled}
+  {disabled}
 >
   {value}
 </button>
@@ -22801,24 +22560,19 @@ stays synchronized with the underlying TinyBase store.
     d="m316.939 407.424v50.061c8.138 4.172 17.763 7.3 28.875 9.386s22.823 3.129 35.135 3.129c11.999 0 23.397-1.147 34.196-3.442 10.799-2.294 20.268-6.075 28.406-11.342 8.138-5.266 14.581-12.15 19.328-20.65s7.121-19.007 7.121-31.522c0-9.074-1.356-17.026-4.069-23.857s-6.625-12.906-11.738-18.225c-5.112-5.319-11.242-10.091-18.389-14.315s-15.207-8.213-24.18-11.967c-6.573-2.712-12.468-5.345-17.685-7.9-5.217-2.556-9.651-5.163-13.303-7.822-3.652-2.66-6.469-5.476-8.451-8.448-1.982-2.973-2.974-6.336-2.974-10.091 0-3.441.887-6.544 2.661-9.308s4.278-5.136 7.512-7.118c3.235-1.981 7.199-3.52 11.894-4.615 4.696-1.095 9.912-1.642 15.651-1.642 4.173 0 8.581.313 13.224.938 4.643.626 9.312 1.591 14.008 2.894 4.695 1.304 9.259 2.947 13.694 4.928 4.434 1.982 8.529 4.276 12.285 6.884v-46.776c-7.616-2.92-15.937-5.084-24.962-6.492s-19.381-2.112-31.066-2.112c-11.895 0-23.163 1.278-33.805 3.833s-20.006 6.544-28.093 11.967c-8.086 5.424-14.476 12.333-19.171 20.729-4.695 8.395-7.043 18.433-7.043 30.114 0 14.914 4.304 27.638 12.912 38.172 8.607 10.533 21.675 19.45 39.204 26.751 6.886 2.816 13.303 5.579 19.25 8.291s11.086 5.528 15.415 8.448c4.33 2.92 7.747 6.101 10.252 9.543 2.504 3.441 3.756 7.352 3.756 11.733 0 3.233-.783 6.231-2.348 8.995s-3.939 5.162-7.121 7.196-7.147 3.624-11.894 4.771c-4.748 1.148-10.303 1.721-16.668 1.721-10.851 0-21.597-1.903-32.24-5.71-10.642-3.806-20.502-9.516-29.579-17.13zm-84.159-123.342h64.22v-41.082h-179v41.082h63.906v182.918h50.874z"
     fill="#fff" fill-rule="evenodd" />
 </svg>",
-  "client/src/App.svelte": "
+  "client/src/App.svelte": "<script lang="ts">
+  import {onMount} from 'svelte';
+  import Loading from './Loading.svelte';
+  import TodoInput from './TodoInput.svelte';
+  import TodoList from './TodoList.svelte';
+  import {storeReady} from './store';
 
+  let loading = $state(true);
 
-
-
-<script lang="ts">
-import {onMount} from 'svelte';
-import Loading from './Loading.svelte';
-import TodoInput from './TodoInput.svelte';
-import TodoList from './TodoList.svelte';
-import {storeReady} from './store';
-
-let loading = $state(true);
-
-onMount(async () => {
-await storeReady;
-loading = false;
-});
+  onMount(async () => {
+    await storeReady;
+    loading = false;
+  });
 </script>
 
 {#if loading}
@@ -22829,46 +22583,40 @@ loading = false;
 {/if}
 ",
   "client/src/Loading.svelte": "<script>
-import './loading.css';
+  import './loading.css';
 </script>
-
-
 
 <div id="loading"></div>
 ",
-  "client/src/TodoInput.svelte": "
+  "client/src/TodoInput.svelte": "<script lang="ts">
+  import './button.css';
+  import './input.css';
+  import './todoInput.css';
+  import {onMount} from 'svelte';
+  import {store} from './store';
 
+  let text = $state('');
+  let input: HTMLInputElement | undefined;
 
+  const addTodo = () => {
+    const trimmedText = text.trim();
+    if (trimmedText) {
+      store.addRow('todos', {text: trimmedText, completed: false});
+      text = '';
+      input?.focus();
+    }
+  };
 
-<script lang="ts">
-import './button.css';
-import './input.css';
-import './todoInput.css';
-import {onMount} from 'svelte';
-import {store} from './store';
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      addTodo();
+    }
+  };
 
-let text = $state('');
-let input: HTMLInputElement | undefined;
-
-const addTodo = () => {
-const trimmedText = text.trim();
-if (trimmedText) {
-store.addRow('todos', {text: trimmedText, completed: false});
-text = '';
-input?.focus();
-}
-};
-
-const handleKeyDown = (event: KeyboardEvent) => {
-if (event.key === 'Enter') {
-event.preventDefault();
-addTodo();
-}
-};
-
-onMount(() => {
-input?.focus();
-});
+  onMount(() => {
+    input?.focus();
+  });
 </script>
 
 <div id="todoInput">
@@ -22882,32 +22630,27 @@ input?.focus();
   <button class="primary" onclick={addTodo}>Add</button>
 </div>
 ",
-  "client/src/TodoItem.svelte": "
-
-
-<script lang="ts">
-import './button.css';
-import './todoItem.css';
-import {getRow} from 'tinybase/ui-svelte';
-import {store} from './store';
+  "client/src/TodoItem.svelte": "<script lang="ts">
+  import './button.css';
+  import './todoItem.css';
+  import {getRow} from 'tinybase/ui-svelte';
+  import {store} from './store';
   import type {TodoRow} from './store';
 
-let {rowId}: {rowId: string} = $props();
+  let {rowId}: {rowId: string} = $props();
 
-const todo = getRow(
-'todos',
-() => rowId,
-store,
-) as {readonly current: TodoRow};
+  const todo = getRow('todos', () => rowId, store) as {
+    readonly current: TodoRow;
+  };
 
-const toggleTodo = (event: Event) => {
+  const toggleTodo = (event: Event) => {
     const input = event.currentTarget as HTMLInputElement;
     store.setPartialRow('todos', rowId, {completed: input.checked});
-};
+  };
 
-const deleteTodo = () => {
-store.delRow('todos', rowId);
-};
+  const deleteTodo = () => {
+    store.delRow('todos', rowId);
+  };
 </script>
 
 <div class="todoItem" class:completed={todo.current.completed}>
@@ -22921,23 +22664,20 @@ store.delRow('todos', rowId);
   <button onclick={deleteTodo}>Delete</button>
 </div>
 ",
-  "client/src/TodoList.svelte": "
+  "client/src/TodoList.svelte": "<script lang="ts">
+  import './todoList.css';
+  import {getSortedRowIds} from 'tinybase/ui-svelte';
+  import TodoItem from './TodoItem.svelte';
+  import {store} from './store';
 
-
-<script lang="ts">
-import './todoList.css';
-import {getSortedRowIds} from 'tinybase/ui-svelte';
-import TodoItem from './TodoItem.svelte';
-import {store} from './store';
-
-const todoIds = getSortedRowIds(
-'todos',
-undefined,
-false,
-0,
-undefined,
-store,
-);
+  const todoIds = getSortedRowIds(
+    'todos',
+    undefined,
+    false,
+    0,
+    undefined,
+    store,
+  );
 </script>
 
 <div id="todoList">
@@ -23496,24 +23236,19 @@ stays synchronized with the underlying TinyBase store.
     d="m316.939 407.424v50.061c8.138 4.172 17.763 7.3 28.875 9.386s22.823 3.129 35.135 3.129c11.999 0 23.397-1.147 34.196-3.442 10.799-2.294 20.268-6.075 28.406-11.342 8.138-5.266 14.581-12.15 19.328-20.65s7.121-19.007 7.121-31.522c0-9.074-1.356-17.026-4.069-23.857s-6.625-12.906-11.738-18.225c-5.112-5.319-11.242-10.091-18.389-14.315s-15.207-8.213-24.18-11.967c-6.573-2.712-12.468-5.345-17.685-7.9-5.217-2.556-9.651-5.163-13.303-7.822-3.652-2.66-6.469-5.476-8.451-8.448-1.982-2.973-2.974-6.336-2.974-10.091 0-3.441.887-6.544 2.661-9.308s4.278-5.136 7.512-7.118c3.235-1.981 7.199-3.52 11.894-4.615 4.696-1.095 9.912-1.642 15.651-1.642 4.173 0 8.581.313 13.224.938 4.643.626 9.312 1.591 14.008 2.894 4.695 1.304 9.259 2.947 13.694 4.928 4.434 1.982 8.529 4.276 12.285 6.884v-46.776c-7.616-2.92-15.937-5.084-24.962-6.492s-19.381-2.112-31.066-2.112c-11.895 0-23.163 1.278-33.805 3.833s-20.006 6.544-28.093 11.967c-8.086 5.424-14.476 12.333-19.171 20.729-4.695 8.395-7.043 18.433-7.043 30.114 0 14.914 4.304 27.638 12.912 38.172 8.607 10.533 21.675 19.45 39.204 26.751 6.886 2.816 13.303 5.579 19.25 8.291s11.086 5.528 15.415 8.448c4.33 2.92 7.747 6.101 10.252 9.543 2.504 3.441 3.756 7.352 3.756 11.733 0 3.233-.783 6.231-2.348 8.995s-3.939 5.162-7.121 7.196-7.147 3.624-11.894 4.771c-4.748 1.148-10.303 1.721-16.668 1.721-10.851 0-21.597-1.903-32.24-5.71-10.642-3.806-20.502-9.516-29.579-17.13zm-84.159-123.342h64.22v-41.082h-179v41.082h63.906v182.918h50.874z"
     fill="#fff" fill-rule="evenodd" />
 </svg>",
-  "client/src/App.svelte": "
+  "client/src/App.svelte": "<script lang="ts">
+  import {onMount} from 'svelte';
+  import Loading from './Loading.svelte';
+  import TodoInput from './TodoInput.svelte';
+  import TodoList from './TodoList.svelte';
+  import {storeReady} from './store';
 
+  let loading = $state(true);
 
-
-
-<script lang="ts">
-import {onMount} from 'svelte';
-import Loading from './Loading.svelte';
-import TodoInput from './TodoInput.svelte';
-import TodoList from './TodoList.svelte';
-import {storeReady} from './store';
-
-let loading = $state(true);
-
-onMount(async () => {
-await storeReady;
-loading = false;
-});
+  onMount(async () => {
+    await storeReady;
+    loading = false;
+  });
 </script>
 
 {#if loading}
@@ -23524,46 +23259,40 @@ loading = false;
 {/if}
 ",
   "client/src/Loading.svelte": "<script>
-import './loading.css';
+  import './loading.css';
 </script>
-
-
 
 <div id="loading"></div>
 ",
-  "client/src/TodoInput.svelte": "
+  "client/src/TodoInput.svelte": "<script lang="ts">
+  import './button.css';
+  import './input.css';
+  import './todoInput.css';
+  import {onMount} from 'svelte';
+  import {store} from './store';
 
+  let text = $state('');
+  let input: HTMLInputElement | undefined;
 
+  const addTodo = () => {
+    const trimmedText = text.trim();
+    if (trimmedText) {
+      store.addRow('todos', {text: trimmedText, completed: false});
+      text = '';
+      input?.focus();
+    }
+  };
 
-<script lang="ts">
-import './button.css';
-import './input.css';
-import './todoInput.css';
-import {onMount} from 'svelte';
-import {store} from './store';
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      addTodo();
+    }
+  };
 
-let text = $state('');
-let input: HTMLInputElement | undefined;
-
-const addTodo = () => {
-const trimmedText = text.trim();
-if (trimmedText) {
-store.addRow('todos', {text: trimmedText, completed: false});
-text = '';
-input?.focus();
-}
-};
-
-const handleKeyDown = (event: KeyboardEvent) => {
-if (event.key === 'Enter') {
-event.preventDefault();
-addTodo();
-}
-};
-
-onMount(() => {
-input?.focus();
-});
+  onMount(() => {
+    input?.focus();
+  });
 </script>
 
 <div id="todoInput">
@@ -23577,32 +23306,27 @@ input?.focus();
   <button class="primary" onclick={addTodo}>Add</button>
 </div>
 ",
-  "client/src/TodoItem.svelte": "
-
-
-<script lang="ts">
-import './button.css';
-import './todoItem.css';
-import {getRow} from 'tinybase/ui-svelte';
-import {store} from './store';
+  "client/src/TodoItem.svelte": "<script lang="ts">
+  import './button.css';
+  import './todoItem.css';
+  import {getRow} from 'tinybase/ui-svelte';
+  import {store} from './store';
   import type {TodoRow} from './store';
 
-let {rowId}: {rowId: string} = $props();
+  let {rowId}: {rowId: string} = $props();
 
-const todo = getRow(
-'todos',
-() => rowId,
-store,
-) as {readonly current: TodoRow};
+  const todo = getRow('todos', () => rowId, store) as {
+    readonly current: TodoRow;
+  };
 
-const toggleTodo = (event: Event) => {
+  const toggleTodo = (event: Event) => {
     const input = event.currentTarget as HTMLInputElement;
     store.setPartialRow('todos', rowId, {completed: input.checked});
-};
+  };
 
-const deleteTodo = () => {
-store.delRow('todos', rowId);
-};
+  const deleteTodo = () => {
+    store.delRow('todos', rowId);
+  };
 </script>
 
 <div class="todoItem" class:completed={todo.current.completed}>
@@ -23616,23 +23340,20 @@ store.delRow('todos', rowId);
   <button onclick={deleteTodo}>Delete</button>
 </div>
 ",
-  "client/src/TodoList.svelte": "
+  "client/src/TodoList.svelte": "<script lang="ts">
+  import './todoList.css';
+  import {getSortedRowIds} from 'tinybase/ui-svelte';
+  import TodoItem from './TodoItem.svelte';
+  import {store} from './store';
 
-
-<script lang="ts">
-import './todoList.css';
-import {getSortedRowIds} from 'tinybase/ui-svelte';
-import TodoItem from './TodoItem.svelte';
-import {store} from './store';
-
-const todoIds = getSortedRowIds(
-'todos',
-undefined,
-false,
-0,
-undefined,
-store,
-);
+  const todoIds = getSortedRowIds(
+    'todos',
+    undefined,
+    false,
+    0,
+    undefined,
+    store,
+  );
 </script>
 
 <div id="todoList">
@@ -24259,24 +23980,19 @@ stays synchronized with the underlying TinyBase store.
     d="m316.939 407.424v50.061c8.138 4.172 17.763 7.3 28.875 9.386s22.823 3.129 35.135 3.129c11.999 0 23.397-1.147 34.196-3.442 10.799-2.294 20.268-6.075 28.406-11.342 8.138-5.266 14.581-12.15 19.328-20.65s7.121-19.007 7.121-31.522c0-9.074-1.356-17.026-4.069-23.857s-6.625-12.906-11.738-18.225c-5.112-5.319-11.242-10.091-18.389-14.315s-15.207-8.213-24.18-11.967c-6.573-2.712-12.468-5.345-17.685-7.9-5.217-2.556-9.651-5.163-13.303-7.822-3.652-2.66-6.469-5.476-8.451-8.448-1.982-2.973-2.974-6.336-2.974-10.091 0-3.441.887-6.544 2.661-9.308s4.278-5.136 7.512-7.118c3.235-1.981 7.199-3.52 11.894-4.615 4.696-1.095 9.912-1.642 15.651-1.642 4.173 0 8.581.313 13.224.938 4.643.626 9.312 1.591 14.008 2.894 4.695 1.304 9.259 2.947 13.694 4.928 4.434 1.982 8.529 4.276 12.285 6.884v-46.776c-7.616-2.92-15.937-5.084-24.962-6.492s-19.381-2.112-31.066-2.112c-11.895 0-23.163 1.278-33.805 3.833s-20.006 6.544-28.093 11.967c-8.086 5.424-14.476 12.333-19.171 20.729-4.695 8.395-7.043 18.433-7.043 30.114 0 14.914 4.304 27.638 12.912 38.172 8.607 10.533 21.675 19.45 39.204 26.751 6.886 2.816 13.303 5.579 19.25 8.291s11.086 5.528 15.415 8.448c4.33 2.92 7.747 6.101 10.252 9.543 2.504 3.441 3.756 7.352 3.756 11.733 0 3.233-.783 6.231-2.348 8.995s-3.939 5.162-7.121 7.196-7.147 3.624-11.894 4.771c-4.748 1.148-10.303 1.721-16.668 1.721-10.851 0-21.597-1.903-32.24-5.71-10.642-3.806-20.502-9.516-29.579-17.13zm-84.159-123.342h64.22v-41.082h-179v41.082h63.906v182.918h50.874z"
     fill="#fff" fill-rule="evenodd" />
 </svg>",
-  "client/src/App.svelte": "
+  "client/src/App.svelte": "<script lang="ts">
+  import {onMount} from 'svelte';
+  import Loading from './Loading.svelte';
+  import TodoInput from './TodoInput.svelte';
+  import TodoList from './TodoList.svelte';
+  import {storeReady} from './store';
 
+  let loading = $state(true);
 
-
-
-<script lang="ts">
-import {onMount} from 'svelte';
-import Loading from './Loading.svelte';
-import TodoInput from './TodoInput.svelte';
-import TodoList from './TodoList.svelte';
-import {storeReady} from './store';
-
-let loading = $state(true);
-
-onMount(async () => {
-await storeReady;
-loading = false;
-});
+  onMount(async () => {
+    await storeReady;
+    loading = false;
+  });
 </script>
 
 {#if loading}
@@ -24287,46 +24003,40 @@ loading = false;
 {/if}
 ",
   "client/src/Loading.svelte": "<script>
-import './loading.css';
+  import './loading.css';
 </script>
-
-
 
 <div id="loading"></div>
 ",
-  "client/src/TodoInput.svelte": "
+  "client/src/TodoInput.svelte": "<script lang="ts">
+  import './button.css';
+  import './input.css';
+  import './todoInput.css';
+  import {onMount} from 'svelte';
+  import {store} from './store';
 
+  let text = $state('');
+  let input: HTMLInputElement | undefined;
 
+  const addTodo = () => {
+    const trimmedText = text.trim();
+    if (trimmedText) {
+      store.addRow('todos', {text: trimmedText, completed: false});
+      text = '';
+      input?.focus();
+    }
+  };
 
-<script lang="ts">
-import './button.css';
-import './input.css';
-import './todoInput.css';
-import {onMount} from 'svelte';
-import {store} from './store';
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      addTodo();
+    }
+  };
 
-let text = $state('');
-let input: HTMLInputElement | undefined;
-
-const addTodo = () => {
-const trimmedText = text.trim();
-if (trimmedText) {
-store.addRow('todos', {text: trimmedText, completed: false});
-text = '';
-input?.focus();
-}
-};
-
-const handleKeyDown = (event: KeyboardEvent) => {
-if (event.key === 'Enter') {
-event.preventDefault();
-addTodo();
-}
-};
-
-onMount(() => {
-input?.focus();
-});
+  onMount(() => {
+    input?.focus();
+  });
 </script>
 
 <div id="todoInput">
@@ -24340,32 +24050,27 @@ input?.focus();
   <button class="primary" onclick={addTodo}>Add</button>
 </div>
 ",
-  "client/src/TodoItem.svelte": "
-
-
-<script lang="ts">
-import './button.css';
-import './todoItem.css';
-import {getRow} from 'tinybase/ui-svelte';
-import {store} from './store';
+  "client/src/TodoItem.svelte": "<script lang="ts">
+  import './button.css';
+  import './todoItem.css';
+  import {getRow} from 'tinybase/ui-svelte';
+  import {store} from './store';
   import type {TodoRow} from './store';
 
-let {rowId}: {rowId: string} = $props();
+  let {rowId}: {rowId: string} = $props();
 
-const todo = getRow(
-'todos',
-() => rowId,
-store,
-) as {readonly current: TodoRow};
+  const todo = getRow('todos', () => rowId, store) as {
+    readonly current: TodoRow;
+  };
 
-const toggleTodo = (event: Event) => {
+  const toggleTodo = (event: Event) => {
     const input = event.currentTarget as HTMLInputElement;
     store.setPartialRow('todos', rowId, {completed: input.checked});
-};
+  };
 
-const deleteTodo = () => {
-store.delRow('todos', rowId);
-};
+  const deleteTodo = () => {
+    store.delRow('todos', rowId);
+  };
 </script>
 
 <div class="todoItem" class:completed={todo.current.completed}>
@@ -24379,23 +24084,20 @@ store.delRow('todos', rowId);
   <button onclick={deleteTodo}>Delete</button>
 </div>
 ",
-  "client/src/TodoList.svelte": "
+  "client/src/TodoList.svelte": "<script lang="ts">
+  import './todoList.css';
+  import {getSortedRowIds} from 'tinybase/ui-svelte';
+  import TodoItem from './TodoItem.svelte';
+  import {store} from './store';
 
-
-<script lang="ts">
-import './todoList.css';
-import {getSortedRowIds} from 'tinybase/ui-svelte';
-import TodoItem from './TodoItem.svelte';
-import {store} from './store';
-
-const todoIds = getSortedRowIds(
-'todos',
-undefined,
-false,
-0,
-undefined,
-store,
-);
+  const todoIds = getSortedRowIds(
+    'todos',
+    undefined,
+    false,
+    0,
+    undefined,
+    store,
+  );
 </script>
 
 <div id="todoList">
