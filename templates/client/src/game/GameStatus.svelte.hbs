@@ -2,36 +2,31 @@
 
 <script{{#if typescript}} lang="ts"{{/if}}>
 import './gameStatus.css';
-import {onMount} from 'svelte';
+import {createValues} from 'tinybase/ui-svelte';
 import {store} from './store';
+{{#if schemas}}
+  {{#if typescript}}
+    import type {Store as TinyBaseStore} from 'tinybase';
+  {{/if}}
+{{/if}}
 
-const getStatus = () => ({
-gameStatus:
-  {{#if typescript}}(store.getValue('gameStatus') as string | undefined) ?? 'playing'{{else}}store.getValue('gameStatus') ?? 'playing'{{/if}},
-currentPlayer:
-  {{#if typescript}}(store.getValue('currentPlayer') as string | undefined) ?? 'X'{{else}}store.getValue('currentPlayer') ?? 'X'{{/if}},
-winner:
-  {{#if typescript}}(store.getValue('winner') as string | undefined) ?? ''{{else}}store.getValue('winner') ?? ''{{/if}},
-});
-
-let status = $state(getStatus());
-
-const updateStatus = () => {
-status = getStatus();
-};
-
-onMount(() => {
-store.addValuesListener(updateStatus);
-updateStatus();
-});
+const status = createValues(
+{{#if schemas}}store as unknown as TinyBaseStore{{else}}store{{/if}},
+){{#if typescript}} as {
+  readonly current: {
+    currentPlayer?: string;
+    gameStatus?: string;
+    winner?: string;
+  };
+}{{/if}};
 </script>
 
 <div id="gameStatus">
-  {#if status.gameStatus === 'playing'}
-    Player <span class="player">{status.currentPlayer}</span>'s turn
-  {:else if status.gameStatus === 'won'}
-    Player <span class="winner">{status.winner}</span> wins!
-  {:else if status.gameStatus === 'draw'}
+  {#if status.current.gameStatus === 'playing'}
+    Player <span class="player">{status.current.currentPlayer}</span>'s turn
+  {:else if status.current.gameStatus === 'won'}
+    Player <span class="winner">{status.current.winner}</span> wins!
+  {:else if status.current.gameStatus === 'draw'}
     It's a draw!
   {/if}
 </div>

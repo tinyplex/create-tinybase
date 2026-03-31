@@ -4957,18 +4957,25 @@ import './loading.css';
 
 <script>
 import './message.css';
+import {createRow} from 'tinybase/ui-svelte';
+import {chatStore} from './chatStore';
 
+let {rowId} = $props();
 
-let {message} = $props();
+const message = createRow(
+'messages',
+() => rowId,
+chatStore,
+);
 
 const getTime = (timestamp) =>
   new Date(timestamp).toLocaleTimeString();
 </script>
 
 <div class="message">
-  <span class="username">{message.username}:</span>
-  <span class="text">{message.text}</span>
-  <span class="time">{getTime(message.timestamp)}</span>
+  <span class="username">{message.current.username}:</span>
+  <span class="text">{message.current.text}</span>
+  <span class="time">{getTime(message.current.timestamp)}</span>
 </div>
 ",
   "client/src/MessageInput.svelte": "
@@ -4979,6 +4986,7 @@ const getTime = (timestamp) =>
 import './button.css';
 import './input.css';
 import './messageInput.css';
+import {createValue} from 'tinybase/ui-svelte';
 import {onMount} from 'svelte';
 import {chatStore} from './chatStore';
 import {settingsStore} from './settingsStore';
@@ -4986,17 +4994,19 @@ import {settingsStore} from './settingsStore';
 let message = $state('');
 let input;
 
+const username = createValue(
+'username',
+settingsStore,
+);
+
 const sendMessage = () => {
 const text = message.trim();
 if (!text) {
 return;
 }
 
-const username =
-  settingsStore.getValue('username') ?? 'Anonymous';
-
 chatStore.addRow('messages', {
-username,
+username: username.current || 'Anonymous',
 text,
 timestamp: Date.now(),
 });
@@ -5030,33 +5040,23 @@ input?.focus();
 
 <script>
 import './messages.css';
-import {onMount} from 'svelte';
+import {createSortedRowIds} from 'tinybase/ui-svelte';
 import Message from './Message.svelte';
 import {chatStore} from './chatStore';
 
-
-const getMessages = () =>
-  chatStore.getSortedRowIds('messages', 'timestamp').map((id) => ({
-    id,
-    row:
-      chatStore.getRow('messages', id),
-  }));
-
-let messages = $state(getMessages());
-
-const updateMessages = () => {
-messages = getMessages();
-};
-
-onMount(() => {
-chatStore.addTablesListener(updateMessages);
-updateMessages();
-});
+const messageIds = createSortedRowIds(
+'messages',
+'timestamp',
+false,
+0,
+undefined,
+chatStore,
+);
 </script>
 
 <div id="messages">
-  {#each messages as message (message.id)}
-    <Message message={message.row} />
+  {#each messageIds.current as rowId (rowId)}
+    <Message {rowId} />
   {/each}
 </div>
 ",
@@ -5066,28 +5066,13 @@ updateMessages();
 <script>
 import './input.css';
 import './usernameInput.css';
-import {onMount} from 'svelte';
+import {createValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
 
-const getUsername = () =>
-  settingsStore.getValue('username') ?? '';
-
-let username = $state(getUsername());
-
-const updateUsername = () => {
-username = getUsername();
-};
-
-const handleInput = (event) => {
-    const nextUsername = event.currentTarget.value;
-  settingsStore.setValue('username', nextUsername);
-  username = nextUsername;
-};
-
-onMount(() => {
-settingsStore.addValueListener('username', updateUsername);
-updateUsername();
-});
+const username = createValue(
+'username',
+settingsStore,
+);
 </script>
 
 <div id="usernameInput">
@@ -5095,9 +5080,8 @@ updateUsername();
   <input
     id="usernameInputField"
     type="text"
-    value={username}
+    bind:value={username.current}
     placeholder="Enter your name"
-    oninput={handleInput}
   />
 </div>
 ",
@@ -5647,28 +5631,13 @@ loading = false;
 
 <script>
 import './brushSize.css';
-import {onMount} from 'svelte';
+import {createValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
 
-const getBrushSize = () =>
-  settingsStore.getValue('brushSize') ?? 5;
-
-let size = $state(getBrushSize());
-
-const updateSize = () => {
-size = getBrushSize();
-};
-
-const handleInput = (event) => {
-    const nextSize = parseInt(event.currentTarget.value);
-  settingsStore.setValue('brushSize', nextSize);
-  size = nextSize;
-};
-
-onMount(() => {
-settingsStore.addValueListener('brushSize', updateSize);
-updateSize();
-});
+const size = createValue(
+'brushSize',
+settingsStore,
+);
 </script>
 
 <div id="brushSize">
@@ -5678,10 +5647,9 @@ updateSize();
     type="range"
     min="1"
     max="50"
-    value={size}
-    oninput={handleInput}
+    bind:value={size.current}
   />
-  <span id="brushSizeValue">{size}</span>
+  <span id="brushSizeValue">{size.current}</span>
 </div>
 ",
   "client/src/Canvas.svelte": "
@@ -5834,34 +5802,25 @@ draw();
 
 <script>
 import './colorPicker.css';
-import {onMount} from 'svelte';
+import {createValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
 
 const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];
-const getCurrentColor = () =>
-  settingsStore.getValue('brushColor') ?? '#d81b60';
-
-let currentColor = $state(getCurrentColor());
-
-const updateActive = () => {
-currentColor = getCurrentColor();
-};
+const currentColor = createValue(
+'brushColor',
+settingsStore,
+);
 
 const setColor = (color) => {
-settingsStore.setValue('brushColor', color);
+currentColor.current = color;
 };
-
-onMount(() => {
-settingsStore.addValueListener('brushColor', updateActive);
-updateActive();
-});
 </script>
 
 <div id="colorPicker">
   {#each colors as color (color)}
     <button
       class="colorBtn"
-      class:active={currentColor === color}
+      class:active={currentColor.current === color}
       style={\`background: \${color}\`}
       onclick={() => setColor(color)}
       aria-label={\`Select \${color} brush\`}
@@ -6409,69 +6368,55 @@ loading = false;
 
 <script>
 import './board.css';
-import {onMount} from 'svelte';
+import {createTable, createValues} from 'tinybase/ui-svelte';
 import Square from './Square.svelte';
 import {store} from './store';
 
-const getSquares = () => {
-const gameStatus =
-  store.getValue('gameStatus') ?? 'playing';
-const winningLine =
-  store.getValue('winningLine') ?? '';
-const currentPlayer =
-  store.getValue('currentPlayer') ?? 'X';
+const positions = Array.from({length: 9}, (_, i) => i.toString());
+
+const board = createTable(
+'board',
+store,
+);
+
+const gameState = createValues(
+store,
+);
+
+const getSquare = (position) => {
+const gameStatus = gameState.current.gameStatus ?? 'playing';
+const winningLine = gameState.current.winningLine ?? '';
 const winningPositions = new Set(
 winningLine ? winningLine.split(',') : [],
 );
-const disabled = gameStatus !== 'playing';
-
-return Array.from({length: 9}, (_, i) => {
-const position = i.toString();
-const value =
-  store.getCell('board', position, 'value') ?? '';
+const value = board.current[position]?.value ?? '';
 
 return {
-position,
 value,
-disabled: disabled || !!value,
+disabled: gameStatus !== 'playing' || !!value,
 winning: winningPositions.has(position),
-currentPlayer,
 };
-});
-};
-
-let squares = $state(getSquares());
-
-const updateBoard = () => {
-squares = getSquares();
 };
 
 const handleSquareClick = (position) => {
-const gameStatus =
-  store.getValue('gameStatus') ?? 'playing';
-const currentPlayer =
-  store.getValue('currentPlayer') ?? 'X';
-const value = store.getCell('board', position, 'value');
+const gameStatus = gameState.current.gameStatus ?? 'playing';
+const currentPlayer = gameState.current.currentPlayer ?? 'X';
+const value = board.current[position]?.value;
 
 if (gameStatus === 'playing' && !value && currentPlayer) {
 store.setCell('board', position, 'value', currentPlayer);
 }
 };
-
-onMount(() => {
-store.addValuesListener(updateBoard);
-store.addTableListener('board', updateBoard);
-updateBoard();
-});
 </script>
 
 <div id="board">
-  {#each squares as square (square.position)}
+  {#each positions as position (position)}
+    {@const square = getSquare(position)}
     <Square
       value={square.value}
       disabled={square.disabled}
       winning={square.winning}
-      handleClick={() => handleSquareClick(square.position)}
+      handleClick={() => handleSquareClick(position)}
     />
   {/each}
 </div>
@@ -6545,36 +6490,20 @@ store.addTableListener('board', checkGameState, true);
 
 <script>
 import './gameStatus.css';
-import {onMount} from 'svelte';
+import {createValues} from 'tinybase/ui-svelte';
 import {store} from './store';
 
-const getStatus = () => ({
-gameStatus:
-  store.getValue('gameStatus') ?? 'playing',
-currentPlayer:
-  store.getValue('currentPlayer') ?? 'X',
-winner:
-  store.getValue('winner') ?? '',
-});
-
-let status = $state(getStatus());
-
-const updateStatus = () => {
-status = getStatus();
-};
-
-onMount(() => {
-store.addValuesListener(updateStatus);
-updateStatus();
-});
+const status = createValues(
+store,
+);
 </script>
 
 <div id="gameStatus">
-  {#if status.gameStatus === 'playing'}
-    Player <span class="player">{status.currentPlayer}</span>'s turn
-  {:else if status.gameStatus === 'won'}
-    Player <span class="winner">{status.winner}</span> wins!
-  {:else if status.gameStatus === 'draw'}
+  {#if status.current.gameStatus === 'playing'}
+    Player <span class="player">{status.current.currentPlayer}</span>'s turn
+  {:else if status.current.gameStatus === 'won'}
+    Player <span class="winner">{status.current.winner}</span> wins!
+  {:else if status.current.gameStatus === 'draw'}
     It's a draw!
   {/if}
 </div>
@@ -7171,12 +7100,12 @@ input?.focus();
 <script>
 import './button.css';
 import './todoItem.css';
-import {useRow} from 'tinybase/ui-svelte';
+import {createRow} from 'tinybase/ui-svelte';
 import {store} from './store';
 
 let {rowId} = $props();
 
-const todo = useRow(
+const todo = createRow(
 'todos',
 () => rowId,
 store,
@@ -7207,11 +7136,11 @@ store.delRow('todos', rowId);
 
 <script>
 import './todoList.css';
-import {useSortedRowIds} from 'tinybase/ui-svelte';
+import {createSortedRowIds} from 'tinybase/ui-svelte';
 import TodoItem from './TodoItem.svelte';
 import {store} from './store';
 
-const todoIds = useSortedRowIds(
+const todoIds = createSortedRowIds(
 'todos',
 undefined,
 false,
@@ -15716,18 +15645,26 @@ import './loading.css';
 
 <script lang="ts">
 import './message.css';
-import type {MessageRow} from './chatStore';
+import {createRow} from 'tinybase/ui-svelte';
+import {chatStore} from './chatStore';
+  import type {MessageRow} from './chatStore';
 
-let {message}: {message: MessageRow} = $props();
+let {rowId}: {rowId: string} = $props();
+
+const message = createRow(
+'messages',
+() => rowId,
+chatStore,
+) as {readonly current: MessageRow};
 
 const getTime = (timestamp: number) =>
   new Date(timestamp).toLocaleTimeString();
 </script>
 
 <div class="message">
-  <span class="username">{message.username}:</span>
-  <span class="text">{message.text}</span>
-  <span class="time">{getTime(message.timestamp)}</span>
+  <span class="username">{message.current.username}:</span>
+  <span class="text">{message.current.text}</span>
+  <span class="time">{getTime(message.current.timestamp)}</span>
 </div>
 ",
   "client/src/MessageInput.svelte": "
@@ -15738,6 +15675,7 @@ const getTime = (timestamp: number) =>
 import './button.css';
 import './input.css';
 import './messageInput.css';
+import {createValue} from 'tinybase/ui-svelte';
 import {onMount} from 'svelte';
 import {chatStore} from './chatStore';
 import {settingsStore} from './settingsStore';
@@ -15745,17 +15683,19 @@ import {settingsStore} from './settingsStore';
 let message = $state('');
 let input: HTMLInputElement | undefined;
 
+const username = createValue(
+'username',
+settingsStore,
+) as {current: string | undefined};
+
 const sendMessage = () => {
 const text = message.trim();
 if (!text) {
 return;
 }
 
-const username =
-  (settingsStore.getValue('username') as string | undefined) ?? 'Anonymous';
-
 chatStore.addRow('messages', {
-username,
+username: username.current || 'Anonymous',
 text,
 timestamp: Date.now(),
 });
@@ -15789,33 +15729,23 @@ input?.focus();
 
 <script lang="ts">
 import './messages.css';
-import {onMount} from 'svelte';
+import {createSortedRowIds} from 'tinybase/ui-svelte';
 import Message from './Message.svelte';
 import {chatStore} from './chatStore';
-import type {MessageRow} from './chatStore';
 
-const getMessages = () =>
-  chatStore.getSortedRowIds('messages', 'timestamp').map((id) => ({
-    id,
-    row:
-      chatStore.getRow('messages', id) as MessageRow,
-  }));
-
-let messages = $state(getMessages());
-
-const updateMessages = () => {
-messages = getMessages();
-};
-
-onMount(() => {
-chatStore.addTablesListener(updateMessages);
-updateMessages();
-});
+const messageIds = createSortedRowIds(
+'messages',
+'timestamp',
+false,
+0,
+undefined,
+chatStore,
+) as {readonly current: string[]};
 </script>
 
 <div id="messages">
-  {#each messages as message (message.id)}
-    <Message message={message.row} />
+  {#each messageIds.current as rowId (rowId)}
+    <Message {rowId} />
   {/each}
 </div>
 ",
@@ -15825,29 +15755,13 @@ updateMessages();
 <script lang="ts">
 import './input.css';
 import './usernameInput.css';
-import {onMount} from 'svelte';
+import {createValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
 
-const getUsername = () =>
-  (settingsStore.getValue('username') as string | undefined) ?? '';
-
-let username = $state(getUsername());
-
-const updateUsername = () => {
-username = getUsername();
-};
-
-const handleInput = (event: Event) => {
-    const input = event.currentTarget as HTMLInputElement;
-    const nextUsername = input.value;
-  settingsStore.setValue('username', nextUsername);
-  username = nextUsername;
-};
-
-onMount(() => {
-settingsStore.addValueListener('username', updateUsername);
-updateUsername();
-});
+const username = createValue(
+'username',
+settingsStore,
+) as {current: string | undefined};
 </script>
 
 <div id="usernameInput">
@@ -15855,9 +15769,8 @@ updateUsername();
   <input
     id="usernameInputField"
     type="text"
-    value={username}
+    bind:value={username.current}
     placeholder="Enter your name"
-    oninput={handleInput}
   />
 </div>
 ",
@@ -16486,18 +16399,26 @@ import './loading.css';
 
 <script lang="ts">
 import './message.css';
-import type {MessageRow} from './chatStore';
+import {createRow} from 'tinybase/ui-svelte';
+import {chatStore} from './chatStore';
+  import type {MessageRow} from './chatStore';
 
-let {message}: {message: MessageRow} = $props();
+let {rowId}: {rowId: string} = $props();
+
+const message = createRow(
+'messages',
+() => rowId,
+chatStore,
+) as {readonly current: MessageRow};
 
 const getTime = (timestamp: number) =>
   new Date(timestamp).toLocaleTimeString();
 </script>
 
 <div class="message">
-  <span class="username">{message.username}:</span>
-  <span class="text">{message.text}</span>
-  <span class="time">{getTime(message.timestamp)}</span>
+  <span class="username">{message.current.username}:</span>
+  <span class="text">{message.current.text}</span>
+  <span class="time">{getTime(message.current.timestamp)}</span>
 </div>
 ",
   "client/src/MessageInput.svelte": "
@@ -16508,6 +16429,7 @@ const getTime = (timestamp: number) =>
 import './button.css';
 import './input.css';
 import './messageInput.css';
+import {createValue} from 'tinybase/ui-svelte';
 import {onMount} from 'svelte';
 import {chatStore} from './chatStore';
 import {settingsStore} from './settingsStore';
@@ -16515,17 +16437,19 @@ import {settingsStore} from './settingsStore';
 let message = $state('');
 let input: HTMLInputElement | undefined;
 
+const username = createValue(
+'username',
+settingsStore,
+) as {current: string | undefined};
+
 const sendMessage = () => {
 const text = message.trim();
 if (!text) {
 return;
 }
 
-const username =
-  (settingsStore.getValue('username') as string | undefined) ?? 'Anonymous';
-
 chatStore.addRow('messages', {
-username,
+username: username.current || 'Anonymous',
 text,
 timestamp: Date.now(),
 });
@@ -16559,33 +16483,23 @@ input?.focus();
 
 <script lang="ts">
 import './messages.css';
-import {onMount} from 'svelte';
+import {createSortedRowIds} from 'tinybase/ui-svelte';
 import Message from './Message.svelte';
 import {chatStore} from './chatStore';
-import type {MessageRow} from './chatStore';
 
-const getMessages = () =>
-  chatStore.getSortedRowIds('messages', 'timestamp').map((id) => ({
-    id,
-    row:
-      chatStore.getRow('messages', id) as MessageRow,
-  }));
-
-let messages = $state(getMessages());
-
-const updateMessages = () => {
-messages = getMessages();
-};
-
-onMount(() => {
-chatStore.addTablesListener(updateMessages);
-updateMessages();
-});
+const messageIds = createSortedRowIds(
+'messages',
+'timestamp',
+false,
+0,
+undefined,
+chatStore,
+) as {readonly current: string[]};
 </script>
 
 <div id="messages">
-  {#each messages as message (message.id)}
-    <Message message={message.row} />
+  {#each messageIds.current as rowId (rowId)}
+    <Message {rowId} />
   {/each}
 </div>
 ",
@@ -16595,29 +16509,13 @@ updateMessages();
 <script lang="ts">
 import './input.css';
 import './usernameInput.css';
-import {onMount} from 'svelte';
+import {createValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
 
-const getUsername = () =>
-  (settingsStore.getValue('username') as string | undefined) ?? '';
-
-let username = $state(getUsername());
-
-const updateUsername = () => {
-username = getUsername();
-};
-
-const handleInput = (event: Event) => {
-    const input = event.currentTarget as HTMLInputElement;
-    const nextUsername = input.value;
-  settingsStore.setValue('username', nextUsername);
-  username = nextUsername;
-};
-
-onMount(() => {
-settingsStore.addValueListener('username', updateUsername);
-updateUsername();
-});
+const username = createValue(
+'username',
+settingsStore,
+) as {current: string | undefined};
 </script>
 
 <div id="usernameInput">
@@ -16625,9 +16523,8 @@ updateUsername();
   <input
     id="usernameInputField"
     type="text"
-    value={username}
+    bind:value={username.current}
     placeholder="Enter your name"
-    oninput={handleInput}
   />
 </div>
 ",
@@ -17325,18 +17222,26 @@ import './loading.css';
 
 <script lang="ts">
 import './message.css';
-import type {MessageRow} from './chatStore';
+import {createRow} from 'tinybase/ui-svelte';
+import {chatStore} from './chatStore';
+  import type {MessageRow} from './chatStore';
 
-let {message}: {message: MessageRow} = $props();
+let {rowId}: {rowId: string} = $props();
+
+const message = createRow(
+'messages',
+() => rowId,
+chatStore,
+) as {readonly current: MessageRow};
 
 const getTime = (timestamp: number) =>
   new Date(timestamp).toLocaleTimeString();
 </script>
 
 <div class="message">
-  <span class="username">{message.username}:</span>
-  <span class="text">{message.text}</span>
-  <span class="time">{getTime(message.timestamp)}</span>
+  <span class="username">{message.current.username}:</span>
+  <span class="text">{message.current.text}</span>
+  <span class="time">{getTime(message.current.timestamp)}</span>
 </div>
 ",
   "client/src/MessageInput.svelte": "
@@ -17347,6 +17252,7 @@ const getTime = (timestamp: number) =>
 import './button.css';
 import './input.css';
 import './messageInput.css';
+import {createValue} from 'tinybase/ui-svelte';
 import {onMount} from 'svelte';
 import {chatStore} from './chatStore';
 import {settingsStore} from './settingsStore';
@@ -17354,17 +17260,19 @@ import {settingsStore} from './settingsStore';
 let message = $state('');
 let input: HTMLInputElement | undefined;
 
+const username = createValue(
+'username',
+settingsStore,
+) as {current: string | undefined};
+
 const sendMessage = () => {
 const text = message.trim();
 if (!text) {
 return;
 }
 
-const username =
-  (settingsStore.getValue('username') as string | undefined) ?? 'Anonymous';
-
 chatStore.addRow('messages', {
-username,
+username: username.current || 'Anonymous',
 text,
 timestamp: Date.now(),
 });
@@ -17398,33 +17306,23 @@ input?.focus();
 
 <script lang="ts">
 import './messages.css';
-import {onMount} from 'svelte';
+import {createSortedRowIds} from 'tinybase/ui-svelte';
 import Message from './Message.svelte';
 import {chatStore} from './chatStore';
-import type {MessageRow} from './chatStore';
 
-const getMessages = () =>
-  chatStore.getSortedRowIds('messages', 'timestamp').map((id) => ({
-    id,
-    row:
-      chatStore.getRow('messages', id) as MessageRow,
-  }));
-
-let messages = $state(getMessages());
-
-const updateMessages = () => {
-messages = getMessages();
-};
-
-onMount(() => {
-chatStore.addTablesListener(updateMessages);
-updateMessages();
-});
+const messageIds = createSortedRowIds(
+'messages',
+'timestamp',
+false,
+0,
+undefined,
+chatStore,
+) as {readonly current: string[]};
 </script>
 
 <div id="messages">
-  {#each messages as message (message.id)}
-    <Message message={message.row} />
+  {#each messageIds.current as rowId (rowId)}
+    <Message {rowId} />
   {/each}
 </div>
 ",
@@ -17434,29 +17332,13 @@ updateMessages();
 <script lang="ts">
 import './input.css';
 import './usernameInput.css';
-import {onMount} from 'svelte';
+import {createValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
 
-const getUsername = () =>
-  (settingsStore.getValue('username') as string | undefined) ?? '';
-
-let username = $state(getUsername());
-
-const updateUsername = () => {
-username = getUsername();
-};
-
-const handleInput = (event: Event) => {
-    const input = event.currentTarget as HTMLInputElement;
-    const nextUsername = input.value;
-  settingsStore.setValue('username', nextUsername);
-  username = nextUsername;
-};
-
-onMount(() => {
-settingsStore.addValueListener('username', updateUsername);
-updateUsername();
-});
+const username = createValue(
+'username',
+settingsStore,
+) as {current: string | undefined};
 </script>
 
 <div id="usernameInput">
@@ -17464,9 +17346,8 @@ updateUsername();
   <input
     id="usernameInputField"
     type="text"
-    value={username}
+    bind:value={username.current}
     placeholder="Enter your name"
-    oninput={handleInput}
   />
 </div>
 ",
@@ -18124,29 +18005,13 @@ loading = false;
 
 <script lang="ts">
 import './brushSize.css';
-import {onMount} from 'svelte';
+import {createValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
 
-const getBrushSize = () =>
-  (settingsStore.getValue('brushSize') as number | undefined) ?? 5;
-
-let size = $state(getBrushSize());
-
-const updateSize = () => {
-size = getBrushSize();
-};
-
-const handleInput = (event: Event) => {
-    const input = event.currentTarget as HTMLInputElement;
-    const nextSize = parseInt(input.value);
-  settingsStore.setValue('brushSize', nextSize);
-  size = nextSize;
-};
-
-onMount(() => {
-settingsStore.addValueListener('brushSize', updateSize);
-updateSize();
-});
+const size = createValue(
+'brushSize',
+settingsStore,
+) as {current: number | undefined};
 </script>
 
 <div id="brushSize">
@@ -18156,10 +18021,9 @@ updateSize();
     type="range"
     min="1"
     max="50"
-    value={size}
-    oninput={handleInput}
+    bind:value={size.current}
   />
-  <span id="brushSizeValue">{size}</span>
+  <span id="brushSizeValue">{size.current}</span>
 </div>
 ",
   "client/src/Canvas.svelte": "
@@ -18312,34 +18176,25 @@ draw();
 
 <script lang="ts">
 import './colorPicker.css';
-import {onMount} from 'svelte';
+import {createValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
 
 const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];
-const getCurrentColor = () =>
-  (settingsStore.getValue('brushColor') as string | undefined) ?? '#d81b60';
-
-let currentColor = $state(getCurrentColor());
-
-const updateActive = () => {
-currentColor = getCurrentColor();
-};
+const currentColor = createValue(
+'brushColor',
+settingsStore,
+) as {current: string | undefined};
 
 const setColor = (color: string) => {
-settingsStore.setValue('brushColor', color);
+currentColor.current = color;
 };
-
-onMount(() => {
-settingsStore.addValueListener('brushColor', updateActive);
-updateActive();
-});
 </script>
 
 <div id="colorPicker">
   {#each colors as color (color)}
     <button
       class="colorBtn"
-      class:active={currentColor === color}
+      class:active={currentColor.current === color}
       style={\`background: \${color}\`}
       onclick={() => setColor(color)}
       aria-label={\`Select \${color} brush\`}
@@ -18960,29 +18815,13 @@ loading = false;
 
 <script lang="ts">
 import './brushSize.css';
-import {onMount} from 'svelte';
+import {createValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
 
-const getBrushSize = () =>
-  (settingsStore.getValue('brushSize') as number | undefined) ?? 5;
-
-let size = $state(getBrushSize());
-
-const updateSize = () => {
-size = getBrushSize();
-};
-
-const handleInput = (event: Event) => {
-    const input = event.currentTarget as HTMLInputElement;
-    const nextSize = parseInt(input.value);
-  settingsStore.setValue('brushSize', nextSize);
-  size = nextSize;
-};
-
-onMount(() => {
-settingsStore.addValueListener('brushSize', updateSize);
-updateSize();
-});
+const size = createValue(
+'brushSize',
+settingsStore,
+) as {current: number | undefined};
 </script>
 
 <div id="brushSize">
@@ -18992,10 +18831,9 @@ updateSize();
     type="range"
     min="1"
     max="50"
-    value={size}
-    oninput={handleInput}
+    bind:value={size.current}
   />
-  <span id="brushSizeValue">{size}</span>
+  <span id="brushSizeValue">{size.current}</span>
 </div>
 ",
   "client/src/Canvas.svelte": "
@@ -19148,34 +18986,25 @@ draw();
 
 <script lang="ts">
 import './colorPicker.css';
-import {onMount} from 'svelte';
+import {createValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
 
 const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];
-const getCurrentColor = () =>
-  (settingsStore.getValue('brushColor') as string | undefined) ?? '#d81b60';
-
-let currentColor = $state(getCurrentColor());
-
-const updateActive = () => {
-currentColor = getCurrentColor();
-};
+const currentColor = createValue(
+'brushColor',
+settingsStore,
+) as {current: string | undefined};
 
 const setColor = (color: string) => {
-settingsStore.setValue('brushColor', color);
+currentColor.current = color;
 };
-
-onMount(() => {
-settingsStore.addValueListener('brushColor', updateActive);
-updateActive();
-});
 </script>
 
 <div id="colorPicker">
   {#each colors as color (color)}
     <button
       class="colorBtn"
-      class:active={currentColor === color}
+      class:active={currentColor.current === color}
       style={\`background: \${color}\`}
       onclick={() => setColor(color)}
       aria-label={\`Select \${color} brush\`}
@@ -19865,29 +19694,13 @@ loading = false;
 
 <script lang="ts">
 import './brushSize.css';
-import {onMount} from 'svelte';
+import {createValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
 
-const getBrushSize = () =>
-  (settingsStore.getValue('brushSize') as number | undefined) ?? 5;
-
-let size = $state(getBrushSize());
-
-const updateSize = () => {
-size = getBrushSize();
-};
-
-const handleInput = (event: Event) => {
-    const input = event.currentTarget as HTMLInputElement;
-    const nextSize = parseInt(input.value);
-  settingsStore.setValue('brushSize', nextSize);
-  size = nextSize;
-};
-
-onMount(() => {
-settingsStore.addValueListener('brushSize', updateSize);
-updateSize();
-});
+const size = createValue(
+'brushSize',
+settingsStore,
+) as {current: number | undefined};
 </script>
 
 <div id="brushSize">
@@ -19897,10 +19710,9 @@ updateSize();
     type="range"
     min="1"
     max="50"
-    value={size}
-    oninput={handleInput}
+    bind:value={size.current}
   />
-  <span id="brushSizeValue">{size}</span>
+  <span id="brushSizeValue">{size.current}</span>
 </div>
 ",
   "client/src/Canvas.svelte": "
@@ -20053,34 +19865,25 @@ draw();
 
 <script lang="ts">
 import './colorPicker.css';
-import {onMount} from 'svelte';
+import {createValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
 
 const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];
-const getCurrentColor = () =>
-  (settingsStore.getValue('brushColor') as string | undefined) ?? '#d81b60';
-
-let currentColor = $state(getCurrentColor());
-
-const updateActive = () => {
-currentColor = getCurrentColor();
-};
+const currentColor = createValue(
+'brushColor',
+settingsStore,
+) as {current: string | undefined};
 
 const setColor = (color: string) => {
-settingsStore.setValue('brushColor', color);
+currentColor.current = color;
 };
-
-onMount(() => {
-settingsStore.addValueListener('brushColor', updateActive);
-updateActive();
-});
 </script>
 
 <div id="colorPicker">
   {#each colors as color (color)}
     <button
       class="colorBtn"
-      class:active={currentColor === color}
+      class:active={currentColor.current === color}
       style={\`background: \${color}\`}
       onclick={() => setColor(color)}
       aria-label={\`Select \${color} brush\`}
@@ -20738,69 +20541,61 @@ loading = false;
 
 <script lang="ts">
 import './board.css';
-import {onMount} from 'svelte';
+import {createTable, createValues} from 'tinybase/ui-svelte';
 import Square from './Square.svelte';
 import {store} from './store';
 
-const getSquares = () => {
-const gameStatus =
-  (store.getValue('gameStatus') as string | undefined) ?? 'playing';
-const winningLine =
-  (store.getValue('winningLine') as string | undefined) ?? '';
-const currentPlayer =
-  (store.getValue('currentPlayer') as string | undefined) ?? 'X';
+const positions = Array.from({length: 9}, (_, i) => i.toString());
+
+const board = createTable(
+'board',
+store,
+) as {readonly current: Record<string, {value?: string}>};
+
+const gameState = createValues(
+store,
+) as {
+  readonly current: {
+    currentPlayer?: string;
+    gameStatus?: string;
+    winningLine?: string;
+  };
+};
+
+const getSquare = (position: string) => {
+const gameStatus = gameState.current.gameStatus ?? 'playing';
+const winningLine = gameState.current.winningLine ?? '';
 const winningPositions = new Set(
 winningLine ? winningLine.split(',') : [],
 );
-const disabled = gameStatus !== 'playing';
-
-return Array.from({length: 9}, (_, i) => {
-const position = i.toString();
-const value =
-  (store.getCell('board', position, 'value') as string | undefined) ?? '';
+const value = board.current[position]?.value ?? '';
 
 return {
-position,
 value,
-disabled: disabled || !!value,
+disabled: gameStatus !== 'playing' || !!value,
 winning: winningPositions.has(position),
-currentPlayer,
 };
-});
-};
-
-let squares = $state(getSquares());
-
-const updateBoard = () => {
-squares = getSquares();
 };
 
 const handleSquareClick = (position: string) => {
-const gameStatus =
-  (store.getValue('gameStatus') as string | undefined) ?? 'playing';
-const currentPlayer =
-  (store.getValue('currentPlayer') as string | undefined) ?? 'X';
-const value = store.getCell('board', position, 'value');
+const gameStatus = gameState.current.gameStatus ?? 'playing';
+const currentPlayer = gameState.current.currentPlayer ?? 'X';
+const value = board.current[position]?.value;
 
 if (gameStatus === 'playing' && !value && currentPlayer) {
 store.setCell('board', position, 'value', currentPlayer);
 }
 };
-
-onMount(() => {
-store.addValuesListener(updateBoard);
-store.addTableListener('board', updateBoard);
-updateBoard();
-});
 </script>
 
 <div id="board">
-  {#each squares as square (square.position)}
+  {#each positions as position (position)}
+    {@const square = getSquare(position)}
     <Square
       value={square.value}
       disabled={square.disabled}
       winning={square.winning}
-      handleClick={() => handleSquareClick(square.position)}
+      handleClick={() => handleSquareClick(position)}
     />
   {/each}
 </div>
@@ -20874,36 +20669,26 @@ store.addTableListener('board', checkGameState, true);
 
 <script lang="ts">
 import './gameStatus.css';
-import {onMount} from 'svelte';
+import {createValues} from 'tinybase/ui-svelte';
 import {store} from './store';
 
-const getStatus = () => ({
-gameStatus:
-  (store.getValue('gameStatus') as string | undefined) ?? 'playing',
-currentPlayer:
-  (store.getValue('currentPlayer') as string | undefined) ?? 'X',
-winner:
-  (store.getValue('winner') as string | undefined) ?? '',
-});
-
-let status = $state(getStatus());
-
-const updateStatus = () => {
-status = getStatus();
+const status = createValues(
+store,
+) as {
+  readonly current: {
+    currentPlayer?: string;
+    gameStatus?: string;
+    winner?: string;
+  };
 };
-
-onMount(() => {
-store.addValuesListener(updateStatus);
-updateStatus();
-});
 </script>
 
 <div id="gameStatus">
-  {#if status.gameStatus === 'playing'}
-    Player <span class="player">{status.currentPlayer}</span>'s turn
-  {:else if status.gameStatus === 'won'}
-    Player <span class="winner">{status.winner}</span> wins!
-  {:else if status.gameStatus === 'draw'}
+  {#if status.current.gameStatus === 'playing'}
+    Player <span class="player">{status.current.currentPlayer}</span>'s turn
+  {:else if status.current.gameStatus === 'won'}
+    Player <span class="winner">{status.current.winner}</span> wins!
+  {:else if status.current.gameStatus === 'draw'}
     It's a draw!
   {/if}
 </div>
@@ -21511,69 +21296,61 @@ loading = false;
 
 <script lang="ts">
 import './board.css';
-import {onMount} from 'svelte';
+import {createTable, createValues} from 'tinybase/ui-svelte';
 import Square from './Square.svelte';
 import {store} from './store';
 
-const getSquares = () => {
-const gameStatus =
-  (store.getValue('gameStatus') as string | undefined) ?? 'playing';
-const winningLine =
-  (store.getValue('winningLine') as string | undefined) ?? '';
-const currentPlayer =
-  (store.getValue('currentPlayer') as string | undefined) ?? 'X';
+const positions = Array.from({length: 9}, (_, i) => i.toString());
+
+const board = createTable(
+'board',
+store,
+) as {readonly current: Record<string, {value?: string}>};
+
+const gameState = createValues(
+store,
+) as {
+  readonly current: {
+    currentPlayer?: string;
+    gameStatus?: string;
+    winningLine?: string;
+  };
+};
+
+const getSquare = (position: string) => {
+const gameStatus = gameState.current.gameStatus ?? 'playing';
+const winningLine = gameState.current.winningLine ?? '';
 const winningPositions = new Set(
 winningLine ? winningLine.split(',') : [],
 );
-const disabled = gameStatus !== 'playing';
-
-return Array.from({length: 9}, (_, i) => {
-const position = i.toString();
-const value =
-  (store.getCell('board', position, 'value') as string | undefined) ?? '';
+const value = board.current[position]?.value ?? '';
 
 return {
-position,
 value,
-disabled: disabled || !!value,
+disabled: gameStatus !== 'playing' || !!value,
 winning: winningPositions.has(position),
-currentPlayer,
 };
-});
-};
-
-let squares = $state(getSquares());
-
-const updateBoard = () => {
-squares = getSquares();
 };
 
 const handleSquareClick = (position: string) => {
-const gameStatus =
-  (store.getValue('gameStatus') as string | undefined) ?? 'playing';
-const currentPlayer =
-  (store.getValue('currentPlayer') as string | undefined) ?? 'X';
-const value = store.getCell('board', position, 'value');
+const gameStatus = gameState.current.gameStatus ?? 'playing';
+const currentPlayer = gameState.current.currentPlayer ?? 'X';
+const value = board.current[position]?.value;
 
 if (gameStatus === 'playing' && !value && currentPlayer) {
 store.setCell('board', position, 'value', currentPlayer);
 }
 };
-
-onMount(() => {
-store.addValuesListener(updateBoard);
-store.addTableListener('board', updateBoard);
-updateBoard();
-});
 </script>
 
 <div id="board">
-  {#each squares as square (square.position)}
+  {#each positions as position (position)}
+    {@const square = getSquare(position)}
     <Square
       value={square.value}
       disabled={square.disabled}
       winning={square.winning}
-      handleClick={() => handleSquareClick(square.position)}
+      handleClick={() => handleSquareClick(position)}
     />
   {/each}
 </div>
@@ -21647,36 +21424,26 @@ store.addTableListener('board', checkGameState, true);
 
 <script lang="ts">
 import './gameStatus.css';
-import {onMount} from 'svelte';
+import {createValues} from 'tinybase/ui-svelte';
 import {store} from './store';
 
-const getStatus = () => ({
-gameStatus:
-  (store.getValue('gameStatus') as string | undefined) ?? 'playing',
-currentPlayer:
-  (store.getValue('currentPlayer') as string | undefined) ?? 'X',
-winner:
-  (store.getValue('winner') as string | undefined) ?? '',
-});
-
-let status = $state(getStatus());
-
-const updateStatus = () => {
-status = getStatus();
+const status = createValues(
+store,
+) as {
+  readonly current: {
+    currentPlayer?: string;
+    gameStatus?: string;
+    winner?: string;
+  };
 };
-
-onMount(() => {
-store.addValuesListener(updateStatus);
-updateStatus();
-});
 </script>
 
 <div id="gameStatus">
-  {#if status.gameStatus === 'playing'}
-    Player <span class="player">{status.currentPlayer}</span>'s turn
-  {:else if status.gameStatus === 'won'}
-    Player <span class="winner">{status.winner}</span> wins!
-  {:else if status.gameStatus === 'draw'}
+  {#if status.current.gameStatus === 'playing'}
+    Player <span class="player">{status.current.currentPlayer}</span>'s turn
+  {:else if status.current.gameStatus === 'won'}
+    Player <span class="winner">{status.current.winner}</span> wins!
+  {:else if status.current.gameStatus === 'draw'}
     It's a draw!
   {/if}
 </div>
@@ -22353,69 +22120,61 @@ loading = false;
 
 <script lang="ts">
 import './board.css';
-import {onMount} from 'svelte';
+import {createTable, createValues} from 'tinybase/ui-svelte';
 import Square from './Square.svelte';
 import {store} from './store';
 
-const getSquares = () => {
-const gameStatus =
-  (store.getValue('gameStatus') as string | undefined) ?? 'playing';
-const winningLine =
-  (store.getValue('winningLine') as string | undefined) ?? '';
-const currentPlayer =
-  (store.getValue('currentPlayer') as string | undefined) ?? 'X';
+const positions = Array.from({length: 9}, (_, i) => i.toString());
+
+const board = createTable(
+'board',
+store,
+) as {readonly current: Record<string, {value?: string}>};
+
+const gameState = createValues(
+store,
+) as {
+  readonly current: {
+    currentPlayer?: string;
+    gameStatus?: string;
+    winningLine?: string;
+  };
+};
+
+const getSquare = (position: string) => {
+const gameStatus = gameState.current.gameStatus ?? 'playing';
+const winningLine = gameState.current.winningLine ?? '';
 const winningPositions = new Set(
 winningLine ? winningLine.split(',') : [],
 );
-const disabled = gameStatus !== 'playing';
-
-return Array.from({length: 9}, (_, i) => {
-const position = i.toString();
-const value =
-  (store.getCell('board', position, 'value') as string | undefined) ?? '';
+const value = board.current[position]?.value ?? '';
 
 return {
-position,
 value,
-disabled: disabled || !!value,
+disabled: gameStatus !== 'playing' || !!value,
 winning: winningPositions.has(position),
-currentPlayer,
 };
-});
-};
-
-let squares = $state(getSquares());
-
-const updateBoard = () => {
-squares = getSquares();
 };
 
 const handleSquareClick = (position: string) => {
-const gameStatus =
-  (store.getValue('gameStatus') as string | undefined) ?? 'playing';
-const currentPlayer =
-  (store.getValue('currentPlayer') as string | undefined) ?? 'X';
-const value = store.getCell('board', position, 'value');
+const gameStatus = gameState.current.gameStatus ?? 'playing';
+const currentPlayer = gameState.current.currentPlayer ?? 'X';
+const value = board.current[position]?.value;
 
 if (gameStatus === 'playing' && !value && currentPlayer) {
 store.setCell('board', position, 'value', currentPlayer);
 }
 };
-
-onMount(() => {
-store.addValuesListener(updateBoard);
-store.addTableListener('board', updateBoard);
-updateBoard();
-});
 </script>
 
 <div id="board">
-  {#each squares as square (square.position)}
+  {#each positions as position (position)}
+    {@const square = getSquare(position)}
     <Square
       value={square.value}
       disabled={square.disabled}
       winning={square.winning}
-      handleClick={() => handleSquareClick(square.position)}
+      handleClick={() => handleSquareClick(position)}
     />
   {/each}
 </div>
@@ -22489,36 +22248,26 @@ store.addTableListener('board', checkGameState, true);
 
 <script lang="ts">
 import './gameStatus.css';
-import {onMount} from 'svelte';
+import {createValues} from 'tinybase/ui-svelte';
 import {store} from './store';
 
-const getStatus = () => ({
-gameStatus:
-  (store.getValue('gameStatus') as string | undefined) ?? 'playing',
-currentPlayer:
-  (store.getValue('currentPlayer') as string | undefined) ?? 'X',
-winner:
-  (store.getValue('winner') as string | undefined) ?? '',
-});
-
-let status = $state(getStatus());
-
-const updateStatus = () => {
-status = getStatus();
+const status = createValues(
+store,
+) as {
+  readonly current: {
+    currentPlayer?: string;
+    gameStatus?: string;
+    winner?: string;
+  };
 };
-
-onMount(() => {
-store.addValuesListener(updateStatus);
-updateStatus();
-});
 </script>
 
 <div id="gameStatus">
-  {#if status.gameStatus === 'playing'}
-    Player <span class="player">{status.currentPlayer}</span>'s turn
-  {:else if status.gameStatus === 'won'}
-    Player <span class="winner">{status.winner}</span> wins!
-  {:else if status.gameStatus === 'draw'}
+  {#if status.current.gameStatus === 'playing'}
+    Player <span class="player">{status.current.currentPlayer}</span>'s turn
+  {:else if status.current.gameStatus === 'won'}
+    Player <span class="winner">{status.current.winner}</span> wins!
+  {:else if status.current.gameStatus === 'draw'}
     It's a draw!
   {/if}
 </div>
@@ -23211,13 +22960,13 @@ input?.focus();
 <script lang="ts">
 import './button.css';
 import './todoItem.css';
-import {useRow} from 'tinybase/ui-svelte';
+import {createRow} from 'tinybase/ui-svelte';
 import {store} from './store';
   import type {TodoRow} from './store';
 
 let {rowId}: {rowId: string} = $props();
 
-const todo = useRow(
+const todo = createRow(
 'todos',
 () => rowId,
 store,
@@ -23249,11 +22998,11 @@ store.delRow('todos', rowId);
 
 <script lang="ts">
 import './todoList.css';
-import {useSortedRowIds} from 'tinybase/ui-svelte';
+import {createSortedRowIds} from 'tinybase/ui-svelte';
 import TodoItem from './TodoItem.svelte';
 import {store} from './store';
 
-const todoIds = useSortedRowIds(
+const todoIds = createSortedRowIds(
 'todos',
 undefined,
 false,
@@ -23906,13 +23655,13 @@ input?.focus();
 <script lang="ts">
 import './button.css';
 import './todoItem.css';
-import {useRow} from 'tinybase/ui-svelte';
+import {createRow} from 'tinybase/ui-svelte';
 import {store} from './store';
   import type {TodoRow} from './store';
 
 let {rowId}: {rowId: string} = $props();
 
-const todo = useRow(
+const todo = createRow(
 'todos',
 () => rowId,
 store,
@@ -23944,11 +23693,11 @@ store.delRow('todos', rowId);
 
 <script lang="ts">
 import './todoList.css';
-import {useSortedRowIds} from 'tinybase/ui-svelte';
+import {createSortedRowIds} from 'tinybase/ui-svelte';
 import TodoItem from './TodoItem.svelte';
 import {store} from './store';
 
-const todoIds = useSortedRowIds(
+const todoIds = createSortedRowIds(
 'todos',
 undefined,
 false,
@@ -24670,13 +24419,13 @@ input?.focus();
 <script lang="ts">
 import './button.css';
 import './todoItem.css';
-import {useRow} from 'tinybase/ui-svelte';
+import {createRow} from 'tinybase/ui-svelte';
 import {store} from './store';
   import type {TodoRow} from './store';
 
 let {rowId}: {rowId: string} = $props();
 
-const todo = useRow(
+const todo = createRow(
 'todos',
 () => rowId,
 store,
@@ -24708,11 +24457,11 @@ store.delRow('todos', rowId);
 
 <script lang="ts">
 import './todoList.css';
-import {useSortedRowIds} from 'tinybase/ui-svelte';
+import {createSortedRowIds} from 'tinybase/ui-svelte';
 import TodoItem from './TodoItem.svelte';
 import {store} from './store';
 
-const todoIds = useSortedRowIds(
+const todoIds = createSortedRowIds(
 'todos',
 undefined,
 false,

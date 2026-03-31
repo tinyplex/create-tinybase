@@ -3,7 +3,7 @@
 
 <script{{#if typescript}} lang="ts"{{/if}}>
 import './todoList.css';
-import {useSortedRowIds} from 'tinybase/ui-svelte';
+import {createSortedRowIds} from 'tinybase/ui-svelte';
 import TodoItem from './TodoItem.svelte';
 import {store} from './store';
 {{#if schemas}}
@@ -12,7 +12,7 @@ import {store} from './store';
   {{/if}}
 {{/if}}
 
-const todoIds = useSortedRowIds(
+const todoIds = createSortedRowIds(
 'todos',
 undefined,
 false,

@@ -3,32 +3,27 @@
 
 <script{{#if typescript}} lang="ts"{{/if}}>
 import './messages.css';
-import {onMount} from 'svelte';
+import {createSortedRowIds} from 'tinybase/ui-svelte';
 import Message from './Message.svelte';
 import {chatStore} from './chatStore';
-{{#if typescript}}import type {MessageRow} from './chatStore';{{/if}}
+{{#if schemas}}
+  {{#if typescript}}
+    import type {Store as TinyBaseStore} from 'tinybase';
+  {{/if}}
+{{/if}}
 
-const getMessages = () =>
-  chatStore.getSortedRowIds('messages', 'timestamp').map((id) => ({
-    id,
-    row:
-      {{#if typescript}}chatStore.getRow('messages', id) as MessageRow{{else}}chatStore.getRow('messages', id){{/if}},
-  }));
-
-let messages = $state(getMessages());
-
-const updateMessages = () => {
-messages = getMessages();
-};
-
-onMount(() => {
-chatStore.addTablesListener(updateMessages);
-updateMessages();
-});
+const messageIds = createSortedRowIds(
+'messages',
+'timestamp',
+false,
+0,
+undefined,
+{{#if schemas}}chatStore as unknown as TinyBaseStore{{else}}chatStore{{/if}},
+){{#if typescript}} as {readonly current: string[]}{{/if}};
 </script>
 
 <div id="messages">
-  {#each messages as message (message.id)}
-    <Message message={message.row} />
+  {#each messageIds.current as rowId (rowId)}
+    <Message {rowId} />
   {/each}
 </div>

@@ -4,33 +4,18 @@
 <script{{#if typescript}} lang="ts"{{/if}}>
 import './input.css';
 import './usernameInput.css';
-import {onMount} from 'svelte';
+import {createValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
-
-const getUsername = () =>
-  {{#if typescript}}(settingsStore.getValue('username') as string | undefined) ?? ''{{else}}settingsStore.getValue('username') ?? ''{{/if}};
-
-let username = $state(getUsername());
-
-const updateUsername = () => {
-username = getUsername();
-};
-
-const handleInput = (event{{#if typescript}}: Event{{/if}}) => {
+{{#if schemas}}
   {{#if typescript}}
-    const input = event.currentTarget as HTMLInputElement;
-    const nextUsername = input.value;
-  {{else}}
-    const nextUsername = event.currentTarget.value;
+    import type {Store as TinyBaseStore} from 'tinybase';
   {{/if}}
-  settingsStore.setValue('username', nextUsername);
-  username = nextUsername;
-};
+{{/if}}
 
-onMount(() => {
-settingsStore.addValueListener('username', updateUsername);
-updateUsername();
-});
+const username = createValue(
+'username',
+{{#if schemas}}settingsStore as unknown as TinyBaseStore{{else}}settingsStore{{/if}},
+){{#if typescript}} as {current: string | undefined}{{/if}};
 </script>
 
 <div id="usernameInput">
@@ -38,8 +23,7 @@ updateUsername();
   <input
     id="usernameInputField"
     type="text"
-    value={username}
+    bind:value={username.current}
     placeholder="Enter your name"
-    oninput={handleInput}
   />
 </div>

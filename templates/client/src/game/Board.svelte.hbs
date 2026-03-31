@@ -3,69 +3,66 @@
 
 <script{{#if typescript}} lang="ts"{{/if}}>
 import './board.css';
-import {onMount} from 'svelte';
+import {createTable, createValues} from 'tinybase/ui-svelte';
 import Square from './Square.svelte';
 import {store} from './store';
+{{#if schemas}}
+  {{#if typescript}}
+    import type {Store as TinyBaseStore} from 'tinybase';
+  {{/if}}
+{{/if}}
 
-const getSquares = () => {
-const gameStatus =
-  {{#if typescript}}(store.getValue('gameStatus') as string | undefined) ?? 'playing'{{else}}store.getValue('gameStatus') ?? 'playing'{{/if}};
-const winningLine =
-  {{#if typescript}}(store.getValue('winningLine') as string | undefined) ?? ''{{else}}store.getValue('winningLine') ?? ''{{/if}};
-const currentPlayer =
-  {{#if typescript}}(store.getValue('currentPlayer') as string | undefined) ?? 'X'{{else}}store.getValue('currentPlayer') ?? 'X'{{/if}};
+const positions = Array.from({length: 9}, (_, i) => i.toString());
+
+const board = createTable(
+'board',
+{{#if schemas}}store as unknown as TinyBaseStore{{else}}store{{/if}},
+){{#if typescript}} as {readonly current: Record<string, {value?: string}>}{{/if}};
+
+const gameState = createValues(
+{{#if schemas}}store as unknown as TinyBaseStore{{else}}store{{/if}},
+){{#if typescript}} as {
+  readonly current: {
+    currentPlayer?: string;
+    gameStatus?: string;
+    winningLine?: string;
+  };
+}{{/if}};
+
+const getSquare = (position{{#if typescript}}: string{{/if}}) => {
+const gameStatus = gameState.current.gameStatus ?? 'playing';
+const winningLine = gameState.current.winningLine ?? '';
 const winningPositions = new Set(
 winningLine ? winningLine.split(',') : [],
 );
-const disabled = gameStatus !== 'playing';
-
-return Array.from({length: 9}, (_, i) => {
-const position = i.toString();
-const value =
-  {{#if typescript}}(store.getCell('board', position, 'value') as string | undefined) ?? ''{{else}}store.getCell('board', position, 'value') ?? ''{{/if}};
+const value = board.current[position]?.value ?? '';
 
 return {
-position,
 value,
-disabled: disabled || !!value,
+disabled: gameStatus !== 'playing' || !!value,
 winning: winningPositions.has(position),
-currentPlayer,
 };
-});
-};
-
-let squares = $state(getSquares());
-
-const updateBoard = () => {
-squares = getSquares();
 };
 
 const handleSquareClick = (position{{#if typescript}}: string{{/if}}) => {
-const gameStatus =
-  {{#if typescript}}(store.getValue('gameStatus') as string | undefined) ?? 'playing'{{else}}store.getValue('gameStatus') ?? 'playing'{{/if}};
-const currentPlayer =
-  {{#if typescript}}(store.getValue('currentPlayer') as string | undefined) ?? 'X'{{else}}store.getValue('currentPlayer') ?? 'X'{{/if}};
-const value = store.getCell('board', position, 'value');
+const gameStatus = gameState.current.gameStatus ?? 'playing';
+const currentPlayer = gameState.current.currentPlayer ?? 'X';
+const value = board.current[position]?.value;
 
 if (gameStatus === 'playing' && !value && currentPlayer) {
 store.setCell('board', position, 'value', currentPlayer);
 }
 };
-
-onMount(() => {
-store.addValuesListener(updateBoard);
-store.addTableListener('board', updateBoard);
-updateBoard();
-});
 </script>
 
 <div id="board">
-  {#each squares as square (square.position)}
+  {#each positions as position (position)}
+    {@const square = getSquare(position)}
     <Square
       value={square.value}
       disabled={square.disabled}
       winning={square.winning}
-      handleClick={() => handleSquareClick(square.position)}
+      handleClick={() => handleSquareClick(position)}
     />
   {/each}
 </div>

@@ -6,12 +6,23 @@
 import './button.css';
 import './input.css';
 import './messageInput.css';
+import {createValue} from 'tinybase/ui-svelte';
 import {onMount} from 'svelte';
 import {chatStore} from './chatStore';
 import {settingsStore} from './settingsStore';
+{{#if schemas}}
+  {{#if typescript}}
+    import type {Store as TinyBaseStore} from 'tinybase';
+  {{/if}}
+{{/if}}
 
 let message = $state('');
 let input{{#if typescript}}: HTMLInputElement | undefined{{/if}};
+
+const username = createValue(
+'username',
+{{#if schemas}}settingsStore as unknown as TinyBaseStore{{else}}settingsStore{{/if}},
+){{#if typescript}} as {current: string | undefined}{{/if}};
 
 const sendMessage = () => {
 const text = message.trim();
@@ -19,11 +30,8 @@ if (!text) {
 return;
 }
 
-const username =
-  {{#if typescript}}(settingsStore.getValue('username') as string | undefined) ?? 'Anonymous'{{else}}settingsStore.getValue('username') ?? 'Anonymous'{{/if}};
-
 chatStore.addRow('messages', {
-username,
+username: username.current || 'Anonymous',
 text,
 timestamp: Date.now(),
 });

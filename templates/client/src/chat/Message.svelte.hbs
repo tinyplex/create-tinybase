@@ -2,16 +2,29 @@
 
 <script{{#if typescript}} lang="ts"{{/if}}>
 import './message.css';
-{{#if typescript}}import type {MessageRow} from './chatStore';{{/if}}
+import {createRow} from 'tinybase/ui-svelte';
+import {chatStore} from './chatStore';
+{{#if typescript}}
+  {{#if schemas}}
+    import type {Store as TinyBaseStore} from 'tinybase';
+  {{/if}}
+  import type {MessageRow} from './chatStore';
+{{/if}}
 
-let {message}{{#if typescript}}: {message: MessageRow}{{/if}} = $props();
+let {rowId}{{#if typescript}}: {rowId: string}{{/if}} = $props();
+
+const message = createRow(
+'messages',
+() => rowId,
+{{#if schemas}}chatStore as unknown as TinyBaseStore{{else}}chatStore{{/if}},
+){{#if typescript}} as {readonly current: MessageRow}{{/if}};
 
 const getTime = (timestamp{{#if typescript}}: number{{/if}}) =>
   new Date(timestamp).toLocaleTimeString();
 </script>
 
 <div class="message">
-  <span class="username">{message.username}:</span>
-  <span class="text">{message.text}</span>
-  <span class="time">{getTime(message.timestamp)}</span>
+  <span class="username">{message.current.username}:</span>
+  <span class="text">{message.current.text}</span>
+  <span class="time">{getTime(message.current.timestamp)}</span>
 </div>
