@@ -2,7 +2,7 @@
 
 <script{{#if typescript}} lang="ts"{{/if}}>
 import './message.css';
-import {createRow} from 'tinybase/ui-svelte';
+import {getRow} from 'tinybase/ui-svelte';
 import {chatStore} from './chatStore';
 {{#if typescript}}
   {{#if schemas}}
@@ -13,7 +13,7 @@ import {chatStore} from './chatStore';
 
 let {rowId}{{#if typescript}}: {rowId: string}{{/if}} = $props();
 
-const message = createRow(
+const message = getRow(
 'messages',
 () => rowId,
 {{#if schemas}}chatStore as unknown as TinyBaseStore{{else}}chatStore{{/if}},

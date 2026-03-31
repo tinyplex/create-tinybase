@@ -2,7 +2,7 @@
 
 <script{{#if typescript}} lang="ts"{{/if}}>
 import './gameStatus.css';
-import {createValues} from 'tinybase/ui-svelte';
+import {getValues} from 'tinybase/ui-svelte';
 import {store} from './store';
 {{#if schemas}}
   {{#if typescript}}
@@ -10,7 +10,7 @@ import {store} from './store';
   {{/if}}
 {{/if}}
 
-const status = createValues(
+const status = getValues(
 {{#if schemas}}store as unknown as TinyBaseStore{{else}}store{{/if}},
 ){{#if typescript}} as {
   readonly current: {

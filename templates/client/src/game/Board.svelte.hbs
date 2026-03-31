@@ -3,7 +3,7 @@
 
 <script{{#if typescript}} lang="ts"{{/if}}>
 import './board.css';
-import {createTable, createValues} from 'tinybase/ui-svelte';
+import {getTable, getValues} from 'tinybase/ui-svelte';
 import Square from './Square.svelte';
 import {store} from './store';
 {{#if schemas}}
@@ -14,12 +14,12 @@ import {store} from './store';
 
 const positions = Array.from({length: 9}, (_, i) => i.toString());
 
-const board = createTable(
+const board = getTable(
 'board',
 {{#if schemas}}store as unknown as TinyBaseStore{{else}}store{{/if}},
 ){{#if typescript}} as {readonly current: Record<string, {value?: string}>}{{/if}};
 
-const gameState = createValues(
+const gameState = getValues(
 {{#if schemas}}store as unknown as TinyBaseStore{{else}}store{{/if}},
 ){{#if typescript}} as {
   readonly current: {

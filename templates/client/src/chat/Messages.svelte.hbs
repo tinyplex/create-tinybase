@@ -3,7 +3,7 @@
 
 <script{{#if typescript}} lang="ts"{{/if}}>
 import './messages.css';
-import {createSortedRowIds} from 'tinybase/ui-svelte';
+import {getSortedRowIds} from 'tinybase/ui-svelte';
 import Message from './Message.svelte';
 import {chatStore} from './chatStore';
 {{#if schemas}}
@@ -12,7 +12,7 @@ import {chatStore} from './chatStore';
   {{/if}}
 {{/if}}
 
-const messageIds = createSortedRowIds(
+const messageIds = getSortedRowIds(
 'messages',
 'timestamp',
 false,

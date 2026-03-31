@@ -4,7 +4,7 @@
 <script{{#if typescript}} lang="ts"{{/if}}>
 import './button.css';
 import './todoItem.css';
-import {createRow} from 'tinybase/ui-svelte';
+import {getRow} from 'tinybase/ui-svelte';
 import {store} from './store';
 {{#if typescript}}
   {{#if schemas}}
@@ -15,7 +15,7 @@ import {store} from './store';
 
 let {rowId}{{#if typescript}}: {rowId: string}{{/if}} = $props();
 
-const todo = createRow(
+const todo = getRow(
 'todos',
 () => rowId,
 {{#if schemas}}store as unknown as TinyBaseStore{{else}}store{{/if}},

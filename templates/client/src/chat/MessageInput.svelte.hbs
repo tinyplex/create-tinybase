@@ -6,7 +6,7 @@
 import './button.css';
 import './input.css';
 import './messageInput.css';
-import {createValue} from 'tinybase/ui-svelte';
+import {getValue} from 'tinybase/ui-svelte';
 import {onMount} from 'svelte';
 import {chatStore} from './chatStore';
 import {settingsStore} from './settingsStore';
@@ -19,7 +19,7 @@ import {settingsStore} from './settingsStore';
 let message = $state('');
 let input{{#if typescript}}: HTMLInputElement | undefined{{/if}};
 
-const username = createValue(
+const username = getValue(
 'username',
 {{#if schemas}}settingsStore as unknown as TinyBaseStore{{else}}settingsStore{{/if}},
 ){{#if typescript}} as {current: string | undefined}{{/if}};

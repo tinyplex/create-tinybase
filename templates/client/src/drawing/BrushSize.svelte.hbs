@@ -2,7 +2,7 @@
 
 <script{{#if typescript}} lang="ts"{{/if}}>
 import './brushSize.css';
-import {createValue} from 'tinybase/ui-svelte';
+import {getValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
 {{#if schemas}}
   {{#if typescript}}
@@ -10,7 +10,7 @@ import {settingsStore} from './settingsStore';
   {{/if}}
 {{/if}}
 
-const size = createValue(
+const size = getValue(
 'brushSize',
 {{#if schemas}}settingsStore as unknown as TinyBaseStore{{else}}settingsStore{{/if}},
 ){{#if typescript}} as {current: number | undefined}{{/if}};

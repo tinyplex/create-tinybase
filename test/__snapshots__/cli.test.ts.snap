@@ -269,7 +269,7 @@ with the store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
+    "vite": "^8.0.3",
     "@vitejs/plugin-react": "^6.0.1"
   },
   "dependencies": {
@@ -993,9 +993,9 @@ with the store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
+    "vite": "^8.0.3",
     "@vitejs/plugin-react": "^6.0.1",
-    "vite-plugin-static-copy": "^3.3.0"
+    "vite-plugin-static-copy": "^4.0.0"
   },
   "dependencies": {
     "tinybase": "^8.0.2",
@@ -1817,7 +1817,7 @@ with the store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
+    "vite": "^8.0.3",
     "@vitejs/plugin-react": "^6.0.1"
   },
   "dependencies": {
@@ -2582,7 +2582,7 @@ with the store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
+    "vite": "^8.0.3",
     "@vitejs/plugin-react": "^6.0.1"
   },
   "dependencies": {
@@ -3285,7 +3285,7 @@ with the store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
+    "vite": "^8.0.3",
     "@vitejs/plugin-react": "^6.0.1"
   },
   "dependencies": {
@@ -4010,9 +4010,9 @@ The \`server\` directory contains your Cloudflare Durable Objects WebSocket serv
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
+    "vite": "^8.0.3",
     "@vitejs/plugin-react": "^6.0.1",
-    "vite-plugin-static-copy": "^3.3.0"
+    "vite-plugin-static-copy": "^4.0.0"
   },
   "dependencies": {
     "tinybase": "^8.0.2",
@@ -4581,8 +4581,8 @@ export default {
     "tinybase": "^8.0.2"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260317.1",
-    "wrangler": "^4.75.0"
+    "@cloudflare/workers-types": "^4.20260329.1",
+    "wrangler": "^4.78.0"
   }
 }
 ",
@@ -4868,9 +4868,9 @@ stays synchronized with the underlying TinyBase store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
+    "vite": "^8.0.3",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "svelte": "^5.54.0"
+    "svelte": "^5.55.1"
   },
   "dependencies": {
     "tinybase": "beta"
@@ -4957,12 +4957,12 @@ import './loading.css';
 
 <script>
 import './message.css';
-import {createRow} from 'tinybase/ui-svelte';
+import {getRow} from 'tinybase/ui-svelte';
 import {chatStore} from './chatStore';
 
 let {rowId} = $props();
 
-const message = createRow(
+const message = getRow(
 'messages',
 () => rowId,
 chatStore,
@@ -4986,7 +4986,7 @@ const getTime = (timestamp) =>
 import './button.css';
 import './input.css';
 import './messageInput.css';
-import {createValue} from 'tinybase/ui-svelte';
+import {getValue} from 'tinybase/ui-svelte';
 import {onMount} from 'svelte';
 import {chatStore} from './chatStore';
 import {settingsStore} from './settingsStore';
@@ -4994,7 +4994,7 @@ import {settingsStore} from './settingsStore';
 let message = $state('');
 let input;
 
-const username = createValue(
+const username = getValue(
 'username',
 settingsStore,
 );
@@ -5040,11 +5040,11 @@ input?.focus();
 
 <script>
 import './messages.css';
-import {createSortedRowIds} from 'tinybase/ui-svelte';
+import {getSortedRowIds} from 'tinybase/ui-svelte';
 import Message from './Message.svelte';
 import {chatStore} from './chatStore';
 
-const messageIds = createSortedRowIds(
+const messageIds = getSortedRowIds(
 'messages',
 'timestamp',
 false,
@@ -5066,10 +5066,10 @@ chatStore,
 <script>
 import './input.css';
 import './usernameInput.css';
-import {createValue} from 'tinybase/ui-svelte';
+import {getValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
 
-const username = createValue(
+const username = getValue(
 'username',
 settingsStore,
 );
@@ -5553,9 +5553,9 @@ stays synchronized with the underlying TinyBase store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
+    "vite": "^8.0.3",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "svelte": "^5.54.0"
+    "svelte": "^5.55.1"
   },
   "dependencies": {
     "tinybase": "beta"
@@ -5631,10 +5631,10 @@ loading = false;
 
 <script>
 import './brushSize.css';
-import {createValue} from 'tinybase/ui-svelte';
+import {getValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
 
-const size = createValue(
+const size = getValue(
 'brushSize',
 settingsStore,
 );
@@ -5802,11 +5802,11 @@ draw();
 
 <script>
 import './colorPicker.css';
-import {createValue} from 'tinybase/ui-svelte';
+import {getValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
 
 const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];
-const currentColor = createValue(
+const currentColor = getValue(
 'brushColor',
 settingsStore,
 );
@@ -6294,9 +6294,9 @@ stays synchronized with the underlying TinyBase store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
+    "vite": "^8.0.3",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "svelte": "^5.54.0"
+    "svelte": "^5.55.1"
   },
   "dependencies": {
     "tinybase": "beta"
@@ -6368,18 +6368,18 @@ loading = false;
 
 <script>
 import './board.css';
-import {createTable, createValues} from 'tinybase/ui-svelte';
+import {getTable, getValues} from 'tinybase/ui-svelte';
 import Square from './Square.svelte';
 import {store} from './store';
 
 const positions = Array.from({length: 9}, (_, i) => i.toString());
 
-const board = createTable(
+const board = getTable(
 'board',
 store,
 );
 
-const gameState = createValues(
+const gameState = getValues(
 store,
 );
 
@@ -6490,10 +6490,10 @@ store.addTableListener('board', checkGameState, true);
 
 <script>
 import './gameStatus.css';
-import {createValues} from 'tinybase/ui-svelte';
+import {getValues} from 'tinybase/ui-svelte';
 import {store} from './store';
 
-const status = createValues(
+const status = getValues(
 store,
 );
 </script>
@@ -6968,9 +6968,9 @@ stays synchronized with the underlying TinyBase store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
+    "vite": "^8.0.3",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "svelte": "^5.54.0"
+    "svelte": "^5.55.1"
   },
   "dependencies": {
     "tinybase": "beta"
@@ -7100,12 +7100,12 @@ input?.focus();
 <script>
 import './button.css';
 import './todoItem.css';
-import {createRow} from 'tinybase/ui-svelte';
+import {getRow} from 'tinybase/ui-svelte';
 import {store} from './store';
 
 let {rowId} = $props();
 
-const todo = createRow(
+const todo = getRow(
 'todos',
 () => rowId,
 store,
@@ -7136,11 +7136,11 @@ store.delRow('todos', rowId);
 
 <script>
 import './todoList.css';
-import {createSortedRowIds} from 'tinybase/ui-svelte';
+import {getSortedRowIds} from 'tinybase/ui-svelte';
 import TodoItem from './TodoItem.svelte';
 import {store} from './store';
 
-const todoIds = createSortedRowIds(
+const todoIds = getSortedRowIds(
 'todos',
 undefined,
 false,
@@ -7585,7 +7585,7 @@ Your data is automatically saved and restored when you reload the page.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0"
+    "vite": "^8.0.3"
   },
   "dependencies": {
     "tinybase": "^8.0.2"
@@ -8239,7 +8239,7 @@ Your data is automatically saved and restored when you reload the page.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0"
+    "vite": "^8.0.3"
   },
   "dependencies": {
     "tinybase": "^8.0.2"
@@ -8929,7 +8929,7 @@ The app uses **TinyBase** to manage application state in a reactive data store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0"
+    "vite": "^8.0.3"
   },
   "dependencies": {
     "tinybase": "^8.0.2"
@@ -9612,7 +9612,7 @@ Your data is automatically saved and restored when you reload the page.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0"
+    "vite": "^8.0.3"
   },
   "dependencies": {
     "tinybase": "^8.0.2"
@@ -10231,7 +10231,7 @@ Your data is automatically saved and restored when you reload the page.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0"
+    "vite": "^8.0.3"
   },
   "dependencies": {
     "tinybase": "^8.0.2"
@@ -10841,8 +10841,8 @@ with the store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
-    "typescript": "^5.9.3",
+    "vite": "^8.0.3",
+    "typescript": "^6.0.2",
     "@types/node": "^25.5.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
@@ -11662,8 +11662,8 @@ The \`server\` directory contains your Node.js WebSocket server.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
-    "typescript": "^5.9.3",
+    "vite": "^8.0.3",
+    "typescript": "^6.0.2",
     "@types/node": "^25.5.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
@@ -12227,11 +12227,11 @@ console.log(\`WebSocket server running on ws://localhost:\${PORT}\`);
   },
   "dependencies": {
     "tinybase": "^8.0.2",
-    "ws": "^8.19.0"
+    "ws": "^8.20.0"
   },
   "devDependencies": {
     "@types/ws": "^8.18.1",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.2",
     "tsx": "^4.21.0"
   }
 }
@@ -12508,8 +12508,8 @@ with the store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
-    "typescript": "^5.9.3",
+    "vite": "^8.0.3",
+    "typescript": "^6.0.2",
     "@types/node": "^25.5.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
@@ -13322,8 +13322,8 @@ with the store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
-    "typescript": "^5.9.3",
+    "vite": "^8.0.3",
+    "typescript": "^6.0.2",
     "@types/node": "^25.5.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
@@ -14072,8 +14072,8 @@ with the store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
-    "typescript": "^5.9.3",
+    "vite": "^8.0.3",
+    "typescript": "^6.0.2",
     "@types/node": "^25.5.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
@@ -14803,8 +14803,8 @@ with the store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
-    "typescript": "^5.9.3",
+    "vite": "^8.0.3",
+    "typescript": "^6.0.2",
     "@types/node": "^25.5.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
@@ -15551,13 +15551,13 @@ stays synchronized with the underlying TinyBase store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
-    "typescript": "^5.9.3",
+    "vite": "^8.0.3",
+    "typescript": "^6.0.2",
     "@types/node": "^25.5.0",
     "@tsconfig/svelte": "^5.0.8",
-    "svelte-check": "^4.4.5",
+    "svelte-check": "^4.4.6",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "svelte": "^5.54.0"
+    "svelte": "^5.55.1"
   },
   "dependencies": {
     "tinybase": "beta"
@@ -15645,13 +15645,13 @@ import './loading.css';
 
 <script lang="ts">
 import './message.css';
-import {createRow} from 'tinybase/ui-svelte';
+import {getRow} from 'tinybase/ui-svelte';
 import {chatStore} from './chatStore';
   import type {MessageRow} from './chatStore';
 
 let {rowId}: {rowId: string} = $props();
 
-const message = createRow(
+const message = getRow(
 'messages',
 () => rowId,
 chatStore,
@@ -15675,7 +15675,7 @@ const getTime = (timestamp: number) =>
 import './button.css';
 import './input.css';
 import './messageInput.css';
-import {createValue} from 'tinybase/ui-svelte';
+import {getValue} from 'tinybase/ui-svelte';
 import {onMount} from 'svelte';
 import {chatStore} from './chatStore';
 import {settingsStore} from './settingsStore';
@@ -15683,7 +15683,7 @@ import {settingsStore} from './settingsStore';
 let message = $state('');
 let input: HTMLInputElement | undefined;
 
-const username = createValue(
+const username = getValue(
 'username',
 settingsStore,
 ) as {current: string | undefined};
@@ -15729,11 +15729,11 @@ input?.focus();
 
 <script lang="ts">
 import './messages.css';
-import {createSortedRowIds} from 'tinybase/ui-svelte';
+import {getSortedRowIds} from 'tinybase/ui-svelte';
 import Message from './Message.svelte';
 import {chatStore} from './chatStore';
 
-const messageIds = createSortedRowIds(
+const messageIds = getSortedRowIds(
 'messages',
 'timestamp',
 false,
@@ -15755,10 +15755,10 @@ chatStore,
 <script lang="ts">
 import './input.css';
 import './usernameInput.css';
-import {createValue} from 'tinybase/ui-svelte';
+import {getValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
 
-const username = createValue(
+const username = getValue(
 'username',
 settingsStore,
 ) as {current: string | undefined};
@@ -16300,13 +16300,13 @@ stays synchronized with the underlying TinyBase store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
-    "typescript": "^5.9.3",
+    "vite": "^8.0.3",
+    "typescript": "^6.0.2",
     "@types/node": "^25.5.0",
     "@tsconfig/svelte": "^5.0.8",
-    "svelte-check": "^4.4.5",
+    "svelte-check": "^4.4.6",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "svelte": "^5.54.0"
+    "svelte": "^5.55.1"
   },
   "dependencies": {
     "tinybase": "beta",
@@ -16399,13 +16399,13 @@ import './loading.css';
 
 <script lang="ts">
 import './message.css';
-import {createRow} from 'tinybase/ui-svelte';
+import {getRow} from 'tinybase/ui-svelte';
 import {chatStore} from './chatStore';
   import type {MessageRow} from './chatStore';
 
 let {rowId}: {rowId: string} = $props();
 
-const message = createRow(
+const message = getRow(
 'messages',
 () => rowId,
 chatStore,
@@ -16429,7 +16429,7 @@ const getTime = (timestamp: number) =>
 import './button.css';
 import './input.css';
 import './messageInput.css';
-import {createValue} from 'tinybase/ui-svelte';
+import {getValue} from 'tinybase/ui-svelte';
 import {onMount} from 'svelte';
 import {chatStore} from './chatStore';
 import {settingsStore} from './settingsStore';
@@ -16437,7 +16437,7 @@ import {settingsStore} from './settingsStore';
 let message = $state('');
 let input: HTMLInputElement | undefined;
 
-const username = createValue(
+const username = getValue(
 'username',
 settingsStore,
 ) as {current: string | undefined};
@@ -16483,11 +16483,11 @@ input?.focus();
 
 <script lang="ts">
 import './messages.css';
-import {createSortedRowIds} from 'tinybase/ui-svelte';
+import {getSortedRowIds} from 'tinybase/ui-svelte';
 import Message from './Message.svelte';
 import {chatStore} from './chatStore';
 
-const messageIds = createSortedRowIds(
+const messageIds = getSortedRowIds(
 'messages',
 'timestamp',
 false,
@@ -16509,10 +16509,10 @@ chatStore,
 <script lang="ts">
 import './input.css';
 import './usernameInput.css';
-import {createValue} from 'tinybase/ui-svelte';
+import {getValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
 
-const username = createValue(
+const username = getValue(
 'username',
 settingsStore,
 ) as {current: string | undefined};
@@ -17068,14 +17068,14 @@ stays synchronized with the underlying TinyBase store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
-    "typescript": "^5.9.3",
+    "vite": "^8.0.3",
+    "typescript": "^6.0.2",
     "@types/node": "^25.5.0",
     "@tsconfig/svelte": "^5.0.8",
-    "svelte-check": "^4.4.5",
+    "svelte-check": "^4.4.6",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "svelte": "^5.54.0",
-    "vite-plugin-static-copy": "^3.3.0"
+    "svelte": "^5.55.1",
+    "vite-plugin-static-copy": "^4.0.0"
   },
   "dependencies": {
     "tinybase": "beta",
@@ -17222,13 +17222,13 @@ import './loading.css';
 
 <script lang="ts">
 import './message.css';
-import {createRow} from 'tinybase/ui-svelte';
+import {getRow} from 'tinybase/ui-svelte';
 import {chatStore} from './chatStore';
   import type {MessageRow} from './chatStore';
 
 let {rowId}: {rowId: string} = $props();
 
-const message = createRow(
+const message = getRow(
 'messages',
 () => rowId,
 chatStore,
@@ -17252,7 +17252,7 @@ const getTime = (timestamp: number) =>
 import './button.css';
 import './input.css';
 import './messageInput.css';
-import {createValue} from 'tinybase/ui-svelte';
+import {getValue} from 'tinybase/ui-svelte';
 import {onMount} from 'svelte';
 import {chatStore} from './chatStore';
 import {settingsStore} from './settingsStore';
@@ -17260,7 +17260,7 @@ import {settingsStore} from './settingsStore';
 let message = $state('');
 let input: HTMLInputElement | undefined;
 
-const username = createValue(
+const username = getValue(
 'username',
 settingsStore,
 ) as {current: string | undefined};
@@ -17306,11 +17306,11 @@ input?.focus();
 
 <script lang="ts">
 import './messages.css';
-import {createSortedRowIds} from 'tinybase/ui-svelte';
+import {getSortedRowIds} from 'tinybase/ui-svelte';
 import Message from './Message.svelte';
 import {chatStore} from './chatStore';
 
-const messageIds = createSortedRowIds(
+const messageIds = getSortedRowIds(
 'messages',
 'timestamp',
 false,
@@ -17332,10 +17332,10 @@ chatStore,
 <script lang="ts">
 import './input.css';
 import './usernameInput.css';
-import {createValue} from 'tinybase/ui-svelte';
+import {getValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
 
-const username = createValue(
+const username = getValue(
 'username',
 settingsStore,
 ) as {current: string | undefined};
@@ -17922,13 +17922,13 @@ stays synchronized with the underlying TinyBase store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
-    "typescript": "^5.9.3",
+    "vite": "^8.0.3",
+    "typescript": "^6.0.2",
     "@types/node": "^25.5.0",
     "@tsconfig/svelte": "^5.0.8",
-    "svelte-check": "^4.4.5",
+    "svelte-check": "^4.4.6",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "svelte": "^5.54.0"
+    "svelte": "^5.55.1"
   },
   "dependencies": {
     "tinybase": "beta"
@@ -18005,10 +18005,10 @@ loading = false;
 
 <script lang="ts">
 import './brushSize.css';
-import {createValue} from 'tinybase/ui-svelte';
+import {getValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
 
-const size = createValue(
+const size = getValue(
 'brushSize',
 settingsStore,
 ) as {current: number | undefined};
@@ -18176,11 +18176,11 @@ draw();
 
 <script lang="ts">
 import './colorPicker.css';
-import {createValue} from 'tinybase/ui-svelte';
+import {getValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
 
 const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];
-const currentColor = createValue(
+const currentColor = getValue(
 'brushColor',
 settingsStore,
 ) as {current: string | undefined};
@@ -18727,13 +18727,13 @@ stays synchronized with the underlying TinyBase store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
-    "typescript": "^5.9.3",
+    "vite": "^8.0.3",
+    "typescript": "^6.0.2",
     "@types/node": "^25.5.0",
     "@tsconfig/svelte": "^5.0.8",
-    "svelte-check": "^4.4.5",
+    "svelte-check": "^4.4.6",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "svelte": "^5.54.0"
+    "svelte": "^5.55.1"
   },
   "dependencies": {
     "tinybase": "beta",
@@ -18815,10 +18815,10 @@ loading = false;
 
 <script lang="ts">
 import './brushSize.css';
-import {createValue} from 'tinybase/ui-svelte';
+import {getValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
 
-const size = createValue(
+const size = getValue(
 'brushSize',
 settingsStore,
 ) as {current: number | undefined};
@@ -18986,11 +18986,11 @@ draw();
 
 <script lang="ts">
 import './colorPicker.css';
-import {createValue} from 'tinybase/ui-svelte';
+import {getValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
 
 const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];
-const currentColor = createValue(
+const currentColor = getValue(
 'brushColor',
 settingsStore,
 ) as {current: string | undefined};
@@ -19551,14 +19551,14 @@ stays synchronized with the underlying TinyBase store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
-    "typescript": "^5.9.3",
+    "vite": "^8.0.3",
+    "typescript": "^6.0.2",
     "@types/node": "^25.5.0",
     "@tsconfig/svelte": "^5.0.8",
-    "svelte-check": "^4.4.5",
+    "svelte-check": "^4.4.6",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "svelte": "^5.54.0",
-    "vite-plugin-static-copy": "^3.3.0"
+    "svelte": "^5.55.1",
+    "vite-plugin-static-copy": "^4.0.0"
   },
   "dependencies": {
     "tinybase": "beta",
@@ -19694,10 +19694,10 @@ loading = false;
 
 <script lang="ts">
 import './brushSize.css';
-import {createValue} from 'tinybase/ui-svelte';
+import {getValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
 
-const size = createValue(
+const size = getValue(
 'brushSize',
 settingsStore,
 ) as {current: number | undefined};
@@ -19865,11 +19865,11 @@ draw();
 
 <script lang="ts">
 import './colorPicker.css';
-import {createValue} from 'tinybase/ui-svelte';
+import {getValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
 
 const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];
-const currentColor = createValue(
+const currentColor = getValue(
 'brushColor',
 settingsStore,
 ) as {current: string | undefined};
@@ -20462,13 +20462,13 @@ stays synchronized with the underlying TinyBase store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
-    "typescript": "^5.9.3",
+    "vite": "^8.0.3",
+    "typescript": "^6.0.2",
     "@types/node": "^25.5.0",
     "@tsconfig/svelte": "^5.0.8",
-    "svelte-check": "^4.4.5",
+    "svelte-check": "^4.4.6",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "svelte": "^5.54.0"
+    "svelte": "^5.55.1"
   },
   "dependencies": {
     "tinybase": "beta"
@@ -20541,18 +20541,18 @@ loading = false;
 
 <script lang="ts">
 import './board.css';
-import {createTable, createValues} from 'tinybase/ui-svelte';
+import {getTable, getValues} from 'tinybase/ui-svelte';
 import Square from './Square.svelte';
 import {store} from './store';
 
 const positions = Array.from({length: 9}, (_, i) => i.toString());
 
-const board = createTable(
+const board = getTable(
 'board',
 store,
 ) as {readonly current: Record<string, {value?: string}>};
 
-const gameState = createValues(
+const gameState = getValues(
 store,
 ) as {
   readonly current: {
@@ -20669,10 +20669,10 @@ store.addTableListener('board', checkGameState, true);
 
 <script lang="ts">
 import './gameStatus.css';
-import {createValues} from 'tinybase/ui-svelte';
+import {getValues} from 'tinybase/ui-svelte';
 import {store} from './store';
 
-const status = createValues(
+const status = getValues(
 store,
 ) as {
   readonly current: {
@@ -21212,13 +21212,13 @@ stays synchronized with the underlying TinyBase store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
-    "typescript": "^5.9.3",
+    "vite": "^8.0.3",
+    "typescript": "^6.0.2",
     "@types/node": "^25.5.0",
     "@tsconfig/svelte": "^5.0.8",
-    "svelte-check": "^4.4.5",
+    "svelte-check": "^4.4.6",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "svelte": "^5.54.0"
+    "svelte": "^5.55.1"
   },
   "dependencies": {
     "tinybase": "beta",
@@ -21296,18 +21296,18 @@ loading = false;
 
 <script lang="ts">
 import './board.css';
-import {createTable, createValues} from 'tinybase/ui-svelte';
+import {getTable, getValues} from 'tinybase/ui-svelte';
 import Square from './Square.svelte';
 import {store} from './store';
 
 const positions = Array.from({length: 9}, (_, i) => i.toString());
 
-const board = createTable(
+const board = getTable(
 'board',
 store,
 ) as {readonly current: Record<string, {value?: string}>};
 
-const gameState = createValues(
+const gameState = getValues(
 store,
 ) as {
   readonly current: {
@@ -21424,10 +21424,10 @@ store.addTableListener('board', checkGameState, true);
 
 <script lang="ts">
 import './gameStatus.css';
-import {createValues} from 'tinybase/ui-svelte';
+import {getValues} from 'tinybase/ui-svelte';
 import {store} from './store';
 
-const status = createValues(
+const status = getValues(
 store,
 ) as {
   readonly current: {
@@ -21981,14 +21981,14 @@ stays synchronized with the underlying TinyBase store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
-    "typescript": "^5.9.3",
+    "vite": "^8.0.3",
+    "typescript": "^6.0.2",
     "@types/node": "^25.5.0",
     "@tsconfig/svelte": "^5.0.8",
-    "svelte-check": "^4.4.5",
+    "svelte-check": "^4.4.6",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "svelte": "^5.54.0",
-    "vite-plugin-static-copy": "^3.3.0"
+    "svelte": "^5.55.1",
+    "vite-plugin-static-copy": "^4.0.0"
   },
   "dependencies": {
     "tinybase": "beta",
@@ -22120,18 +22120,18 @@ loading = false;
 
 <script lang="ts">
 import './board.css';
-import {createTable, createValues} from 'tinybase/ui-svelte';
+import {getTable, getValues} from 'tinybase/ui-svelte';
 import Square from './Square.svelte';
 import {store} from './store';
 
 const positions = Array.from({length: 9}, (_, i) => i.toString());
 
-const board = createTable(
+const board = getTable(
 'board',
 store,
 ) as {readonly current: Record<string, {value?: string}>};
 
-const gameState = createValues(
+const gameState = getValues(
 store,
 ) as {
   readonly current: {
@@ -22248,10 +22248,10 @@ store.addTableListener('board', checkGameState, true);
 
 <script lang="ts">
 import './gameStatus.css';
-import {createValues} from 'tinybase/ui-svelte';
+import {getValues} from 'tinybase/ui-svelte';
 import {store} from './store';
 
-const status = createValues(
+const status = getValues(
 store,
 ) as {
   readonly current: {
@@ -22823,13 +22823,13 @@ stays synchronized with the underlying TinyBase store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
-    "typescript": "^5.9.3",
+    "vite": "^8.0.3",
+    "typescript": "^6.0.2",
     "@types/node": "^25.5.0",
     "@tsconfig/svelte": "^5.0.8",
-    "svelte-check": "^4.4.5",
+    "svelte-check": "^4.4.6",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "svelte": "^5.54.0"
+    "svelte": "^5.55.1"
   },
   "dependencies": {
     "tinybase": "beta"
@@ -22960,13 +22960,13 @@ input?.focus();
 <script lang="ts">
 import './button.css';
 import './todoItem.css';
-import {createRow} from 'tinybase/ui-svelte';
+import {getRow} from 'tinybase/ui-svelte';
 import {store} from './store';
   import type {TodoRow} from './store';
 
 let {rowId}: {rowId: string} = $props();
 
-const todo = createRow(
+const todo = getRow(
 'todos',
 () => rowId,
 store,
@@ -22998,11 +22998,11 @@ store.delRow('todos', rowId);
 
 <script lang="ts">
 import './todoList.css';
-import {createSortedRowIds} from 'tinybase/ui-svelte';
+import {getSortedRowIds} from 'tinybase/ui-svelte';
 import TodoItem from './TodoItem.svelte';
 import {store} from './store';
 
-const todoIds = createSortedRowIds(
+const todoIds = getSortedRowIds(
 'todos',
 undefined,
 false,
@@ -23513,13 +23513,13 @@ stays synchronized with the underlying TinyBase store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
-    "typescript": "^5.9.3",
+    "vite": "^8.0.3",
+    "typescript": "^6.0.2",
     "@types/node": "^25.5.0",
     "@tsconfig/svelte": "^5.0.8",
-    "svelte-check": "^4.4.5",
+    "svelte-check": "^4.4.6",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "svelte": "^5.54.0"
+    "svelte": "^5.55.1"
   },
   "dependencies": {
     "tinybase": "beta",
@@ -23655,13 +23655,13 @@ input?.focus();
 <script lang="ts">
 import './button.css';
 import './todoItem.css';
-import {createRow} from 'tinybase/ui-svelte';
+import {getRow} from 'tinybase/ui-svelte';
 import {store} from './store';
   import type {TodoRow} from './store';
 
 let {rowId}: {rowId: string} = $props();
 
-const todo = createRow(
+const todo = getRow(
 'todos',
 () => rowId,
 store,
@@ -23693,11 +23693,11 @@ store.delRow('todos', rowId);
 
 <script lang="ts">
 import './todoList.css';
-import {createSortedRowIds} from 'tinybase/ui-svelte';
+import {getSortedRowIds} from 'tinybase/ui-svelte';
 import TodoItem from './TodoItem.svelte';
 import {store} from './store';
 
-const todoIds = createSortedRowIds(
+const todoIds = getSortedRowIds(
 'todos',
 undefined,
 false,
@@ -24222,14 +24222,14 @@ stays synchronized with the underlying TinyBase store.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
-    "typescript": "^5.9.3",
+    "vite": "^8.0.3",
+    "typescript": "^6.0.2",
     "@types/node": "^25.5.0",
     "@tsconfig/svelte": "^5.0.8",
-    "svelte-check": "^4.4.5",
+    "svelte-check": "^4.4.6",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "svelte": "^5.54.0",
-    "vite-plugin-static-copy": "^3.3.0"
+    "svelte": "^5.55.1",
+    "vite-plugin-static-copy": "^4.0.0"
   },
   "dependencies": {
     "tinybase": "beta",
@@ -24419,13 +24419,13 @@ input?.focus();
 <script lang="ts">
 import './button.css';
 import './todoItem.css';
-import {createRow} from 'tinybase/ui-svelte';
+import {getRow} from 'tinybase/ui-svelte';
 import {store} from './store';
   import type {TodoRow} from './store';
 
 let {rowId}: {rowId: string} = $props();
 
-const todo = createRow(
+const todo = getRow(
 'todos',
 () => rowId,
 store,
@@ -24457,11 +24457,11 @@ store.delRow('todos', rowId);
 
 <script lang="ts">
 import './todoList.css';
-import {createSortedRowIds} from 'tinybase/ui-svelte';
+import {getSortedRowIds} from 'tinybase/ui-svelte';
 import TodoItem from './TodoItem.svelte';
 import {store} from './store';
 
-const todoIds = createSortedRowIds(
+const todoIds = getSortedRowIds(
 'todos',
 undefined,
 false,
@@ -24993,8 +24993,8 @@ Your data is automatically saved and restored when you reload the page.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
-    "typescript": "^5.9.3",
+    "vite": "^8.0.3",
+    "typescript": "^6.0.2",
     "@types/node": "^25.5.0"
   },
   "dependencies": {
@@ -25702,8 +25702,8 @@ Your data is automatically saved and restored when you reload the page.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
-    "typescript": "^5.9.3",
+    "vite": "^8.0.3",
+    "typescript": "^6.0.2",
     "@types/node": "^25.5.0"
   },
   "dependencies": {
@@ -26449,8 +26449,8 @@ Your data is automatically saved and restored when you reload the page.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
-    "typescript": "^5.9.3",
+    "vite": "^8.0.3",
+    "typescript": "^6.0.2",
     "@types/node": "^25.5.0"
   },
   "dependencies": {
@@ -27117,14 +27117,14 @@ Your data is automatically saved and restored when you reload the page.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
-    "typescript": "^5.9.3",
+    "vite": "^8.0.3",
+    "typescript": "^6.0.2",
     "@types/node": "^25.5.0",
-    "vite-plugin-static-copy": "^3.3.0"
+    "vite-plugin-static-copy": "^4.0.0"
   },
   "dependencies": {
     "tinybase": "^8.0.2",
-    "@electric-sql/pglite": "^0.3.16"
+    "@electric-sql/pglite": "^0.4.2"
   }
 }
 ",
@@ -27830,8 +27830,8 @@ Your data is automatically saved and restored when you reload the page.
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.0",
-    "typescript": "^5.9.3",
+    "vite": "^8.0.3",
+    "typescript": "^6.0.2",
     "@types/node": "^25.5.0"
   },
   "dependencies": {

@@ -24,7 +24,7 @@
 {{#list}}
   "tinybase": "^8.0.2"
   {{#if (eq serverType "node")}}
-    "ws": "^8.19.0"
+    "ws": "^8.20.0"
   {{/if}}
 {{/list}}
 },
@@ -33,16 +33,16 @@
   {{#if (eq serverType "node")}}
     "@types/ws": "^8.18.1"
   {{else}}
-    "@cloudflare/workers-types": "^4.20260317.1"
+    "@cloudflare/workers-types": "^4.20260329.1"
   {{/if}}
   {{#if typescript}}
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.2"
     {{#if (eq serverType "node")}}
       "tsx": "^4.21.0"
     {{/if}}
   {{/if}}
   {{#if (eq serverType "durable-objects")}}
-    "wrangler": "^4.75.0"
+    "wrangler": "^4.78.0"
   {{/if}}
 {{/list}}
 }

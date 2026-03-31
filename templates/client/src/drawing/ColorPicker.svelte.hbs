@@ -2,7 +2,7 @@
 
 <script{{#if typescript}} lang="ts"{{/if}}>
 import './colorPicker.css';
-import {createValue} from 'tinybase/ui-svelte';
+import {getValue} from 'tinybase/ui-svelte';
 import {settingsStore} from './settingsStore';
 {{#if schemas}}
   {{#if typescript}}
@@ -11,7 +11,7 @@ import {settingsStore} from './settingsStore';
 {{/if}}
 
 const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];
-const currentColor = createValue(
+const currentColor = getValue(
 'brushColor',
 {{#if schemas}}settingsStore as unknown as TinyBaseStore{{else}}settingsStore{{/if}},
 ){{#if typescript}} as {current: string | undefined}{{/if}};
