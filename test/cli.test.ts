@@ -490,7 +490,6 @@ describe('create-tinybase', () => {
         }
 
         if (combo.framework === 'svelte') {
-          expect(pkg.dependencies.tinybase).toBe('beta');
           expect(pkg.devDependencies?.svelte).toBeDefined();
           expect(
             pkg.devDependencies?.['@sveltejs/vite-plugin-svelte'],

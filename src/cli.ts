@@ -62,7 +62,7 @@ const config = {
       choices: [
         {title: 'React', value: 'react'},
         {title: 'Vanilla', value: 'vanilla'},
-        {title: 'Svelte (experimental)', value: 'svelte'},
+        {title: 'Svelte', value: 'svelte'},
       ],
       initial: 0,
     },
