@@ -61,6 +61,8 @@ with the store.
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
+  "client/.npmrc": "legacy-peer-deps=true
+",
   "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
@@ -779,6 +781,8 @@ with the store.
 
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/.npmrc": "legacy-peer-deps=true
 ",
   "client/index.html": "<!doctype html>
 <html lang="en">
@@ -1597,6 +1601,8 @@ with the store.
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
+  "client/.npmrc": "legacy-peer-deps=true
+",
   "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
@@ -2362,6 +2368,8 @@ with the store.
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
+  "client/.npmrc": "legacy-peer-deps=true
+",
   "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
@@ -3064,6 +3072,8 @@ with the store.
 
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/.npmrc": "legacy-peer-deps=true
 ",
   "client/index.html": "<!doctype html>
 <html lang="en">
@@ -3779,6 +3789,8 @@ The \`server\` directory contains your Cloudflare Durable Objects WebSocket serv
 
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/.npmrc": "legacy-peer-deps=true
 ",
   "client/index.html": "<!doctype html>
 <html lang="en">
@@ -7267,6 +7279,8 @@ Your data is automatically saved and restored when you reload the page.
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
+  "client/.npmrc": "legacy-peer-deps=true
+",
   "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
@@ -7920,6 +7934,8 @@ Your data is automatically saved and restored when you reload the page.
 
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/.npmrc": "legacy-peer-deps=true
 ",
   "client/index.html": "<!doctype html>
 <html lang="en">
@@ -8611,6 +8627,8 @@ The app uses **TinyBase** to manage application state in a reactive data store.
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
+  "client/.npmrc": "legacy-peer-deps=true
+",
   "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
@@ -9294,6 +9312,8 @@ Your data is automatically saved and restored when you reload the page.
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
+  "client/.npmrc": "legacy-peer-deps=true
+",
   "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
@@ -9913,6 +9933,8 @@ Your data is automatically saved and restored when you reload the page.
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
+  "client/.npmrc": "legacy-peer-deps=true
+",
   "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
@@ -10517,6 +10539,8 @@ with the store.
 
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/.npmrc": "legacy-peer-deps=true
 ",
   "client/index.html": "<!doctype html>
 <html lang="en">
@@ -11333,6 +11357,8 @@ The \`server\` directory contains your Node.js WebSocket server.
 
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/.npmrc": "legacy-peer-deps=true
 ",
   "client/index.html": "<!doctype html>
 <html lang="en">
@@ -12185,6 +12211,8 @@ with the store.
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
+  "client/.npmrc": "legacy-peer-deps=true
+",
   "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
@@ -12999,6 +13027,8 @@ with the store.
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
+  "client/.npmrc": "legacy-peer-deps=true
+",
   "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
@@ -13749,6 +13779,8 @@ with the store.
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
+  "client/.npmrc": "legacy-peer-deps=true
+",
   "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
@@ -14474,6 +14506,8 @@ with the store.
 
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/.npmrc": "legacy-peer-deps=true
 ",
   "client/index.html": "<!doctype html>
 <html lang="en">
@@ -24404,6 +24438,8 @@ Your data is automatically saved and restored when you reload the page.
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
+  "client/.npmrc": "legacy-peer-deps=true
+",
   "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
@@ -25112,6 +25148,8 @@ Your data is automatically saved and restored when you reload the page.
 
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/.npmrc": "legacy-peer-deps=true
 ",
   "client/index.html": "<!doctype html>
 <html lang="en">
@@ -25860,6 +25898,8 @@ Your data is automatically saved and restored when you reload the page.
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
 ",
+  "client/.npmrc": "legacy-peer-deps=true
+",
   "client/index.html": "<!doctype html>
 <html lang="en">
   <head>
@@ -26522,6 +26562,8 @@ Your data is automatically saved and restored when you reload the page.
 
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/.npmrc": "legacy-peer-deps=true
 ",
   "client/index.html": "<!doctype html>
 <html lang="en">
@@ -27240,6 +27282,8 @@ Your data is automatically saved and restored when you reload the page.
 
 - [TinyBase Documentation](https://tinybase.org)
 - [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/.npmrc": "legacy-peer-deps=true
 ",
   "client/index.html": "<!doctype html>
 <html lang="en">

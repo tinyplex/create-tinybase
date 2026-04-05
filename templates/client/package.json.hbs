@@ -1,9 +1,10 @@
+{{includeFile template="client/index.html.hbs" output="client/index.html"}}
+{{includeFile template="client/.npmrc.hbs" output="client/.npmrc"}}
 {
 "name": "{{projectName}}{{#if server}}-client{{/if}}",
 "version": "1.0.0",
 "scripts": {
 {{#list}}
-  {{includeFile template="client/index.html.hbs" output="client/index.html"}}
   "dev": "vite"
   {{#if typescript}}
     {{#if svelte}}
@@ -89,9 +90,6 @@
 }
 {{#if prettier}}
   {{includeFile template="client/.prettierrc.json.hbs" output="client/.prettierrc.json"}}
-{{/if}}
-{{#if svelte}}
-  {{includeFile template="client/.npmrc.hbs" output="client/.npmrc"}}
 {{/if}}
 {{#if eslint}}
   {{includeFile template="client/eslint.config.js.hbs" output="client/eslint.config.js"}}
