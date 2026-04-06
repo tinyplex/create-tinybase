@@ -60,8 +60,8 @@ const config = {
       name: 'framework',
       message: 'Framework:',
       choices: [
-        {title: 'React', value: 'react'},
         {title: 'Vanilla', value: 'vanilla'},
+        {title: 'React', value: 'react'},
         {title: 'Svelte', value: 'svelte'},
       ],
       initial: 0,

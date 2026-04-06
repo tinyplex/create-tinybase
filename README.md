@@ -4,8 +4,8 @@ A CLI tool to scaffold a new TinyBase application with full synchronization and
 local-first capabilities.
 
 Build a todo list, a drawing app, a chat app, or a tic-tac-toe game using
-TypeScript or JavaScript, with React or Vanilla JS - in just a matter of
-seconds.
+TypeScript or JavaScript, with React, Svelte, or Vanilla JS - in just a matter
+of seconds.
 
 ## Usage
 
@@ -19,7 +19,7 @@ This will prompt you with questions to configure your new TinyBase app:
 
 - **Project name** - Name of your project directory
 - **Language** - TypeScript or JavaScript
-- **Framework** - React or Vanilla JS
+- **Framework** - Vanilla JS, React, or Svelte
 - **App type** - Todo app, Chat app, Drawing app, or Tic-tac-toe game
 - **Store schemas** - TypeScript type safety for stores (TypeScript only)
 - **Synchronization** - None, remote demo server, local Node server, or local Durable Objects server
@@ -107,6 +107,13 @@ are the details of what each option entails:
 
 ### Framework Choice
 
+**Vanilla JS** offers:
+
+- No framework dependencies
+- Smallest bundle size
+- Direct DOM manipulation
+- Manual listener-based updates
+
 **React** provides:
 
 - Component-based architecture
@@ -114,12 +121,12 @@ are the details of what each option entails:
 - Automatic re-rendering on store updates
 - Full ecosystem support
 
-**Vanilla JS** offers:
+**Svelte** provides:
 
-- No framework dependencies
-- Smaller bundle size
-- Direct DOM manipulation
-- Manual listener-based updates
+- Component-based architecture with compiled output
+- Reactive declarations for TinyBase stores
+- No virtual DOM - smaller runtime overhead
+- `.svelte` single-file components
 
 ### App Types
 
@@ -258,7 +265,7 @@ my-tinybase-app/
 │   ├── index.html       # Entry HTML
 │   ├── public/          # Static assets
 │   └── src/             # Source code
-│       ├── App.tsx      # Main app component
+│       ├── App.tsx      # Main app component (React/Svelte)
 │       ├── Store.tsx    # TinyBase store setup
 │       └── ...          # App-specific components
 └── server/              # Server code (optional)
@@ -273,6 +280,7 @@ my-tinybase-app/
 - [TinyBase GitHub](https://github.com/tinyplex/tinybase)
 - [Synchronization Guide](https://tinybase.org/guides/synchronization)
 - [React Integration](https://tinybase.org/guides/building-uis/using-react)
+- [Svelte Integration](https://tinybase.org/guides/building-uis/using-svelte)
 
 ## License
 
