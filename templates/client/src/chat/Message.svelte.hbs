@@ -1,30 +1,27 @@
 {{includeFile template="client/src/chat/message.css.hbs" output="client/src/message.css"}}
 
-<script{{#if typescript}} lang="ts"{{/if}}>
-import './message.css';
-import {getRow} from 'tinybase/ui-svelte';
-import {chatStore} from './chatStore';
-{{#if typescript}}
-  {{#if schemas}}
-    import type {Store as TinyBaseStore} from 'tinybase';
+<script{{#if typescript}} lang="ts" {{/if}}>
+  import './message.css';
+  import { getRow } from 'tinybase/ui-svelte';
+  import { STORE_ID } from './chatStore';
+  {{#if typescript}}
+  import type { MessageRow } from './chatStore';
   {{/if}}
-  import type {MessageRow} from './chatStore';
-{{/if}}
 
-let {rowId}{{#if typescript}}: {rowId: string}{{/if}} = $props();
+  let { rowId }{{#if typescript}}: { rowId: string }{{/if}} = $props();
 
-const message = getRow(
-'messages',
-() => rowId,
-{{#if schemas}}chatStore as unknown as TinyBaseStore{{else}}chatStore{{/if}},
-){{#if typescript}} as {readonly current: MessageRow}{{/if}};
+  const message = getRow(
+    'messages',
+    () => rowId,
+    STORE_ID,
+  ){{#if typescript}} as { readonly current: MessageRow }{{/if}};
 
-const getTime = (timestamp{{#if typescript}}: number{{/if}}) =>
-  new Date(timestamp).toLocaleTimeString();
+  const getTime = (timestamp{{#if typescript}}: number{{/if}}) =>
+    new Date(timestamp).toLocaleTimeString();
 </script>
 
-<div class="message">
-  <span class="username">{message.current.username}:</span>
-  <span class="text">{message.current.text}</span>
-  <span class="time">{getTime(message.current.timestamp)}</span>
-</div>
+  <div class="message">
+    <span class="username">{message.current.username}:</span>
+    <span class="text">{message.current.text}</span>
+    <span class="time">{getTime(message.current.timestamp)}</span>
+  </div>

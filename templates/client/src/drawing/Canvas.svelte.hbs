@@ -1,133 +1,161 @@
 {{includeFile template="client/src/drawing/canvas.css.hbs" output="client/src/canvas.css"}}
 
-<script{{#if typescript}} lang="ts"{{/if}}>
-import './canvas.css';
-import {onMount} from 'svelte';
-import {getHlcFunctions} from 'tinybase';
-import {canvasStore} from './canvasStore';
-{{#if typescript}}import type {StrokeRow} from './canvasStore';{{/if}}
-import {settingsStore} from './settingsStore';
+<script{{#if typescript}} lang="ts" {{/if}}>
+  import './canvas.css';
+  import { onMount } from 'svelte';
+  import { getHlcFunctions } from 'tinybase';
+  import { getStore } from 'tinybase/ui-svelte';
+  import { STORE_ID as CANVAS_STORE_ID } from './canvasStore';
+  {{#if typescript}}
+  import type { Store } from 'tinybase';
+  import type { StrokeRow } from './canvasStore';
+  {{/if}}
+  import { STORE_ID as SETTINGS_STORE_ID } from './settingsStore';
 
-const [getNextHlc] = getHlcFunctions();
+  const canvasStore = getStore(CANVAS_STORE_ID){{#if typescript}} as Store{{/if}};
+  const settingsStore = getStore(SETTINGS_STORE_ID){{#if typescript}} as Store{{/if}};
 
-let canvas{{#if typescript}}: HTMLCanvasElement | undefined{{/if}};
-let isDrawing = false;
-let currentStrokeId{{#if typescript}}: string | null{{/if}} = null;
+  const [getNextHlc] = getHlcFunctions();
 
-const getPoint = (event{{#if typescript}}: MouseEvent | TouchEvent{{/if}}) => {
-if (!canvas) {
-return null;
-}
+  let canvas{{#if typescript}}: HTMLCanvasElement | undefined{{/if}};
+  let isDrawing = false;
+  let currentStrokeId{{#if typescript}}: string | null{{/if}} = null;
 
-const rect = canvas.getBoundingClientRect();
-const clientX = 'touches' in event ? event.touches[0]?.clientX : event.clientX;
-const clientY = 'touches' in event ? event.touches[0]?.clientY : event.clientY;
+  const getPoint = (event{{#if typescript}}: MouseEvent | TouchEvent{{/if}}) => {
+    if (!canvas) {
+      return null;
+    }
 
-if (clientX == null || clientY == null) {
-return null;
-}
+    const rect = canvas.getBoundingClientRect();
+    const clientX = 'touches' in event ? event.touches[0]?.clientX : event.clientX;
+    const clientY = 'touches' in event ? event.touches[0]?.clientY : event.clientY;
 
-return {
-x: clientX - rect.left,
-y: clientY - rect.top,
-};
-};
+    if (clientX == null || clientY == null) {
+      return null;
+    }
 
-const startStroke = (event{{#if typescript}}: MouseEvent | TouchEvent{{/if}}) => {
-isDrawing = true;
-currentStrokeId = getNextHlc();
+    return {
+      x: clientX - rect.left,
+      y: clientY - rect.top,
+    };
+  };
 
-const point = getPoint(event);
-if (!point || !currentStrokeId) {
-return;
-}
+  const startStroke = (event{{#if typescript}}: MouseEvent | TouchEvent{{/if}}) => {
+    isDrawing = true;
+    currentStrokeId = getNextHlc();
 
-const brushColor =
-  {{#if typescript}}(settingsStore.getValue('brushColor') as string | undefined) ?? '#d81b60'{{else}}settingsStore.getValue('brushColor') ?? '#d81b60'{{/if}};
-const brushSize =
-  {{#if typescript}}(settingsStore.getValue('brushSize') as number | undefined) ?? 5{{else}}settingsStore.getValue('brushSize') ?? 5{{/if}};
+    const point = getPoint(event);
+    if (!point || !currentStrokeId) {
+      return;
+    }
 
-canvasStore.setRow('strokes', currentStrokeId, {
-color: brushColor,
-size: brushSize,
-points: JSON.stringify([point.x, point.y]),
-});
-};
+    const brushColor =
+      {{#if typescript}}
+      (settingsStore.getValue('brushColor') as string | undefined) ?? '#d81b60';
+      {{else}}
+      settingsStore.getValue('brushColor') ?? '#d81b60';
+      {{/if}}
+    const brushSize =
+      {{#if typescript}}
+      (settingsStore.getValue('brushSize') as number | undefined) ?? 5;
+      {{else}}
+      settingsStore.getValue('brushSize') ?? 5;
+      {{/if}}
 
-const extendStroke = (event{{#if typescript}}: MouseEvent | TouchEvent{{/if}}) => {
-if (!isDrawing || !currentStrokeId) {
-return;
-}
+    canvasStore.setRow('strokes', currentStrokeId, {
+      color: brushColor,
+      size: brushSize,
+      points: JSON.stringify([point.x, point.y]),
+    });
+  };
 
-const point = getPoint(event);
-if (!point) {
-return;
-}
+  const extendStroke = (event{{#if typescript}}: MouseEvent | TouchEvent{{/if}}) => {
+    if (!isDrawing || !currentStrokeId) {
+      return;
+    }
 
-const pointsArray = JSON.parse(
-  {{#if typescript}}(canvasStore.getCell('strokes', currentStrokeId, 'points') as string | undefined) ?? '[]'{{else}}canvasStore.getCell('strokes', currentStrokeId, 'points') ?? '[]'{{/if}},
-){{#if typescript}} as number[]{{/if}};
-pointsArray.push(point.x, point.y);
-canvasStore.setCell('strokes', currentStrokeId, 'points', JSON.stringify(pointsArray));
-};
+    const point = getPoint(event);
+    if (!point) {
+      return;
+    }
 
-const endStroke = () => {
-isDrawing = false;
-currentStrokeId = null;
-};
+    const pointsArray = JSON.parse(
+      {{#if typescript}}
+      (canvasStore.getCell('strokes', currentStrokeId, 'points') as string | undefined) ?? '[]'
+      {{else}}
+      canvasStore.getCell('strokes', currentStrokeId, 'points') ?? '[]'
+      {{/if}}
+    ){{#if typescript}} as number[]{{/if}};
+    pointsArray.push(point.x, point.y);
+    canvasStore.setCell(
+      'strokes',
+      currentStrokeId,
+      'points',
+      JSON.stringify(pointsArray),
+    );
+  };
 
-const handleTouchStart = (event{{#if typescript}}: TouchEvent{{/if}}) => {
-event.preventDefault();
-startStroke(event);
-};
+  const endStroke = () => {
+    isDrawing = false;
+    currentStrokeId = null;
+  };
 
-const handleTouchMove = (event{{#if typescript}}: TouchEvent{{/if}}) => {
-event.preventDefault();
-extendStroke(event);
-};
+  const handleTouchStart = (event{{#if typescript}}: TouchEvent{{/if}}) => {
+    event.preventDefault();
+    startStroke(event);
+  };
 
-onMount(() => {
-const draw = () => {
-if (!canvas) {
-return;
-}
+  const handleTouchMove = (event{{#if typescript}}: TouchEvent{{/if}}) => {
+    event.preventDefault();
+    extendStroke(event);
+  };
 
-const ctx = canvas.getContext('2d');
-if (!ctx) {
-return;
-}
+  onMount(() => {
+    const draw = () => {
+      if (!canvas) {
+        return;
+      }
 
-ctx.fillStyle = '#111';
-ctx.fillRect(0, 0, canvas.width, canvas.height);
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        return;
+      }
 
-canvasStore.getSortedRowIds('strokes').forEach((id) => {
-const stroke =
-  {{#if typescript}}canvasStore.getRow('strokes', id) as StrokeRow{{else}}canvasStore.getRow('strokes', id){{/if}};
-if (!stroke?.points) {
-return;
-}
+      ctx.fillStyle = '#111';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-const pointsArray = JSON.parse(stroke.points){{#if typescript}} as number[]{{/if}};
-if (pointsArray.length < 2) {
-return;
-}
+      canvasStore.getSortedRowIds('strokes').forEach((id) => {
+        const stroke =
+          {{#if typescript}}
+          (canvasStore.getRow('strokes', id) as StrokeRow | undefined);
+          {{else}}
+          canvasStore.getRow('strokes', id);
+          {{/if}}
+        if (!stroke?.points) {
+          return;
+        }
 
-ctx.strokeStyle = stroke.color;
-ctx.lineWidth = stroke.size * 2;
-ctx.lineCap = 'round';
-ctx.lineJoin = 'round';
-ctx.beginPath();
-ctx.moveTo(pointsArray[0], pointsArray[1]);
-for (let i = 2; i < pointsArray.length; i += 2) {
-ctx.lineTo(pointsArray[i], pointsArray[i + 1]);
-}
-ctx.stroke();
-});
-};
+        const pointsArray = JSON.parse(stroke.points){{#if typescript}} as number[]{{/if}};
+        if (pointsArray.length < 2) {
+          return;
+        }
 
-canvasStore.addTablesListener(draw);
-draw();
-});
+        ctx.strokeStyle = stroke.color;
+        ctx.lineWidth = stroke.size * 2;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+        ctx.moveTo(pointsArray[0], pointsArray[1]);
+        for (let i = 2; i < pointsArray.length; i += 2) {
+          ctx.lineTo(pointsArray[i], pointsArray[i + 1]);
+        }
+        ctx.stroke();
+      });
+    };
+
+    canvasStore.addTablesListener(draw);
+    draw();
+  });
 </script>
 
 <canvas

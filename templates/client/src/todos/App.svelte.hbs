@@ -1,26 +1,26 @@
-{{includeFile template="client/src/todos/store.ts.hbs" output="client/src/store.ts"}}
+{{includeFile template="client/src/todos/Store.svelte.hbs" output="client/src/Store.svelte"}}
 {{includeFile template="client/src/shared/Loading.svelte.hbs" output="client/src/Loading.svelte"}}
 {{includeFile template="client/src/todos/TodoInput.svelte.hbs" output="client/src/TodoInput.svelte"}}
 {{includeFile template="client/src/todos/TodoList.svelte.hbs" output="client/src/TodoList.svelte"}}
 
-<script{{#if typescript}} lang="ts"{{/if}}>
-import {onMount} from 'svelte';
-import Loading from './Loading.svelte';
-import TodoInput from './TodoInput.svelte';
-import TodoList from './TodoList.svelte';
-import {storeReady} from './store';
+<script{{#if typescript}} lang="ts" {{/if}}>
+  import { Provider } from 'tinybase/ui-svelte';
+  import { Inspector } from 'tinybase/ui-svelte-inspector';
+  import Loading from './Loading.svelte';
+  import Store from './Store.svelte';
+  import TodoInput from './TodoInput.svelte';
+  import TodoList from './TodoList.svelte';
 
-let loading = $state(true);
-
-onMount(async () => {
-await storeReady;
-loading = false;
-});
+  let loading = $state(true);
 </script>
 
-{#if loading}
-  <Loading />
-{:else}
-  <TodoInput />
-  <TodoList />
-{/if}
+  <Provider>
+    <Store onReady={()=> loading = false} />
+      {#if loading}
+    <Loading />
+  {:else}
+    <TodoInput />
+    <TodoList />
+    <Inspector />
+  {/if}
+</Provider>

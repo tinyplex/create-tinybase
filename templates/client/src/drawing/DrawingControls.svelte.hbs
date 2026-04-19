@@ -4,15 +4,18 @@
 {{includeFile template="client/src/drawing/BrushSize.svelte.hbs" output="client/src/BrushSize.svelte"}}
 
 <script>
-import './button.css';
-import './drawingControls.css';
-import BrushSize from './BrushSize.svelte';
-import ColorPicker from './ColorPicker.svelte';
-import {canvasStore} from './canvasStore';
+  import './button.css';
+  import './drawingControls.css';
+  import { getStore } from 'tinybase/ui-svelte';
+  import BrushSize from './BrushSize.svelte';
+  import ColorPicker from './ColorPicker.svelte';
+  import { STORE_ID } from './canvasStore';
 
-const clearStrokes = () => {
-canvasStore.delTable('strokes');
-};
+  const canvasStore = getStore(STORE_ID);
+
+  const clearStrokes = () => {
+    canvasStore.delTable('strokes');
+  };
 </script>
 
 <div id="drawingControls">

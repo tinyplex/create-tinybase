@@ -1,28 +1,23 @@
 {{includeFile template="client/src/drawing/colorPicker.css.hbs" output="client/src/colorPicker.css"}}
 
-<script{{#if typescript}} lang="ts"{{/if}}>
-import './colorPicker.css';
-import {getValue} from 'tinybase/ui-svelte';
-import {settingsStore} from './settingsStore';
-{{#if schemas}}
-  {{#if typescript}}
-    import type {Store as TinyBaseStore} from 'tinybase';
-  {{/if}}
-{{/if}}
+<script{{#if typescript}} lang="ts" {{/if}}>
+  import './colorPicker.css';
+  import { getValue } from 'tinybase/ui-svelte';
+  import { STORE_ID } from './settingsStore';
 
-const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];
-const currentColor = getValue(
-'brushColor',
-{{#if schemas}}settingsStore as unknown as TinyBaseStore{{else}}settingsStore{{/if}},
-){{#if typescript}} as {current: string | undefined}{{/if}};
+  const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];
+  const currentColor = getValue(
+    'brushColor',
+    STORE_ID,
+  ){{#if typescript}} as { current: string | undefined }{{/if}};
 
-const setColor = (color{{#if typescript}}: string{{/if}}) => {
-currentColor.current = color;
-};
+  const setColor = (color{{#if typescript}}: string{{/if}}) => {
+    currentColor.current = color;
+  };
 </script>
 
-<div id="colorPicker">
-  {#each colors as color (color)}
+  <div id="colorPicker">
+    {#each colors as color (color)}
     <button
       class="colorBtn"
       class:active={currentColor.current === color}

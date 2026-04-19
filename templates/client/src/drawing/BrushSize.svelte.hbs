@@ -1,29 +1,18 @@
 {{includeFile template="client/src/drawing/brushSize.css.hbs" output="client/src/brushSize.css"}}
 
-<script{{#if typescript}} lang="ts"{{/if}}>
-import './brushSize.css';
-import {getValue} from 'tinybase/ui-svelte';
-import {settingsStore} from './settingsStore';
-{{#if schemas}}
-  {{#if typescript}}
-    import type {Store as TinyBaseStore} from 'tinybase';
-  {{/if}}
-{{/if}}
+<script{{#if typescript}} lang="ts" {{/if}}>
+  import './brushSize.css';
+  import { getValue } from 'tinybase/ui-svelte';
+  import { STORE_ID } from './settingsStore';
 
-const size = getValue(
-'brushSize',
-{{#if schemas}}settingsStore as unknown as TinyBaseStore{{else}}settingsStore{{/if}},
-){{#if typescript}} as {current: number | undefined}{{/if}};
+  const size = getValue(
+    'brushSize',
+    STORE_ID,
+  ){{#if typescript}} as { current: number | undefined }{{/if}};
 </script>
 
-<div id="brushSize">
-  <label for="brushSizeSlider">Size:</label>
-  <input
-    id="brushSizeSlider"
-    type="range"
-    min="1"
-    max="50"
-    bind:value={size.current}
-  />
-  <span id="brushSizeValue">{size.current}</span>
-</div>
+  <div id="brushSize">
+    <label for="brushSizeSlider">Size:</label>
+    <input id="brushSizeSlider" type="range" min="1" max="50" bind:value={size.current} />
+    <span id="brushSizeValue">{size.current}</span>
+  </div>

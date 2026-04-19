@@ -1,28 +1,23 @@
 {{includeFile template="client/src/game/gameStatus.css.hbs" output="client/src/gameStatus.css"}}
 
-<script{{#if typescript}} lang="ts"{{/if}}>
-import './gameStatus.css';
-import {getValues} from 'tinybase/ui-svelte';
-import {store} from './store';
-{{#if schemas}}
-  {{#if typescript}}
-    import type {Store as TinyBaseStore} from 'tinybase';
-  {{/if}}
-{{/if}}
+<script{{#if typescript}} lang="ts" {{/if}}>
+  import './gameStatus.css';
+  import { getValues } from 'tinybase/ui-svelte';
+  import { STORE_ID } from './store';
 
-const status = getValues(
-{{#if schemas}}store as unknown as TinyBaseStore{{else}}store{{/if}},
-){{#if typescript}} as {
-  readonly current: {
-    currentPlayer?: string;
-    gameStatus?: string;
-    winner?: string;
-  };
-}{{/if}};
+  const status = getValues(
+    STORE_ID,
+  ){{#if typescript}} as {
+    readonly current: {
+      currentPlayer?: string;
+      gameStatus?: string;
+      winner?: string;
+    };
+  }{{/if}};
 </script>
 
-<div id="gameStatus">
-  {#if status.current.gameStatus === 'playing'}
+  <div id="gameStatus">
+    {#if status.current.gameStatus === 'playing'}
     Player <span class="player">{status.current.currentPlayer}</span>'s turn
   {:else if status.current.gameStatus === 'won'}
     Player <span class="winner">{status.current.winner}</span> wins!

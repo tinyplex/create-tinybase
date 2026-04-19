@@ -1,0 +1,114 @@
+{{includeFile template="client/src/chat/chatStore.ts.hbs" output="client/src/chatStore.{{ext}}"}}
+{{#if persistSqlite}}{{includeFile template="client/src/shared/sqlite.ts.hbs" output="client/src/sqlite.{{ext}}"}}{{/if}}
+{{#if persistPglite}}{{includeFile template="client/src/shared/pglite.ts.hbs" output="client/src/pglite.{{ext}}"}}{{/if}}
+{{#if sync}}{{includeFile template="client/src/shared/config.ts.hbs" output="client/src/config.ts"}}{{/if}}
+
+<script{{#if typescript}} lang="ts" {{/if}}>
+  {{#if schemas}}
+  import { createMergeableStore, type NoValuesSchema } from 'tinybase/with-schemas';
+  import * as UiSvelte from 'tinybase/ui-svelte/with-schemas';
+  {{else}}
+  import { createMergeableStore } from 'tinybase';
+  import { provideStore } from 'tinybase/ui-svelte';
+  {{/if}}
+  import { onMount } from 'svelte';
+  {{#if persist}}
+  {{#if persistLocalStorage}}
+  {{#if schemas}}
+  import { createLocalPersister } from 'tinybase/persisters/persister-browser/with-schemas';
+  {{else}}
+  import { createLocalPersister } from 'tinybase/persisters/persister-browser';
+  {{/if}}
+  {{/if}}
+  {{#if persistSqlite}}
+  {{#if schemas}}
+  import { createSqliteWasmPersister } from 'tinybase/persisters/persister-sqlite-wasm/with-schemas';
+  {{else}}
+  import { createSqliteWasmPersister } from 'tinybase/persisters/persister-sqlite-wasm';
+  {{/if}}
+  import { getDb } from './sqlite';
+  {{/if}}
+  {{#if persistPglite}}
+  {{#if schemas}}
+  import { createPglitePersister } from 'tinybase/persisters/persister-pglite/with-schemas';
+  {{else}}
+  import { createPglitePersister } from 'tinybase/persisters/persister-pglite';
+  {{/if}}
+  import { getPgLite } from './pglite';
+  {{/if}}
+  {{/if}}
+  {{#if sync}}
+  import { SERVER } from './config';
+  import ReconnectingWebSocket from 'reconnecting-websocket';
+  {{#if schemas}}
+  import { createWsSynchronizer } from 'tinybase/synchronizers/synchronizer-ws-client/with-schemas';
+  {{else}}
+  import { createWsSynchronizer } from 'tinybase/synchronizers/synchronizer-ws-client';
+  {{/if}}
+  {{/if}}
+  import { getDefaultContent } from './utils';
+  import { STORE_ID } from './chatStore';
+
+  {{#if schemas}}
+  const TABLES_SCHEMA = {
+    messages: {
+      username: { type: 'string', default: '' },
+      text: { type: 'string', default: '' },
+      timestamp: { type: 'number', default: 0 },
+    },
+  } as const;
+
+  type Schemas = [typeof TABLES_SCHEMA, NoValuesSchema];
+  const { provideStore } = UiSvelte as UiSvelte.WithSchemas<Schemas>;
+
+  {{/if}}
+  let { onReady }{{#if typescript}}: { onReady?: () => void }{{/if}} = $props();
+
+  const store = createMergeableStore(){{#if schemas}}
+    .setTablesSchema(TABLES_SCHEMA){{/if}}
+    .setDefaultContent(getDefaultContent());
+
+  provideStore(STORE_ID, store);
+
+  onMount(async () => {
+    {{#if persist}}
+    {{#if persistLocalStorage}}
+    const persister = createLocalPersister(store, STORE_ID);
+    await persister.load();
+    await persister.startAutoSave();
+    onReady?.();
+    {{/if}}
+    {{#if persistSqlite}}
+    const { sqlite3, db } = await getDb();
+    const persister = createSqliteWasmPersister(store, sqlite3, db, STORE_ID);
+    await persister.load();
+    await persister.startAutoSave();
+    onReady?.();
+    {{/if}}
+    {{#if persistPglite}}
+    const pgLite = await getPgLite();
+    const persister = await createPglitePersister(store, pgLite, STORE_ID);
+    await persister.load();
+    await persister.startAutoSave();
+    onReady?.();
+    {{/if}}
+    {{/if}}
+    {{#if sync}}
+    const serverPathId = location.pathname;
+    const synchronizer = await createWsSynchronizer(
+      store,
+      new ReconnectingWebSocket(SERVER + serverPathId),
+    );
+    await synchronizer.startSync();
+    synchronizer.getWebSocket().addEventListener('open', () => {
+      synchronizer.load().then(() => {
+        synchronizer.save();
+        {{#unless persist}}onReady?.();{{/unless}}
+      });
+    });
+    {{/if}}
+    {{#unless persist}}{{#unless sync}}
+    onReady?.();
+    {{/unless}}{{/unless}}
+  });
+</script>

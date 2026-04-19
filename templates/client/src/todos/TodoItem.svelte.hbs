@@ -1,47 +1,42 @@
 {{includeFile template="client/src/shared/button.css.hbs" output="client/src/button.css"}}
 {{includeFile template="client/src/todos/todoItem.css.hbs" output="client/src/todoItem.css"}}
 
-<script{{#if typescript}} lang="ts"{{/if}}>
-import './button.css';
-import './todoItem.css';
-import {getRow} from 'tinybase/ui-svelte';
-import {store} from './store';
-{{#if typescript}}
-  {{#if schemas}}
-    import type {Store as TinyBaseStore} from 'tinybase';
-  {{/if}}
-  import type {TodoRow} from './store';
-{{/if}}
-
-let {rowId}{{#if typescript}}: {rowId: string}{{/if}} = $props();
-
-const todo = getRow(
-'todos',
-() => rowId,
-{{#if schemas}}store as unknown as TinyBaseStore{{else}}store{{/if}},
-){{#if typescript}} as {readonly current: TodoRow}{{/if}};
-
-const toggleTodo = (event{{#if typescript}}: Event{{/if}}) => {
+<script{{#if typescript}} lang="ts" {{/if}}>
+  import './button.css';
+  import './todoItem.css';
+  import { getRow, getStore } from 'tinybase/ui-svelte';
+  import { STORE_ID } from './store';
   {{#if typescript}}
-    const input = event.currentTarget as HTMLInputElement;
-    store.setPartialRow('todos', rowId, {completed: input.checked});
-  {{else}}
-    store.setPartialRow('todos', rowId, {completed: event.currentTarget.checked});
+  import type { Store } from 'tinybase';
+  import type { TodoRow } from './store';
   {{/if}}
-};
 
-const deleteTodo = () => {
-store.delRow('todos', rowId);
-};
+  const store = getStore(STORE_ID){{#if typescript}} as Store{{/if}};
+
+  let { rowId }{{#if typescript}}: { rowId: string }{{/if}} = $props();
+
+  const todo = getRow(
+    'todos',
+    () => rowId,
+    STORE_ID,
+  ){{#if typescript}} as { readonly current: TodoRow }{{/if}};
+
+  const toggleTodo = (event{{#if typescript}}: Event{{/if}}) => {
+    {{#if typescript}}
+    const input = event.currentTarget as HTMLInputElement;
+    store.setPartialRow('todos', rowId, { completed: input.checked });
+    {{else}}
+    store.setPartialRow('todos', rowId, { completed: event.currentTarget.checked });
+    {{/if}}
+  };
+
+  const deleteTodo = () => {
+    store.delRow('todos', rowId);
+  };
 </script>
 
-<div class="todoItem" class:completed={todo.current.completed}>
-  <input
-    id={`todo-${rowId}`}
-    type="checkbox"
-    checked={todo.current.completed}
-    onchange={toggleTodo}
-  />
-  <label for={`todo-${rowId}`}>{todo.current.text}</label>
-  <button onclick={deleteTodo}>Delete</button>
-</div>
+  <div class="todoItem" class:completed={todo.current.completed}>
+    <input id={`todo-${rowId}`} type="checkbox" checked={todo.current.completed} onchange={toggleTodo} />
+    <label for={`todo-${rowId}`}>{todo.current.text}</label>
+    <button onclick={deleteTodo}>Delete</button>
+  </div>

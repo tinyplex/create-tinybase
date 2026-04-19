@@ -1,11 +1,19 @@
 {{#if schemas}}
-  {{addImport "import {createMergeableStore, type Row} from 'tinybase/with-schemas';"}}
+  {{#if vanilla}}
+    {{addImport "import {createMergeableStore, type Row} from 'tinybase/with-schemas';"}}
+  {{else}}
+    {{addImport "import {type Row} from 'tinybase/with-schemas';"}}
+  {{/if}}
 {{else}}
-  {{addImport "import {createMergeableStore} from 'tinybase';"}}
+  {{#if vanilla}}
+    {{addImport "import {createMergeableStore} from 'tinybase';"}}
+  {{/if}}
 {{/if}}
 
 {{includeFile template="client/src/chat/utils.ts.hbs" output="client/src/utils.ts"}}
+{{#if vanilla}}
 {{addImport "import {getDefaultContent} from './utils';"}}
+{{/if}}
 
 {{#if schemas}}
   const TABLES_SCHEMA = {
@@ -17,96 +25,100 @@
   } as const;
 
 {{/if}}
-export const chatStore = createMergeableStore(){{#if schemas}}
-  .setTablesSchema(TABLES_SCHEMA){{/if}}
-.setDefaultContent(getDefaultContent());
+export const STORE_ID = 'chat';
 
 export type MessageRow = {{#if schemas}}Row<typeof TABLES_SCHEMA, 'messages'>{{else}}{username: string; text: string; timestamp: number}{{/if}};
 
-let resolveChatReady: () => void;
-export const chatStoreReady = new Promise<void>((resolve) => {
-  resolveChatReady = resolve;
-  });
+{{#if vanilla}}
+  export const chatStore = createMergeableStore(){{#if schemas}}
+    .setTablesSchema(TABLES_SCHEMA){{/if}}
+  .setDefaultContent(getDefaultContent());
 
-  {{#if persist}}
-    {{#if persistLocalStorage}}
+  let resolveChatReady: () => void;
+  export const chatStoreReady = new Promise<void>((resolve) => {
+    resolveChatReady = resolve;
+    });
+
+    {{#if persist}}
+      {{#if persistLocalStorage}}
+        {{#if schemas}}
+          {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser/with-schemas';"}}
+        {{else}}
+          {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser';"}}
+        {{/if}}
+
+        const chatPersister = createLocalPersister(chatStore, 'chat');
+        chatPersister.load().then(() => {
+        chatPersister.startAutoSave();
+        resolveChatReady();
+        });
+      {{/if}}
+      {{#if persistSqlite}}
+        {{#if schemas}}
+          {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm/with-schemas';"}}
+        {{else}}
+          {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';"}}
+        {{/if}}
+        {{includeFile template="client/src/shared/sqlite.ts.hbs" output="client/src/sqlite.ts"}}
+        {{addImport "import {getDb} from './sqlite';"}}
+
+        getDb().then(({sqlite3, db}) => {
+        const chatPersister = createSqliteWasmPersister(chatStore, sqlite3, db, 'chat');
+        chatPersister.load().then(() => {
+        chatPersister.startAutoSave();
+        resolveChatReady();
+        });
+        });
+      {{/if}}
+      {{#if persistPglite}}
+        {{#if schemas}}
+          {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite/with-schemas';"}}
+        {{else}}
+          {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite';"}}
+        {{/if}}
+        {{includeFile template="client/src/shared/pglite.ts.hbs" output="client/src/pglite.{{ext}}"}}
+        {{addImport "import {getPgLite} from './pglite';"}}
+
+        getPgLite().then((pgLite) => {
+        createPglitePersister(chatStore, pgLite, 'chat').then((chatPersister) => {
+        chatPersister.load().then(() => {
+        chatPersister.startAutoSave();
+        resolveChatReady();
+        });
+        });
+        });
+      {{/if}}
+    {{/if}}
+
+    {{#if sync}}
+      {{includeFile template="client/src/shared/config.ts.hbs" output="client/src/config.ts"}}
+      {{addImport "import {SERVER} from './config';"}}
+      {{addImport "import ReconnectingWebSocket from 'reconnecting-websocket';"}}
       {{#if schemas}}
-        {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser/with-schemas';"}}
+        {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client/with-schemas';"}}
       {{else}}
-        {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser';"}}
+        {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';"}}
       {{/if}}
 
-      const chatPersister = createLocalPersister(chatStore, 'chat');
-      chatPersister.load().then(() => {
-      chatPersister.startAutoSave();
-      resolveChatReady();
-      });
-    {{/if}}
-    {{#if persistSqlite}}
-      {{#if schemas}}
-        {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm/with-schemas';"}}
-      {{else}}
-        {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';"}}
-      {{/if}}
-      {{includeFile template="client/src/shared/sqlite.ts.hbs" output="client/src/sqlite.ts"}}
-      {{addImport "import {getDb} from './sqlite';"}}
+      const serverPathId = location.pathname;
+      createWsSynchronizer(
+      chatStore,
+      new ReconnectingWebSocket(SERVER + serverPathId),
+      ).then(async (synchronizer) => {
+      await synchronizer.startSync();
 
-      getDb().then(({sqlite3, db}) => {
-      const chatPersister = createSqliteWasmPersister(chatStore, sqlite3, db, 'chat');
-      chatPersister.load().then(() => {
-      chatPersister.startAutoSave();
-      resolveChatReady();
-      });
-      });
-    {{/if}}
-    {{#if persistPglite}}
-      {{#if schemas}}
-        {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite/with-schemas';"}}
-      {{else}}
-        {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite';"}}
-      {{/if}}
-      {{includeFile template="client/src/shared/pglite.ts.hbs" output="client/src/pglite.{{ext}}"}}
-      {{addImport "import {getPgLite} from './pglite';"}}
-
-      getPgLite().then((pgLite) => {
-      createPglitePersister(chatStore, pgLite, 'chat').then((chatPersister) => {
-      chatPersister.load().then(() => {
-      chatPersister.startAutoSave();
-      resolveChatReady();
+      synchronizer.getWebSocket().addEventListener('open', () => {
+      synchronizer.load().then(() => {
+      synchronizer.save();
+      {{#unless persist}}resolveChatReady();{{/unless}}
       });
       });
       });
     {{/if}}
-  {{/if}}
 
-  {{#if sync}}
-    {{includeFile template="client/src/shared/config.ts.hbs" output="client/src/config.ts"}}
-    {{addImport "import {SERVER} from './config';"}}
-    {{addImport "import ReconnectingWebSocket from 'reconnecting-websocket';"}}
-    {{#if schemas}}
-      {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client/with-schemas';"}}
-    {{else}}
-      {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';"}}
-    {{/if}}
+    {{#unless persist}}{{#unless sync}}
+        resolveChatReady();
+      {{/unless}}{{/unless}}
 
-    const serverPathId = location.pathname;
-    createWsSynchronizer(
-    chatStore,
-    new ReconnectingWebSocket(SERVER + serverPathId),
-    ).then(async (synchronizer) => {
-    await synchronizer.startSync();
-
-    synchronizer.getWebSocket().addEventListener('open', () => {
-    synchronizer.load().then(() => {
-    synchronizer.save();
-    {{#unless persist}}resolveChatReady();{{/unless}}
-    });
-    });
-    });
-  {{/if}}
-
-  {{#unless persist}}{{#unless sync}}
-      resolveChatReady();
-    {{/unless}}{{/unless}}
-
-  export type ChatStore = typeof chatStore;
+    export type ChatStore = typeof chatStore;
+{{/if}}

@@ -1,31 +1,34 @@
-{{includeFile template="client/src/chat/settingsStore.ts.hbs" output="client/src/settingsStore.ts"}}
-{{includeFile template="client/src/chat/chatStore.ts.hbs" output="client/src/chatStore.ts"}}
+{{includeFile template="client/src/chat/SettingsStore.svelte.hbs" output="client/src/SettingsStore.svelte"}}
+{{includeFile template="client/src/chat/ChatStore.svelte.hbs" output="client/src/ChatStore.svelte"}}
 {{includeFile template="client/src/shared/Loading.svelte.hbs" output="client/src/Loading.svelte"}}
 {{includeFile template="client/src/chat/UsernameInput.svelte.hbs" output="client/src/UsernameInput.svelte"}}
 {{includeFile template="client/src/chat/Messages.svelte.hbs" output="client/src/Messages.svelte"}}
 {{includeFile template="client/src/chat/MessageInput.svelte.hbs" output="client/src/MessageInput.svelte"}}
 
-<script{{#if typescript}} lang="ts"{{/if}}>
-import {onMount} from 'svelte';
-import Loading from './Loading.svelte';
-import MessageInput from './MessageInput.svelte';
-import Messages from './Messages.svelte';
-import UsernameInput from './UsernameInput.svelte';
-import {chatStoreReady} from './chatStore';
-import {settingsStoreReady} from './settingsStore';
+<script{{#if typescript}} lang="ts" {{/if}}>
+  import { Provider } from 'tinybase/ui-svelte';
+  import { Inspector } from 'tinybase/ui-svelte-inspector';
+  import ChatStore from './ChatStore.svelte';
+  import Loading from './Loading.svelte';
+  import MessageInput from './MessageInput.svelte';
+  import Messages from './Messages.svelte';
+  import SettingsStore from './SettingsStore.svelte';
+  import UsernameInput from './UsernameInput.svelte';
 
-let loading = $state(true);
-
-onMount(async () => {
-await Promise.all([settingsStoreReady, chatStoreReady]);
-loading = false;
-});
+  let settingsReady = $state(false);
+  let chatReady = $state(false);
+  const loading = $derived(!settingsReady || !chatReady);
 </script>
 
-{#if loading}
-  <Loading />
-{:else}
-  <UsernameInput />
-  <Messages />
-  <MessageInput />
-{/if}
+  <Provider>
+    <SettingsStore onReady={()=> settingsReady = true} />
+      <ChatStore onReady={()=> chatReady = true} />
+        {#if loading}
+    <Loading />
+  {:else}
+    <UsernameInput />
+    <Messages />
+    <MessageInput />
+    <Inspector />
+  {/if}
+</Provider>

@@ -2,44 +2,44 @@
 {{includeFile template="client/src/shared/input.css.hbs" output="client/src/input.css"}}
 {{includeFile template="client/src/todos/todoInput.css.hbs" output="client/src/todoInput.css"}}
 
-<script{{#if typescript}} lang="ts"{{/if}}>
-import './button.css';
-import './input.css';
-import './todoInput.css';
-import {onMount} from 'svelte';
-import {store} from './store';
+<script{{#if typescript}} lang="ts" {{/if}}>
+  import './button.css';
+  import './input.css';
+  import './todoInput.css';
+  import { onMount } from 'svelte';
+  import { getStore } from 'tinybase/ui-svelte';
+  import { STORE_ID } from './store';
+  {{#if typescript}}
+  import type { Store } from 'tinybase';
+  {{/if}}
 
-let text = $state('');
-let input{{#if typescript}}: HTMLInputElement | undefined{{/if}};
+  const store = getStore(STORE_ID){{#if typescript}} as Store{{/if}};
 
-const addTodo = () => {
-const trimmedText = text.trim();
-if (trimmedText) {
-store.addRow('todos', {text: trimmedText, completed: false});
-text = '';
-input?.focus();
-}
-};
+  let text = $state('');
+  let input{{#if typescript}}: HTMLInputElement | undefined{{/if}};
 
-const handleKeyDown = (event{{#if typescript}}: KeyboardEvent{{/if}}) => {
-if (event.key === 'Enter') {
-event.preventDefault();
-addTodo();
-}
-};
+  const addTodo = () => {
+    const trimmedText = text.trim();
+    if (trimmedText) {
+      store.addRow('todos', { text: trimmedText, completed: false });
+      text = '';
+      input?.focus();
+    }
+  };
 
-onMount(() => {
-input?.focus();
-});
+  const handleKeyDown = (event{{#if typescript}}: KeyboardEvent{{/if}}) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      addTodo();
+    }
+  };
+
+  onMount(() => {
+    input?.focus();
+  });
 </script>
 
-<div id="todoInput">
-  <input
-    bind:this={input}
-    bind:value={text}
-    type="text"
-    placeholder="What needs to be done?"
-    onkeydown={handleKeyDown}
-  />
-  <button class="primary" onclick={addTodo}>Add</button>
-</div>
+  <div id="todoInput">
+    <input bind:this={input} bind:value={text} type="text" placeholder="What needs to be done?" onkeydown={handleKeyDown} />
+    <button class="primary" onclick={addTodo}>Add</button>
+  </div>

@@ -1,0 +1,85 @@
+{{includeFile template="client/src/drawing/settingsStore.ts.hbs" output="client/src/settingsStore.{{ext}}"}}
+{{#if persistSqlite}}{{includeFile template="client/src/shared/sqlite.ts.hbs" output="client/src/sqlite.{{ext}}"}}{{/if}}
+{{#if persistPglite}}{{includeFile template="client/src/shared/pglite.ts.hbs" output="client/src/pglite.{{ext}}"}}{{/if}}
+
+<script{{#if typescript}} lang="ts" {{/if}}>
+  {{#if schemas}}
+  import { createStore, type NoTablesSchema } from 'tinybase/with-schemas';
+  import * as UiSvelte from 'tinybase/ui-svelte/with-schemas';
+  {{else}}
+  import { createStore } from 'tinybase';
+  import { provideStore } from 'tinybase/ui-svelte';
+  {{/if}}
+  import { onMount } from 'svelte';
+  {{#if persist}}
+  {{#if persistLocalStorage}}
+  {{#if schemas}}
+  import { createLocalPersister } from 'tinybase/persisters/persister-browser/with-schemas';
+  {{else}}
+  import { createLocalPersister } from 'tinybase/persisters/persister-browser';
+  {{/if}}
+  {{/if}}
+  {{#if persistSqlite}}
+  {{#if schemas}}
+  import { createSqliteWasmPersister } from 'tinybase/persisters/persister-sqlite-wasm/with-schemas';
+  {{else}}
+  import { createSqliteWasmPersister } from 'tinybase/persisters/persister-sqlite-wasm';
+  {{/if}}
+  import { getDb } from './sqlite';
+  {{/if}}
+  {{#if persistPglite}}
+  {{#if schemas}}
+  import { createPglitePersister } from 'tinybase/persisters/persister-pglite/with-schemas';
+  {{else}}
+  import { createPglitePersister } from 'tinybase/persisters/persister-pglite';
+  {{/if}}
+  import { getPgLite } from './pglite';
+  {{/if}}
+  {{/if}}
+  import { STORE_ID } from './settingsStore';
+
+  {{#if schemas}}
+  const VALUES_SCHEMA = {
+    brushColor: { type: 'string' },
+    brushSize: { type: 'number' },
+  } as const;
+
+  type Schemas = [NoTablesSchema, typeof VALUES_SCHEMA];
+  const { provideStore } = UiSvelte as UiSvelte.WithSchemas<Schemas>;
+
+  {{/if}}
+  let { onReady }{{#if typescript}}: { onReady?: () => void }{{/if}} = $props();
+
+  const store = createStore(){{#if schemas}}
+    .setValuesSchema(VALUES_SCHEMA){{/if}};
+
+  provideStore(STORE_ID, store);
+
+  onMount(async () => {
+    {{#if persist}}
+    {{#if persistLocalStorage}}
+    const persister = createLocalPersister(store, STORE_ID);
+    await persister.load([{}, { brushColor: '#d81b60', brushSize: 5 }]);
+    await persister.startAutoSave();
+    onReady?.();
+    {{/if}}
+    {{#if persistSqlite}}
+    const { sqlite3, db } = await getDb();
+    const persister = createSqliteWasmPersister(store, sqlite3, db, STORE_ID);
+    await persister.load([{}, { brushColor: '#d81b60', brushSize: 5 }]);
+    await persister.startAutoSave();
+    onReady?.();
+    {{/if}}
+    {{#if persistPglite}}
+    const pgLite = await getPgLite();
+    const persister = await createPglitePersister(store, pgLite, STORE_ID);
+    await persister.load([{}, { brushColor: '#d81b60', brushSize: 5 }]);
+    await persister.startAutoSave();
+    onReady?.();
+    {{/if}}
+    {{else}}
+    store.setValues({ brushColor: '#d81b60', brushSize: 5 });
+    onReady?.();
+    {{/if}}
+  });
+</script>

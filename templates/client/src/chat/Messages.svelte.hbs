@@ -1,29 +1,24 @@
 {{includeFile template="client/src/chat/messages.css.hbs" output="client/src/messages.css"}}
 {{includeFile template="client/src/chat/Message.svelte.hbs" output="client/src/Message.svelte"}}
 
-<script{{#if typescript}} lang="ts"{{/if}}>
-import './messages.css';
-import {getSortedRowIds} from 'tinybase/ui-svelte';
-import Message from './Message.svelte';
-import {chatStore} from './chatStore';
-{{#if schemas}}
-  {{#if typescript}}
-    import type {Store as TinyBaseStore} from 'tinybase';
-  {{/if}}
-{{/if}}
+<script{{#if typescript}} lang="ts" {{/if}}>
+  import './messages.css';
+  import { getSortedRowIds } from 'tinybase/ui-svelte';
+  import Message from './Message.svelte';
+  import { STORE_ID } from './chatStore';
 
-const messageIds = getSortedRowIds(
-'messages',
-'timestamp',
-false,
-0,
-undefined,
-{{#if schemas}}chatStore as unknown as TinyBaseStore{{else}}chatStore{{/if}},
-){{#if typescript}} as {readonly current: string[]}{{/if}};
+  const messageIds = getSortedRowIds(
+    'messages',
+    'timestamp',
+    false,
+    0,
+    undefined,
+    STORE_ID,
+  ){{#if typescript}} as { readonly current: string[] }{{/if}};
 </script>
 
-<div id="messages">
-  {#each messageIds.current as rowId (rowId)}
+  <div id="messages">
+    {#each messageIds.current as rowId (rowId)}
     <Message {rowId} />
   {/each}
 </div>

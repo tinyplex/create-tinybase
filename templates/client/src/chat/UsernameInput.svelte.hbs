@@ -1,29 +1,19 @@
 {{includeFile template="client/src/shared/input.css.hbs" output="client/src/input.css"}}
 {{includeFile template="client/src/chat/usernameInput.css.hbs" output="client/src/usernameInput.css"}}
 
-<script{{#if typescript}} lang="ts"{{/if}}>
-import './input.css';
-import './usernameInput.css';
-import {getValue} from 'tinybase/ui-svelte';
-import {settingsStore} from './settingsStore';
-{{#if schemas}}
-  {{#if typescript}}
-    import type {Store as TinyBaseStore} from 'tinybase';
-  {{/if}}
-{{/if}}
+<script{{#if typescript}} lang="ts" {{/if}}>
+  import './input.css';
+  import './usernameInput.css';
+  import { getValue } from 'tinybase/ui-svelte';
+  import { STORE_ID } from './settingsStore';
 
-const username = getValue(
-'username',
-{{#if schemas}}settingsStore as unknown as TinyBaseStore{{else}}settingsStore{{/if}},
-){{#if typescript}} as {current: string | undefined}{{/if}};
+  const username = getValue(
+    'username',
+    STORE_ID,
+  ){{#if typescript}} as { current: string | undefined }{{/if}};
 </script>
 
-<div id="usernameInput">
-  <label for="usernameInputField">Your name:</label>
-  <input
-    id="usernameInputField"
-    type="text"
-    bind:value={username.current}
-    placeholder="Enter your name"
-  />
-</div>
+  <div id="usernameInput">
+    <label for="usernameInputField">Your name:</label>
+    <input id="usernameInputField" type="text" bind:value={username.current} placeholder="Enter your name" />
+  </div>

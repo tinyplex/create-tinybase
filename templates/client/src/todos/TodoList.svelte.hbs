@@ -1,29 +1,24 @@
 {{includeFile template="client/src/todos/todoList.css.hbs" output="client/src/todoList.css"}}
 {{includeFile template="client/src/todos/TodoItem.svelte.hbs" output="client/src/TodoItem.svelte"}}
 
-<script{{#if typescript}} lang="ts"{{/if}}>
-import './todoList.css';
-import {getSortedRowIds} from 'tinybase/ui-svelte';
-import TodoItem from './TodoItem.svelte';
-import {store} from './store';
-{{#if schemas}}
-  {{#if typescript}}
-    import type {Store as TinyBaseStore} from 'tinybase';
-  {{/if}}
-{{/if}}
+<script{{#if typescript}} lang="ts" {{/if}}>
+  import './todoList.css';
+  import { getSortedRowIds } from 'tinybase/ui-svelte';
+  import TodoItem from './TodoItem.svelte';
+  import { STORE_ID } from './store';
 
-const todoIds = getSortedRowIds(
-'todos',
-undefined,
-false,
-0,
-undefined,
-{{#if schemas}}store as unknown as TinyBaseStore{{else}}store{{/if}},
-);
+  const todoIds = getSortedRowIds(
+    'todos',
+    undefined,
+    false,
+    0,
+    undefined,
+    STORE_ID,
+  );
 </script>
 
-<div id="todoList">
-  {#each todoIds.current as rowId (rowId)}
+  <div id="todoList">
+    {#each todoIds.current as rowId (rowId)}
     <TodoItem {rowId} />
   {/each}
 </div>
