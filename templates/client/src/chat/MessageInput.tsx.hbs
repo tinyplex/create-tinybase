@@ -18,7 +18,7 @@ const handleSend = useAddRowCallback(
 'messages',
 () => ({
 username,
-text: message,
+text: message.trim(),
 timestamp: Date.now(),
 }),
 [message, username],

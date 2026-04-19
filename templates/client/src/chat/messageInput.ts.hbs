@@ -9,8 +9,8 @@
 {{includeFile template="client/src/shared/input.ts.hbs" output="client/src/input.{{ext}}"}}
 {{addImport "import {createInput} from './input';"}}
 
-export const createMessageInput = (settingsStore: SettingsStore, chatStore: ChatStore): HTMLDivElement => {
-const messageInputContainer = document.createElement('div');
+export const createMessageInput = (settingsStore: SettingsStore, chatStore: ChatStore): HTMLFormElement => {
+const messageInputContainer = document.createElement('form');
 messageInputContainer.id = 'messageInput';
 
 const messageInput = createInput('Type a message...');
@@ -25,16 +25,16 @@ text,
 timestamp: Date.now(),
 });
 messageInput.value = '';
+messageInput.focus();
 }
 };
 
-messageInput.addEventListener('keypress', (e) => {
-if (e.key === 'Enter') {
+messageInputContainer.addEventListener('submit', (event) => {
+event.preventDefault();
 sendMessage();
-}
 });
 
-const sendButton = createButton('Send', sendMessage, 'primary');
+const sendButton = createButton('Send', null, 'primary', 'submit');
 messageInputContainer.appendChild(sendButton);
 
 return messageInputContainer;

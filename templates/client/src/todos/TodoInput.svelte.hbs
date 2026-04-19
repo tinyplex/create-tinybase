@@ -27,11 +27,9 @@
     }
   };
 
-  const handleKeyDown = (event{{#if typescript}}: KeyboardEvent{{/if}}) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      addTodo();
-    }
+  const handleSubmit = (event{{#if typescript}}: SubmitEvent{{/if}}) => {
+    event.preventDefault();
+    addTodo();
   };
 
   onMount(() => {
@@ -39,7 +37,7 @@
   });
 </script>
 
-  <div id="todoInput">
-    <input bind:this={input} bind:value={text} type="text" placeholder="What needs to be done?" onkeydown={handleKeyDown} />
-    <button class="primary" onclick={addTodo}>Add</button>
-  </div>
+  <form id="todoInput" onsubmit={handleSubmit}>
+    <input bind:this={input} bind:value={text} type="text" placeholder="What needs to be done?" />
+    <button class="primary" type="submit">Add</button>
+  </form>

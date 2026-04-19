@@ -6,8 +6,8 @@
 {{includeFile template="client/src/shared/input.ts.hbs" output="client/src/input.{{ext}}"}}
 {{addImport "import {createInput} from './input';"}}
 
-export const createTodoInput = (store: TodosStore): HTMLDivElement => {
-const container = document.createElement('div');
+export const createTodoInput = (store: TodosStore): HTMLFormElement => {
+const container = document.createElement('form');
 container.id = 'todoInput';
 
 const input = createInput('What needs to be done?');
@@ -17,16 +17,16 @@ const text = input.value.trim();
 if (text) {
 store.addRow('todos', {text, completed: false});
 input.value = '';
+input.focus();
 }
 };
 
-input.addEventListener('keypress', (e) => {
-if (e.key === 'Enter') {
+container.addEventListener('submit', (event) => {
+event.preventDefault();
 addTodo();
-}
 });
 
-const addButton = createButton('Add', addTodo, 'primary');
+const addButton = createButton('Add', null, 'primary', 'submit');
 
 container.appendChild(input);
 container.appendChild(addButton);

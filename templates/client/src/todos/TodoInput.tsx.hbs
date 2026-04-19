@@ -9,7 +9,7 @@
 
 export const TodoInput = () => {
 const [text, setText] = useState('');
-const addRow = useAddRowCallback('todos', () => ({text, completed: false}), [text], STORE_ID);
+const addRow = useAddRowCallback('todos', () => ({text: text.trim(), completed: false}), [text], STORE_ID);
 
 const handleSubmit = (e: React.FormEvent) => {
 e.preventDefault();
