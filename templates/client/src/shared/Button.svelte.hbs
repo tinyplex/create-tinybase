@@ -1,0 +1,24 @@
+{{includeFile template="client/src/shared/button.css.hbs" output="client/src/button.css"}}
+
+<script{{#if typescript}} lang="ts" {{/if}}>
+  import './button.css';
+  {{#if typescript}}
+  import type { Snippet } from 'svelte';
+  {{/if}}
+
+  let {
+    children,
+    onclick = undefined,
+    type = 'button',
+    variant = 'default',
+  }{{#if typescript}}: {
+    children?: Snippet;
+    onclick?: () => void;
+    type?: 'button' | 'submit' | 'reset';
+    variant?: 'default' | 'primary';
+  }{{/if}} = $props();
+</script>
+
+<button {type} class:primary={variant === 'primary'} {onclick}>
+  {@render children?.()}
+</button>

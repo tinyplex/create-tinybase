@@ -1,10 +1,10 @@
-{{includeFile template="client/src/shared/button.css.hbs" output="client/src/button.css"}}
 {{includeFile template="client/src/game/Board.svelte.hbs" output="client/src/Board.svelte"}}
 {{includeFile template="client/src/game/GameStatus.svelte.hbs" output="client/src/GameStatus.svelte"}}
+{{includeFile template="client/src/shared/Button.svelte.hbs" output="client/src/Button.svelte"}}
 
 <script>
-  import './button.css';
   import { onMount } from 'svelte';
+  import Button from './Button.svelte';
   import { getStore } from 'tinybase/ui-svelte';
   import Board from './Board.svelte';
   import GameStatus from './GameStatus.svelte';
@@ -63,5 +63,5 @@
 <GameStatus />
 <Board />
 <div style="text-align: center; margin-top: 2rem;">
-  <button class="primary" onclick={resetGame}>New Game</button>
+  <Button variant="primary" onclick={resetGame}>New Game</Button>
 </div>

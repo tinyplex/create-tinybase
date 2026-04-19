@@ -1,0 +1,42 @@
+{{includeFile template="client/src/shared/input.css.hbs" output="client/src/input.css"}}
+
+<script{{#if typescript}} lang="ts" {{/if}}>
+  import './input.css';
+  import { onMount } from 'svelte';
+
+  let {
+    id = undefined,
+    value = '',
+    onChange = undefined,
+    placeholder = '',
+    autoFocus = false,
+  }{{#if typescript}}: {
+    id?: string;
+    value?: string;
+    onChange?: (value: string) => void;
+    placeholder?: string;
+    autoFocus?: boolean;
+  }{{/if}} = $props();
+
+  let input{{#if typescript}}: HTMLInputElement | undefined{{/if}};
+
+  const handleInput = (event{{#if typescript}}: Event{{/if}}) => {
+    const input = event.currentTarget{{#if typescript}} as HTMLInputElement{{/if}};
+    onChange?.(input.value);
+  };
+
+  onMount(() => {
+    if (autoFocus) {
+      input?.focus();
+    }
+  });
+</script>
+
+<input
+  bind:this={input}
+  {id}
+  type="text"
+  {value}
+  oninput={handleInput}
+  {placeholder}
+/>

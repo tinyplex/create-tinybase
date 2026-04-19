@@ -1,9 +1,9 @@
-{{includeFile template="client/src/shared/input.css.hbs" output="client/src/input.css"}}
 {{includeFile template="client/src/chat/usernameInput.css.hbs" output="client/src/usernameInput.css"}}
+{{includeFile template="client/src/shared/Input.svelte.hbs" output="client/src/Input.svelte"}}
 
 <script{{#if typescript}} lang="ts" {{/if}}>
-  import './input.css';
   import './usernameInput.css';
+  import Input from './Input.svelte';
   import { getValue } from 'tinybase/ui-svelte';
   import { STORE_ID } from './settingsStore';
 
@@ -15,5 +15,12 @@
 
   <div id="usernameInput">
     <label for="usernameInputField">Your name:</label>
-    <input id="usernameInputField" type="text" bind:value={username.current} placeholder="Enter your name" />
+    <Input
+      id="usernameInputField"
+      value={username.current ?? ''}
+      onChange={(value) => {
+        username.current = value;
+      }}
+      placeholder="Enter your name"
+    />
   </div>

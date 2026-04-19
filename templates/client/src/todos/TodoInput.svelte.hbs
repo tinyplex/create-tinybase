@@ -1,11 +1,11 @@
-{{includeFile template="client/src/shared/button.css.hbs" output="client/src/button.css"}}
 {{includeFile template="client/src/shared/input.css.hbs" output="client/src/input.css"}}
 {{includeFile template="client/src/todos/todoInput.css.hbs" output="client/src/todoInput.css"}}
+{{includeFile template="client/src/shared/Button.svelte.hbs" output="client/src/Button.svelte"}}
 
 <script{{#if typescript}} lang="ts" {{/if}}>
-  import './button.css';
   import './input.css';
   import './todoInput.css';
+  import Button from './Button.svelte';
   import { onMount } from 'svelte';
   import { getStore } from 'tinybase/ui-svelte';
   import { STORE_ID } from './store';
@@ -39,5 +39,5 @@
 
   <form id="todoInput" onsubmit={handleSubmit}>
     <input bind:this={input} bind:value={text} type="text" placeholder="What needs to be done?" />
-    <button class="primary" type="submit">Add</button>
+    <Button variant="primary" type="submit">Add</Button>
   </form>
