@@ -1,17 +1,11 @@
 {{#if schemas}}
-  {{#if vanilla}}
-    {{addImport "import {createMergeableStore, type Row} from 'tinybase/with-schemas';"}}
-  {{else}}
-    {{addImport "import {type Row} from 'tinybase/with-schemas';"}}
-  {{/if}}
+  {{addImport "import {createMergeableStore, type Row} from 'tinybase/with-schemas';"}}
 {{else}}
-  {{#if vanilla}}
-    {{addImport "import {createMergeableStore} from 'tinybase';"}}
-  {{/if}}
+  {{addImport "import {createMergeableStore} from 'tinybase';"}}
 {{/if}}
 
 {{#if schemas}}
-  const TABLES_SCHEMA = {
+  export const TABLES_SCHEMA = {
   strokes: {
   color: {type: 'string', default: ''},
   size: {type: 'number', default: 1},
@@ -24,10 +18,13 @@ export const STORE_ID = 'canvas';
 
 export type StrokeRow = {{#if schemas}}Row<typeof TABLES_SCHEMA, 'strokes'>{{else}}{color: string; size: number; points: string}{{/if}};
 
+export const createCanvasStore = () =>
+createMergeableStore(){{#if schemas}}
+  .setTablesSchema(TABLES_SCHEMA){{/if}}
+.setDefaultContent([{strokes: {}}, {}]);
+
 {{#if vanilla}}
-  export const canvasStore = createMergeableStore(){{#if schemas}}
-    .setTablesSchema(TABLES_SCHEMA){{/if}}
-  .setDefaultContent([{strokes: {}}, {}]);
+  export const canvasStore = createCanvasStore();
 
   let resolveCanvasReady: () => void;
   export const canvasStoreReady = new Promise<void>((resolve) => {

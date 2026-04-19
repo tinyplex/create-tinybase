@@ -1,42 +1,26 @@
+{{includeFile template="client/src/todos/store.ts.hbs" output="client/src/storeData.{{#if typescript}}ts{{else}}js{{/if}}"}}
+
 {{#if schemas}}
-  {{addImport "import {createMergeableStore, type Row} from 'tinybase/with-schemas';"}}
   {{addImport "import * as UiReact from 'tinybase/ui-react/with-schemas';"}}
   {{addImport "import {type NoValuesSchema} from 'tinybase/with-schemas';"}}
 
-  const TODOS_SCHEMA = {
-  todos: {
-  text: {type: 'string', default: ''},
-  completed: {type: 'boolean', default: false},
-  },
-  } as const;
-
-  type Schemas = [typeof TODOS_SCHEMA, NoValuesSchema];
+  {{addImport "import {TABLES_SCHEMA} from './storeData';"}}
+  type Schemas = [typeof TABLES_SCHEMA, NoValuesSchema];
 
   const {useAddRowCallback, useCreateMergeableStore, {{#if persist}}useCreatePersister, {{/if}}useDelRowCallback, useProvideStore, useRow, useSetPartialRowCallback, useSortedRowIds} = UiReact as UiReact.WithSchemas<Schemas>;
 {{else}}
-  {{addImport "import {createMergeableStore} from 'tinybase';"}}
   {{addImport "import {useCreateMergeableStore, useProvideStore, useAddRowCallback, useDelRowCallback, useRow, useSortedRowIds, useSetPartialRowCallback} from 'tinybase/ui-react';"}}
 {{/if}}
 
-export type TodoRow = {{#if schemas}}Row<typeof TODOS_SCHEMA, 'todos'>{{else}}{text: string; completed: boolean}{{/if}};
+{{addImport "import {STORE_ID, createTodosStore, type TodoRow} from './storeData';"}}
 
+export {STORE_ID};
+export type {TodoRow};
 export {useAddRowCallback, useDelRowCallback, useRow, useSortedRowIds, useSetPartialRowCallback};
-
-export const STORE_ID = 'todos';
 
 export const Store = ({onReady}: {onReady?: () => void}) => {
 const store = useCreateMergeableStore(() =>
-createMergeableStore(){{#if schemas}}
-  .setTablesSchema(TODOS_SCHEMA){{/if}}
-.setDefaultContent([
-{
-todos: {
-'1': {text: 'Learn TinyBase', completed: false},
-'2': {text: 'Build an app', completed: false},
-},
-},
-{},
-]),
+createTodosStore(),
 );
 
 useProvideStore(STORE_ID, store);

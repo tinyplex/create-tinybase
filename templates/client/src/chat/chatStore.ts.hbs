@@ -1,22 +1,14 @@
 {{#if schemas}}
-  {{#if vanilla}}
-    {{addImport "import {createMergeableStore, type Row} from 'tinybase/with-schemas';"}}
-  {{else}}
-    {{addImport "import {type Row} from 'tinybase/with-schemas';"}}
-  {{/if}}
+  {{addImport "import {createMergeableStore, type Row} from 'tinybase/with-schemas';"}}
 {{else}}
-  {{#if vanilla}}
-    {{addImport "import {createMergeableStore} from 'tinybase';"}}
-  {{/if}}
+  {{addImport "import {createMergeableStore} from 'tinybase';"}}
 {{/if}}
 
 {{includeFile template="client/src/chat/utils.ts.hbs" output="client/src/utils.ts"}}
-{{#if vanilla}}
 {{addImport "import {getDefaultContent} from './utils';"}}
-{{/if}}
 
 {{#if schemas}}
-  const TABLES_SCHEMA = {
+  export const TABLES_SCHEMA = {
   messages: {
   username: {type: 'string', default: ''},
   text: {type: 'string', default: ''},
@@ -29,10 +21,13 @@ export const STORE_ID = 'chat';
 
 export type MessageRow = {{#if schemas}}Row<typeof TABLES_SCHEMA, 'messages'>{{else}}{username: string; text: string; timestamp: number}{{/if}};
 
+export const createChatStore = () =>
+createMergeableStore(){{#if schemas}}
+  .setTablesSchema(TABLES_SCHEMA){{/if}}
+.setDefaultContent(getDefaultContent());
+
 {{#if vanilla}}
-  export const chatStore = createMergeableStore(){{#if schemas}}
-    .setTablesSchema(TABLES_SCHEMA){{/if}}
-  .setDefaultContent(getDefaultContent());
+  export const chatStore = createChatStore();
 
   let resolveChatReady: () => void;
   export const chatStoreReady = new Promise<void>((resolve) => {

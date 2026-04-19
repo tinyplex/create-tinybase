@@ -1,33 +1,32 @@
+{{includeFile template="client/src/drawing/settingsStore.ts.hbs" output="client/src/settingsStoreData.{{#if typescript}}ts{{else}}js{{/if}}"}}
+
 {{#if schemas}}
-  {{addImport "import {createStore} from 'tinybase/with-schemas';"}}
-  {{addImport "import * as UiReact from 'tinybase/ui-react/with-schemas';"}}
   {{addImport "import {type NoTablesSchema} from 'tinybase/with-schemas';"}}
+  {{addImport "import * as UiReact from 'tinybase/ui-react/with-schemas';"}}
 {{else}}
-  {{addImport "import {createStore} from 'tinybase';"}}
   {{addImport "import {useCreateStore, useProvideStore, useValueState, useValues} from 'tinybase/ui-react';"}}
 {{/if}}
 
-export const STORE_ID = 'settings';
-
 {{#if schemas}}
-  const VALUES_SCHEMA = {
-  brushColor: {type: 'string'},
-  brushSize: {type: 'number'},
-  } as const;
-
   type Schemas = [NoTablesSchema, typeof VALUES_SCHEMA];
 
   const {useCreateStore, {{#if persist}}useCreatePersister, {{/if}}useProvideStore, useValues, useValueState} = UiReact as UiReact.WithSchemas<Schemas>;
 {{/if}}
 
+{{#if schemas}}
+  {{addImport "import {DEFAULT_VALUES, STORE_ID, VALUES_SCHEMA, createSettingsStore} from './settingsStoreData';"}}
+{{else}}
+  {{addImport "import {DEFAULT_VALUES, STORE_ID, createSettingsStore} from './settingsStoreData';"}}
+{{/if}}
+
+export {STORE_ID};
 export {useValueState, useValues};
 
 export const SettingsStore = ({onReady}: {onReady?: () => void}) => {
 const store = useCreateStore(() =>
-createStore(){{#if schemas}}
-  .setValuesSchema(VALUES_SCHEMA){{/if}}
-.setValue('brushColor', '#d81b60')
-.setValue('brushSize', 5),
+createSettingsStore()
+.setValue('brushColor', DEFAULT_VALUES.brushColor)
+.setValue('brushSize', DEFAULT_VALUES.brushSize),
 );
 
 useProvideStore(STORE_ID, store);

@@ -3,11 +3,10 @@
 {{#if persistPglite}}{{includeFile template="client/src/shared/pglite.ts.hbs" output="client/src/pglite.{{ext}}"}}{{/if}}
 
 <script{{#if typescript}} lang="ts" {{/if}}>
-  {{#if schemas}}
-  import { createStore, type NoTablesSchema } from 'tinybase/with-schemas';
+{{#if schemas}}
+  import { type NoTablesSchema } from 'tinybase/with-schemas';
   import * as UiSvelte from 'tinybase/ui-svelte/with-schemas';
   {{else}}
-  import { createStore } from 'tinybase';
   import { provideStore } from 'tinybase/ui-svelte';
   {{/if}}
   import { onMount } from 'svelte';
@@ -36,22 +35,16 @@
   import { getPgLite } from './pglite';
   {{/if}}
   {{/if}}
-  import { getRandomName } from './utils';
-  import { STORE_ID } from './settingsStore';
+  import { DEFAULT_VALUES, STORE_ID, createSettingsStore{{#if schemas}}, VALUES_SCHEMA{{/if}} } from './settingsStore';
 
   {{#if schemas}}
-  const VALUES_SCHEMA = {
-    username: { type: 'string' },
-  } as const;
-
   type Schemas = [NoTablesSchema, typeof VALUES_SCHEMA];
   const { provideStore } = UiSvelte as UiSvelte.WithSchemas<Schemas>;
 
   {{/if}}
   let { onReady }{{#if typescript}}: { onReady?: () => void }{{/if}} = $props();
 
-  const store = createStore(){{#if schemas}}
-    .setValuesSchema(VALUES_SCHEMA){{/if}};
+  const store = createSettingsStore();
 
   provideStore(STORE_ID, store);
 
@@ -59,26 +52,26 @@
     {{#if persist}}
     {{#if persistLocalStorage}}
     const persister = createLocalPersister(store, STORE_ID);
-    await persister.load([{}, { username: getRandomName() }]);
+    await persister.load([{}, DEFAULT_VALUES]);
     await persister.startAutoSave();
     onReady?.();
     {{/if}}
     {{#if persistSqlite}}
     const { sqlite3, db } = await getDb();
     const persister = createSqliteWasmPersister(store, sqlite3, db, STORE_ID);
-    await persister.load([{}, { username: getRandomName() }]);
+    await persister.load([{}, DEFAULT_VALUES]);
     await persister.startAutoSave();
     onReady?.();
     {{/if}}
     {{#if persistPglite}}
     const pgLite = await getPgLite();
     const persister = await createPglitePersister(store, pgLite, STORE_ID);
-    await persister.load([{}, { username: getRandomName() }]);
+    await persister.load([{}, DEFAULT_VALUES]);
     await persister.startAutoSave();
     onReady?.();
     {{/if}}
     {{else}}
-    store.setValue('username', getRandomName());
+    store.setValue('username', DEFAULT_VALUES.username);
     onReady?.();
     {{/if}}
   });

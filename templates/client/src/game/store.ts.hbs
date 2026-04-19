@@ -1,41 +1,40 @@
 {{#if schemas}}
-  {{#if vanilla}}
-    {{addImport "import {createMergeableStore} from 'tinybase/with-schemas';"}}
-  {{/if}}
+  {{addImport "import {createMergeableStore} from 'tinybase/with-schemas';"}}
 {{else}}
-  {{#if vanilla}}
-    {{addImport "import {createMergeableStore} from 'tinybase';"}}
-  {{/if}}
+  {{addImport "import {createMergeableStore} from 'tinybase';"}}
 {{/if}}
 
 export const STORE_ID = 'game';
 
-{{#if vanilla}}
-  {{#if schemas}}
-    const TABLES_SCHEMA = {
-    board: {
-    value: {type: 'string', default: ''},
-    },
-    } as const;
-
-    const VALUES_SCHEMA = {
-    currentPlayer: {type: 'string'},
-    gameStatus: {type: 'string'},
-    winner: {type: 'string', default: ''},
-    winningLine: {type: 'string', default: ''},
-    } as const;
-
-  {{/if}}
-  export const store = createMergeableStore(){{#if schemas}}
-    .setTablesSchema(TABLES_SCHEMA)
-    .setValuesSchema(VALUES_SCHEMA){{/if}}
-  .setDefaultContent([
-  {},
-  {
-  currentPlayer: 'X',
-  gameStatus: 'playing',
+{{#if schemas}}
+  export const TABLES_SCHEMA = {
+  board: {
+  value: {type: 'string', default: ''},
   },
-  ]);
+  } as const;
+
+  export const VALUES_SCHEMA = {
+  currentPlayer: {type: 'string'},
+  gameStatus: {type: 'string'},
+  winner: {type: 'string', default: ''},
+  winningLine: {type: 'string', default: ''},
+  } as const;
+
+{{/if}}
+export const createGameStore = () =>
+createMergeableStore(){{#if schemas}}
+  .setTablesSchema(TABLES_SCHEMA)
+  .setValuesSchema(VALUES_SCHEMA){{/if}}
+.setDefaultContent([
+{},
+{
+currentPlayer: 'X',
+gameStatus: 'playing',
+},
+]);
+
+{{#if vanilla}}
+  export const store = createGameStore();
 
   let resolveReady: () => void;
   export const storeReady = new Promise<void>((resolve) => {

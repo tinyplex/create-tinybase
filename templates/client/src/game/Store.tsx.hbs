@@ -1,46 +1,29 @@
+{{includeFile template="client/src/game/store.ts.hbs" output="client/src/storeData.{{#if typescript}}ts{{else}}js{{/if}}"}}
+
 {{#if schemas}}
-  {{addImport "import {createMergeableStore} from 'tinybase/with-schemas';"}}
   {{addImport "import * as UiReact from 'tinybase/ui-react/with-schemas';"}}
 {{else}}
-  {{addImport "import {createMergeableStore} from 'tinybase';"}}
   {{addImport "import {useCreateMergeableStore, useProvideStore, useStore, useSetValuesCallback, useSetCellCallback, useTableListener, useCell, useValue} from 'tinybase/ui-react';"}}
 {{/if}}
 
-export const STORE_ID = 'game';
-
 {{#if schemas}}
-  const TABLES_SCHEMA = {
-  board: {
-  value: {type: 'string', default: ''},
-  },
-  } as const;
-
-  const VALUES_SCHEMA = {
-  currentPlayer: {type: 'string'},
-  gameStatus: {type: 'string'},
-  winner: {type: 'string', default: ''},
-  winningLine: {type: 'string', default: ''},
-  } as const;
-
   type Schemas = [typeof TABLES_SCHEMA, typeof VALUES_SCHEMA];
 
   const {useCell, useCreateMergeableStore, {{#if persist}}useCreatePersister, {{/if}}useProvideStore, useSetCellCallback, useSetValuesCallback, useStore, useTableListener, useValue} = UiReact as UiReact.WithSchemas<Schemas>;
 {{/if}}
 
+{{#if schemas}}
+  {{addImport "import {STORE_ID, TABLES_SCHEMA, VALUES_SCHEMA, createGameStore} from './storeData';"}}
+{{else}}
+  {{addImport "import {STORE_ID, createGameStore} from './storeData';"}}
+{{/if}}
+
+export {STORE_ID};
 export {useStore, useSetValuesCallback, useSetCellCallback, useTableListener, useCell, useValue};
 
 export const Store = ({onReady}: {onReady?: () => void}) => {
 const store = useCreateMergeableStore(() =>
-createMergeableStore(){{#if schemas}}
-  .setTablesSchema(TABLES_SCHEMA)
-  .setValuesSchema(VALUES_SCHEMA){{/if}}
-.setDefaultContent([
-{},
-{
-currentPlayer: 'X',
-gameStatus: 'playing',
-},
-]),
+createGameStore(),
 );
 
 useProvideStore(STORE_ID, store);

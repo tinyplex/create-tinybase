@@ -1,37 +1,34 @@
 {{#if schemas}}
-  {{#if vanilla}}
-    {{addImport "import {createMergeableStore, type Row} from 'tinybase/with-schemas';"}}
-  {{else}}
-    {{addImport "import {type Row} from 'tinybase/with-schemas';"}}
-  {{/if}}
-  const TODOS_SCHEMA = {
+  {{addImport "import {createMergeableStore, type Row} from 'tinybase/with-schemas';"}}
+  export const TABLES_SCHEMA = {
   todos: {
   text: {type: 'string', default: ''},
   completed: {type: 'boolean', default: false},
   },
   } as const;
 {{else}}
-  {{#if vanilla}}
-    {{addImport "import {createMergeableStore} from 'tinybase';"}}
-  {{/if}}
+  {{addImport "import {createMergeableStore} from 'tinybase';"}}
 {{/if}}
 
-export type TodoRow = {{#if schemas}}Row<typeof TODOS_SCHEMA, 'todos'>{{else}}{text: string; completed: boolean}{{/if}};
+export type TodoRow = {{#if schemas}}Row<typeof TABLES_SCHEMA, 'todos'>{{else}}{text: string; completed: boolean}{{/if}};
 
 export const STORE_ID = 'todos';
 
+export const createTodosStore = () =>
+createMergeableStore(){{#if schemas}}
+  .setTablesSchema(TABLES_SCHEMA){{/if}}
+.setDefaultContent([
+{
+todos: {
+'1': {text: 'Learn TinyBase', completed: false},
+'2': {text: 'Build an app', completed: false},
+},
+},
+{},
+]);
+
 {{#if vanilla}}
-  export const store = createMergeableStore(){{#if schemas}}
-    .setTablesSchema(TODOS_SCHEMA){{/if}}
-  .setDefaultContent([
-  {
-  todos: {
-  '1': {text: 'Learn TinyBase', completed: false},
-  '2': {text: 'Build an app', completed: false},
-  },
-  },
-  {},
-  ]);
+  export const store = createTodosStore();
 
   let resolveReady: () => void;
   export const storeReady = new Promise<void>((resolve) => {

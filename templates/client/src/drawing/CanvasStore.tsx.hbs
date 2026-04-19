@@ -1,37 +1,31 @@
+{{includeFile template="client/src/drawing/canvasStore.ts.hbs" output="client/src/canvasStoreData.{{#if typescript}}ts{{else}}js{{/if}}"}}
+
 {{#if schemas}}
-  {{addImport "import {createMergeableStore, type Row} from 'tinybase/with-schemas';"}}
-  {{addImport "import * as UiReact from 'tinybase/ui-react/with-schemas';"}}
   {{addImport "import {type NoValuesSchema} from 'tinybase/with-schemas';"}}
+  {{addImport "import * as UiReact from 'tinybase/ui-react/with-schemas';"}}
 {{else}}
-  {{addImport "import {createMergeableStore} from 'tinybase';"}}
   {{addImport "import {useCreateMergeableStore, useProvideStore, useDelTableCallback, useRow, useSortedRowIds, useStore, useTable} from 'tinybase/ui-react';"}}
 {{/if}}
 
-export const STORE_ID = 'canvas';
-
 {{#if schemas}}
-  const TABLES_SCHEMA = {
-  strokes: {
-  color: {type: 'string', default: ''},
-  size: {type: 'number', default: 1},
-  points: {type: 'string', default: '[]'},
-  },
-  } as const;
-
   type Schemas = [typeof TABLES_SCHEMA, NoValuesSchema];
 
   const {useCreateMergeableStore, {{#if persist}}useCreatePersister, {{/if}}useDelTableCallback, useProvideStore, useRow, useSortedRowIds, useStore, useTable} = UiReact as UiReact.WithSchemas<Schemas>;
 {{/if}}
 
-export type StrokeRow = {{#if schemas}}Row<typeof TABLES_SCHEMA, 'strokes'>{{else}}{color: string; size: number; points: string}{{/if}};
+{{#if schemas}}
+  {{addImport "import {STORE_ID, TABLES_SCHEMA, createCanvasStore, type StrokeRow} from './canvasStoreData';"}}
+{{else}}
+  {{addImport "import {STORE_ID, createCanvasStore, type StrokeRow} from './canvasStoreData';"}}
+{{/if}}
 
+export {STORE_ID};
+export type {StrokeRow};
 export {useDelTableCallback, useRow, useSortedRowIds, useStore, useTable};
 
 export const CanvasStore = ({onReady}: {onReady?: () => void}) => {
 const store = useCreateMergeableStore(() =>
-createMergeableStore(){{#if schemas}}
-  .setTablesSchema(TABLES_SCHEMA){{/if}}
-.setDefaultContent([{strokes: {}}, {}]),
+createCanvasStore(),
 );
 
 useProvideStore(STORE_ID, store);

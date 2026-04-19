@@ -1,28 +1,27 @@
 {{#if schemas}}
-  {{#if vanilla}}
-    {{addImport "import {createStore} from 'tinybase/with-schemas';"}}
-  {{/if}}
+  {{addImport "import {createStore} from 'tinybase/with-schemas';"}}
 {{else}}
-  {{#if vanilla}}
-    {{addImport "import {createStore} from 'tinybase';"}}
-  {{/if}}
+  {{addImport "import {createStore} from 'tinybase';"}}
 {{/if}}
 
 {{includeFile template="client/src/chat/utils.ts.hbs" output="client/src/utils.ts"}}
-{{#if vanilla}}
 {{addImport "import {getRandomName} from './utils';"}}
-{{/if}}
 export const STORE_ID = 'settings';
 
-{{#if vanilla}}
-  {{#if schemas}}
-    const VALUES_SCHEMA = {
-    username: {type: 'string'},
-    } as const;
+export const DEFAULT_VALUES = {username: getRandomName()};
 
-  {{/if}}
-  export const settingsStore = createStore(){{#if schemas}}
-    .setValuesSchema(VALUES_SCHEMA){{/if}};
+{{#if schemas}}
+  export const VALUES_SCHEMA = {
+  username: {type: 'string'},
+  } as const;
+
+{{/if}}
+export const createSettingsStore = () =>
+createStore(){{#if schemas}}
+  .setValuesSchema(VALUES_SCHEMA){{/if}};
+
+{{#if vanilla}}
+  export const settingsStore = createSettingsStore();
 
   let resolveSettingsReady: () => void;
   export const settingsStoreReady = new Promise<void>((resolve) => {
@@ -38,7 +37,7 @@ export const STORE_ID = 'settings';
         {{/if}}
 
         const settingsPersister = createLocalPersister(settingsStore, 'settings');
-        settingsPersister.load([{}, {username: getRandomName()}]).then(() => {
+        settingsPersister.load([{}, DEFAULT_VALUES]).then(() => {
         settingsPersister.startAutoSave();
         resolveSettingsReady();
         });
@@ -54,7 +53,7 @@ export const STORE_ID = 'settings';
 
         getDb().then(({sqlite3, db}) => {
         const settingsPersister = createSqliteWasmPersister(settingsStore, sqlite3, db, 'settings');
-        settingsPersister.load([{}, {username: getRandomName()}]).then(() => {
+        settingsPersister.load([{}, DEFAULT_VALUES]).then(() => {
         settingsPersister.startAutoSave();
         resolveSettingsReady();
         });
@@ -71,7 +70,7 @@ export const STORE_ID = 'settings';
 
         getPgLite().then((pgLite) => {
         createPglitePersister(settingsStore, pgLite, 'settings').then((settingsPersister) => {
-        settingsPersister.load([{}, {username: getRandomName()}]).then(() => {
+        settingsPersister.load([{}, DEFAULT_VALUES]).then(() => {
         settingsPersister.startAutoSave();
         resolveSettingsReady();
         });
@@ -79,7 +78,7 @@ export const STORE_ID = 'settings';
         });
       {{/if}}
     {{else}}
-      settingsStore.setValue('username', getRandomName());
+      settingsStore.setValue('username', DEFAULT_VALUES.username);
       resolveSettingsReady();
     {{/if}}
 

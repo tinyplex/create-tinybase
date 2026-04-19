@@ -4,11 +4,10 @@
 {{#if sync}}{{includeFile template="client/src/shared/config.ts.hbs" output="client/src/config.ts"}}{{/if}}
 
 <script{{#if typescript}} lang="ts" {{/if}}>
-  {{#if schemas}}
-  import { createMergeableStore, type NoValuesSchema } from 'tinybase/with-schemas';
+{{#if schemas}}
+  import { type NoValuesSchema } from 'tinybase/with-schemas';
   import * as UiSvelte from 'tinybase/ui-svelte/with-schemas';
   {{else}}
-  import { createMergeableStore } from 'tinybase';
   import { provideStore } from 'tinybase/ui-svelte';
   {{/if}}
   import { onMount } from 'svelte';
@@ -46,26 +45,16 @@
   import { createWsSynchronizer } from 'tinybase/synchronizers/synchronizer-ws-client';
   {{/if}}
   {{/if}}
-  import { STORE_ID } from './canvasStore';
+  import { STORE_ID, createCanvasStore{{#if schemas}}, TABLES_SCHEMA{{/if}} } from './canvasStore';
 
   {{#if schemas}}
-  const TABLES_SCHEMA = {
-    strokes: {
-      color: { type: 'string', default: '' },
-      size: { type: 'number', default: 1 },
-      points: { type: 'string', default: '[]' },
-    },
-  } as const;
-
   type Schemas = [typeof TABLES_SCHEMA, NoValuesSchema];
   const { provideStore } = UiSvelte as UiSvelte.WithSchemas<Schemas>;
 
   {{/if}}
   let { onReady }{{#if typescript}}: { onReady?: () => void }{{/if}} = $props();
 
-  const store = createMergeableStore(){{#if schemas}}
-    .setTablesSchema(TABLES_SCHEMA){{/if}}
-    .setDefaultContent([{ strokes: {} }, {}]);
+  const store = createCanvasStore();
 
   provideStore(STORE_ID, store);
 
