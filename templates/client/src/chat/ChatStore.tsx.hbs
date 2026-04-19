@@ -1,3 +1,7 @@
+{{#unless persist}}{{#unless sync}}
+  {{addImport "import {useEffect} from 'react';"}}
+{{/unless}}{{/unless}}
+
 {{includeFile template="client/src/chat/chatStore.ts.hbs" output="client/src/chatStoreData.{{#if typescript}}ts{{else}}js{{/if}}"}}
 
 {{#if schemas}}
@@ -88,7 +92,7 @@ useProvideStore(STORE_ID, store);
     store,
     async (store) => {
     const pgLite = await getPgLite();
-    return await createPglitePersister(store, pgLite, 'chat');
+    return await createPglitePersister(store, pgLite, STORE_ID);
     },
     [],
     async (persister) => {
@@ -135,7 +139,9 @@ useProvideStore(STORE_ID, store);
 {{/if}}
 
 {{#unless persist}}{{#unless sync}}
+    useEffect(() => {
     onReady?.();
+    }, [onReady]);
   {{/unless}}{{/unless}}
 
 return null;

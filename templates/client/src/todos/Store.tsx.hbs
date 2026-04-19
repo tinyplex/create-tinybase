@@ -1,3 +1,7 @@
+{{#unless persist}}{{#unless sync}}
+  {{addImport "import {useEffect} from 'react';"}}
+{{/unless}}{{/unless}}
+
 {{includeFile template="client/src/todos/store.ts.hbs" output="client/src/storeData.{{#if typescript}}ts{{else}}js{{/if}}"}}
 
 {{#if schemas}}
@@ -130,7 +134,9 @@ useProvideStore(STORE_ID, store);
 {{/if}}
 
 {{#unless persist}}{{#unless sync}}
+    useEffect(() => {
     onReady?.();
+    }, [onReady]);
   {{/unless}}{{/unless}}
 
 return null;

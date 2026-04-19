@@ -42,7 +42,7 @@ createMergeableStore(){{#if schemas}}
           {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser';"}}
         {{/if}}
 
-        const chatPersister = createLocalPersister(chatStore, 'chat');
+        const chatPersister = createLocalPersister(chatStore, STORE_ID);
         chatPersister.load().then(() => {
         chatPersister.startAutoSave();
         resolveChatReady();
@@ -58,7 +58,7 @@ createMergeableStore(){{#if schemas}}
         {{addImport "import {getDb} from './sqlite';"}}
 
         getDb().then(({sqlite3, db}) => {
-        const chatPersister = createSqliteWasmPersister(chatStore, sqlite3, db, 'chat');
+        const chatPersister = createSqliteWasmPersister(chatStore, sqlite3, db, STORE_ID);
         chatPersister.load().then(() => {
         chatPersister.startAutoSave();
         resolveChatReady();
@@ -75,7 +75,7 @@ createMergeableStore(){{#if schemas}}
         {{addImport "import {getPgLite} from './pglite';"}}
 
         getPgLite().then((pgLite) => {
-        createPglitePersister(chatStore, pgLite, 'chat').then((chatPersister) => {
+        createPglitePersister(chatStore, pgLite, STORE_ID).then((chatPersister) => {
         chatPersister.load().then(() => {
         chatPersister.startAutoSave();
         resolveChatReady();

@@ -49,7 +49,7 @@ gameStatus: 'playing',
           {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser';"}}
         {{/if}}
 
-        const persister = createLocalPersister(store, 'game');
+        const persister = createLocalPersister(store, STORE_ID);
         persister.load().then(() => {
         persister.startAutoSave();
         resolveReady();
@@ -65,7 +65,7 @@ gameStatus: 'playing',
         {{addImport "import {getDb} from './sqlite';"}}
 
         getDb().then(({sqlite3, db}) => {
-        const persister = createSqliteWasmPersister(store, sqlite3, db, 'game');
+        const persister = createSqliteWasmPersister(store, sqlite3, db, STORE_ID);
         persister.load().then(() => {
         persister.startAutoSave();
         resolveReady();
@@ -82,7 +82,7 @@ gameStatus: 'playing',
         {{addImport "import {getPgLite} from './pglite';"}}
 
         getPgLite().then((pgLite) => {
-        createPglitePersister(store, pgLite, 'game').then((persister) => {
+        createPglitePersister(store, pgLite, STORE_ID).then((persister) => {
         persister.load().then(() => {
         persister.startAutoSave();
         resolveReady();

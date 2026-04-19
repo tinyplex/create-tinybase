@@ -39,7 +39,7 @@ createMergeableStore(){{#if schemas}}
           {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser';"}}
         {{/if}}
 
-        const canvasPersister = createLocalPersister(canvasStore, 'canvas');
+        const canvasPersister = createLocalPersister(canvasStore, STORE_ID);
         canvasPersister.load().then(() => {
         canvasPersister.startAutoSave();
         resolveCanvasReady();
@@ -55,7 +55,7 @@ createMergeableStore(){{#if schemas}}
         {{addImport "import {getDb} from './sqlite';"}}
 
         getDb().then(({sqlite3, db}) => {
-        const canvasPersister = createSqliteWasmPersister(canvasStore, sqlite3, db, 'canvas');
+        const canvasPersister = createSqliteWasmPersister(canvasStore, sqlite3, db, STORE_ID);
         canvasPersister.load().then(() => {
         canvasPersister.startAutoSave();
         resolveCanvasReady();
@@ -72,7 +72,7 @@ createMergeableStore(){{#if schemas}}
         {{addImport "import {getPgLite} from './pglite';"}}
 
         getPgLite().then((pgLite) => {
-        createPglitePersister(canvasStore, pgLite, 'canvas').then((canvasPersister) => {
+        createPglitePersister(canvasStore, pgLite, STORE_ID).then((canvasPersister) => {
         canvasPersister.load().then(() => {
         canvasPersister.startAutoSave();
         resolveCanvasReady();

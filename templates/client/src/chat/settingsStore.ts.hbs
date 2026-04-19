@@ -36,7 +36,7 @@ createStore(){{#if schemas}}
           {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser';"}}
         {{/if}}
 
-        const settingsPersister = createLocalPersister(settingsStore, 'settings');
+        const settingsPersister = createLocalPersister(settingsStore, STORE_ID);
         settingsPersister.load([{}, DEFAULT_VALUES]).then(() => {
         settingsPersister.startAutoSave();
         resolveSettingsReady();
@@ -52,7 +52,7 @@ createStore(){{#if schemas}}
         {{addImport "import {getDb} from './sqlite';"}}
 
         getDb().then(({sqlite3, db}) => {
-        const settingsPersister = createSqliteWasmPersister(settingsStore, sqlite3, db, 'settings');
+        const settingsPersister = createSqliteWasmPersister(settingsStore, sqlite3, db, STORE_ID);
         settingsPersister.load([{}, DEFAULT_VALUES]).then(() => {
         settingsPersister.startAutoSave();
         resolveSettingsReady();
@@ -69,7 +69,7 @@ createStore(){{#if schemas}}
         {{addImport "import {getPgLite} from './pglite';"}}
 
         getPgLite().then((pgLite) => {
-        createPglitePersister(settingsStore, pgLite, 'settings').then((settingsPersister) => {
+        createPglitePersister(settingsStore, pgLite, STORE_ID).then((settingsPersister) => {
         settingsPersister.load([{}, DEFAULT_VALUES]).then(() => {
         settingsPersister.startAutoSave();
         resolveSettingsReady();

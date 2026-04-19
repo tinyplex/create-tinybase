@@ -43,7 +43,7 @@ todos: {
           {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser';"}}
         {{/if}}
 
-        const persister = createLocalPersister(store, 'todos');
+        const persister = createLocalPersister(store, STORE_ID);
         persister.load().then(() => {
         persister.startAutoSave();
         resolveReady();
@@ -59,7 +59,7 @@ todos: {
         {{addImport "import {getDb} from './sqlite';"}}
 
         getDb().then(({sqlite3, db}) => {
-        const persister = createSqliteWasmPersister(store, sqlite3, db, 'todos');
+        const persister = createSqliteWasmPersister(store, sqlite3, db, STORE_ID);
         persister.load().then(() => {
         persister.startAutoSave();
         resolveReady();
@@ -76,7 +76,7 @@ todos: {
         {{addImport "import {getPgLite} from './pglite';"}}
 
         getPgLite().then((pgLite) => {
-        createPglitePersister(store, pgLite, 'todos').then((persister) => {
+        createPglitePersister(store, pgLite, STORE_ID).then((persister) => {
         persister.load().then(() => {
         persister.startAutoSave();
         resolveReady();
