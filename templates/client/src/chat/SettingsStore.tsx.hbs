@@ -1,3 +1,7 @@
+{{#unless persist}}
+  {{addImport "import {useEffect} from 'react';"}}
+{{/unless}}
+
 {{includeFile template="client/src/chat/settingsStore.ts.hbs" output="client/src/settingsStoreData.{{#if typescript}}ts{{else}}js{{/if}}"}}
 
 {{#if schemas}}
@@ -24,7 +28,7 @@ export {useValue, useValueState};
 
 export const SettingsStore = ({onReady}: {onReady?: () => void}) => {
 const store = useCreateStore(() =>
-createSettingsStore().setValue('username', DEFAULT_VALUES.username),
+createSettingsStore(),
 );
 
 useProvideStore(STORE_ID, store);
@@ -43,7 +47,7 @@ useProvideStore(STORE_ID, store);
     (store) => createLocalPersister(store, STORE_ID),
     [],
     async (persister) => {
-    await persister.load();
+    await persister.load([{}, DEFAULT_VALUES]);
     await persister.startAutoSave();
     onReady?.();
     },
@@ -67,7 +71,7 @@ useProvideStore(STORE_ID, store);
     },
     [],
     async (persister) => {
-    await persister.load();
+    await persister.load([{}, DEFAULT_VALUES]);
     await persister.startAutoSave();
     onReady?.();
     },
@@ -91,7 +95,7 @@ useProvideStore(STORE_ID, store);
     },
     [],
     async (persister) => {
-    await persister.load();
+    await persister.load([{}, DEFAULT_VALUES]);
     await persister.startAutoSave();
     onReady?.();
     },
@@ -100,7 +104,10 @@ useProvideStore(STORE_ID, store);
 {{/if}}
 
 {{#unless persist}}{{#unless sync}}
+    useEffect(() => {
+    store.setValue('username', DEFAULT_VALUES.username);
     onReady?.();
+    }, [onReady, store]);
   {{/unless}}{{/unless}}
 
 return null;
