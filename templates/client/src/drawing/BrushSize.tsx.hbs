@@ -11,9 +11,9 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
   return (
   <div id="brushSize">
-    <label>Size:</label>
-    <input type="range" min="1" max="50" value={size ?? 5} onChange={handleChange} />
-    <span id="brushSizeValue">{size}</span>
+    <label htmlFor="brushSizeSlider">Size:</label>
+    <input id="brushSizeSlider" type="range" min="1" max="50" value={size ?? 5} onChange={handleChange} />
+    <span id="brushSizeValue">{size ?? 5}</span>
   </div>
   );
   };

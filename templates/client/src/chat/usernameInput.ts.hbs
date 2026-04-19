@@ -14,6 +14,8 @@ const label = document.createElement('label');
 label.textContent = 'Your name:';
 
 const usernameInput = createInput('Enter your name', settingsStore.getValue('username') as string);
+usernameInput.id = 'usernameInputField';
+label.htmlFor = usernameInput.id;
 
 container.appendChild(label);
 container.appendChild(usernameInput);

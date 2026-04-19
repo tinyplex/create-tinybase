@@ -10,9 +10,11 @@ const label = document.createElement('label');
 label.textContent = 'Size:';
 
 const sizeSlider = document.createElement('input');
+sizeSlider.id = 'brushSizeSlider';
 sizeSlider.type = 'range';
 sizeSlider.min = '1';
 sizeSlider.max = '50';
+label.htmlFor = sizeSlider.id;
 
 const sizeLabel = document.createElement('span');
 sizeLabel.id = 'brushSizeValue';
