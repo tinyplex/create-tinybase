@@ -356,8 +356,7 @@ export const Button = ({
   </button>
 );
 ",
-  "client/src/ChatStore.jsx": "import {createMergeableStore} from 'tinybase';
-import {
+  "client/src/ChatStore.jsx": "import {
   useCreateMergeableStore,
   useProvideStore,
   useAddRowCallback,
@@ -365,18 +364,15 @@ import {
   useSortedRowIds,
   useStore,
 } from 'tinybase/ui-react';
-import {getDefaultContent} from './utils';
+import {STORE_ID, createChatStore} from './chatStoreData';
 import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 import {useCreatePersister} from 'tinybase/ui-react';
 
-export const STORE_ID = 'chat';
-
+export {STORE_ID};
 export {useAddRowCallback, useRow, useSortedRowIds, useStore};
 
 export const ChatStore = ({onReady}) => {
-  const store = useCreateMergeableStore(() =>
-    createMergeableStore().setDefaultContent(getDefaultContent()),
-  );
+  const store = useCreateMergeableStore(() => createChatStore());
 
   useProvideStore(STORE_ID, store);
 
@@ -397,12 +393,14 @@ export const ChatStore = ({onReady}) => {
   "client/src/Input.jsx": "import './input.css';
 
 export const Input = ({
+  id,
   value,
   onChange,
   placeholder = '',
   autoFocus = false,
 }) => (
   <input
+    id={id}
     type="text"
     value={value}
     onChange={(e) => onChange(e.target.value)}
@@ -445,7 +443,7 @@ export const MessageInput = () => {
     'messages',
     () => ({
       username,
-      text: message,
+      text: message.trim(),
       timestamp: Date.now(),
     }),
     [message, username],
@@ -498,25 +496,25 @@ export const Messages = () => {
   );
 };
 ",
-  "client/src/SettingsStore.jsx": "import {createStore} from 'tinybase';
-import {
+  "client/src/SettingsStore.jsx": "import {
   useCreateStore,
   useProvideStore,
   useValue,
   useValueState,
 } from 'tinybase/ui-react';
-import {getRandomName} from './utils';
+import {
+  DEFAULT_VALUES,
+  STORE_ID,
+  createSettingsStore,
+} from './settingsStoreData';
 import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 import {useCreatePersister} from 'tinybase/ui-react';
 
-export const STORE_ID = 'settings';
-
+export {STORE_ID};
 export {useValue, useValueState};
 
 export const SettingsStore = ({onReady}) => {
-  const store = useCreateStore(() =>
-    createStore().setValue('username', getRandomName()),
-  );
+  const store = useCreateStore(() => createSettingsStore());
 
   useProvideStore(STORE_ID, store);
 
@@ -525,7 +523,7 @@ export const SettingsStore = ({onReady}) => {
     (store) => createLocalPersister(store, STORE_ID),
     [],
     async (persister) => {
-      await persister.load();
+      await persister.load([{}, DEFAULT_VALUES]);
       await persister.startAutoSave();
       onReady?.();
     },
@@ -543,9 +541,10 @@ export const UsernameInput = () => {
 
   return (
     <div id="usernameInput">
-      <label>Your name:</label>
+      <label htmlFor="usernameInputField">Your name:</label>
       <Input
-        value={username + ''}
+        id="usernameInputField"
+        value={String(username ?? '')}
         onChange={setUsername}
         placeholder="Enter your name"
       />
@@ -578,6 +577,14 @@ button.primary {
 button.primary:hover {
   background: #c2185b;
 }
+",
+  "client/src/chatStoreData.js": "import {createMergeableStore} from 'tinybase';
+import {getDefaultContent} from './utils';
+
+export const STORE_ID = 'chat';
+
+export const createChatStore = () =>
+  createMergeableStore().setDefaultContent(getDefaultContent());
 ",
   "client/src/index.jsx": "import ReactDOM from 'react-dom/client';
 import {App} from './App';
@@ -617,9 +624,7 @@ input[type='text']::placeholder {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -666,6 +671,15 @@ input[type='text']::placeholder {
   margin-bottom: 1rem;
 }
 ",
+  "client/src/settingsStoreData.js": "import {createStore} from 'tinybase';
+import {getRandomName} from './utils';
+
+export const STORE_ID = 'settings';
+
+export const DEFAULT_VALUES = {username: getRandomName()};
+
+export const createSettingsStore = () => createStore();
+",
   "client/src/usernameInput.css": "#usernameInput {
   margin-bottom: 1rem;
   display: flex;
@@ -681,7 +695,7 @@ input[type='text']::placeholder {
   flex: 1;
 }
 ",
-  "client/src/utils.jsx": "const NAMES = [
+  "client/src/utils.js": "const NAMES = [
   'Carol',
   'Charlie',
   'Casey',
@@ -1141,8 +1155,7 @@ export const Button = ({
   </button>
 );
 ",
-  "client/src/ChatStore.jsx": "import {createMergeableStore} from 'tinybase';
-import {
+  "client/src/ChatStore.jsx": "import {
   useCreateMergeableStore,
   useProvideStore,
   useAddRowCallback,
@@ -1150,19 +1163,16 @@ import {
   useSortedRowIds,
   useStore,
 } from 'tinybase/ui-react';
-import {getDefaultContent} from './utils';
+import {STORE_ID, createChatStore} from './chatStoreData';
 import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';
 import {useCreatePersister} from 'tinybase/ui-react';
 import {getDb} from './sqlite';
 
-export const STORE_ID = 'chat';
-
+export {STORE_ID};
 export {useAddRowCallback, useRow, useSortedRowIds, useStore};
 
 export const ChatStore = ({onReady}) => {
-  const store = useCreateMergeableStore(() =>
-    createMergeableStore().setDefaultContent(getDefaultContent()),
-  );
+  const store = useCreateMergeableStore(() => createChatStore());
 
   useProvideStore(STORE_ID, store);
 
@@ -1186,12 +1196,14 @@ export const ChatStore = ({onReady}) => {
   "client/src/Input.jsx": "import './input.css';
 
 export const Input = ({
+  id,
   value,
   onChange,
   placeholder = '',
   autoFocus = false,
 }) => (
   <input
+    id={id}
     type="text"
     value={value}
     onChange={(e) => onChange(e.target.value)}
@@ -1234,7 +1246,7 @@ export const MessageInput = () => {
     'messages',
     () => ({
       username,
-      text: message,
+      text: message.trim(),
       timestamp: Date.now(),
     }),
     [message, username],
@@ -1287,26 +1299,26 @@ export const Messages = () => {
   );
 };
 ",
-  "client/src/SettingsStore.jsx": "import {createStore} from 'tinybase';
-import {
+  "client/src/SettingsStore.jsx": "import {
   useCreateStore,
   useProvideStore,
   useValue,
   useValueState,
 } from 'tinybase/ui-react';
-import {getRandomName} from './utils';
+import {
+  DEFAULT_VALUES,
+  STORE_ID,
+  createSettingsStore,
+} from './settingsStoreData';
 import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';
 import {useCreatePersister} from 'tinybase/ui-react';
 import {getDb} from './sqlite';
 
-export const STORE_ID = 'settings';
-
+export {STORE_ID};
 export {useValue, useValueState};
 
 export const SettingsStore = ({onReady}) => {
-  const store = useCreateStore(() =>
-    createStore().setValue('username', getRandomName()),
-  );
+  const store = useCreateStore(() => createSettingsStore());
 
   useProvideStore(STORE_ID, store);
 
@@ -1318,7 +1330,7 @@ export const SettingsStore = ({onReady}) => {
     },
     [],
     async (persister) => {
-      await persister.load();
+      await persister.load([{}, DEFAULT_VALUES]);
       await persister.startAutoSave();
       onReady?.();
     },
@@ -1336,9 +1348,10 @@ export const UsernameInput = () => {
 
   return (
     <div id="usernameInput">
-      <label>Your name:</label>
+      <label htmlFor="usernameInputField">Your name:</label>
       <Input
-        value={username + ''}
+        id="usernameInputField"
+        value={String(username ?? '')}
         onChange={setUsername}
         placeholder="Enter your name"
       />
@@ -1371,6 +1384,14 @@ button.primary {
 button.primary:hover {
   background: #c2185b;
 }
+",
+  "client/src/chatStoreData.js": "import {createMergeableStore} from 'tinybase';
+import {getDefaultContent} from './utils';
+
+export const STORE_ID = 'chat';
+
+export const createChatStore = () =>
+  createMergeableStore().setDefaultContent(getDefaultContent());
 ",
   "client/src/index.jsx": "import ReactDOM from 'react-dom/client';
 import {App} from './App';
@@ -1410,9 +1431,7 @@ input[type='text']::placeholder {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -1459,6 +1478,15 @@ input[type='text']::placeholder {
   margin-bottom: 1rem;
 }
 ",
+  "client/src/settingsStoreData.js": "import {createStore} from 'tinybase';
+import {getRandomName} from './utils';
+
+export const STORE_ID = 'settings';
+
+export const DEFAULT_VALUES = {username: getRandomName()};
+
+export const createSettingsStore = () => createStore();
+",
   "client/src/sqlite.jsx": "import sqlite3InitModule from '@sqlite.org/sqlite-wasm';
 
 let sqlite3Promise = null;
@@ -1491,7 +1519,7 @@ export const getDb = async () => {
   flex: 1;
 }
 ",
-  "client/src/utils.jsx": "const NAMES = [
+  "client/src/utils.js": "const NAMES = [
   'Carol',
   'Charlie',
   'Casey',
@@ -1888,15 +1916,16 @@ export const BrushSize = () => {
 
   return (
     <div id="brushSize">
-      <label>Size:</label>
+      <label htmlFor="brushSizeSlider">Size:</label>
       <input
+        id="brushSizeSlider"
         type="range"
         min="1"
         max="50"
         value={size ?? 5}
         onChange={handleChange}
       />
-      <span id="brushSizeValue">{size}</span>
+      <span id="brushSizeValue">{size ?? 5}</span>
     </div>
   );
 };
@@ -2049,8 +2078,7 @@ export const Canvas = () => {
   );
 };
 ",
-  "client/src/CanvasStore.jsx": "import {createMergeableStore} from 'tinybase';
-import {
+  "client/src/CanvasStore.jsx": "import {
   useCreateMergeableStore,
   useProvideStore,
   useDelTableCallback,
@@ -2059,17 +2087,15 @@ import {
   useStore,
   useTable,
 } from 'tinybase/ui-react';
+import {STORE_ID, createCanvasStore} from './canvasStoreData';
 import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 import {useCreatePersister} from 'tinybase/ui-react';
 
-export const STORE_ID = 'canvas';
-
+export {STORE_ID};
 export {useDelTableCallback, useRow, useSortedRowIds, useStore, useTable};
 
 export const CanvasStore = ({onReady}) => {
-  const store = useCreateMergeableStore(() =>
-    createMergeableStore().setDefaultContent([{strokes: {}}, {}]),
-  );
+  const store = useCreateMergeableStore(() => createCanvasStore());
 
   useProvideStore(STORE_ID, store);
 
@@ -2139,24 +2165,25 @@ export const DrawingControls = () => {
 
 export const Loading = () => <div id="loading" />;
 ",
-  "client/src/SettingsStore.jsx": "import {createStore} from 'tinybase';
-import {
+  "client/src/SettingsStore.jsx": "import {
   useCreateStore,
   useProvideStore,
   useValueState,
   useValues,
 } from 'tinybase/ui-react';
+import {
+  DEFAULT_VALUES,
+  STORE_ID,
+  createSettingsStore,
+} from './settingsStoreData';
 import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 import {useCreatePersister} from 'tinybase/ui-react';
 
-export const STORE_ID = 'settings';
-
+export {STORE_ID};
 export {useValueState, useValues};
 
 export const SettingsStore = ({onReady}) => {
-  const store = useCreateStore(() =>
-    createStore().setValue('brushColor', '#d81b60').setValue('brushSize', 5),
-  );
+  const store = useCreateStore(() => createSettingsStore());
 
   useProvideStore(STORE_ID, store);
 
@@ -2165,7 +2192,7 @@ export const SettingsStore = ({onReady}) => {
     (store) => createLocalPersister(store, STORE_ID),
     [],
     async (persister) => {
-      await persister.load();
+      await persister.load([{}, DEFAULT_VALUES]);
       await persister.startAutoSave();
       onReady?.();
     },
@@ -2231,6 +2258,13 @@ button.primary:hover {
   margin: 0 auto;
 }
 ",
+  "client/src/canvasStoreData.js": "import {createMergeableStore} from 'tinybase';
+
+export const STORE_ID = 'canvas';
+
+export const createCanvasStore = () =>
+  createMergeableStore().setDefaultContent([{strokes: {}}, {}]);
+",
   "client/src/colorPicker.css": "#colorPicker {
   display: flex;
   gap: 0;
@@ -2281,9 +2315,7 @@ addEventListener('load', () => {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -2294,6 +2326,14 @@ addEventListener('load', () => {
     transform: rotate(360deg);
   }
 }
+",
+  "client/src/settingsStoreData.js": "import {createStore} from 'tinybase';
+
+export const STORE_ID = 'settings';
+
+export const DEFAULT_VALUES = {brushColor: '#d81b60', brushSize: 5};
+
+export const createSettingsStore = () => createStore();
 ",
   "client/vite.config.js": "import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
@@ -2815,8 +2855,7 @@ export const Square = ({position, disabled, winning}) => {
   );
 };
 ",
-  "client/src/Store.jsx": "import {createMergeableStore} from 'tinybase';
-import {
+  "client/src/Store.jsx": "import {
   useCreateMergeableStore,
   useProvideStore,
   useStore,
@@ -2826,11 +2865,11 @@ import {
   useCell,
   useValue,
 } from 'tinybase/ui-react';
+import {STORE_ID, createGameStore} from './storeData';
 import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 import {useCreatePersister} from 'tinybase/ui-react';
 
-export const STORE_ID = 'game';
-
+export {STORE_ID};
 export {
   useStore,
   useSetValuesCallback,
@@ -2841,15 +2880,7 @@ export {
 };
 
 export const Store = ({onReady}) => {
-  const store = useCreateMergeableStore(() =>
-    createMergeableStore().setDefaultContent([
-      {},
-      {
-        currentPlayer: 'X',
-        gameStatus: 'playing',
-      },
-    ]),
-  );
+  const store = useCreateMergeableStore(() => createGameStore());
 
   useProvideStore(STORE_ID, store);
 
@@ -2945,9 +2976,7 @@ addEventListener('load', () => {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -2997,6 +3026,19 @@ addEventListener('load', () => {
   background: var(--accent);
   color: var(--bg);
 }
+",
+  "client/src/storeData.js": "import {createMergeableStore} from 'tinybase';
+
+export const STORE_ID = 'game';
+
+export const createGameStore = () =>
+  createMergeableStore().setDefaultContent([
+    {},
+    {
+      currentPlayer: 'X',
+      gameStatus: 'playing',
+    },
+  ]);
 ",
   "client/vite.config.js": "import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
@@ -3365,12 +3407,14 @@ export const Button = ({
   "client/src/Input.jsx": "import './input.css';
 
 export const Input = ({
+  id,
   value,
   onChange,
   placeholder = '',
   autoFocus = false,
 }) => (
   <input
+    id={id}
     type="text"
     value={value}
     onChange={(e) => onChange(e.target.value)}
@@ -3383,8 +3427,7 @@ export const Input = ({
 
 export const Loading = () => <div id="loading" />;
 ",
-  "client/src/Store.jsx": "import {createMergeableStore} from 'tinybase';
-import {
+  "client/src/Store.jsx": "import {
   useCreateMergeableStore,
   useProvideStore,
   useAddRowCallback,
@@ -3393,9 +3436,11 @@ import {
   useSortedRowIds,
   useSetPartialRowCallback,
 } from 'tinybase/ui-react';
+import {STORE_ID, createTodosStore} from './storeData';
 import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 import {useCreatePersister} from 'tinybase/ui-react';
 
+export {STORE_ID};
 export {
   useAddRowCallback,
   useDelRowCallback,
@@ -3404,20 +3449,8 @@ export {
   useSetPartialRowCallback,
 };
 
-export const STORE_ID = 'todos';
-
 export const Store = ({onReady}) => {
-  const store = useCreateMergeableStore(() =>
-    createMergeableStore().setDefaultContent([
-      {
-        todos: {
-          1: {text: 'Learn TinyBase', completed: false},
-          2: {text: 'Build an app', completed: false},
-        },
-      },
-      {},
-    ]),
-  );
+  const store = useCreateMergeableStore(() => createTodosStore());
 
   useProvideStore(STORE_ID, store);
 
@@ -3445,7 +3478,7 @@ export const TodoInput = () => {
   const [text, setText] = useState('');
   const addRow = useAddRowCallback(
     'todos',
-    () => ({text, completed: false}),
+    () => ({text: text.trim(), completed: false}),
     [text],
     STORE_ID,
   );
@@ -3594,9 +3627,7 @@ input[type='text']::placeholder {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -3607,6 +3638,21 @@ input[type='text']::placeholder {
     transform: rotate(360deg);
   }
 }
+",
+  "client/src/storeData.js": "import {createMergeableStore} from 'tinybase';
+
+export const STORE_ID = 'todos';
+
+export const createTodosStore = () =>
+  createMergeableStore().setDefaultContent([
+    {
+      todos: {
+        1: {text: 'Learn TinyBase', completed: false},
+        2: {text: 'Build an app', completed: false},
+      },
+    },
+    {},
+  ]);
 ",
   "client/src/todoInput.css": "#todoInput {
   display: flex;
@@ -4156,12 +4202,14 @@ export const Button = ({
   "client/src/Input.jsx": "import './input.css';
 
 export const Input = ({
+  id,
   value,
   onChange,
   placeholder = '',
   autoFocus = false,
 }) => (
   <input
+    id={id}
     type="text"
     value={value}
     onChange={(e) => onChange(e.target.value)}
@@ -4174,8 +4222,7 @@ export const Input = ({
 
 export const Loading = () => <div id="loading" />;
 ",
-  "client/src/Store.jsx": "import {createMergeableStore} from 'tinybase';
-import {
+  "client/src/Store.jsx": "import {
   useCreateMergeableStore,
   useProvideStore,
   useAddRowCallback,
@@ -4184,6 +4231,7 @@ import {
   useSortedRowIds,
   useSetPartialRowCallback,
 } from 'tinybase/ui-react';
+import {STORE_ID, createTodosStore} from './storeData';
 import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';
 import {useCreatePersister} from 'tinybase/ui-react';
 import {getDb} from './sqlite';
@@ -4192,6 +4240,7 @@ import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 import {useCreateSynchronizer} from 'tinybase/ui-react';
 
+export {STORE_ID};
 export {
   useAddRowCallback,
   useDelRowCallback,
@@ -4200,20 +4249,8 @@ export {
   useSetPartialRowCallback,
 };
 
-export const STORE_ID = 'todos';
-
 export const Store = ({onReady}) => {
-  const store = useCreateMergeableStore(() =>
-    createMergeableStore().setDefaultContent([
-      {
-        todos: {
-          1: {text: 'Learn TinyBase', completed: false},
-          2: {text: 'Build an app', completed: false},
-        },
-      },
-      {},
-    ]),
-  );
+  const store = useCreateMergeableStore(() => createTodosStore());
 
   useProvideStore(STORE_ID, store);
 
@@ -4261,7 +4298,7 @@ export const TodoInput = () => {
   const [text, setText] = useState('');
   const addRow = useAddRowCallback(
     'todos',
-    () => ({text, completed: false}),
+    () => ({text: text.trim(), completed: false}),
     [text],
     STORE_ID,
   );
@@ -4417,9 +4454,7 @@ input[type='text']::placeholder {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -4447,6 +4482,21 @@ export const getDb = async () => {
   }
   return {sqlite3: await sqlite3Promise, db};
 };
+",
+  "client/src/storeData.js": "import {createMergeableStore} from 'tinybase';
+
+export const STORE_ID = 'todos';
+
+export const createTodosStore = () =>
+  createMergeableStore().setDefaultContent([
+    {
+      todos: {
+        1: {text: 'Learn TinyBase', completed: false},
+        2: {text: 'Build an app', completed: false},
+      },
+    },
+    {},
+  ]);
 ",
   "client/src/todoInput.css": "#todoInput {
   display: flex;
@@ -4929,18 +4979,30 @@ stays synchronized with the underlying TinyBase store.
   {/if}
 </Provider>
 ",
-  "client/src/ChatStore.svelte": "<script>
-  import {createMergeableStore} from 'tinybase';
-  import {onMount} from 'svelte';
-  import {provideStore} from 'tinybase/ui-svelte';
-  import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+  "client/src/Button.svelte": "<script>
+  import './button.css';
 
-  import {getDefaultContent} from './utils';
-  import {STORE_ID} from './chatStore';
+  let {
+    children,
+    onclick = undefined,
+    type = 'button',
+    variant = 'default',
+  } = $props();
+</script>
+
+<button {type} class:primary={variant === 'primary'} {onclick}>
+  {@render children?.()}
+</button>
+",
+  "client/src/ChatStore.svelte": "<script>
+  import {provideStore} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
+  import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+  import {STORE_ID, createChatStore} from './chatStore';
 
   let {onReady} = $props();
 
-  const store = createMergeableStore().setDefaultContent(getDefaultContent());
+  const store = createChatStore();
 
   provideStore(STORE_ID, store);
 
@@ -4951,6 +5013,41 @@ stays synchronized with the underlying TinyBase store.
     onReady?.();
   });
 </script>
+",
+  "client/src/Input.svelte": "<script>
+  import './input.css';
+  import {onMount} from 'svelte';
+
+  let {
+    id = undefined,
+    value = '',
+    onChange = undefined,
+    placeholder = '',
+    autoFocus = false,
+  } = $props();
+
+  let input;
+
+  const handleInput = (event) => {
+    const input = event.currentTarget;
+    onChange?.(input.value);
+  };
+
+  onMount(() => {
+    if (autoFocus) {
+      input?.focus();
+    }
+  });
+</script>
+
+<input
+  bind:this={input}
+  {id}
+  type="text"
+  {value}
+  oninput={handleInput}
+  {placeholder}
+/>
 ",
   "client/src/Loading.svelte": "<script>
   import './loading.css';
@@ -4977,9 +5074,9 @@ stays synchronized with the underlying TinyBase store.
 </div>
 ",
   "client/src/MessageInput.svelte": "<script>
-  import './button.css';
   import './input.css';
   import './messageInput.css';
+  import Button from './Button.svelte';
   import {getValue, getStore} from 'tinybase/ui-svelte';
   import {onMount} from 'svelte';
   import {STORE_ID as CHAT_STORE_ID} from './chatStore';
@@ -5025,7 +5122,7 @@ stays synchronized with the underlying TinyBase store.
     type="text"
     placeholder="Type a message..."
   />
-  <button class="primary" type="submit">Send</button>
+  <Button variant="primary" type="submit">Send</Button>
 </form>
 ",
   "client/src/Messages.svelte": "<script>
@@ -5051,31 +5148,28 @@ stays synchronized with the underlying TinyBase store.
 </div>
 ",
   "client/src/SettingsStore.svelte": "<script>
-  import {createStore} from 'tinybase';
-  import {onMount} from 'svelte';
   import {provideStore} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
   import {createLocalPersister} from 'tinybase/persisters/persister-browser';
-
-  import {getRandomName} from './utils';
-  import {STORE_ID} from './settingsStore';
+  import {DEFAULT_VALUES, STORE_ID, createSettingsStore} from './settingsStore';
 
   let {onReady} = $props();
 
-  const store = createStore();
+  const store = createSettingsStore();
 
   provideStore(STORE_ID, store);
 
   onMount(async () => {
     const persister = createLocalPersister(store, STORE_ID);
-    await persister.load([{}, {username: getRandomName()}]);
+    await persister.load([{}, DEFAULT_VALUES]);
     await persister.startAutoSave();
     onReady?.();
   });
 </script>
 ",
   "client/src/UsernameInput.svelte": "<script>
-  import './input.css';
   import './usernameInput.css';
+  import Input from './Input.svelte';
   import {getValue} from 'tinybase/ui-svelte';
   import {STORE_ID} from './settingsStore';
 
@@ -5084,10 +5178,12 @@ stays synchronized with the underlying TinyBase store.
 
 <div id="usernameInput">
   <label for="usernameInputField">Your name:</label>
-  <input
+  <Input
     id="usernameInputField"
-    type="text"
-    bind:value={username.current}
+    value={username.current ?? ''}
+    onChange={(value) => {
+      username.current = value;
+    }}
     placeholder="Enter your name"
   />
 </div>
@@ -5118,9 +5214,13 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "client/src/chatStore.js": "import {getDefaultContent} from './utils';
+  "client/src/chatStore.js": "import {createMergeableStore} from 'tinybase';
+import {getDefaultContent} from './utils';
 
 export const STORE_ID = 'chat';
+
+export const createChatStore = () =>
+  createMergeableStore().setDefaultContent(getDefaultContent());
 ",
   "client/src/index.js": "import {mount} from 'svelte';
 import App from './App.svelte';
@@ -5162,9 +5262,7 @@ input[type='text']::placeholder {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -5211,9 +5309,14 @@ input[type='text']::placeholder {
   margin-bottom: 1rem;
 }
 ",
-  "client/src/settingsStore.js": "import {getRandomName} from './utils';
+  "client/src/settingsStore.js": "import {createStore} from 'tinybase';
+import {getRandomName} from './utils';
 
 export const STORE_ID = 'settings';
+
+export const DEFAULT_VALUES = {username: getRandomName()};
+
+export const createSettingsStore = () => createStore();
 ",
   "client/src/usernameInput.css": "#usernameInput {
   margin-bottom: 1rem;
@@ -5624,6 +5727,21 @@ stays synchronized with the underlying TinyBase store.
   <span id="brushSizeValue">{size.current}</span>
 </div>
 ",
+  "client/src/Button.svelte": "<script>
+  import './button.css';
+
+  let {
+    children,
+    onclick = undefined,
+    type = 'button',
+    variant = 'default',
+  } = $props();
+</script>
+
+<button {type} class:primary={variant === 'primary'} {onclick}>
+  {@render children?.()}
+</button>
+",
   "client/src/Canvas.svelte": "<script>
   import './canvas.css';
   import {onMount} from 'svelte';
@@ -5776,16 +5894,14 @@ stays synchronized with the underlying TinyBase store.
 ></canvas>
 ",
   "client/src/CanvasStore.svelte": "<script>
-  import {createMergeableStore} from 'tinybase';
-  import {onMount} from 'svelte';
   import {provideStore} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
   import {createLocalPersister} from 'tinybase/persisters/persister-browser';
-
-  import {STORE_ID} from './canvasStore';
+  import {STORE_ID, createCanvasStore} from './canvasStore';
 
   let {onReady} = $props();
 
-  const store = createMergeableStore().setDefaultContent([{strokes: {}}, {}]);
+  const store = createCanvasStore();
 
   provideStore(STORE_ID, store);
 
@@ -5831,8 +5947,8 @@ stays synchronized with the underlying TinyBase store.
 </div>
 ",
   "client/src/DrawingControls.svelte": "<script>
-  import './button.css';
   import './drawingControls.css';
+  import Button from './Button.svelte';
   import {getStore} from 'tinybase/ui-svelte';
   import BrushSize from './BrushSize.svelte';
   import ColorPicker from './ColorPicker.svelte';
@@ -5848,7 +5964,7 @@ stays synchronized with the underlying TinyBase store.
 <div id="drawingControls">
   <ColorPicker />
   <BrushSize />
-  <button class="primary" onclick={clearStrokes}>Clear</button>
+  <Button variant="primary" onclick={clearStrokes}>Clear</Button>
 </div>
 ",
   "client/src/Loading.svelte": "<script>
@@ -5858,22 +5974,20 @@ stays synchronized with the underlying TinyBase store.
 <div id="loading"></div>
 ",
   "client/src/SettingsStore.svelte": "<script>
-  import {createStore} from 'tinybase';
-  import {onMount} from 'svelte';
   import {provideStore} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
   import {createLocalPersister} from 'tinybase/persisters/persister-browser';
-
-  import {STORE_ID} from './settingsStore';
+  import {DEFAULT_VALUES, STORE_ID, createSettingsStore} from './settingsStore';
 
   let {onReady} = $props();
 
-  const store = createStore();
+  const store = createSettingsStore();
 
   provideStore(STORE_ID, store);
 
   onMount(async () => {
     const persister = createLocalPersister(store, STORE_ID);
-    await persister.load([{}, {brushColor: '#d81b60', brushSize: 5}]);
+    await persister.load([{}, DEFAULT_VALUES]);
     await persister.startAutoSave();
     onReady?.();
   });
@@ -5936,7 +6050,12 @@ button.primary:hover {
   margin: 0 auto;
 }
 ",
-  "client/src/canvasStore.js": "export const STORE_ID = 'canvas';
+  "client/src/canvasStore.js": "import {createMergeableStore} from 'tinybase';
+
+export const STORE_ID = 'canvas';
+
+export const createCanvasStore = () =>
+  createMergeableStore().setDefaultContent([{strokes: {}}, {}]);
 ",
   "client/src/colorPicker.css": "#colorPicker {
   display: flex;
@@ -5990,9 +6109,7 @@ addEventListener('load', () => {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -6004,7 +6121,13 @@ addEventListener('load', () => {
   }
 }
 ",
-  "client/src/settingsStore.js": "export const STORE_ID = 'settings';
+  "client/src/settingsStore.js": "import {createStore} from 'tinybase';
+
+export const STORE_ID = 'settings';
+
+export const DEFAULT_VALUES = {brushColor: '#d81b60', brushSize: 5};
+
+export const createSettingsStore = () => createStore();
 ",
   "client/vite.config.js": "import {defineConfig} from 'vite';
 import {svelte} from '@sveltejs/vite-plugin-svelte';
@@ -6397,9 +6520,24 @@ stays synchronized with the underlying TinyBase store.
   {/each}
 </div>
 ",
-  "client/src/Game.svelte": "<script>
+  "client/src/Button.svelte": "<script>
   import './button.css';
+
+  let {
+    children,
+    onclick = undefined,
+    type = 'button',
+    variant = 'default',
+  } = $props();
+</script>
+
+<button {type} class:primary={variant === 'primary'} {onclick}>
+  {@render children?.()}
+</button>
+",
+  "client/src/Game.svelte": "<script>
   import {onMount} from 'svelte';
+  import Button from './Button.svelte';
   import {getStore} from 'tinybase/ui-svelte';
   import Board from './Board.svelte';
   import GameStatus from './GameStatus.svelte';
@@ -6463,7 +6601,7 @@ stays synchronized with the underlying TinyBase store.
 <GameStatus />
 <Board />
 <div style="text-align: center; margin-top: 2rem;">
-  <button class="primary" onclick={resetGame}>New Game</button>
+  <Button variant="primary" onclick={resetGame}>New Game</Button>
 </div>
 ",
   "client/src/GameStatus.svelte": "<script>
@@ -6505,22 +6643,14 @@ stays synchronized with the underlying TinyBase store.
 </button>
 ",
   "client/src/Store.svelte": "<script>
-  import {createMergeableStore} from 'tinybase';
-  import {onMount} from 'svelte';
   import {provideStore} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
   import {createLocalPersister} from 'tinybase/persisters/persister-browser';
-
-  import {STORE_ID} from './store';
+  import {STORE_ID, createGameStore} from './store';
 
   let {onReady} = $props();
 
-  const store = createMergeableStore().setDefaultContent([
-    {},
-    {
-      currentPlayer: 'X',
-      gameStatus: 'playing',
-    },
-  ]);
+  const store = createGameStore();
 
   provideStore(STORE_ID, store);
 
@@ -6612,9 +6742,7 @@ addEventListener('load', () => {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -6665,7 +6793,18 @@ addEventListener('load', () => {
   color: var(--bg);
 }
 ",
-  "client/src/store.js": "export const STORE_ID = 'game';
+  "client/src/store.js": "import {createMergeableStore} from 'tinybase';
+
+export const STORE_ID = 'game';
+
+export const createGameStore = () =>
+  createMergeableStore().setDefaultContent([
+    {},
+    {
+      currentPlayer: 'X',
+      gameStatus: 'playing',
+    },
+  ]);
 ",
   "client/vite.config.js": "import {defineConfig} from 'vite';
 import {svelte} from '@sveltejs/vite-plugin-svelte';
@@ -7010,6 +7149,21 @@ stays synchronized with the underlying TinyBase store.
   {/if}
 </Provider>
 ",
+  "client/src/Button.svelte": "<script>
+  import './button.css';
+
+  let {
+    children,
+    onclick = undefined,
+    type = 'button',
+    variant = 'default',
+  } = $props();
+</script>
+
+<button {type} class:primary={variant === 'primary'} {onclick}>
+  {@render children?.()}
+</button>
+",
   "client/src/Loading.svelte": "<script>
   import './loading.css';
 </script>
@@ -7017,24 +7171,14 @@ stays synchronized with the underlying TinyBase store.
 <div id="loading"></div>
 ",
   "client/src/Store.svelte": "<script>
-  import {createMergeableStore} from 'tinybase';
-  import {onMount} from 'svelte';
   import {provideStore} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
   import {createLocalPersister} from 'tinybase/persisters/persister-browser';
-
-  import {STORE_ID} from './store';
+  import {STORE_ID, createTodosStore} from './store';
 
   let {onReady} = $props();
 
-  const store = createMergeableStore().setDefaultContent([
-    {
-      todos: {
-        '1': {text: 'Learn TinyBase', completed: false},
-        '2': {text: 'Build an app', completed: false},
-      },
-    },
-    {},
-  ]);
+  const store = createTodosStore();
 
   provideStore(STORE_ID, store);
 
@@ -7047,9 +7191,9 @@ stays synchronized with the underlying TinyBase store.
 </script>
 ",
   "client/src/TodoInput.svelte": "<script>
-  import './button.css';
   import './input.css';
   import './todoInput.css';
+  import Button from './Button.svelte';
   import {onMount} from 'svelte';
   import {getStore} from 'tinybase/ui-svelte';
   import {STORE_ID} from './store';
@@ -7068,11 +7212,9 @@ stays synchronized with the underlying TinyBase store.
     }
   };
 
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      addTodo();
-    }
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    addTodo();
   };
 
   onMount(() => {
@@ -7080,16 +7222,15 @@ stays synchronized with the underlying TinyBase store.
   });
 </script>
 
-<div id="todoInput">
+<form id="todoInput" onsubmit={handleSubmit}>
   <input
     bind:this={input}
     bind:value={text}
     type="text"
     placeholder="What needs to be done?"
-    onkeydown={handleKeyDown}
   />
-  <button class="primary" onclick={addTodo}>Add</button>
-</div>
+  <Button variant="primary" type="submit">Add</Button>
+</form>
 ",
   "client/src/TodoItem.svelte": "<script>
   import './button.css';
@@ -7213,9 +7354,7 @@ input[type='text']::placeholder {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -7227,7 +7366,20 @@ input[type='text']::placeholder {
   }
 }
 ",
-  "client/src/store.js": "export const STORE_ID = 'todos';
+  "client/src/store.js": "import {createMergeableStore} from 'tinybase';
+
+export const STORE_ID = 'todos';
+
+export const createTodosStore = () =>
+  createMergeableStore().setDefaultContent([
+    {
+      todos: {
+        1: {text: 'Learn TinyBase', completed: false},
+        2: {text: 'Build an app', completed: false},
+      },
+    },
+    {},
+  ]);
 ",
   "client/src/todoInput.css": "#todoInput {
   display: flex;
@@ -7633,13 +7785,21 @@ button.primary:hover {
 ",
   "client/src/button.js": "import './button.css';
 
-export const createButton = (text, onClick, variant = 'default') => {
+export const createButton = (
+  text,
+  onClick,
+  variant = 'default',
+  type = 'button',
+) => {
   const button = document.createElement('button');
   button.textContent = text;
+  button.type = type;
   if (variant === 'primary') {
     button.className = 'primary';
   }
-  button.addEventListener('click', onClick);
+  if (onClick) {
+    button.addEventListener('click', onClick);
+  }
   return button;
 };
 ",
@@ -7649,15 +7809,17 @@ import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 
 export const STORE_ID = 'chat';
 
-export const chatStore =
+export const createChatStore = () =>
   createMergeableStore().setDefaultContent(getDefaultContent());
+
+export const chatStore = createChatStore();
 
 let resolveChatReady;
 export const chatStoreReady = new Promise((resolve) => {
   resolveChatReady = resolve;
 });
 
-const chatPersister = createLocalPersister(chatStore, 'chat');
+const chatPersister = createLocalPersister(chatStore, STORE_ID);
 chatPersister.load().then(() => {
   chatPersister.startAutoSave();
   resolveChatReady();
@@ -7713,9 +7875,7 @@ export const createInput = (placeholder = '', value = '', onInput) => {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -7801,7 +7961,7 @@ import {createButton} from './button';
 import {createInput} from './input';
 
 export const createMessageInput = (settingsStore, chatStore) => {
-  const messageInputContainer = document.createElement('div');
+  const messageInputContainer = document.createElement('form');
   messageInputContainer.id = 'messageInput';
 
   const messageInput = createInput('Type a message...');
@@ -7816,16 +7976,16 @@ export const createMessageInput = (settingsStore, chatStore) => {
         timestamp: Date.now(),
       });
       messageInput.value = '';
+      messageInput.focus();
     }
   };
 
-  messageInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      sendMessage();
-    }
+  messageInputContainer.addEventListener('submit', (event) => {
+    event.preventDefault();
+    sendMessage();
   });
 
-  const sendButton = createButton('Send', sendMessage, 'primary');
+  const sendButton = createButton('Send', null, 'primary', 'submit');
   messageInputContainer.appendChild(sendButton);
 
   return messageInputContainer;
@@ -7870,15 +8030,19 @@ import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 
 export const STORE_ID = 'settings';
 
-export const settingsStore = createStore();
+export const DEFAULT_VALUES = {username: getRandomName()};
+
+export const createSettingsStore = () => createStore();
+
+export const settingsStore = createSettingsStore();
 
 let resolveSettingsReady;
 export const settingsStoreReady = new Promise((resolve) => {
   resolveSettingsReady = resolve;
 });
 
-const settingsPersister = createLocalPersister(settingsStore, 'settings');
-settingsPersister.load([{}, {username: getRandomName()}]).then(() => {
+const settingsPersister = createLocalPersister(settingsStore, STORE_ID);
+settingsPersister.load([{}, DEFAULT_VALUES]).then(() => {
   settingsPersister.startAutoSave();
   resolveSettingsReady();
 });
@@ -7914,6 +8078,8 @@ export const createUsernameInput = (settingsStore, _chatStore) => {
     'Enter your name',
     settingsStore.getValue('username'),
   );
+  usernameInput.id = 'usernameInputField';
+  label.htmlFor = usernameInput.id;
 
   container.appendChild(label);
   container.appendChild(usernameInput);
@@ -8289,9 +8455,11 @@ export const createBrushSize = (store) => {
   label.textContent = 'Size:';
 
   const sizeSlider = document.createElement('input');
+  sizeSlider.id = 'brushSizeSlider';
   sizeSlider.type = 'range';
   sizeSlider.min = '1';
   sizeSlider.max = '50';
+  label.htmlFor = sizeSlider.id;
 
   const sizeLabel = document.createElement('span');
   sizeLabel.id = 'brushSizeValue';
@@ -8346,13 +8514,21 @@ button.primary:hover {
 ",
   "client/src/button.js": "import './button.css';
 
-export const createButton = (text, onClick, variant = 'default') => {
+export const createButton = (
+  text,
+  onClick,
+  variant = 'default',
+  type = 'button',
+) => {
   const button = document.createElement('button');
   button.textContent = text;
+  button.type = type;
   if (variant === 'primary') {
     button.className = 'primary';
   }
-  button.addEventListener('click', onClick);
+  if (onClick) {
+    button.addEventListener('click', onClick);
+  }
   return button;
 };
 ",
@@ -8483,17 +8659,17 @@ import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 
 export const STORE_ID = 'canvas';
 
-export const canvasStore = createMergeableStore().setDefaultContent([
-  {strokes: {}},
-  {},
-]);
+export const createCanvasStore = () =>
+  createMergeableStore().setDefaultContent([{strokes: {}}, {}]);
+
+export const canvasStore = createCanvasStore();
 
 let resolveCanvasReady;
 export const canvasStoreReady = new Promise((resolve) => {
   resolveCanvasReady = resolve;
 });
 
-const canvasPersister = createLocalPersister(canvasStore, 'canvas');
+const canvasPersister = createLocalPersister(canvasStore, STORE_ID);
 canvasPersister.load().then(() => {
   canvasPersister.startAutoSave();
   resolveCanvasReady();
@@ -8609,9 +8785,7 @@ addEventListener('load', () => {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -8641,15 +8815,19 @@ import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 
 export const STORE_ID = 'settings';
 
-export const settingsStore = createStore();
+export const DEFAULT_VALUES = {brushColor: '#d81b60', brushSize: 5};
+
+export const createSettingsStore = () => createStore();
+
+export const settingsStore = createSettingsStore();
 
 let resolveSettingsReady;
 export const settingsStoreReady = new Promise((resolve) => {
   resolveSettingsReady = resolve;
 });
 
-const settingsPersister = createLocalPersister(settingsStore, 'settings');
-settingsPersister.load([{}, {brushColor: '#d81b60', brushSize: 5}]).then(() => {
+const settingsPersister = createLocalPersister(settingsStore, STORE_ID);
+settingsPersister.load([{}, DEFAULT_VALUES]).then(() => {
   settingsPersister.startAutoSave();
   resolveSettingsReady();
 });
@@ -8985,9 +9163,11 @@ export const createBrushSize = (store) => {
   label.textContent = 'Size:';
 
   const sizeSlider = document.createElement('input');
+  sizeSlider.id = 'brushSizeSlider';
   sizeSlider.type = 'range';
   sizeSlider.min = '1';
   sizeSlider.max = '50';
+  label.htmlFor = sizeSlider.id;
 
   const sizeLabel = document.createElement('span');
   sizeLabel.id = 'brushSizeValue';
@@ -9042,13 +9222,21 @@ button.primary:hover {
 ",
   "client/src/button.js": "import './button.css';
 
-export const createButton = (text, onClick, variant = 'default') => {
+export const createButton = (
+  text,
+  onClick,
+  variant = 'default',
+  type = 'button',
+) => {
   const button = document.createElement('button');
   button.textContent = text;
+  button.type = type;
   if (variant === 'primary') {
     button.className = 'primary';
   }
-  button.addEventListener('click', onClick);
+  if (onClick) {
+    button.addEventListener('click', onClick);
+  }
   return button;
 };
 ",
@@ -9178,10 +9366,10 @@ export const createCanvas = (settingsStore, canvasStore) => {
 
 export const STORE_ID = 'canvas';
 
-export const canvasStore = createMergeableStore().setDefaultContent([
-  {strokes: {}},
-  {},
-]);
+export const createCanvasStore = () =>
+  createMergeableStore().setDefaultContent([{strokes: {}}, {}]);
+
+export const canvasStore = createCanvasStore();
 
 let resolveCanvasReady;
 export const canvasStoreReady = new Promise((resolve) => {
@@ -9300,9 +9488,7 @@ addEventListener('load', () => {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -9331,14 +9517,20 @@ export const hideLoading = (loadingDiv) => {
 
 export const STORE_ID = 'settings';
 
-export const settingsStore = createStore();
+export const DEFAULT_VALUES = {brushColor: '#d81b60', brushSize: 5};
+
+export const createSettingsStore = () => createStore();
+
+export const settingsStore = createSettingsStore();
 
 let resolveSettingsReady;
 export const settingsStoreReady = new Promise((resolve) => {
   resolveSettingsReady = resolve;
 });
 
-settingsStore.setValue('brushColor', '#d81b60').setValue('brushSize', 5);
+settingsStore
+  .setValue('brushColor', DEFAULT_VALUES.brushColor)
+  .setValue('brushSize', DEFAULT_VALUES.brushSize);
 resolveSettingsReady();
 ",
 }
@@ -9724,13 +9916,21 @@ button.primary:hover {
 ",
   "client/src/button.js": "import './button.css';
 
-export const createButton = (text, onClick, variant = 'default') => {
+export const createButton = (
+  text,
+  onClick,
+  variant = 'default',
+  type = 'button',
+) => {
   const button = document.createElement('button');
   button.textContent = text;
+  button.type = type;
   if (variant === 'primary') {
     button.className = 'primary';
   }
-  button.addEventListener('click', onClick);
+  if (onClick) {
+    button.addEventListener('click', onClick);
+  }
   return button;
 };
 ",
@@ -9863,9 +10063,7 @@ addEventListener('load', () => {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -9945,20 +10143,23 @@ import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 
 export const STORE_ID = 'game';
 
-export const store = createMergeableStore().setDefaultContent([
-  {},
-  {
-    currentPlayer: 'X',
-    gameStatus: 'playing',
-  },
-]);
+export const createGameStore = () =>
+  createMergeableStore().setDefaultContent([
+    {},
+    {
+      currentPlayer: 'X',
+      gameStatus: 'playing',
+    },
+  ]);
+
+export const store = createGameStore();
 
 let resolveReady;
 export const storeReady = new Promise((resolve) => {
   resolveReady = resolve;
 });
 
-const persister = createLocalPersister(store, 'game');
+const persister = createLocalPersister(store, STORE_ID);
 persister.load().then(() => {
   persister.startAutoSave();
   resolveReady();
@@ -10298,13 +10499,21 @@ button.primary:hover {
 ",
   "client/src/button.js": "import './button.css';
 
-export const createButton = (text, onClick, variant = 'default') => {
+export const createButton = (
+  text,
+  onClick,
+  variant = 'default',
+  type = 'button',
+) => {
   const button = document.createElement('button');
   button.textContent = text;
+  button.type = type;
   if (variant === 'primary') {
     button.className = 'primary';
   }
-  button.addEventListener('click', onClick);
+  if (onClick) {
+    button.addEventListener('click', onClick);
+  }
   return button;
 };
 ",
@@ -10358,9 +10567,7 @@ export const createInput = (placeholder = '', value = '', onInput) => {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -10390,22 +10597,25 @@ import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 
 export const STORE_ID = 'todos';
 
-export const store = createMergeableStore().setDefaultContent([
-  {
-    todos: {
-      1: {text: 'Learn TinyBase', completed: false},
-      2: {text: 'Build an app', completed: false},
+export const createTodosStore = () =>
+  createMergeableStore().setDefaultContent([
+    {
+      todos: {
+        1: {text: 'Learn TinyBase', completed: false},
+        2: {text: 'Build an app', completed: false},
+      },
     },
-  },
-  {},
-]);
+    {},
+  ]);
+
+export const store = createTodosStore();
 
 let resolveReady;
 export const storeReady = new Promise((resolve) => {
   resolveReady = resolve;
 });
 
-const persister = createLocalPersister(store, 'todos');
+const persister = createLocalPersister(store, STORE_ID);
 persister.load().then(() => {
   persister.startAutoSave();
   resolveReady();
@@ -10427,7 +10637,7 @@ import {createButton} from './button';
 import {createInput} from './input';
 
 export const createTodoInput = (store) => {
-  const container = document.createElement('div');
+  const container = document.createElement('form');
   container.id = 'todoInput';
 
   const input = createInput('What needs to be done?');
@@ -10437,16 +10647,16 @@ export const createTodoInput = (store) => {
     if (text) {
       store.addRow('todos', {text, completed: false});
       input.value = '';
+      input.focus();
     }
   };
 
-  input.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      addTodo();
-    }
+  container.addEventListener('submit', (event) => {
+    event.preventDefault();
+    addTodo();
   });
 
-  const addButton = createButton('Add', addTodo, 'primary');
+  const addButton = createButton('Add', null, 'primary', 'submit');
 
   container.appendChild(input);
   container.appendChild(addButton);
@@ -10935,8 +11145,7 @@ export const Button = ({
   </button>
 );
 ",
-  "client/src/ChatStore.tsx": "import {createMergeableStore} from 'tinybase';
-import {
+  "client/src/ChatStore.tsx": "import {
   useCreateMergeableStore,
   useProvideStore,
   useAddRowCallback,
@@ -10944,20 +11153,16 @@ import {
   useSortedRowIds,
   useStore,
 } from 'tinybase/ui-react';
-import {getDefaultContent} from './utils';
+import {STORE_ID, createChatStore, type MessageRow} from './chatStoreData';
 import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 import {useCreatePersister} from 'tinybase/ui-react';
 
-export const STORE_ID = 'chat';
-
-export type MessageRow = {username: string; text: string; timestamp: number};
-
+export {STORE_ID};
+export type {MessageRow};
 export {useAddRowCallback, useRow, useSortedRowIds, useStore};
 
 export const ChatStore = ({onReady}: {onReady?: () => void}) => {
-  const store = useCreateMergeableStore(() =>
-    createMergeableStore().setDefaultContent(getDefaultContent()),
-  );
+  const store = useCreateMergeableStore(() => createChatStore());
 
   useProvideStore(STORE_ID, store);
 
@@ -10978,6 +11183,7 @@ export const ChatStore = ({onReady}: {onReady?: () => void}) => {
   "client/src/Input.tsx": "import './input.css';
 
 interface InputProps {
+  id?: string;
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
@@ -10985,12 +11191,14 @@ interface InputProps {
 }
 
 export const Input = ({
+  id,
   value,
   onChange,
   placeholder = '',
   autoFocus = false,
 }: InputProps) => (
   <input
+    id={id}
     type="text"
     value={value}
     onChange={(e) => onChange(e.target.value)}
@@ -11041,7 +11249,7 @@ export const MessageInput = () => {
     'messages',
     () => ({
       username,
-      text: message,
+      text: message.trim(),
       timestamp: Date.now(),
     }),
     [message, username],
@@ -11094,25 +11302,25 @@ export const Messages = () => {
   );
 };
 ",
-  "client/src/SettingsStore.tsx": "import {createStore} from 'tinybase';
-import {
+  "client/src/SettingsStore.tsx": "import {
   useCreateStore,
   useProvideStore,
   useValue,
   useValueState,
 } from 'tinybase/ui-react';
-import {getRandomName} from './utils';
+import {
+  DEFAULT_VALUES,
+  STORE_ID,
+  createSettingsStore,
+} from './settingsStoreData';
 import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 import {useCreatePersister} from 'tinybase/ui-react';
 
-export const STORE_ID = 'settings';
-
+export {STORE_ID};
 export {useValue, useValueState};
 
 export const SettingsStore = ({onReady}: {onReady?: () => void}) => {
-  const store = useCreateStore(() =>
-    createStore().setValue('username', getRandomName()),
-  );
+  const store = useCreateStore(() => createSettingsStore());
 
   useProvideStore(STORE_ID, store);
 
@@ -11121,7 +11329,7 @@ export const SettingsStore = ({onReady}: {onReady?: () => void}) => {
     (store) => createLocalPersister(store, STORE_ID),
     [],
     async (persister) => {
-      await persister.load();
+      await persister.load([{}, DEFAULT_VALUES]);
       await persister.startAutoSave();
       onReady?.();
     },
@@ -11139,9 +11347,10 @@ export const UsernameInput = () => {
 
   return (
     <div id="usernameInput">
-      <label>Your name:</label>
+      <label htmlFor="usernameInputField">Your name:</label>
       <Input
-        value={username + ''}
+        id="usernameInputField"
+        value={String(username ?? '')}
         onChange={setUsername}
         placeholder="Enter your name"
       />
@@ -11174,6 +11383,16 @@ button.primary {
 button.primary:hover {
   background: #c2185b;
 }
+",
+  "client/src/chatStoreData.ts": "import {createMergeableStore} from 'tinybase';
+import {getDefaultContent} from './utils';
+
+export const STORE_ID = 'chat';
+
+export type MessageRow = {username: string; text: string; timestamp: number};
+
+export const createChatStore = () =>
+  createMergeableStore().setDefaultContent(getDefaultContent());
 ",
   "client/src/index.tsx": "import ReactDOM from 'react-dom/client';
 import {App} from './App';
@@ -11213,9 +11432,7 @@ input[type='text']::placeholder {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -11262,6 +11479,15 @@ input[type='text']::placeholder {
   margin-bottom: 1rem;
 }
 ",
+  "client/src/settingsStoreData.ts": "import {createStore} from 'tinybase';
+import {getRandomName} from './utils';
+
+export const STORE_ID = 'settings';
+
+export const DEFAULT_VALUES = {username: getRandomName()};
+
+export const createSettingsStore = () => createStore();
+",
   "client/src/usernameInput.css": "#usernameInput {
   margin-bottom: 1rem;
   display: flex;
@@ -11277,7 +11503,7 @@ input[type='text']::placeholder {
   flex: 1;
 }
 ",
-  "client/src/utils.tsx": "const NAMES = [
+  "client/src/utils.ts": "const NAMES = [
   'Carol',
   'Charlie',
   'Casey',
@@ -11763,8 +11989,7 @@ export const Button = ({
   </button>
 );
 ",
-  "client/src/ChatStore.tsx": "import {createMergeableStore} from 'tinybase';
-import {
+  "client/src/ChatStore.tsx": "import {
   useCreateMergeableStore,
   useProvideStore,
   useAddRowCallback,
@@ -11772,7 +11997,7 @@ import {
   useSortedRowIds,
   useStore,
 } from 'tinybase/ui-react';
-import {getDefaultContent} from './utils';
+import {STORE_ID, createChatStore, type MessageRow} from './chatStoreData';
 import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 import {useCreatePersister} from 'tinybase/ui-react';
 import {SERVER} from './config';
@@ -11780,16 +12005,12 @@ import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 import {useCreateSynchronizer} from 'tinybase/ui-react';
 
-export const STORE_ID = 'chat';
-
-export type MessageRow = {username: string; text: string; timestamp: number};
-
+export {STORE_ID};
+export type {MessageRow};
 export {useAddRowCallback, useRow, useSortedRowIds, useStore};
 
 export const ChatStore = ({onReady}: {onReady?: () => void}) => {
-  const store = useCreateMergeableStore(() =>
-    createMergeableStore().setDefaultContent(getDefaultContent()),
-  );
+  const store = useCreateMergeableStore(() => createChatStore());
 
   useProvideStore(STORE_ID, store);
 
@@ -11827,6 +12048,7 @@ export const ChatStore = ({onReady}: {onReady?: () => void}) => {
   "client/src/Input.tsx": "import './input.css';
 
 interface InputProps {
+  id?: string;
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
@@ -11834,12 +12056,14 @@ interface InputProps {
 }
 
 export const Input = ({
+  id,
   value,
   onChange,
   placeholder = '',
   autoFocus = false,
 }: InputProps) => (
   <input
+    id={id}
     type="text"
     value={value}
     onChange={(e) => onChange(e.target.value)}
@@ -11890,7 +12114,7 @@ export const MessageInput = () => {
     'messages',
     () => ({
       username,
-      text: message,
+      text: message.trim(),
       timestamp: Date.now(),
     }),
     [message, username],
@@ -11943,25 +12167,25 @@ export const Messages = () => {
   );
 };
 ",
-  "client/src/SettingsStore.tsx": "import {createStore} from 'tinybase';
-import {
+  "client/src/SettingsStore.tsx": "import {
   useCreateStore,
   useProvideStore,
   useValue,
   useValueState,
 } from 'tinybase/ui-react';
-import {getRandomName} from './utils';
+import {
+  DEFAULT_VALUES,
+  STORE_ID,
+  createSettingsStore,
+} from './settingsStoreData';
 import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 import {useCreatePersister} from 'tinybase/ui-react';
 
-export const STORE_ID = 'settings';
-
+export {STORE_ID};
 export {useValue, useValueState};
 
 export const SettingsStore = ({onReady}: {onReady?: () => void}) => {
-  const store = useCreateStore(() =>
-    createStore().setValue('username', getRandomName()),
-  );
+  const store = useCreateStore(() => createSettingsStore());
 
   useProvideStore(STORE_ID, store);
 
@@ -11970,7 +12194,7 @@ export const SettingsStore = ({onReady}: {onReady?: () => void}) => {
     (store) => createLocalPersister(store, STORE_ID),
     [],
     async (persister) => {
-      await persister.load();
+      await persister.load([{}, DEFAULT_VALUES]);
       await persister.startAutoSave();
       onReady?.();
     },
@@ -11988,9 +12212,10 @@ export const UsernameInput = () => {
 
   return (
     <div id="usernameInput">
-      <label>Your name:</label>
+      <label htmlFor="usernameInputField">Your name:</label>
       <Input
-        value={username + ''}
+        id="usernameInputField"
+        value={String(username ?? '')}
         onChange={setUsername}
         placeholder="Enter your name"
       />
@@ -12023,6 +12248,16 @@ button.primary {
 button.primary:hover {
   background: #c2185b;
 }
+",
+  "client/src/chatStoreData.ts": "import {createMergeableStore} from 'tinybase';
+import {getDefaultContent} from './utils';
+
+export const STORE_ID = 'chat';
+
+export type MessageRow = {username: string; text: string; timestamp: number};
+
+export const createChatStore = () =>
+  createMergeableStore().setDefaultContent(getDefaultContent());
 ",
   "client/src/config.ts": "export const SERVER = 'ws://localhost:8043';
 ",
@@ -12069,9 +12304,7 @@ input[type='text']::placeholder {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -12118,6 +12351,15 @@ input[type='text']::placeholder {
   margin-bottom: 1rem;
 }
 ",
+  "client/src/settingsStoreData.ts": "import {createStore} from 'tinybase';
+import {getRandomName} from './utils';
+
+export const STORE_ID = 'settings';
+
+export const DEFAULT_VALUES = {username: getRandomName()};
+
+export const createSettingsStore = () => createStore();
+",
   "client/src/usernameInput.css": "#usernameInput {
   margin-bottom: 1rem;
   display: flex;
@@ -12133,7 +12375,7 @@ input[type='text']::placeholder {
   flex: 1;
 }
 ",
-  "client/src/utils.tsx": "const NAMES = [
+  "client/src/utils.ts": "const NAMES = [
   'Carol',
   'Charlie',
   'Casey',
@@ -12594,15 +12836,16 @@ export const BrushSize = () => {
 
   return (
     <div id="brushSize">
-      <label>Size:</label>
+      <label htmlFor="brushSizeSlider">Size:</label>
       <input
+        id="brushSizeSlider"
         type="range"
         min="1"
         max="50"
         value={size ?? 5}
         onChange={handleChange}
       />
-      <span id="brushSizeValue">{size}</span>
+      <span id="brushSizeValue">{size ?? 5}</span>
     </div>
   );
 };
@@ -12767,8 +13010,7 @@ export const Canvas = () => {
   );
 };
 ",
-  "client/src/CanvasStore.tsx": "import {createMergeableStore} from 'tinybase';
-import {
+  "client/src/CanvasStore.tsx": "import {
   useCreateMergeableStore,
   useProvideStore,
   useDelTableCallback,
@@ -12777,19 +13019,16 @@ import {
   useStore,
   useTable,
 } from 'tinybase/ui-react';
+import {STORE_ID, createCanvasStore, type StrokeRow} from './canvasStoreData';
 import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 import {useCreatePersister} from 'tinybase/ui-react';
 
-export const STORE_ID = 'canvas';
-
-export type StrokeRow = {color: string; size: number; points: string};
-
+export {STORE_ID};
+export type {StrokeRow};
 export {useDelTableCallback, useRow, useSortedRowIds, useStore, useTable};
 
 export const CanvasStore = ({onReady}: {onReady?: () => void}) => {
-  const store = useCreateMergeableStore(() =>
-    createMergeableStore().setDefaultContent([{strokes: {}}, {}]),
-  );
+  const store = useCreateMergeableStore(() => createCanvasStore());
 
   useProvideStore(STORE_ID, store);
 
@@ -12859,24 +13098,25 @@ export const DrawingControls = () => {
 
 export const Loading = () => <div id="loading" />;
 ",
-  "client/src/SettingsStore.tsx": "import {createStore} from 'tinybase';
-import {
+  "client/src/SettingsStore.tsx": "import {
   useCreateStore,
   useProvideStore,
   useValueState,
   useValues,
 } from 'tinybase/ui-react';
+import {
+  DEFAULT_VALUES,
+  STORE_ID,
+  createSettingsStore,
+} from './settingsStoreData';
 import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 import {useCreatePersister} from 'tinybase/ui-react';
 
-export const STORE_ID = 'settings';
-
+export {STORE_ID};
 export {useValueState, useValues};
 
 export const SettingsStore = ({onReady}: {onReady?: () => void}) => {
-  const store = useCreateStore(() =>
-    createStore().setValue('brushColor', '#d81b60').setValue('brushSize', 5),
-  );
+  const store = useCreateStore(() => createSettingsStore());
 
   useProvideStore(STORE_ID, store);
 
@@ -12885,7 +13125,7 @@ export const SettingsStore = ({onReady}: {onReady?: () => void}) => {
     (store) => createLocalPersister(store, STORE_ID),
     [],
     async (persister) => {
-      await persister.load();
+      await persister.load([{}, DEFAULT_VALUES]);
       await persister.startAutoSave();
       onReady?.();
     },
@@ -12951,6 +13191,15 @@ button.primary:hover {
   margin: 0 auto;
 }
 ",
+  "client/src/canvasStoreData.ts": "import {createMergeableStore} from 'tinybase';
+
+export const STORE_ID = 'canvas';
+
+export type StrokeRow = {color: string; size: number; points: string};
+
+export const createCanvasStore = () =>
+  createMergeableStore().setDefaultContent([{strokes: {}}, {}]);
+",
   "client/src/colorPicker.css": "#colorPicker {
   display: flex;
   gap: 0;
@@ -13001,9 +13250,7 @@ addEventListener('load', () => {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -13014,6 +13261,14 @@ addEventListener('load', () => {
     transform: rotate(360deg);
   }
 }
+",
+  "client/src/settingsStoreData.ts": "import {createStore} from 'tinybase';
+
+export const STORE_ID = 'settings';
+
+export const DEFAULT_VALUES = {brushColor: '#d81b60', brushSize: 5};
+
+export const createSettingsStore = () => createStore();
 ",
   "client/src/vite-env.d.ts": "declare module '*.css' {
   const content: string;
@@ -13582,8 +13837,7 @@ export const Square = ({
   );
 };
 ",
-  "client/src/Store.tsx": "import {createMergeableStore} from 'tinybase';
-import {
+  "client/src/Store.tsx": "import {
   useCreateMergeableStore,
   useProvideStore,
   useStore,
@@ -13593,11 +13847,11 @@ import {
   useCell,
   useValue,
 } from 'tinybase/ui-react';
+import {STORE_ID, createGameStore} from './storeData';
 import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 import {useCreatePersister} from 'tinybase/ui-react';
 
-export const STORE_ID = 'game';
-
+export {STORE_ID};
 export {
   useStore,
   useSetValuesCallback,
@@ -13608,15 +13862,7 @@ export {
 };
 
 export const Store = ({onReady}: {onReady?: () => void}) => {
-  const store = useCreateMergeableStore(() =>
-    createMergeableStore().setDefaultContent([
-      {},
-      {
-        currentPlayer: 'X',
-        gameStatus: 'playing',
-      },
-    ]),
-  );
+  const store = useCreateMergeableStore(() => createGameStore());
 
   useProvideStore(STORE_ID, store);
 
@@ -13712,9 +13958,7 @@ addEventListener('load', () => {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -13764,6 +14008,19 @@ addEventListener('load', () => {
   background: var(--accent);
   color: var(--bg);
 }
+",
+  "client/src/storeData.ts": "import {createMergeableStore} from 'tinybase';
+
+export const STORE_ID = 'game';
+
+export const createGameStore = () =>
+  createMergeableStore().setDefaultContent([
+    {},
+    {
+      currentPlayer: 'X',
+      gameStatus: 'playing',
+    },
+  ]);
 ",
   "client/src/vite-env.d.ts": "declare module '*.css' {
   const content: string;
@@ -14171,6 +14428,7 @@ export const Button = ({
   "client/src/Input.tsx": "import './input.css';
 
 interface InputProps {
+  id?: string;
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
@@ -14178,12 +14436,14 @@ interface InputProps {
 }
 
 export const Input = ({
+  id,
   value,
   onChange,
   placeholder = '',
   autoFocus = false,
 }: InputProps) => (
   <input
+    id={id}
     type="text"
     value={value}
     onChange={(e) => onChange(e.target.value)}
@@ -14196,8 +14456,7 @@ export const Input = ({
 
 export const Loading = () => <div id="loading" />;
 ",
-  "client/src/Store.tsx": "import {createMergeableStore} from 'tinybase';
-import {
+  "client/src/Store.tsx": "import {
   useCreateMergeableStore,
   useProvideStore,
   useAddRowCallback,
@@ -14206,11 +14465,12 @@ import {
   useSortedRowIds,
   useSetPartialRowCallback,
 } from 'tinybase/ui-react';
+import {STORE_ID, createTodosStore, type TodoRow} from './storeData';
 import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 import {useCreatePersister} from 'tinybase/ui-react';
 
-export type TodoRow = {text: string; completed: boolean};
-
+export {STORE_ID};
+export type {TodoRow};
 export {
   useAddRowCallback,
   useDelRowCallback,
@@ -14219,20 +14479,8 @@ export {
   useSetPartialRowCallback,
 };
 
-export const STORE_ID = 'todos';
-
 export const Store = ({onReady}: {onReady?: () => void}) => {
-  const store = useCreateMergeableStore(() =>
-    createMergeableStore().setDefaultContent([
-      {
-        todos: {
-          '1': {text: 'Learn TinyBase', completed: false},
-          '2': {text: 'Build an app', completed: false},
-        },
-      },
-      {},
-    ]),
-  );
+  const store = useCreateMergeableStore(() => createTodosStore());
 
   useProvideStore(STORE_ID, store);
 
@@ -14260,7 +14508,7 @@ export const TodoInput = () => {
   const [text, setText] = useState('');
   const addRow = useAddRowCallback(
     'todos',
-    () => ({text, completed: false}),
+    () => ({text: text.trim(), completed: false}),
     [text],
     STORE_ID,
   );
@@ -14410,9 +14658,7 @@ input[type='text']::placeholder {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -14423,6 +14669,23 @@ input[type='text']::placeholder {
     transform: rotate(360deg);
   }
 }
+",
+  "client/src/storeData.ts": "import {createMergeableStore} from 'tinybase';
+
+export type TodoRow = {text: string; completed: boolean};
+
+export const STORE_ID = 'todos';
+
+export const createTodosStore = () =>
+  createMergeableStore().setDefaultContent([
+    {
+      todos: {
+        '1': {text: 'Learn TinyBase', completed: false},
+        '2': {text: 'Build an app', completed: false},
+      },
+    },
+    {},
+  ]);
 ",
   "client/src/todoInput.css": "#todoInput {
   display: flex;
@@ -14909,6 +15172,7 @@ export const Button = ({
   "client/src/Input.tsx": "import './input.css';
 
 interface InputProps {
+  id?: string;
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
@@ -14916,12 +15180,14 @@ interface InputProps {
 }
 
 export const Input = ({
+  id,
   value,
   onChange,
   placeholder = '',
   autoFocus = false,
 }: InputProps) => (
   <input
+    id={id}
     type="text"
     value={value}
     onChange={(e) => onChange(e.target.value)}
@@ -14934,8 +15200,7 @@ export const Input = ({
 
 export const Loading = () => <div id="loading" />;
 ",
-  "client/src/Store.tsx": "import {createMergeableStore} from 'tinybase';
-import {
+  "client/src/Store.tsx": "import {
   useCreateMergeableStore,
   useProvideStore,
   useAddRowCallback,
@@ -14944,6 +15209,7 @@ import {
   useSortedRowIds,
   useSetPartialRowCallback,
 } from 'tinybase/ui-react';
+import {STORE_ID, createTodosStore, type TodoRow} from './storeData';
 import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 import {useCreatePersister} from 'tinybase/ui-react';
 import {SERVER} from './config';
@@ -14951,8 +15217,8 @@ import ReconnectingWebSocket from 'reconnecting-websocket';
 import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
 import {useCreateSynchronizer} from 'tinybase/ui-react';
 
-export type TodoRow = {text: string; completed: boolean};
-
+export {STORE_ID};
+export type {TodoRow};
 export {
   useAddRowCallback,
   useDelRowCallback,
@@ -14961,20 +15227,8 @@ export {
   useSetPartialRowCallback,
 };
 
-export const STORE_ID = 'todos';
-
 export const Store = ({onReady}: {onReady?: () => void}) => {
-  const store = useCreateMergeableStore(() =>
-    createMergeableStore().setDefaultContent([
-      {
-        todos: {
-          '1': {text: 'Learn TinyBase', completed: false},
-          '2': {text: 'Build an app', completed: false},
-        },
-      },
-      {},
-    ]),
-  );
+  const store = useCreateMergeableStore(() => createTodosStore());
 
   useProvideStore(STORE_ID, store);
 
@@ -15019,7 +15273,7 @@ export const TodoInput = () => {
   const [text, setText] = useState('');
   const addRow = useAddRowCallback(
     'todos',
-    () => ({text, completed: false}),
+    () => ({text: text.trim(), completed: false}),
     [text],
     STORE_ID,
   );
@@ -15176,9 +15430,7 @@ input[type='text']::placeholder {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -15189,6 +15441,23 @@ input[type='text']::placeholder {
     transform: rotate(360deg);
   }
 }
+",
+  "client/src/storeData.ts": "import {createMergeableStore} from 'tinybase';
+
+export type TodoRow = {text: string; completed: boolean};
+
+export const STORE_ID = 'todos';
+
+export const createTodosStore = () =>
+  createMergeableStore().setDefaultContent([
+    {
+      todos: {
+        '1': {text: 'Learn TinyBase', completed: false},
+        '2': {text: 'Build an app', completed: false},
+      },
+    },
+    {},
+  ]);
 ",
   "client/src/todoInput.css": "#todoInput {
   display: flex;
@@ -15636,18 +15905,36 @@ stays synchronized with the underlying TinyBase store.
   {/if}
 </Provider>
 ",
-  "client/src/ChatStore.svelte": "<script lang="ts">
-  import {createMergeableStore} from 'tinybase';
-  import {onMount} from 'svelte';
-  import {provideStore} from 'tinybase/ui-svelte';
-  import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+  "client/src/Button.svelte": "<script lang="ts">
+  import './button.css';
+  import type {Snippet} from 'svelte';
 
-  import {getDefaultContent} from './utils';
-  import {STORE_ID} from './chatStore';
+  let {
+    children,
+    onclick = undefined,
+    type = 'button',
+    variant = 'default',
+  }: {
+    children?: Snippet;
+    onclick?: () => void;
+    type?: 'button' | 'submit' | 'reset';
+    variant?: 'default' | 'primary';
+  } = $props();
+</script>
+
+<button {type} class:primary={variant === 'primary'} {onclick}>
+  {@render children?.()}
+</button>
+",
+  "client/src/ChatStore.svelte": "<script lang="ts">
+  import {provideStore} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
+  import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+  import {STORE_ID, createChatStore} from './chatStore';
 
   let {onReady}: {onReady?: () => void} = $props();
 
-  const store = createMergeableStore().setDefaultContent(getDefaultContent());
+  const store = createChatStore();
 
   provideStore(STORE_ID, store);
 
@@ -15658,6 +15945,47 @@ stays synchronized with the underlying TinyBase store.
     onReady?.();
   });
 </script>
+",
+  "client/src/Input.svelte": "<script lang="ts">
+  import './input.css';
+  import {onMount} from 'svelte';
+
+  let {
+    id = undefined,
+    value = '',
+    onChange = undefined,
+    placeholder = '',
+    autoFocus = false,
+  }: {
+    id?: string;
+    value?: string;
+    onChange?: (value: string) => void;
+    placeholder?: string;
+    autoFocus?: boolean;
+  } = $props();
+
+  let input: HTMLInputElement | undefined;
+
+  const handleInput = (event: Event) => {
+    const input = event.currentTarget as HTMLInputElement;
+    onChange?.(input.value);
+  };
+
+  onMount(() => {
+    if (autoFocus) {
+      input?.focus();
+    }
+  });
+</script>
+
+<input
+  bind:this={input}
+  {id}
+  type="text"
+  {value}
+  oninput={handleInput}
+  {placeholder}
+/>
 ",
   "client/src/Loading.svelte": "<script>
   import './loading.css';
@@ -15688,9 +16016,9 @@ stays synchronized with the underlying TinyBase store.
 </div>
 ",
   "client/src/MessageInput.svelte": "<script lang="ts">
-  import './button.css';
   import './input.css';
   import './messageInput.css';
+  import Button from './Button.svelte';
   import {getValue, getStore} from 'tinybase/ui-svelte';
   import {onMount} from 'svelte';
   import {STORE_ID as CHAT_STORE_ID} from './chatStore';
@@ -15739,7 +16067,7 @@ stays synchronized with the underlying TinyBase store.
     type="text"
     placeholder="Type a message..."
   />
-  <button class="primary" type="submit">Send</button>
+  <Button variant="primary" type="submit">Send</Button>
 </form>
 ",
   "client/src/Messages.svelte": "<script lang="ts">
@@ -15765,31 +16093,28 @@ stays synchronized with the underlying TinyBase store.
 </div>
 ",
   "client/src/SettingsStore.svelte": "<script lang="ts">
-  import {createStore} from 'tinybase';
-  import {onMount} from 'svelte';
   import {provideStore} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
   import {createLocalPersister} from 'tinybase/persisters/persister-browser';
-
-  import {getRandomName} from './utils';
-  import {STORE_ID} from './settingsStore';
+  import {DEFAULT_VALUES, STORE_ID, createSettingsStore} from './settingsStore';
 
   let {onReady}: {onReady?: () => void} = $props();
 
-  const store = createStore();
+  const store = createSettingsStore();
 
   provideStore(STORE_ID, store);
 
   onMount(async () => {
     const persister = createLocalPersister(store, STORE_ID);
-    await persister.load([{}, {username: getRandomName()}]);
+    await persister.load([{}, DEFAULT_VALUES]);
     await persister.startAutoSave();
     onReady?.();
   });
 </script>
 ",
   "client/src/UsernameInput.svelte": "<script lang="ts">
-  import './input.css';
   import './usernameInput.css';
+  import Input from './Input.svelte';
   import {getValue} from 'tinybase/ui-svelte';
   import {STORE_ID} from './settingsStore';
 
@@ -15800,10 +16125,12 @@ stays synchronized with the underlying TinyBase store.
 
 <div id="usernameInput">
   <label for="usernameInputField">Your name:</label>
-  <input
+  <Input
     id="usernameInputField"
-    type="text"
-    bind:value={username.current}
+    value={username.current ?? ''}
+    onChange={(value) => {
+      username.current = value;
+    }}
     placeholder="Enter your name"
   />
 </div>
@@ -15834,9 +16161,15 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "client/src/chatStore.ts": "import {getDefaultContent} from './utils';
+  "client/src/chatStore.ts": "import {createMergeableStore} from 'tinybase';
+import {getDefaultContent} from './utils';
 
 export const STORE_ID = 'chat';
+
+export type MessageRow = {username: string; text: string; timestamp: number};
+
+export const createChatStore = () =>
+  createMergeableStore().setDefaultContent(getDefaultContent());
 ",
   "client/src/index.ts": "import {mount} from 'svelte';
 import App from './App.svelte';
@@ -15878,9 +16211,7 @@ input[type='text']::placeholder {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -15927,9 +16258,14 @@ input[type='text']::placeholder {
   margin-bottom: 1rem;
 }
 ",
-  "client/src/settingsStore.ts": "import {getRandomName} from './utils';
+  "client/src/settingsStore.ts": "import {createStore} from 'tinybase';
+import {getRandomName} from './utils';
 
 export const STORE_ID = 'settings';
+
+export const DEFAULT_VALUES = {username: getRandomName()};
+
+export const createSettingsStore = () => createStore();
 ",
   "client/src/usernameInput.css": "#usernameInput {
   margin-bottom: 1rem;
@@ -16384,22 +16720,39 @@ stays synchronized with the underlying TinyBase store.
   {/if}
 </Provider>
 ",
-  "client/src/ChatStore.svelte": "<script lang="ts">
-  import {createMergeableStore} from 'tinybase';
-  import {onMount} from 'svelte';
-  import {provideStore} from 'tinybase/ui-svelte';
-  import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+  "client/src/Button.svelte": "<script lang="ts">
+  import './button.css';
+  import type {Snippet} from 'svelte';
 
+  let {
+    children,
+    onclick = undefined,
+    type = 'button',
+    variant = 'default',
+  }: {
+    children?: Snippet;
+    onclick?: () => void;
+    type?: 'button' | 'submit' | 'reset';
+    variant?: 'default' | 'primary';
+  } = $props();
+</script>
+
+<button {type} class:primary={variant === 'primary'} {onclick}>
+  {@render children?.()}
+</button>
+",
+  "client/src/ChatStore.svelte": "<script lang="ts">
+  import {provideStore} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
+  import {createLocalPersister} from 'tinybase/persisters/persister-browser';
   import {SERVER} from './config';
   import ReconnectingWebSocket from 'reconnecting-websocket';
   import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-
-  import {getDefaultContent} from './utils';
-  import {STORE_ID} from './chatStore';
+  import {STORE_ID, createChatStore} from './chatStore';
 
   let {onReady}: {onReady?: () => void} = $props();
 
-  const store = createMergeableStore().setDefaultContent(getDefaultContent());
+  const store = createChatStore();
 
   provideStore(STORE_ID, store);
 
@@ -16407,7 +16760,7 @@ stays synchronized with the underlying TinyBase store.
     const persister = createLocalPersister(store, STORE_ID);
     await persister.load();
     await persister.startAutoSave();
-
+    onReady?.();
     const serverPathId = location.pathname;
     const synchronizer = await createWsSynchronizer(
       store,
@@ -16421,6 +16774,47 @@ stays synchronized with the underlying TinyBase store.
     });
   });
 </script>
+",
+  "client/src/Input.svelte": "<script lang="ts">
+  import './input.css';
+  import {onMount} from 'svelte';
+
+  let {
+    id = undefined,
+    value = '',
+    onChange = undefined,
+    placeholder = '',
+    autoFocus = false,
+  }: {
+    id?: string;
+    value?: string;
+    onChange?: (value: string) => void;
+    placeholder?: string;
+    autoFocus?: boolean;
+  } = $props();
+
+  let input: HTMLInputElement | undefined;
+
+  const handleInput = (event: Event) => {
+    const input = event.currentTarget as HTMLInputElement;
+    onChange?.(input.value);
+  };
+
+  onMount(() => {
+    if (autoFocus) {
+      input?.focus();
+    }
+  });
+</script>
+
+<input
+  bind:this={input}
+  {id}
+  type="text"
+  {value}
+  oninput={handleInput}
+  {placeholder}
+/>
 ",
   "client/src/Loading.svelte": "<script>
   import './loading.css';
@@ -16451,9 +16845,9 @@ stays synchronized with the underlying TinyBase store.
 </div>
 ",
   "client/src/MessageInput.svelte": "<script lang="ts">
-  import './button.css';
   import './input.css';
   import './messageInput.css';
+  import Button from './Button.svelte';
   import {getValue, getStore} from 'tinybase/ui-svelte';
   import {onMount} from 'svelte';
   import {STORE_ID as CHAT_STORE_ID} from './chatStore';
@@ -16502,7 +16896,7 @@ stays synchronized with the underlying TinyBase store.
     type="text"
     placeholder="Type a message..."
   />
-  <button class="primary" type="submit">Send</button>
+  <Button variant="primary" type="submit">Send</Button>
 </form>
 ",
   "client/src/Messages.svelte": "<script lang="ts">
@@ -16528,31 +16922,28 @@ stays synchronized with the underlying TinyBase store.
 </div>
 ",
   "client/src/SettingsStore.svelte": "<script lang="ts">
-  import {createStore} from 'tinybase';
-  import {onMount} from 'svelte';
   import {provideStore} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
   import {createLocalPersister} from 'tinybase/persisters/persister-browser';
-
-  import {getRandomName} from './utils';
-  import {STORE_ID} from './settingsStore';
+  import {DEFAULT_VALUES, STORE_ID, createSettingsStore} from './settingsStore';
 
   let {onReady}: {onReady?: () => void} = $props();
 
-  const store = createStore();
+  const store = createSettingsStore();
 
   provideStore(STORE_ID, store);
 
   onMount(async () => {
     const persister = createLocalPersister(store, STORE_ID);
-    await persister.load([{}, {username: getRandomName()}]);
+    await persister.load([{}, DEFAULT_VALUES]);
     await persister.startAutoSave();
     onReady?.();
   });
 </script>
 ",
   "client/src/UsernameInput.svelte": "<script lang="ts">
-  import './input.css';
   import './usernameInput.css';
+  import Input from './Input.svelte';
   import {getValue} from 'tinybase/ui-svelte';
   import {STORE_ID} from './settingsStore';
 
@@ -16563,10 +16954,12 @@ stays synchronized with the underlying TinyBase store.
 
 <div id="usernameInput">
   <label for="usernameInputField">Your name:</label>
-  <input
+  <Input
     id="usernameInputField"
-    type="text"
-    bind:value={username.current}
+    value={username.current ?? ''}
+    onChange={(value) => {
+      username.current = value;
+    }}
     placeholder="Enter your name"
   />
 </div>
@@ -16597,9 +16990,15 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "client/src/chatStore.ts": "import {getDefaultContent} from './utils';
+  "client/src/chatStore.ts": "import {createMergeableStore} from 'tinybase';
+import {getDefaultContent} from './utils';
 
 export const STORE_ID = 'chat';
+
+export type MessageRow = {username: string; text: string; timestamp: number};
+
+export const createChatStore = () =>
+  createMergeableStore().setDefaultContent(getDefaultContent());
 ",
   "client/src/config.ts": "export const SERVER = 'wss://vite.tinybase.org';
 ",
@@ -16648,9 +17047,7 @@ input[type='text']::placeholder {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -16697,9 +17094,14 @@ input[type='text']::placeholder {
   margin-bottom: 1rem;
 }
 ",
-  "client/src/settingsStore.ts": "import {getRandomName} from './utils';
+  "client/src/settingsStore.ts": "import {createStore} from 'tinybase';
+import {getRandomName} from './utils';
 
 export const STORE_ID = 'settings';
+
+export const DEFAULT_VALUES = {username: getRandomName()};
+
+export const createSettingsStore = () => createStore();
 ",
   "client/src/usernameInput.css": "#usernameInput {
   margin-bottom: 1rem;
@@ -17198,19 +17600,37 @@ stays synchronized with the underlying TinyBase store.
   {/if}
 </Provider>
 ",
+  "client/src/Button.svelte": "<script lang="ts">
+  import './button.css';
+  import type {Snippet} from 'svelte';
+
+  let {
+    children,
+    onclick = undefined,
+    type = 'button',
+    variant = 'default',
+  }: {
+    children?: Snippet;
+    onclick?: () => void;
+    type?: 'button' | 'submit' | 'reset';
+    variant?: 'default' | 'primary';
+  } = $props();
+</script>
+
+<button {type} class:primary={variant === 'primary'} {onclick}>
+  {@render children?.()}
+</button>
+",
   "client/src/ChatStore.svelte": "<script lang="ts">
-  import {createMergeableStore} from 'tinybase';
-  import {onMount} from 'svelte';
   import {provideStore} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
   import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';
   import {getDb} from './sqlite';
-
-  import {getDefaultContent} from './utils';
-  import {STORE_ID} from './chatStore';
+  import {STORE_ID, createChatStore} from './chatStore';
 
   let {onReady}: {onReady?: () => void} = $props();
 
-  const store = createMergeableStore().setDefaultContent(getDefaultContent());
+  const store = createChatStore();
 
   provideStore(STORE_ID, store);
 
@@ -17222,6 +17642,47 @@ stays synchronized with the underlying TinyBase store.
     onReady?.();
   });
 </script>
+",
+  "client/src/Input.svelte": "<script lang="ts">
+  import './input.css';
+  import {onMount} from 'svelte';
+
+  let {
+    id = undefined,
+    value = '',
+    onChange = undefined,
+    placeholder = '',
+    autoFocus = false,
+  }: {
+    id?: string;
+    value?: string;
+    onChange?: (value: string) => void;
+    placeholder?: string;
+    autoFocus?: boolean;
+  } = $props();
+
+  let input: HTMLInputElement | undefined;
+
+  const handleInput = (event: Event) => {
+    const input = event.currentTarget as HTMLInputElement;
+    onChange?.(input.value);
+  };
+
+  onMount(() => {
+    if (autoFocus) {
+      input?.focus();
+    }
+  });
+</script>
+
+<input
+  bind:this={input}
+  {id}
+  type="text"
+  {value}
+  oninput={handleInput}
+  {placeholder}
+/>
 ",
   "client/src/Loading.svelte": "<script>
   import './loading.css';
@@ -17252,9 +17713,9 @@ stays synchronized with the underlying TinyBase store.
 </div>
 ",
   "client/src/MessageInput.svelte": "<script lang="ts">
-  import './button.css';
   import './input.css';
   import './messageInput.css';
+  import Button from './Button.svelte';
   import {getValue, getStore} from 'tinybase/ui-svelte';
   import {onMount} from 'svelte';
   import {STORE_ID as CHAT_STORE_ID} from './chatStore';
@@ -17303,7 +17764,7 @@ stays synchronized with the underlying TinyBase store.
     type="text"
     placeholder="Type a message..."
   />
-  <button class="primary" type="submit">Send</button>
+  <Button variant="primary" type="submit">Send</Button>
 </form>
 ",
   "client/src/Messages.svelte": "<script lang="ts">
@@ -17329,33 +17790,30 @@ stays synchronized with the underlying TinyBase store.
 </div>
 ",
   "client/src/SettingsStore.svelte": "<script lang="ts">
-  import {createStore} from 'tinybase';
-  import {onMount} from 'svelte';
   import {provideStore} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
   import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';
   import {getDb} from './sqlite';
-
-  import {getRandomName} from './utils';
-  import {STORE_ID} from './settingsStore';
+  import {DEFAULT_VALUES, STORE_ID, createSettingsStore} from './settingsStore';
 
   let {onReady}: {onReady?: () => void} = $props();
 
-  const store = createStore();
+  const store = createSettingsStore();
 
   provideStore(STORE_ID, store);
 
   onMount(async () => {
     const {sqlite3, db} = await getDb();
     const persister = createSqliteWasmPersister(store, sqlite3, db, STORE_ID);
-    await persister.load([{}, {username: getRandomName()}]);
+    await persister.load([{}, DEFAULT_VALUES]);
     await persister.startAutoSave();
     onReady?.();
   });
 </script>
 ",
   "client/src/UsernameInput.svelte": "<script lang="ts">
-  import './input.css';
   import './usernameInput.css';
+  import Input from './Input.svelte';
   import {getValue} from 'tinybase/ui-svelte';
   import {STORE_ID} from './settingsStore';
 
@@ -17366,10 +17824,12 @@ stays synchronized with the underlying TinyBase store.
 
 <div id="usernameInput">
   <label for="usernameInputField">Your name:</label>
-  <input
+  <Input
     id="usernameInputField"
-    type="text"
-    bind:value={username.current}
+    value={username.current ?? ''}
+    onChange={(value) => {
+      username.current = value;
+    }}
     placeholder="Enter your name"
   />
 </div>
@@ -17400,9 +17860,15 @@ button.primary:hover {
   background: #c2185b;
 }
 ",
-  "client/src/chatStore.ts": "import {getDefaultContent} from './utils';
+  "client/src/chatStore.ts": "import {createMergeableStore} from 'tinybase';
+import {getDefaultContent} from './utils';
 
 export const STORE_ID = 'chat';
+
+export type MessageRow = {username: string; text: string; timestamp: number};
+
+export const createChatStore = () =>
+  createMergeableStore().setDefaultContent(getDefaultContent());
 ",
   "client/src/index.ts": "import {mount} from 'svelte';
 import App from './App.svelte';
@@ -17444,9 +17910,7 @@ input[type='text']::placeholder {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -17493,9 +17957,14 @@ input[type='text']::placeholder {
   margin-bottom: 1rem;
 }
 ",
-  "client/src/settingsStore.ts": "import {getRandomName} from './utils';
+  "client/src/settingsStore.ts": "import {createStore} from 'tinybase';
+import {getRandomName} from './utils';
 
 export const STORE_ID = 'settings';
+
+export const DEFAULT_VALUES = {username: getRandomName()};
+
+export const createSettingsStore = () => createStore();
 ",
   "client/src/sqlite.ts": "import sqlite3InitModule, {
   type Database,
@@ -17977,6 +18446,27 @@ stays synchronized with the underlying TinyBase store.
   <span id="brushSizeValue">{size.current}</span>
 </div>
 ",
+  "client/src/Button.svelte": "<script lang="ts">
+  import './button.css';
+  import type {Snippet} from 'svelte';
+
+  let {
+    children,
+    onclick = undefined,
+    type = 'button',
+    variant = 'default',
+  }: {
+    children?: Snippet;
+    onclick?: () => void;
+    type?: 'button' | 'submit' | 'reset';
+    variant?: 'default' | 'primary';
+  } = $props();
+</script>
+
+<button {type} class:primary={variant === 'primary'} {onclick}>
+  {@render children?.()}
+</button>
+",
   "client/src/Canvas.svelte": "<script lang="ts">
   import './canvas.css';
   import {onMount} from 'svelte';
@@ -18092,7 +18582,9 @@ stays synchronized with the underlying TinyBase store.
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       canvasStore.getSortedRowIds('strokes').forEach((id) => {
-        const stroke = canvasStore.getRow('strokes', id) as StrokeRow;
+        const stroke = canvasStore.getRow('strokes', id) as
+          | StrokeRow
+          | undefined;
         if (!stroke?.points) {
           return;
         }
@@ -18135,16 +18627,14 @@ stays synchronized with the underlying TinyBase store.
 ></canvas>
 ",
   "client/src/CanvasStore.svelte": "<script lang="ts">
-  import {createMergeableStore} from 'tinybase';
-  import {onMount} from 'svelte';
   import {provideStore} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
   import {createLocalPersister} from 'tinybase/persisters/persister-browser';
-
-  import {STORE_ID} from './canvasStore';
+  import {STORE_ID, createCanvasStore} from './canvasStore';
 
   let {onReady}: {onReady?: () => void} = $props();
 
-  const store = createMergeableStore().setDefaultContent([{strokes: {}}, {}]);
+  const store = createCanvasStore();
 
   provideStore(STORE_ID, store);
 
@@ -18192,8 +18682,8 @@ stays synchronized with the underlying TinyBase store.
 </div>
 ",
   "client/src/DrawingControls.svelte": "<script>
-  import './button.css';
   import './drawingControls.css';
+  import Button from './Button.svelte';
   import {getStore} from 'tinybase/ui-svelte';
   import BrushSize from './BrushSize.svelte';
   import ColorPicker from './ColorPicker.svelte';
@@ -18209,7 +18699,7 @@ stays synchronized with the underlying TinyBase store.
 <div id="drawingControls">
   <ColorPicker />
   <BrushSize />
-  <button class="primary" onclick={clearStrokes}>Clear</button>
+  <Button variant="primary" onclick={clearStrokes}>Clear</Button>
 </div>
 ",
   "client/src/Loading.svelte": "<script>
@@ -18219,22 +18709,20 @@ stays synchronized with the underlying TinyBase store.
 <div id="loading"></div>
 ",
   "client/src/SettingsStore.svelte": "<script lang="ts">
-  import {createStore} from 'tinybase';
-  import {onMount} from 'svelte';
   import {provideStore} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
   import {createLocalPersister} from 'tinybase/persisters/persister-browser';
-
-  import {STORE_ID} from './settingsStore';
+  import {DEFAULT_VALUES, STORE_ID, createSettingsStore} from './settingsStore';
 
   let {onReady}: {onReady?: () => void} = $props();
 
-  const store = createStore();
+  const store = createSettingsStore();
 
   provideStore(STORE_ID, store);
 
   onMount(async () => {
     const persister = createLocalPersister(store, STORE_ID);
-    await persister.load([{}, {brushColor: '#d81b60', brushSize: 5}]);
+    await persister.load([{}, DEFAULT_VALUES]);
     await persister.startAutoSave();
     onReady?.();
   });
@@ -18297,7 +18785,14 @@ button.primary:hover {
   margin: 0 auto;
 }
 ",
-  "client/src/canvasStore.ts": "export const STORE_ID = 'canvas';
+  "client/src/canvasStore.ts": "import {createMergeableStore} from 'tinybase';
+
+export const STORE_ID = 'canvas';
+
+export type StrokeRow = {color: string; size: number; points: string};
+
+export const createCanvasStore = () =>
+  createMergeableStore().setDefaultContent([{strokes: {}}, {}]);
 ",
   "client/src/colorPicker.css": "#colorPicker {
   display: flex;
@@ -18351,9 +18846,7 @@ addEventListener('load', () => {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -18365,7 +18858,13 @@ addEventListener('load', () => {
   }
 }
 ",
-  "client/src/settingsStore.ts": "export const STORE_ID = 'settings';
+  "client/src/settingsStore.ts": "import {createStore} from 'tinybase';
+
+export const STORE_ID = 'settings';
+
+export const DEFAULT_VALUES = {brushColor: '#d81b60', brushSize: 5};
+
+export const createSettingsStore = () => createStore();
 ",
   "client/src/vite-env.d.ts": "/// <reference types="vite/client" />
 
@@ -18797,6 +19296,27 @@ stays synchronized with the underlying TinyBase store.
   <span id="brushSizeValue">{size.current}</span>
 </div>
 ",
+  "client/src/Button.svelte": "<script lang="ts">
+  import './button.css';
+  import type {Snippet} from 'svelte';
+
+  let {
+    children,
+    onclick = undefined,
+    type = 'button',
+    variant = 'default',
+  }: {
+    children?: Snippet;
+    onclick?: () => void;
+    type?: 'button' | 'submit' | 'reset';
+    variant?: 'default' | 'primary';
+  } = $props();
+</script>
+
+<button {type} class:primary={variant === 'primary'} {onclick}>
+  {@render children?.()}
+</button>
+",
   "client/src/Canvas.svelte": "<script lang="ts">
   import './canvas.css';
   import {onMount} from 'svelte';
@@ -18912,7 +19432,9 @@ stays synchronized with the underlying TinyBase store.
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       canvasStore.getSortedRowIds('strokes').forEach((id) => {
-        const stroke = canvasStore.getRow('strokes', id) as StrokeRow;
+        const stroke = canvasStore.getRow('strokes', id) as
+          | StrokeRow
+          | undefined;
         if (!stroke?.points) {
           return;
         }
@@ -18955,20 +19477,17 @@ stays synchronized with the underlying TinyBase store.
 ></canvas>
 ",
   "client/src/CanvasStore.svelte": "<script lang="ts">
-  import {createMergeableStore} from 'tinybase';
-  import {onMount} from 'svelte';
   import {provideStore} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
   import {createLocalPersister} from 'tinybase/persisters/persister-browser';
-
   import {SERVER} from './config';
   import ReconnectingWebSocket from 'reconnecting-websocket';
   import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-
-  import {STORE_ID} from './canvasStore';
+  import {STORE_ID, createCanvasStore} from './canvasStore';
 
   let {onReady}: {onReady?: () => void} = $props();
 
-  const store = createMergeableStore().setDefaultContent([{strokes: {}}, {}]);
+  const store = createCanvasStore();
 
   provideStore(STORE_ID, store);
 
@@ -18976,7 +19495,7 @@ stays synchronized with the underlying TinyBase store.
     const persister = createLocalPersister(store, STORE_ID);
     await persister.load();
     await persister.startAutoSave();
-
+    onReady?.();
     const serverPathId = location.pathname;
     const synchronizer = await createWsSynchronizer(
       store,
@@ -19027,8 +19546,8 @@ stays synchronized with the underlying TinyBase store.
 </div>
 ",
   "client/src/DrawingControls.svelte": "<script>
-  import './button.css';
   import './drawingControls.css';
+  import Button from './Button.svelte';
   import {getStore} from 'tinybase/ui-svelte';
   import BrushSize from './BrushSize.svelte';
   import ColorPicker from './ColorPicker.svelte';
@@ -19044,7 +19563,7 @@ stays synchronized with the underlying TinyBase store.
 <div id="drawingControls">
   <ColorPicker />
   <BrushSize />
-  <button class="primary" onclick={clearStrokes}>Clear</button>
+  <Button variant="primary" onclick={clearStrokes}>Clear</Button>
 </div>
 ",
   "client/src/Loading.svelte": "<script>
@@ -19054,22 +19573,20 @@ stays synchronized with the underlying TinyBase store.
 <div id="loading"></div>
 ",
   "client/src/SettingsStore.svelte": "<script lang="ts">
-  import {createStore} from 'tinybase';
-  import {onMount} from 'svelte';
   import {provideStore} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
   import {createLocalPersister} from 'tinybase/persisters/persister-browser';
-
-  import {STORE_ID} from './settingsStore';
+  import {DEFAULT_VALUES, STORE_ID, createSettingsStore} from './settingsStore';
 
   let {onReady}: {onReady?: () => void} = $props();
 
-  const store = createStore();
+  const store = createSettingsStore();
 
   provideStore(STORE_ID, store);
 
   onMount(async () => {
     const persister = createLocalPersister(store, STORE_ID);
-    await persister.load([{}, {brushColor: '#d81b60', brushSize: 5}]);
+    await persister.load([{}, DEFAULT_VALUES]);
     await persister.startAutoSave();
     onReady?.();
   });
@@ -19132,7 +19649,14 @@ button.primary:hover {
   margin: 0 auto;
 }
 ",
-  "client/src/canvasStore.ts": "export const STORE_ID = 'canvas';
+  "client/src/canvasStore.ts": "import {createMergeableStore} from 'tinybase';
+
+export const STORE_ID = 'canvas';
+
+export type StrokeRow = {color: string; size: number; points: string};
+
+export const createCanvasStore = () =>
+  createMergeableStore().setDefaultContent([{strokes: {}}, {}]);
 ",
   "client/src/colorPicker.css": "#colorPicker {
   display: flex;
@@ -19193,9 +19717,7 @@ addEventListener('load', () => {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -19207,7 +19729,13 @@ addEventListener('load', () => {
   }
 }
 ",
-  "client/src/settingsStore.ts": "export const STORE_ID = 'settings';
+  "client/src/settingsStore.ts": "import {createStore} from 'tinybase';
+
+export const STORE_ID = 'settings';
+
+export const DEFAULT_VALUES = {brushColor: '#d81b60', brushSize: 5};
+
+export const createSettingsStore = () => createStore();
 ",
   "client/src/vite-env.d.ts": "/// <reference types="vite/client" />
 
@@ -19683,6 +20211,27 @@ stays synchronized with the underlying TinyBase store.
   <span id="brushSizeValue">{size.current}</span>
 </div>
 ",
+  "client/src/Button.svelte": "<script lang="ts">
+  import './button.css';
+  import type {Snippet} from 'svelte';
+
+  let {
+    children,
+    onclick = undefined,
+    type = 'button',
+    variant = 'default',
+  }: {
+    children?: Snippet;
+    onclick?: () => void;
+    type?: 'button' | 'submit' | 'reset';
+    variant?: 'default' | 'primary';
+  } = $props();
+</script>
+
+<button {type} class:primary={variant === 'primary'} {onclick}>
+  {@render children?.()}
+</button>
+",
   "client/src/Canvas.svelte": "<script lang="ts">
   import './canvas.css';
   import {onMount} from 'svelte';
@@ -19798,7 +20347,9 @@ stays synchronized with the underlying TinyBase store.
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       canvasStore.getSortedRowIds('strokes').forEach((id) => {
-        const stroke = canvasStore.getRow('strokes', id) as StrokeRow;
+        const stroke = canvasStore.getRow('strokes', id) as
+          | StrokeRow
+          | undefined;
         if (!stroke?.points) {
           return;
         }
@@ -19841,17 +20392,15 @@ stays synchronized with the underlying TinyBase store.
 ></canvas>
 ",
   "client/src/CanvasStore.svelte": "<script lang="ts">
-  import {createMergeableStore} from 'tinybase';
-  import {onMount} from 'svelte';
   import {provideStore} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
   import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';
   import {getDb} from './sqlite';
-
-  import {STORE_ID} from './canvasStore';
+  import {STORE_ID, createCanvasStore} from './canvasStore';
 
   let {onReady}: {onReady?: () => void} = $props();
 
-  const store = createMergeableStore().setDefaultContent([{strokes: {}}, {}]);
+  const store = createCanvasStore();
 
   provideStore(STORE_ID, store);
 
@@ -19900,8 +20449,8 @@ stays synchronized with the underlying TinyBase store.
 </div>
 ",
   "client/src/DrawingControls.svelte": "<script>
-  import './button.css';
   import './drawingControls.css';
+  import Button from './Button.svelte';
   import {getStore} from 'tinybase/ui-svelte';
   import BrushSize from './BrushSize.svelte';
   import ColorPicker from './ColorPicker.svelte';
@@ -19917,7 +20466,7 @@ stays synchronized with the underlying TinyBase store.
 <div id="drawingControls">
   <ColorPicker />
   <BrushSize />
-  <button class="primary" onclick={clearStrokes}>Clear</button>
+  <Button variant="primary" onclick={clearStrokes}>Clear</Button>
 </div>
 ",
   "client/src/Loading.svelte": "<script>
@@ -19927,24 +20476,22 @@ stays synchronized with the underlying TinyBase store.
 <div id="loading"></div>
 ",
   "client/src/SettingsStore.svelte": "<script lang="ts">
-  import {createStore} from 'tinybase';
-  import {onMount} from 'svelte';
   import {provideStore} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
   import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';
   import {getDb} from './sqlite';
-
-  import {STORE_ID} from './settingsStore';
+  import {DEFAULT_VALUES, STORE_ID, createSettingsStore} from './settingsStore';
 
   let {onReady}: {onReady?: () => void} = $props();
 
-  const store = createStore();
+  const store = createSettingsStore();
 
   provideStore(STORE_ID, store);
 
   onMount(async () => {
     const {sqlite3, db} = await getDb();
     const persister = createSqliteWasmPersister(store, sqlite3, db, STORE_ID);
-    await persister.load([{}, {brushColor: '#d81b60', brushSize: 5}]);
+    await persister.load([{}, DEFAULT_VALUES]);
     await persister.startAutoSave();
     onReady?.();
   });
@@ -20007,7 +20554,14 @@ button.primary:hover {
   margin: 0 auto;
 }
 ",
-  "client/src/canvasStore.ts": "export const STORE_ID = 'canvas';
+  "client/src/canvasStore.ts": "import {createMergeableStore} from 'tinybase';
+
+export const STORE_ID = 'canvas';
+
+export type StrokeRow = {color: string; size: number; points: string};
+
+export const createCanvasStore = () =>
+  createMergeableStore().setDefaultContent([{strokes: {}}, {}]);
 ",
   "client/src/colorPicker.css": "#colorPicker {
   display: flex;
@@ -20061,9 +20615,7 @@ addEventListener('load', () => {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -20075,7 +20627,13 @@ addEventListener('load', () => {
   }
 }
 ",
-  "client/src/settingsStore.ts": "export const STORE_ID = 'settings';
+  "client/src/settingsStore.ts": "import {createStore} from 'tinybase';
+
+export const STORE_ID = 'settings';
+
+export const DEFAULT_VALUES = {brushColor: '#d81b60', brushSize: 5};
+
+export const createSettingsStore = () => createStore();
 ",
   "client/src/sqlite.ts": "import sqlite3InitModule, {
   type Database,
@@ -20548,9 +21106,30 @@ stays synchronized with the underlying TinyBase store.
   {/each}
 </div>
 ",
-  "client/src/Game.svelte": "<script>
+  "client/src/Button.svelte": "<script lang="ts">
   import './button.css';
+  import type {Snippet} from 'svelte';
+
+  let {
+    children,
+    onclick = undefined,
+    type = 'button',
+    variant = 'default',
+  }: {
+    children?: Snippet;
+    onclick?: () => void;
+    type?: 'button' | 'submit' | 'reset';
+    variant?: 'default' | 'primary';
+  } = $props();
+</script>
+
+<button {type} class:primary={variant === 'primary'} {onclick}>
+  {@render children?.()}
+</button>
+",
+  "client/src/Game.svelte": "<script>
   import {onMount} from 'svelte';
+  import Button from './Button.svelte';
   import {getStore} from 'tinybase/ui-svelte';
   import Board from './Board.svelte';
   import GameStatus from './GameStatus.svelte';
@@ -20614,7 +21193,7 @@ stays synchronized with the underlying TinyBase store.
 <GameStatus />
 <Board />
 <div style="text-align: center; margin-top: 2rem;">
-  <button class="primary" onclick={resetGame}>New Game</button>
+  <Button variant="primary" onclick={resetGame}>New Game</Button>
 </div>
 ",
   "client/src/GameStatus.svelte": "<script lang="ts">
@@ -20672,22 +21251,14 @@ stays synchronized with the underlying TinyBase store.
 </button>
 ",
   "client/src/Store.svelte": "<script lang="ts">
-  import {createMergeableStore} from 'tinybase';
-  import {onMount} from 'svelte';
   import {provideStore} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
   import {createLocalPersister} from 'tinybase/persisters/persister-browser';
-
-  import {STORE_ID} from './store';
+  import {STORE_ID, createGameStore} from './store';
 
   let {onReady}: {onReady?: () => void} = $props();
 
-  const store = createMergeableStore().setDefaultContent([
-    {},
-    {
-      currentPlayer: 'X',
-      gameStatus: 'playing',
-    },
-  ]);
+  const store = createGameStore();
 
   provideStore(STORE_ID, store);
 
@@ -20779,9 +21350,7 @@ addEventListener('load', () => {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -20832,7 +21401,18 @@ addEventListener('load', () => {
   color: var(--bg);
 }
 ",
-  "client/src/store.ts": "export const STORE_ID = 'game';
+  "client/src/store.ts": "import {createMergeableStore} from 'tinybase';
+
+export const STORE_ID = 'game';
+
+export const createGameStore = () =>
+  createMergeableStore().setDefaultContent([
+    {},
+    {
+      currentPlayer: 'X',
+      gameStatus: 'playing',
+    },
+  ]);
 ",
   "client/src/vite-env.d.ts": "/// <reference types="vite/client" />
 
@@ -21296,9 +21876,30 @@ stays synchronized with the underlying TinyBase store.
   {/each}
 </div>
 ",
-  "client/src/Game.svelte": "<script>
+  "client/src/Button.svelte": "<script lang="ts">
   import './button.css';
+  import type {Snippet} from 'svelte';
+
+  let {
+    children,
+    onclick = undefined,
+    type = 'button',
+    variant = 'default',
+  }: {
+    children?: Snippet;
+    onclick?: () => void;
+    type?: 'button' | 'submit' | 'reset';
+    variant?: 'default' | 'primary';
+  } = $props();
+</script>
+
+<button {type} class:primary={variant === 'primary'} {onclick}>
+  {@render children?.()}
+</button>
+",
+  "client/src/Game.svelte": "<script>
   import {onMount} from 'svelte';
+  import Button from './Button.svelte';
   import {getStore} from 'tinybase/ui-svelte';
   import Board from './Board.svelte';
   import GameStatus from './GameStatus.svelte';
@@ -21362,7 +21963,7 @@ stays synchronized with the underlying TinyBase store.
 <GameStatus />
 <Board />
 <div style="text-align: center; margin-top: 2rem;">
-  <button class="primary" onclick={resetGame}>New Game</button>
+  <Button variant="primary" onclick={resetGame}>New Game</Button>
 </div>
 ",
   "client/src/GameStatus.svelte": "<script lang="ts">
@@ -21420,26 +22021,17 @@ stays synchronized with the underlying TinyBase store.
 </button>
 ",
   "client/src/Store.svelte": "<script lang="ts">
-  import {createMergeableStore} from 'tinybase';
-  import {onMount} from 'svelte';
   import {provideStore} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
   import {createLocalPersister} from 'tinybase/persisters/persister-browser';
-
   import {SERVER} from './config';
   import ReconnectingWebSocket from 'reconnecting-websocket';
   import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-
-  import {STORE_ID} from './store';
+  import {STORE_ID, createGameStore} from './store';
 
   let {onReady}: {onReady?: () => void} = $props();
 
-  const store = createMergeableStore().setDefaultContent([
-    {},
-    {
-      currentPlayer: 'X',
-      gameStatus: 'playing',
-    },
-  ]);
+  const store = createGameStore();
 
   provideStore(STORE_ID, store);
 
@@ -21447,7 +22039,7 @@ stays synchronized with the underlying TinyBase store.
     const persister = createLocalPersister(store, STORE_ID);
     await persister.load();
     await persister.startAutoSave();
-
+    onReady?.();
     const serverPathId = location.pathname;
     const synchronizer = await createWsSynchronizer(
       store,
@@ -21549,9 +22141,7 @@ addEventListener('load', () => {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -21602,7 +22192,18 @@ addEventListener('load', () => {
   color: var(--bg);
 }
 ",
-  "client/src/store.ts": "export const STORE_ID = 'game';
+  "client/src/store.ts": "import {createMergeableStore} from 'tinybase';
+
+export const STORE_ID = 'game';
+
+export const createGameStore = () =>
+  createMergeableStore().setDefaultContent([
+    {},
+    {
+      currentPlayer: 'X',
+      gameStatus: 'playing',
+    },
+  ]);
 ",
   "client/src/vite-env.d.ts": "/// <reference types="vite/client" />
 
@@ -22110,9 +22711,30 @@ stays synchronized with the underlying TinyBase store.
   {/each}
 </div>
 ",
-  "client/src/Game.svelte": "<script>
+  "client/src/Button.svelte": "<script lang="ts">
   import './button.css';
+  import type {Snippet} from 'svelte';
+
+  let {
+    children,
+    onclick = undefined,
+    type = 'button',
+    variant = 'default',
+  }: {
+    children?: Snippet;
+    onclick?: () => void;
+    type?: 'button' | 'submit' | 'reset';
+    variant?: 'default' | 'primary';
+  } = $props();
+</script>
+
+<button {type} class:primary={variant === 'primary'} {onclick}>
+  {@render children?.()}
+</button>
+",
+  "client/src/Game.svelte": "<script>
   import {onMount} from 'svelte';
+  import Button from './Button.svelte';
   import {getStore} from 'tinybase/ui-svelte';
   import Board from './Board.svelte';
   import GameStatus from './GameStatus.svelte';
@@ -22176,7 +22798,7 @@ stays synchronized with the underlying TinyBase store.
 <GameStatus />
 <Board />
 <div style="text-align: center; margin-top: 2rem;">
-  <button class="primary" onclick={resetGame}>New Game</button>
+  <Button variant="primary" onclick={resetGame}>New Game</Button>
 </div>
 ",
   "client/src/GameStatus.svelte": "<script lang="ts">
@@ -22234,23 +22856,15 @@ stays synchronized with the underlying TinyBase store.
 </button>
 ",
   "client/src/Store.svelte": "<script lang="ts">
-  import {createMergeableStore} from 'tinybase';
-  import {onMount} from 'svelte';
   import {provideStore} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
   import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';
   import {getDb} from './sqlite';
-
-  import {STORE_ID} from './store';
+  import {STORE_ID, createGameStore} from './store';
 
   let {onReady}: {onReady?: () => void} = $props();
 
-  const store = createMergeableStore().setDefaultContent([
-    {},
-    {
-      currentPlayer: 'X',
-      gameStatus: 'playing',
-    },
-  ]);
+  const store = createGameStore();
 
   provideStore(STORE_ID, store);
 
@@ -22343,9 +22957,7 @@ addEventListener('load', () => {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -22416,7 +23028,18 @@ export const getDb = async () => {
   color: var(--bg);
 }
 ",
-  "client/src/store.ts": "export const STORE_ID = 'game';
+  "client/src/store.ts": "import {createMergeableStore} from 'tinybase';
+
+export const STORE_ID = 'game';
+
+export const createGameStore = () =>
+  createMergeableStore().setDefaultContent([
+    {},
+    {
+      currentPlayer: 'X',
+      gameStatus: 'playing',
+    },
+  ]);
 ",
   "client/src/vite-env.d.ts": "/// <reference types="vite/client" />
 
@@ -22812,6 +23435,27 @@ stays synchronized with the underlying TinyBase store.
   {/if}
 </Provider>
 ",
+  "client/src/Button.svelte": "<script lang="ts">
+  import './button.css';
+  import type {Snippet} from 'svelte';
+
+  let {
+    children,
+    onclick = undefined,
+    type = 'button',
+    variant = 'default',
+  }: {
+    children?: Snippet;
+    onclick?: () => void;
+    type?: 'button' | 'submit' | 'reset';
+    variant?: 'default' | 'primary';
+  } = $props();
+</script>
+
+<button {type} class:primary={variant === 'primary'} {onclick}>
+  {@render children?.()}
+</button>
+",
   "client/src/Loading.svelte": "<script>
   import './loading.css';
 </script>
@@ -22819,24 +23463,14 @@ stays synchronized with the underlying TinyBase store.
 <div id="loading"></div>
 ",
   "client/src/Store.svelte": "<script lang="ts">
-  import {createMergeableStore} from 'tinybase';
-  import {onMount} from 'svelte';
   import {provideStore} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
   import {createLocalPersister} from 'tinybase/persisters/persister-browser';
-
-  import {STORE_ID} from './store';
+  import {STORE_ID, createTodosStore} from './store';
 
   let {onReady}: {onReady?: () => void} = $props();
 
-  const store = createMergeableStore().setDefaultContent([
-    {
-      todos: {
-        '1': {text: 'Learn TinyBase', completed: false},
-        '2': {text: 'Build an app', completed: false},
-      },
-    },
-    {},
-  ]);
+  const store = createTodosStore();
 
   provideStore(STORE_ID, store);
 
@@ -22849,9 +23483,9 @@ stays synchronized with the underlying TinyBase store.
 </script>
 ",
   "client/src/TodoInput.svelte": "<script lang="ts">
-  import './button.css';
   import './input.css';
   import './todoInput.css';
+  import Button from './Button.svelte';
   import {onMount} from 'svelte';
   import {getStore} from 'tinybase/ui-svelte';
   import {STORE_ID} from './store';
@@ -22871,11 +23505,9 @@ stays synchronized with the underlying TinyBase store.
     }
   };
 
-  const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      addTodo();
-    }
+  const handleSubmit = (event: SubmitEvent) => {
+    event.preventDefault();
+    addTodo();
   };
 
   onMount(() => {
@@ -22883,16 +23515,15 @@ stays synchronized with the underlying TinyBase store.
   });
 </script>
 
-<div id="todoInput">
+<form id="todoInput" onsubmit={handleSubmit}>
   <input
     bind:this={input}
     bind:value={text}
     type="text"
     placeholder="What needs to be done?"
-    onkeydown={handleKeyDown}
   />
-  <button class="primary" onclick={addTodo}>Add</button>
-</div>
+  <Button variant="primary" type="submit">Add</Button>
+</form>
 ",
   "client/src/TodoItem.svelte": "<script lang="ts">
   import './button.css';
@@ -23019,9 +23650,7 @@ input[type='text']::placeholder {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -23033,9 +23662,22 @@ input[type='text']::placeholder {
   }
 }
 ",
-  "client/src/store.ts": "export type TodoRow = {text: string; completed: boolean};
+  "client/src/store.ts": "import {createMergeableStore} from 'tinybase';
+
+export type TodoRow = {text: string; completed: boolean};
 
 export const STORE_ID = 'todos';
+
+export const createTodosStore = () =>
+  createMergeableStore().setDefaultContent([
+    {
+      todos: {
+        '1': {text: 'Learn TinyBase', completed: false},
+        '2': {text: 'Build an app', completed: false},
+      },
+    },
+    {},
+  ]);
 ",
   "client/src/todoInput.css": "#todoInput {
   display: flex;
@@ -23501,6 +24143,27 @@ stays synchronized with the underlying TinyBase store.
   {/if}
 </Provider>
 ",
+  "client/src/Button.svelte": "<script lang="ts">
+  import './button.css';
+  import type {Snippet} from 'svelte';
+
+  let {
+    children,
+    onclick = undefined,
+    type = 'button',
+    variant = 'default',
+  }: {
+    children?: Snippet;
+    onclick?: () => void;
+    type?: 'button' | 'submit' | 'reset';
+    variant?: 'default' | 'primary';
+  } = $props();
+</script>
+
+<button {type} class:primary={variant === 'primary'} {onclick}>
+  {@render children?.()}
+</button>
+",
   "client/src/Loading.svelte": "<script>
   import './loading.css';
 </script>
@@ -23508,28 +24171,17 @@ stays synchronized with the underlying TinyBase store.
 <div id="loading"></div>
 ",
   "client/src/Store.svelte": "<script lang="ts">
-  import {createMergeableStore} from 'tinybase';
-  import {onMount} from 'svelte';
   import {provideStore} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
   import {createLocalPersister} from 'tinybase/persisters/persister-browser';
-
   import {SERVER} from './config';
   import ReconnectingWebSocket from 'reconnecting-websocket';
   import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';
-
-  import {STORE_ID} from './store';
+  import {STORE_ID, createTodosStore} from './store';
 
   let {onReady}: {onReady?: () => void} = $props();
 
-  const store = createMergeableStore().setDefaultContent([
-    {
-      todos: {
-        '1': {text: 'Learn TinyBase', completed: false},
-        '2': {text: 'Build an app', completed: false},
-      },
-    },
-    {},
-  ]);
+  const store = createTodosStore();
 
   provideStore(STORE_ID, store);
 
@@ -23537,7 +24189,7 @@ stays synchronized with the underlying TinyBase store.
     const persister = createLocalPersister(store, STORE_ID);
     await persister.load();
     await persister.startAutoSave();
-
+    onReady?.();
     const serverPathId = location.pathname;
     const synchronizer = await createWsSynchronizer(
       store,
@@ -23553,9 +24205,9 @@ stays synchronized with the underlying TinyBase store.
 </script>
 ",
   "client/src/TodoInput.svelte": "<script lang="ts">
-  import './button.css';
   import './input.css';
   import './todoInput.css';
+  import Button from './Button.svelte';
   import {onMount} from 'svelte';
   import {getStore} from 'tinybase/ui-svelte';
   import {STORE_ID} from './store';
@@ -23575,11 +24227,9 @@ stays synchronized with the underlying TinyBase store.
     }
   };
 
-  const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      addTodo();
-    }
+  const handleSubmit = (event: SubmitEvent) => {
+    event.preventDefault();
+    addTodo();
   };
 
   onMount(() => {
@@ -23587,16 +24237,15 @@ stays synchronized with the underlying TinyBase store.
   });
 </script>
 
-<div id="todoInput">
+<form id="todoInput" onsubmit={handleSubmit}>
   <input
     bind:this={input}
     bind:value={text}
     type="text"
     placeholder="What needs to be done?"
-    onkeydown={handleKeyDown}
   />
-  <button class="primary" onclick={addTodo}>Add</button>
-</div>
+  <Button variant="primary" type="submit">Add</Button>
+</form>
 ",
   "client/src/TodoItem.svelte": "<script lang="ts">
   import './button.css';
@@ -23730,9 +24379,7 @@ input[type='text']::placeholder {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -23744,9 +24391,22 @@ input[type='text']::placeholder {
   }
 }
 ",
-  "client/src/store.ts": "export type TodoRow = {text: string; completed: boolean};
+  "client/src/store.ts": "import {createMergeableStore} from 'tinybase';
+
+export type TodoRow = {text: string; completed: boolean};
 
 export const STORE_ID = 'todos';
+
+export const createTodosStore = () =>
+  createMergeableStore().setDefaultContent([
+    {
+      todos: {
+        '1': {text: 'Learn TinyBase', completed: false},
+        '2': {text: 'Build an app', completed: false},
+      },
+    },
+    {},
+  ]);
 ",
   "client/src/todoInput.css": "#todoInput {
   display: flex;
@@ -24256,6 +24916,27 @@ stays synchronized with the underlying TinyBase store.
   {/if}
 </Provider>
 ",
+  "client/src/Button.svelte": "<script lang="ts">
+  import './button.css';
+  import type {Snippet} from 'svelte';
+
+  let {
+    children,
+    onclick = undefined,
+    type = 'button',
+    variant = 'default',
+  }: {
+    children?: Snippet;
+    onclick?: () => void;
+    type?: 'button' | 'submit' | 'reset';
+    variant?: 'default' | 'primary';
+  } = $props();
+</script>
+
+<button {type} class:primary={variant === 'primary'} {onclick}>
+  {@render children?.()}
+</button>
+",
   "client/src/Loading.svelte": "<script>
   import './loading.css';
 </script>
@@ -24263,25 +24944,15 @@ stays synchronized with the underlying TinyBase store.
 <div id="loading"></div>
 ",
   "client/src/Store.svelte": "<script lang="ts">
-  import {createMergeableStore} from 'tinybase';
-  import {onMount} from 'svelte';
   import {provideStore} from 'tinybase/ui-svelte';
+  import {onMount} from 'svelte';
   import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';
   import {getDb} from './sqlite';
-
-  import {STORE_ID} from './store';
+  import {STORE_ID, createTodosStore} from './store';
 
   let {onReady}: {onReady?: () => void} = $props();
 
-  const store = createMergeableStore().setDefaultContent([
-    {
-      todos: {
-        '1': {text: 'Learn TinyBase', completed: false},
-        '2': {text: 'Build an app', completed: false},
-      },
-    },
-    {},
-  ]);
+  const store = createTodosStore();
 
   provideStore(STORE_ID, store);
 
@@ -24295,9 +24966,9 @@ stays synchronized with the underlying TinyBase store.
 </script>
 ",
   "client/src/TodoInput.svelte": "<script lang="ts">
-  import './button.css';
   import './input.css';
   import './todoInput.css';
+  import Button from './Button.svelte';
   import {onMount} from 'svelte';
   import {getStore} from 'tinybase/ui-svelte';
   import {STORE_ID} from './store';
@@ -24317,11 +24988,9 @@ stays synchronized with the underlying TinyBase store.
     }
   };
 
-  const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      addTodo();
-    }
+  const handleSubmit = (event: SubmitEvent) => {
+    event.preventDefault();
+    addTodo();
   };
 
   onMount(() => {
@@ -24329,16 +24998,15 @@ stays synchronized with the underlying TinyBase store.
   });
 </script>
 
-<div id="todoInput">
+<form id="todoInput" onsubmit={handleSubmit}>
   <input
     bind:this={input}
     bind:value={text}
     type="text"
     placeholder="What needs to be done?"
-    onkeydown={handleKeyDown}
   />
-  <button class="primary" onclick={addTodo}>Add</button>
-</div>
+  <Button variant="primary" type="submit">Add</Button>
+</form>
 ",
   "client/src/TodoItem.svelte": "<script lang="ts">
   import './button.css';
@@ -24465,9 +25133,7 @@ input[type='text']::placeholder {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -24499,9 +25165,22 @@ export const getDb = async () => {
   return {sqlite3: await sqlite3Promise, db};
 };
 ",
-  "client/src/store.ts": "export type TodoRow = {text: string; completed: boolean};
+  "client/src/store.ts": "import {createMergeableStore} from 'tinybase';
+
+export type TodoRow = {text: string; completed: boolean};
 
 export const STORE_ID = 'todos';
+
+export const createTodosStore = () =>
+  createMergeableStore().setDefaultContent([
+    {
+      todos: {
+        '1': {text: 'Learn TinyBase', completed: false},
+        '2': {text: 'Build an app', completed: false},
+      },
+    },
+    {},
+  ]);
 ",
   "client/src/todoInput.css": "#todoInput {
   display: flex;
@@ -24957,15 +25636,19 @@ button.primary:hover {
 
 export const createButton = (
   text: string,
-  onClick: () => void,
+  onClick: (() => void) | null,
   variant: 'default' | 'primary' = 'default',
+  type: 'button' | 'submit' = 'button',
 ): HTMLButtonElement => {
   const button = document.createElement('button');
   button.textContent = text;
+  button.type = type;
   if (variant === 'primary') {
     button.className = 'primary';
   }
-  button.addEventListener('click', onClick);
+  if (onClick) {
+    button.addEventListener('click', onClick);
+  }
   return button;
 };
 ",
@@ -24975,17 +25658,19 @@ import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 
 export const STORE_ID = 'chat';
 
-export const chatStore =
+export type MessageRow = {username: string; text: string; timestamp: number};
+
+export const createChatStore = () =>
   createMergeableStore().setDefaultContent(getDefaultContent());
 
-export type MessageRow = {username: string; text: string; timestamp: number};
+export const chatStore = createChatStore();
 
 let resolveChatReady: () => void;
 export const chatStoreReady = new Promise<void>((resolve) => {
   resolveChatReady = resolve;
 });
 
-const chatPersister = createLocalPersister(chatStore, 'chat');
+const chatPersister = createLocalPersister(chatStore, STORE_ID);
 chatPersister.load().then(() => {
   chatPersister.startAutoSave();
   resolveChatReady();
@@ -25047,9 +25732,7 @@ export const createInput = (
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -25143,8 +25826,8 @@ import {createInput} from './input';
 export const createMessageInput = (
   settingsStore: SettingsStore,
   chatStore: ChatStore,
-): HTMLDivElement => {
-  const messageInputContainer = document.createElement('div');
+): HTMLFormElement => {
+  const messageInputContainer = document.createElement('form');
   messageInputContainer.id = 'messageInput';
 
   const messageInput = createInput('Type a message...');
@@ -25159,16 +25842,16 @@ export const createMessageInput = (
         timestamp: Date.now(),
       });
       messageInput.value = '';
+      messageInput.focus();
     }
   };
 
-  messageInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      sendMessage();
-    }
+  messageInputContainer.addEventListener('submit', (event) => {
+    event.preventDefault();
+    sendMessage();
   });
 
-  const sendButton = createButton('Send', sendMessage, 'primary');
+  const sendButton = createButton('Send', null, 'primary', 'submit');
   messageInputContainer.appendChild(sendButton);
 
   return messageInputContainer;
@@ -25213,15 +25896,19 @@ import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 
 export const STORE_ID = 'settings';
 
-export const settingsStore = createStore();
+export const DEFAULT_VALUES = {username: getRandomName()};
+
+export const createSettingsStore = () => createStore();
+
+export const settingsStore = createSettingsStore();
 
 let resolveSettingsReady: () => void;
 export const settingsStoreReady = new Promise<void>((resolve) => {
   resolveSettingsReady = resolve;
 });
 
-const settingsPersister = createLocalPersister(settingsStore, 'settings');
-settingsPersister.load([{}, {username: getRandomName()}]).then(() => {
+const settingsPersister = createLocalPersister(settingsStore, STORE_ID);
+settingsPersister.load([{}, DEFAULT_VALUES]).then(() => {
   settingsPersister.startAutoSave();
   resolveSettingsReady();
 });
@@ -25262,6 +25949,8 @@ export const createUsernameInput = (
     'Enter your name',
     settingsStore.getValue('username') as string,
   );
+  usernameInput.id = 'usernameInputField';
+  label.htmlFor = usernameInput.id;
 
   container.appendChild(label);
   container.appendChild(usernameInput);
@@ -25668,9 +26357,11 @@ export const createBrushSize = (store: SettingsStore): HTMLDivElement => {
   label.textContent = 'Size:';
 
   const sizeSlider = document.createElement('input');
+  sizeSlider.id = 'brushSizeSlider';
   sizeSlider.type = 'range';
   sizeSlider.min = '1';
   sizeSlider.max = '50';
+  label.htmlFor = sizeSlider.id;
 
   const sizeLabel = document.createElement('span');
   sizeLabel.id = 'brushSizeValue';
@@ -25727,15 +26418,19 @@ button.primary:hover {
 
 export const createButton = (
   text: string,
-  onClick: () => void,
+  onClick: (() => void) | null,
   variant: 'default' | 'primary' = 'default',
+  type: 'button' | 'submit' = 'button',
 ): HTMLButtonElement => {
   const button = document.createElement('button');
   button.textContent = text;
+  button.type = type;
   if (variant === 'primary') {
     button.className = 'primary';
   }
-  button.addEventListener('click', onClick);
+  if (onClick) {
+    button.addEventListener('click', onClick);
+  }
   return button;
 };
 ",
@@ -25873,19 +26568,19 @@ import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 
 export const STORE_ID = 'canvas';
 
-export const canvasStore = createMergeableStore().setDefaultContent([
-  {strokes: {}},
-  {},
-]);
-
 export type StrokeRow = {color: string; size: number; points: string};
+
+export const createCanvasStore = () =>
+  createMergeableStore().setDefaultContent([{strokes: {}}, {}]);
+
+export const canvasStore = createCanvasStore();
 
 let resolveCanvasReady: () => void;
 export const canvasStoreReady = new Promise<void>((resolve) => {
   resolveCanvasReady = resolve;
 });
 
-const canvasPersister = createLocalPersister(canvasStore, 'canvas');
+const canvasPersister = createLocalPersister(canvasStore, STORE_ID);
 canvasPersister.load().then(() => {
   canvasPersister.startAutoSave();
   resolveCanvasReady();
@@ -26010,9 +26705,7 @@ addEventListener('load', () => {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -26042,15 +26735,19 @@ import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 
 export const STORE_ID = 'settings';
 
-export const settingsStore = createStore();
+export const DEFAULT_VALUES = {brushColor: '#d81b60', brushSize: 5};
+
+export const createSettingsStore = () => createStore();
+
+export const settingsStore = createSettingsStore();
 
 let resolveSettingsReady: () => void;
 export const settingsStoreReady = new Promise<void>((resolve) => {
   resolveSettingsReady = resolve;
 });
 
-const settingsPersister = createLocalPersister(settingsStore, 'settings');
-settingsPersister.load([{}, {brushColor: '#d81b60', brushSize: 5}]).then(() => {
+const settingsPersister = createLocalPersister(settingsStore, STORE_ID);
+settingsPersister.load([{}, DEFAULT_VALUES]).then(() => {
   settingsPersister.startAutoSave();
   resolveSettingsReady();
 });
@@ -26472,15 +27169,19 @@ button.primary:hover {
 
 export const createButton = (
   text: string,
-  onClick: () => void,
+  onClick: (() => void) | null,
   variant: 'default' | 'primary' = 'default',
+  type: 'button' | 'submit' = 'button',
 ): HTMLButtonElement => {
   const button = document.createElement('button');
   button.textContent = text;
+  button.type = type;
   if (variant === 'primary') {
     button.className = 'primary';
   }
-  button.addEventListener('click', onClick);
+  if (onClick) {
+    button.addEventListener('click', onClick);
+  }
   return button;
 };
 ",
@@ -26616,9 +27317,7 @@ addEventListener('load', () => {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -26703,20 +27402,23 @@ import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 
 export const STORE_ID = 'game';
 
-export const store = createMergeableStore().setDefaultContent([
-  {},
-  {
-    currentPlayer: 'X',
-    gameStatus: 'playing',
-  },
-]);
+export const createGameStore = () =>
+  createMergeableStore().setDefaultContent([
+    {},
+    {
+      currentPlayer: 'X',
+      gameStatus: 'playing',
+    },
+  ]);
+
+export const store = createGameStore();
 
 let resolveReady: () => void;
 export const storeReady = new Promise<void>((resolve) => {
   resolveReady = resolve;
 });
 
-const persister = createLocalPersister(store, 'game');
+const persister = createLocalPersister(store, STORE_ID);
 persister.load().then(() => {
   persister.startAutoSave();
   resolveReady();
@@ -27154,15 +27856,19 @@ button.primary:hover {
 
 export const createButton = (
   text: string,
-  onClick: () => void,
+  onClick: (() => void) | null,
   variant: 'default' | 'primary' = 'default',
+  type: 'button' | 'submit' = 'button',
 ): HTMLButtonElement => {
   const button = document.createElement('button');
   button.textContent = text;
+  button.type = type;
   if (variant === 'primary') {
     button.className = 'primary';
   }
-  button.addEventListener('click', onClick);
+  if (onClick) {
+    button.addEventListener('click', onClick);
+  }
   return button;
 };
 ",
@@ -27298,9 +28004,7 @@ addEventListener('load', () => {
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -27397,13 +28101,16 @@ import {getPgLite} from './pglite';
 
 export const STORE_ID = 'game';
 
-export const store = createMergeableStore().setDefaultContent([
-  {},
-  {
-    currentPlayer: 'X',
-    gameStatus: 'playing',
-  },
-]);
+export const createGameStore = () =>
+  createMergeableStore().setDefaultContent([
+    {},
+    {
+      currentPlayer: 'X',
+      gameStatus: 'playing',
+    },
+  ]);
+
+export const store = createGameStore();
 
 let resolveReady: () => void;
 export const storeReady = new Promise<void>((resolve) => {
@@ -27411,7 +28118,7 @@ export const storeReady = new Promise<void>((resolve) => {
 });
 
 getPgLite().then((pgLite) => {
-  createPglitePersister(store, pgLite, 'game').then((persister) => {
+  createPglitePersister(store, pgLite, STORE_ID).then((persister) => {
     persister.load().then(() => {
       persister.startAutoSave();
       resolveReady();
@@ -27811,15 +28518,19 @@ button.primary:hover {
 
 export const createButton = (
   text: string,
-  onClick: () => void,
+  onClick: (() => void) | null,
   variant: 'default' | 'primary' = 'default',
+  type: 'button' | 'submit' = 'button',
 ): HTMLButtonElement => {
   const button = document.createElement('button');
   button.textContent = text;
+  button.type = type;
   if (variant === 'primary') {
     button.className = 'primary';
   }
-  button.addEventListener('click', onClick);
+  if (onClick) {
+    button.addEventListener('click', onClick);
+  }
   return button;
 };
 ",
@@ -27877,9 +28588,7 @@ export const createInput = (
 }
 
 #loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100">
-  <path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" />
-</svg>');
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
 }
 
 @keyframes spin {
@@ -27911,22 +28620,25 @@ export type TodoRow = {text: string; completed: boolean};
 
 export const STORE_ID = 'todos';
 
-export const store = createMergeableStore().setDefaultContent([
-  {
-    todos: {
-      '1': {text: 'Learn TinyBase', completed: false},
-      '2': {text: 'Build an app', completed: false},
+export const createTodosStore = () =>
+  createMergeableStore().setDefaultContent([
+    {
+      todos: {
+        '1': {text: 'Learn TinyBase', completed: false},
+        '2': {text: 'Build an app', completed: false},
+      },
     },
-  },
-  {},
-]);
+    {},
+  ]);
+
+export const store = createTodosStore();
 
 let resolveReady: () => void;
 export const storeReady = new Promise<void>((resolve) => {
   resolveReady = resolve;
 });
 
-const persister = createLocalPersister(store, 'todos');
+const persister = createLocalPersister(store, STORE_ID);
 persister.load().then(() => {
   persister.startAutoSave();
   resolveReady();
@@ -27949,8 +28661,8 @@ import {type TodosStore} from './store';
 import {createButton} from './button';
 import {createInput} from './input';
 
-export const createTodoInput = (store: TodosStore): HTMLDivElement => {
-  const container = document.createElement('div');
+export const createTodoInput = (store: TodosStore): HTMLFormElement => {
+  const container = document.createElement('form');
   container.id = 'todoInput';
 
   const input = createInput('What needs to be done?');
@@ -27960,16 +28672,16 @@ export const createTodoInput = (store: TodosStore): HTMLDivElement => {
     if (text) {
       store.addRow('todos', {text, completed: false});
       input.value = '';
+      input.focus();
     }
   };
 
-  input.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      addTodo();
-    }
+  container.addEventListener('submit', (event) => {
+    event.preventDefault();
+    addTodo();
   });
 
-  const addButton = createButton('Add', addTodo, 'primary');
+  const addButton = createButton('Add', null, 'primary', 'submit');
 
   container.appendChild(input);
   container.appendChild(addButton);
