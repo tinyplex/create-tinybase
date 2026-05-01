@@ -67,6 +67,10 @@
     <div id="app"></div>
   {{else}}
     <div id="appContainer">
+      {{#unless react}}
+        <div id="topBarMount"></div>
+        <div id="app"></div>
+      {{/unless}}
     </div>
   {{/if}}
   {{includeFile template="client/src/index.tsx.hbs" output="client/src/index.{{entryExt}}"}}

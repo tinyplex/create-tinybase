@@ -428,13 +428,22 @@ export const App = () => {
   );
 };
 ",
+  "client/src/Title.jsx": "import './title.css';
+
+export const Title = () => (
+  <h1 id="topBarTitle">
+    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+    TinyBase Chat
+  </h1>
+);
+",
   "client/src/TopBar.jsx": "import './topBar.css';
 import {Info} from './Info';
+import {Title} from './Title';
 
 export const TopBar = () => (
   <div id="topBar">
-    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-    <div id="topBarTitle">TinyBase Chat</div>
+    <Title />
     <Info />
   </div>
 );
@@ -680,6 +689,23 @@ export const DEFAULT_VALUES = {username: getRandomName()};
 
 export const createSettingsStore = () => createStore();
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -692,19 +718,6 @@ export const createSettingsStore = () => createStore();
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/src/usernameInput.css": "#usernameInput {
@@ -1262,13 +1275,22 @@ export const App = () => {
   );
 };
 ",
+  "client/src/Title.jsx": "import './title.css';
+
+export const Title = () => (
+  <h1 id="topBarTitle">
+    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+    TinyBase Chat
+  </h1>
+);
+",
   "client/src/TopBar.jsx": "import './topBar.css';
 import {Info} from './Info';
+import {Title} from './Title';
 
 export const TopBar = () => (
   <div id="topBar">
-    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-    <div id="topBarTitle">TinyBase Chat</div>
+    <Title />
     <Info />
   </div>
 );
@@ -1531,6 +1553,23 @@ export const getDb = async () => {
   return {sqlite3: await sqlite3Promise, db};
 };
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -1543,19 +1582,6 @@ export const getDb = async () => {
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/src/usernameInput.css": "#usernameInput {
@@ -2151,13 +2177,22 @@ export const App = () => {
   );
 };
 ",
+  "client/src/Title.jsx": "import './title.css';
+
+export const Title = () => (
+  <h1 id="topBarTitle">
+    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+    TinyBase Drawing
+  </h1>
+);
+",
   "client/src/TopBar.jsx": "import './topBar.css';
 import {Info} from './Info';
+import {Title} from './Title';
 
 export const TopBar = () => (
   <div id="topBar">
-    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-    <div id="topBarTitle">TinyBase Drawing</div>
+    <Title />
     <Info />
   </div>
 );
@@ -2389,6 +2424,23 @@ export const DEFAULT_VALUES = {brushColor: '#d81b60', brushSize: 5};
 
 export const createSettingsStore = () => createStore();
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -2401,19 +2453,6 @@ export const createSettingsStore = () => createStore();
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/vite.config.js": "import {defineConfig} from 'vite';
@@ -2875,13 +2914,22 @@ export const App = () => {
   );
 };
 ",
+  "client/src/Title.jsx": "import './title.css';
+
+export const Title = () => (
+  <h1 id="topBarTitle">
+    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+    TinyBase Game
+  </h1>
+);
+",
   "client/src/TopBar.jsx": "import './topBar.css';
 import {Info} from './Info';
+import {Title} from './Title';
 
 export const TopBar = () => (
   <div id="topBar">
-    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-    <div id="topBarTitle">TinyBase Game</div>
+    <Title />
     <Info />
   </div>
 );
@@ -3121,6 +3169,23 @@ export const createGameStore = () =>
     },
   ]);
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -3133,19 +3198,6 @@ export const createGameStore = () =>
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/vite.config.js": "import {defineConfig} from 'vite';
@@ -3472,6 +3524,15 @@ export const App = () => {
   );
 };
 ",
+  "client/src/Title.jsx": "import './title.css';
+
+export const Title = () => (
+  <h1 id="topBarTitle">
+    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+    TinyBase Todos
+  </h1>
+);
+",
   "client/src/TodoInput.jsx": "import './todoInput.css';
 import {useState} from 'react';
 import {useAddRowCallback, STORE_ID} from './Store';
@@ -3569,11 +3630,11 @@ export const TodoList = () => {
 ",
   "client/src/TopBar.jsx": "import './topBar.css';
 import {Info} from './Info';
+import {Title} from './Title';
 
 export const TopBar = () => (
   <div id="topBar">
-    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-    <div id="topBarTitle">TinyBase Todos</div>
+    <Title />
     <Info />
   </div>
 );
@@ -3762,6 +3823,23 @@ export const createTodosStore = () =>
     {},
   ]);
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/todoInput.css": "#todoInput {
   display: flex;
   gap: 0.5rem;
@@ -3833,19 +3911,6 @@ export const createTodosStore = () =>
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/vite.config.js": "import {defineConfig} from 'vite';
@@ -4319,6 +4384,15 @@ export const App = () => {
   );
 };
 ",
+  "client/src/Title.jsx": "import './title.css';
+
+export const Title = () => (
+  <h1 id="topBarTitle">
+    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+    TinyBase Todos
+  </h1>
+);
+",
   "client/src/TodoInput.jsx": "import './todoInput.css';
 import {useState} from 'react';
 import {useAddRowCallback, STORE_ID} from './Store';
@@ -4416,11 +4490,11 @@ export const TodoList = () => {
 ",
   "client/src/TopBar.jsx": "import './topBar.css';
 import {Info} from './Info';
+import {Title} from './Title';
 
 export const TopBar = () => (
   <div id="topBar">
-    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-    <div id="topBarTitle">TinyBase Todos</div>
+    <Title />
     <Info />
   </div>
 );
@@ -4633,6 +4707,23 @@ export const createTodosStore = () =>
     {},
   ]);
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/todoInput.css": "#todoInput {
   display: flex;
   gap: 0.5rem;
@@ -4704,19 +4795,6 @@ export const createTodosStore = () =>
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/vite.config.js": "import {defineConfig} from 'vite';
@@ -4915,7 +4993,10 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer">
+      <div id="topBarMount"></div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.js"></script>
   </body>
@@ -5209,14 +5290,23 @@ stays synchronized with the underlying TinyBase store.
   });
 </script>
 ",
+  "client/src/Title.svelte": "<script>
+  import './title.css';
+</script>
+
+<h1 id="topBarTitle">
+  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+  TinyBase Chat
+</h1>
+",
   "client/src/TopBar.svelte": "<script>
   import './topBar.css';
+  import Title from './Title.svelte';
   import Info from './Info.svelte';
 </script>
 
 <div id="topBar">
-  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-  <div id="topBarTitle">TinyBase Chat</div>
+  <Title />
   <Info />
 </div>
 ",
@@ -5468,6 +5558,23 @@ export const DEFAULT_VALUES = {username: getRandomName()};
 
 export const createSettingsStore = () => createStore();
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -5480,19 +5587,6 @@ export const createSettingsStore = () => createStore();
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/src/usernameInput.css": "#usernameInput {
@@ -5660,7 +5754,10 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer">
+      <div id="topBarMount"></div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.js"></script>
   </body>
@@ -6050,14 +6147,23 @@ stays synchronized with the underlying TinyBase store.
   });
 </script>
 ",
+  "client/src/Title.svelte": "<script>
+  import './title.css';
+</script>
+
+<h1 id="topBarTitle">
+  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+  TinyBase Drawing
+</h1>
+",
   "client/src/TopBar.svelte": "<script>
   import './topBar.css';
+  import Title from './Title.svelte';
   import Info from './Info.svelte';
 </script>
 
 <div id="topBar">
-  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-  <div id="topBarTitle">TinyBase Drawing</div>
+  <Title />
   <Info />
 </div>
 ",
@@ -6294,6 +6400,23 @@ export const DEFAULT_VALUES = {brushColor: '#d81b60', brushSize: 5};
 
 export const createSettingsStore = () => createStore();
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -6306,19 +6429,6 @@ export const createSettingsStore = () => createStore();
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/vite.config.js": "import {defineConfig} from 'vite';
@@ -6444,7 +6554,10 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer">
+      <div id="topBarMount"></div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.js"></script>
   </body>
@@ -6734,14 +6847,23 @@ stays synchronized with the underlying TinyBase store.
   });
 </script>
 ",
+  "client/src/Title.svelte": "<script>
+  import './title.css';
+</script>
+
+<h1 id="topBarTitle">
+  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+  TinyBase Game
+</h1>
+",
   "client/src/TopBar.svelte": "<script>
   import './topBar.css';
+  import Title from './Title.svelte';
   import Info from './Info.svelte';
 </script>
 
 <div id="topBar">
-  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-  <div id="topBarTitle">TinyBase Game</div>
+  <Title />
   <Info />
 </div>
 ",
@@ -6986,6 +7108,23 @@ export const createGameStore = () =>
     },
   ]);
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -6998,19 +7137,6 @@ export const createGameStore = () =>
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/vite.config.js": "import {defineConfig} from 'vite';
@@ -7136,7 +7262,10 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer">
+      <div id="topBarMount"></div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.js"></script>
   </body>
@@ -7277,6 +7406,15 @@ stays synchronized with the underlying TinyBase store.
   });
 </script>
 ",
+  "client/src/Title.svelte": "<script>
+  import './title.css';
+</script>
+
+<h1 id="topBarTitle">
+  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+  TinyBase Todos
+</h1>
+",
   "client/src/TodoInput.svelte": "<script>
   import './input.css';
   import './todoInput.css';
@@ -7377,12 +7515,12 @@ stays synchronized with the underlying TinyBase store.
 ",
   "client/src/TopBar.svelte": "<script>
   import './topBar.css';
+  import Title from './Title.svelte';
   import Info from './Info.svelte';
 </script>
 
 <div id="topBar">
-  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-  <div id="topBarTitle">TinyBase Todos</div>
+  <Title />
   <Info />
 </div>
 ",
@@ -7576,6 +7714,23 @@ export const createTodosStore = () =>
     {},
   ]);
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/todoInput.css": "#todoInput {
   display: flex;
   gap: 0.5rem;
@@ -7647,19 +7802,6 @@ export const createTodosStore = () =>
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/vite.config.js": "import {defineConfig} from 'vite';
@@ -7782,7 +7924,10 @@ Your data is automatically saved and restored when you reload the page.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer">
+      <div id="topBarMount"></div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.js"></script>
   </body>
@@ -8267,6 +8412,40 @@ settingsPersister.load([{}, DEFAULT_VALUES]).then(() => {
   resolveSettingsReady();
 });
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
+  "client/src/title.js": "import './title.css';
+
+export const createTitle = () => {
+  const title = document.createElement('h1');
+  title.id = 'topBarTitle';
+
+  const logo = document.createElement('img');
+  logo.src = '/favicon.svg';
+  logo.id = 'topBarLogo';
+  logo.alt = 'TinyBase';
+  title.appendChild(logo);
+
+  title.append('TinyBase Chat');
+
+  return title;
+};
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -8280,38 +8459,16 @@ settingsPersister.load([{}, DEFAULT_VALUES]).then(() => {
   z-index: 100;
   backdrop-filter: blur(4px);
 }
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
-}
 ",
   "client/src/topBar.js": "import './topBar.css';
+import {createTitle} from './title';
 import {createInfo} from './info';
 
 export const createTopBar = () => {
   const topBar = document.createElement('div');
   topBar.id = 'topBar';
 
-  const logo = document.createElement('img');
-  logo.src = '/favicon.svg';
-  logo.id = 'topBarLogo';
-  logo.alt = 'TinyBase';
-  topBar.appendChild(logo);
-
-  const title = document.createElement('div');
-  title.id = 'topBarTitle';
-  title.textContent = 'TinyBase Chat';
-  topBar.appendChild(title);
-
+  topBar.appendChild(createTitle());
   topBar.appendChild(createInfo());
 
   return topBar;
@@ -8504,7 +8661,10 @@ Your data is automatically saved and restored when you reload the page.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer">
+      <div id="topBarMount"></div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.js"></script>
   </body>
@@ -9100,6 +9260,40 @@ settingsPersister.load([{}, DEFAULT_VALUES]).then(() => {
   resolveSettingsReady();
 });
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
+  "client/src/title.js": "import './title.css';
+
+export const createTitle = () => {
+  const title = document.createElement('h1');
+  title.id = 'topBarTitle';
+
+  const logo = document.createElement('img');
+  logo.src = '/favicon.svg';
+  logo.id = 'topBarLogo';
+  logo.alt = 'TinyBase';
+  title.appendChild(logo);
+
+  title.append('TinyBase Drawing');
+
+  return title;
+};
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -9113,38 +9307,16 @@ settingsPersister.load([{}, DEFAULT_VALUES]).then(() => {
   z-index: 100;
   backdrop-filter: blur(4px);
 }
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
-}
 ",
   "client/src/topBar.js": "import './topBar.css';
+import {createTitle} from './title';
 import {createInfo} from './info';
 
 export const createTopBar = () => {
   const topBar = document.createElement('div');
   topBar.id = 'topBar';
 
-  const logo = document.createElement('img');
-  logo.src = '/favicon.svg';
-  logo.id = 'topBarLogo';
-  logo.alt = 'TinyBase';
-  topBar.appendChild(logo);
-
-  const title = document.createElement('div');
-  title.id = 'topBarTitle';
-  title.textContent = 'TinyBase Drawing';
-  topBar.appendChild(title);
-
+  topBar.appendChild(createTitle());
   topBar.appendChild(createInfo());
 
   return topBar;
@@ -9260,7 +9432,10 @@ The app uses **TinyBase** to manage application state in a reactive data store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer">
+      <div id="topBarMount"></div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.js"></script>
   </body>
@@ -9849,6 +10024,40 @@ settingsStore
   .setValue('brushSize', DEFAULT_VALUES.brushSize);
 resolveSettingsReady();
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
+  "client/src/title.js": "import './title.css';
+
+export const createTitle = () => {
+  const title = document.createElement('h1');
+  title.id = 'topBarTitle';
+
+  const logo = document.createElement('img');
+  logo.src = '/favicon.svg';
+  logo.id = 'topBarLogo';
+  logo.alt = 'TinyBase';
+  title.appendChild(logo);
+
+  title.append('TinyBase Drawing');
+
+  return title;
+};
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -9862,38 +10071,16 @@ resolveSettingsReady();
   z-index: 100;
   backdrop-filter: blur(4px);
 }
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
-}
 ",
   "client/src/topBar.js": "import './topBar.css';
+import {createTitle} from './title';
 import {createInfo} from './info';
 
 export const createTopBar = () => {
   const topBar = document.createElement('div');
   topBar.id = 'topBar';
 
-  const logo = document.createElement('img');
-  logo.src = '/favicon.svg';
-  logo.id = 'topBarLogo';
-  logo.alt = 'TinyBase';
-  topBar.appendChild(logo);
-
-  const title = document.createElement('div');
-  title.id = 'topBarTitle';
-  title.textContent = 'TinyBase Drawing';
-  topBar.appendChild(title);
-
+  topBar.appendChild(createTitle());
   topBar.appendChild(createInfo());
 
   return topBar;
@@ -10011,7 +10198,10 @@ Your data is automatically saved and restored when you reload the page.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer">
+      <div id="topBarMount"></div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.js"></script>
   </body>
@@ -10529,6 +10719,40 @@ persister.load().then(() => {
   resolveReady();
 });
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
+  "client/src/title.js": "import './title.css';
+
+export const createTitle = () => {
+  const title = document.createElement('h1');
+  title.id = 'topBarTitle';
+
+  const logo = document.createElement('img');
+  logo.src = '/favicon.svg';
+  logo.id = 'topBarLogo';
+  logo.alt = 'TinyBase';
+  title.appendChild(logo);
+
+  title.append('TinyBase Game');
+
+  return title;
+};
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -10542,38 +10766,16 @@ persister.load().then(() => {
   z-index: 100;
   backdrop-filter: blur(4px);
 }
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
-}
 ",
   "client/src/topBar.js": "import './topBar.css';
+import {createTitle} from './title';
 import {createInfo} from './info';
 
 export const createTopBar = () => {
   const topBar = document.createElement('div');
   topBar.id = 'topBar';
 
-  const logo = document.createElement('img');
-  logo.src = '/favicon.svg';
-  logo.id = 'topBarLogo';
-  logo.alt = 'TinyBase';
-  topBar.appendChild(logo);
-
-  const title = document.createElement('div');
-  title.id = 'topBarTitle';
-  title.textContent = 'TinyBase Game';
-  topBar.appendChild(title);
-
+  topBar.appendChild(createTitle());
   topBar.appendChild(createInfo());
 
   return topBar;
@@ -10691,7 +10893,10 @@ Your data is automatically saved and restored when you reload the page.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer">
+      <div id="topBarMount"></div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.js"></script>
   </body>
@@ -11033,6 +11238,40 @@ persister.load().then(() => {
   resolveReady();
 });
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
+  "client/src/title.js": "import './title.css';
+
+export const createTitle = () => {
+  const title = document.createElement('h1');
+  title.id = 'topBarTitle';
+
+  const logo = document.createElement('img');
+  logo.src = '/favicon.svg';
+  logo.id = 'topBarLogo';
+  logo.alt = 'TinyBase';
+  title.appendChild(logo);
+
+  title.append('TinyBase Todos');
+
+  return title;
+};
+",
   "client/src/todoInput.css": "#todoInput {
   display: flex;
   gap: 0.5rem;
@@ -11199,38 +11438,16 @@ export const createTodoList = (store) => {
   z-index: 100;
   backdrop-filter: blur(4px);
 }
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
-}
 ",
   "client/src/topBar.js": "import './topBar.css';
+import {createTitle} from './title';
 import {createInfo} from './info';
 
 export const createTopBar = () => {
   const topBar = document.createElement('div');
   topBar.id = 'topBar';
 
-  const logo = document.createElement('img');
-  logo.src = '/favicon.svg';
-  logo.id = 'topBarLogo';
-  logo.alt = 'TinyBase';
-  topBar.appendChild(logo);
-
-  const title = document.createElement('div');
-  title.id = 'topBarTitle';
-  title.textContent = 'TinyBase Todos';
-  topBar.appendChild(title);
-
+  topBar.appendChild(createTitle());
   topBar.appendChild(createInfo());
 
   return topBar;
@@ -11696,13 +11913,22 @@ export const App = () => {
   );
 };
 ",
+  "client/src/Title.tsx": "import './title.css';
+
+export const Title = () => (
+  <h1 id="topBarTitle">
+    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+    TinyBase Chat
+  </h1>
+);
+",
   "client/src/TopBar.tsx": "import './topBar.css';
 import {Info} from './Info';
+import {Title} from './Title';
 
 export const TopBar = () => (
   <div id="topBar">
-    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-    <div id="topBarTitle">TinyBase Chat</div>
+    <Title />
     <Info />
   </div>
 );
@@ -11950,6 +12176,23 @@ export const DEFAULT_VALUES = {username: getRandomName()};
 
 export const createSettingsStore = () => createStore();
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -11962,19 +12205,6 @@ export const createSettingsStore = () => createStore();
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/src/usernameInput.css": "#usernameInput {
@@ -12588,13 +12818,22 @@ export const App = () => {
   );
 };
 ",
+  "client/src/Title.tsx": "import './title.css';
+
+export const Title = () => (
+  <h1 id="topBarTitle">
+    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+    TinyBase Chat
+  </h1>
+);
+",
   "client/src/TopBar.tsx": "import './topBar.css';
 import {Info} from './Info';
+import {Title} from './Title';
 
 export const TopBar = () => (
   <div id="topBar">
-    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-    <div id="topBarTitle">TinyBase Chat</div>
+    <Title />
     <Info />
   </div>
 );
@@ -12849,6 +13088,23 @@ export const DEFAULT_VALUES = {username: getRandomName()};
 
 export const createSettingsStore = () => createStore();
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -12861,19 +13117,6 @@ export const createSettingsStore = () => createStore();
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/src/usernameInput.css": "#usernameInput {
@@ -13546,13 +13789,22 @@ export const App = () => {
   );
 };
 ",
+  "client/src/Title.tsx": "import './title.css';
+
+export const Title = () => (
+  <h1 id="topBarTitle">
+    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+    TinyBase Drawing
+  </h1>
+);
+",
   "client/src/TopBar.tsx": "import './topBar.css';
 import {Info} from './Info';
+import {Title} from './Title';
 
 export const TopBar = () => (
   <div id="topBar">
-    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-    <div id="topBarTitle">TinyBase Drawing</div>
+    <Title />
     <Info />
   </div>
 );
@@ -13786,6 +14038,23 @@ export const DEFAULT_VALUES = {brushColor: '#d81b60', brushSize: 5};
 
 export const createSettingsStore = () => createStore();
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -13798,19 +14067,6 @@ export const createSettingsStore = () => createStore();
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/src/vite-env.d.ts": "declare module '*.css' {
@@ -14319,13 +14575,22 @@ export const App = () => {
   );
 };
 ",
+  "client/src/Title.tsx": "import './title.css';
+
+export const Title = () => (
+  <h1 id="topBarTitle">
+    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+    TinyBase Game
+  </h1>
+);
+",
   "client/src/TopBar.tsx": "import './topBar.css';
 import {Info} from './Info';
+import {Title} from './Title';
 
 export const TopBar = () => (
   <div id="topBar">
-    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-    <div id="topBarTitle">TinyBase Game</div>
+    <Title />
     <Info />
   </div>
 );
@@ -14565,6 +14830,23 @@ export const createGameStore = () =>
     },
   ]);
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -14577,19 +14859,6 @@ export const createGameStore = () =>
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/src/vite-env.d.ts": "declare module '*.css' {
@@ -14964,6 +15233,15 @@ export const App = () => {
   );
 };
 ",
+  "client/src/Title.tsx": "import './title.css';
+
+export const Title = () => (
+  <h1 id="topBarTitle">
+    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+    TinyBase Todos
+  </h1>
+);
+",
   "client/src/TodoInput.tsx": "import './todoInput.css';
 import {useState} from 'react';
 import {useAddRowCallback, STORE_ID} from './Store';
@@ -15062,11 +15340,11 @@ export const TodoList = () => {
 ",
   "client/src/TopBar.tsx": "import './topBar.css';
 import {Info} from './Info';
+import {Title} from './Title';
 
 export const TopBar = () => (
   <div id="topBar">
-    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-    <div id="topBarTitle">TinyBase Todos</div>
+    <Title />
     <Info />
   </div>
 );
@@ -15257,6 +15535,23 @@ export const createTodosStore = () =>
     {},
   ]);
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/todoInput.css": "#todoInput {
   display: flex;
   gap: 0.5rem;
@@ -15328,19 +15623,6 @@ export const createTodosStore = () =>
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/src/vite-env.d.ts": "declare module '*.css' {
@@ -15756,6 +16038,15 @@ export const App = () => {
   );
 };
 ",
+  "client/src/Title.tsx": "import './title.css';
+
+export const Title = () => (
+  <h1 id="topBarTitle">
+    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+    TinyBase Todos
+  </h1>
+);
+",
   "client/src/TodoInput.tsx": "import './todoInput.css';
 import {useState} from 'react';
 import {useAddRowCallback, STORE_ID} from './Store';
@@ -15854,11 +16145,11 @@ export const TodoList = () => {
 ",
   "client/src/TopBar.tsx": "import './topBar.css';
 import {Info} from './Info';
+import {Title} from './Title';
 
 export const TopBar = () => (
   <div id="topBar">
-    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-    <div id="topBarTitle">TinyBase Todos</div>
+    <Title />
     <Info />
   </div>
 );
@@ -16056,6 +16347,23 @@ export const createTodosStore = () =>
     {},
   ]);
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/todoInput.css": "#todoInput {
   display: flex;
   gap: 0.5rem;
@@ -16127,19 +16435,6 @@ export const createTodosStore = () =>
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/src/vite-env.d.ts": "declare module '*.css' {
@@ -16323,18 +16618,12 @@ with the store.
     fill="#fff" fill-rule="evenodd" />
 </svg>",
   "client/src/App.tsx": "import {App as TinyBaseApp} from './TinyBaseApp';
-import {App as TinyWidgetsApp, Image} from 'tinywidgets';
+import {App as TinyWidgetsApp} from 'tinywidgets';
 import {Info} from './Info';
+import {Title} from './Title';
 
 export const App = () => (
   <TinyWidgetsApp title={Title} topNavRight={Info} main={Main} />
-);
-
-const Title = () => (
-  <h1>
-    <Image src="/favicon.svg" variant="logo" alt="TinyBase" />
-    TinyBase Todos
-  </h1>
 );
 
 const Main = () => <TinyBaseApp />;
@@ -16487,6 +16776,16 @@ export const App = () => {
     </StrictMode>
   );
 };
+",
+  "client/src/Title.tsx": "import './title.css';
+import {Image} from 'tinywidgets';
+
+export const Title = () => (
+  <h1 id="topBarTitle">
+    <Image src="/favicon.svg" variant="logo" alt="TinyBase" />
+    TinyBase Todos
+  </h1>
+);
 ",
   "client/src/TodoInput.tsx": "import './todoInput.css';
 import {useState} from 'react';
@@ -16770,6 +17069,23 @@ export const createTodosStore = () =>
     {},
   ]);
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/todoInput.css": "#todoInput {
   display: flex;
   gap: 0.5rem;
@@ -16989,7 +17305,10 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer">
+      <div id="topBarMount"></div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.ts"></script>
   </body>
@@ -17308,14 +17627,23 @@ stays synchronized with the underlying TinyBase store.
   });
 </script>
 ",
+  "client/src/Title.svelte": "<script lang="ts">
+  import './title.css';
+</script>
+
+<h1 id="topBarTitle">
+  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+  TinyBase Chat
+</h1>
+",
   "client/src/TopBar.svelte": "<script lang="ts">
   import './topBar.css';
+  import Title from './Title.svelte';
   import Info from './Info.svelte';
 </script>
 
 <div id="topBar">
-  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-  <div id="topBarTitle">TinyBase Chat</div>
+  <Title />
   <Info />
 </div>
 ",
@@ -17571,6 +17899,23 @@ export const DEFAULT_VALUES = {username: getRandomName()};
 
 export const createSettingsStore = () => createStore();
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -17583,19 +17928,6 @@ export const createSettingsStore = () => createStore();
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/src/usernameInput.css": "#usernameInput {
@@ -17809,7 +18141,10 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer">
+      <div id="topBarMount"></div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.ts"></script>
   </body>
@@ -18152,14 +18487,23 @@ stays synchronized with the underlying TinyBase store.
   });
 </script>
 ",
+  "client/src/Title.svelte": "<script lang="ts">
+  import './title.css';
+</script>
+
+<h1 id="topBarTitle">
+  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+  TinyBase Chat
+</h1>
+",
   "client/src/TopBar.svelte": "<script lang="ts">
   import './topBar.css';
+  import Title from './Title.svelte';
   import Info from './Info.svelte';
 </script>
 
 <div id="topBar">
-  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-  <div id="topBarTitle">TinyBase Chat</div>
+  <Title />
   <Info />
 </div>
 ",
@@ -18422,6 +18766,23 @@ export const DEFAULT_VALUES = {username: getRandomName()};
 
 export const createSettingsStore = () => createStore();
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -18434,19 +18795,6 @@ export const createSettingsStore = () => createStore();
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/src/usernameInput.css": "#usernameInput {
@@ -18650,7 +18998,10 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer">
+      <div id="topBarMount"></div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.ts"></script>
   </body>
@@ -19037,14 +19388,23 @@ stays synchronized with the underlying TinyBase store.
   });
 </script>
 ",
+  "client/src/Title.svelte": "<script lang="ts">
+  import './title.css';
+</script>
+
+<h1 id="topBarTitle">
+  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+  TinyBase Chat
+</h1>
+",
   "client/src/TopBar.svelte": "<script lang="ts">
   import './topBar.css';
+  import Title from './Title.svelte';
   import Info from './Info.svelte';
 </script>
 
 <div id="topBar">
-  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-  <div id="topBarTitle">TinyBase Chat</div>
+  <Title />
   <Info />
 </div>
 ",
@@ -19320,6 +19680,23 @@ export const getDb = async () => {
   return {sqlite3: await sqlite3Promise, db};
 };
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -19332,19 +19709,6 @@ export const getDb = async () => {
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/src/usernameInput.css": "#usernameInput {
@@ -19557,7 +19921,10 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer">
+      <div id="topBarMount"></div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.ts"></script>
   </body>
@@ -19969,14 +20336,23 @@ stays synchronized with the underlying TinyBase store.
   });
 </script>
 ",
+  "client/src/Title.svelte": "<script lang="ts">
+  import './title.css';
+</script>
+
+<h1 id="topBarTitle">
+  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+  TinyBase Drawing
+</h1>
+",
   "client/src/TopBar.svelte": "<script lang="ts">
   import './topBar.css';
+  import Title from './Title.svelte';
   import Info from './Info.svelte';
 </script>
 
 <div id="topBar">
-  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-  <div id="topBarTitle">TinyBase Drawing</div>
+  <Title />
   <Info />
 </div>
 ",
@@ -20215,6 +20591,23 @@ export const DEFAULT_VALUES = {brushColor: '#d81b60', brushSize: 5};
 
 export const createSettingsStore = () => createStore();
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -20227,19 +20620,6 @@ export const createSettingsStore = () => createStore();
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/src/vite-env.d.ts": "/// <reference types="vite/client" />
@@ -20412,7 +20792,10 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer">
+      <div id="topBarMount"></div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.ts"></script>
   </body>
@@ -20848,14 +21231,23 @@ stays synchronized with the underlying TinyBase store.
   });
 </script>
 ",
+  "client/src/Title.svelte": "<script lang="ts">
+  import './title.css';
+</script>
+
+<h1 id="topBarTitle">
+  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+  TinyBase Drawing
+</h1>
+",
   "client/src/TopBar.svelte": "<script lang="ts">
   import './topBar.css';
+  import Title from './Title.svelte';
   import Info from './Info.svelte';
 </script>
 
 <div id="topBar">
-  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-  <div id="topBarTitle">TinyBase Drawing</div>
+  <Title />
   <Info />
 </div>
 ",
@@ -21101,6 +21493,23 @@ export const DEFAULT_VALUES = {brushColor: '#d81b60', brushSize: 5};
 
 export const createSettingsStore = () => createStore();
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -21113,19 +21522,6 @@ export const createSettingsStore = () => createStore();
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/src/vite-env.d.ts": "/// <reference types="vite/client" />
@@ -21288,7 +21684,10 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer">
+      <div id="topBarMount"></div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.ts"></script>
   </body>
@@ -21768,14 +22167,23 @@ stays synchronized with the underlying TinyBase store.
   });
 </script>
 ",
+  "client/src/Title.svelte": "<script lang="ts">
+  import './title.css';
+</script>
+
+<h1 id="topBarTitle">
+  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+  TinyBase Drawing
+</h1>
+",
   "client/src/TopBar.svelte": "<script lang="ts">
   import './topBar.css';
+  import Title from './Title.svelte';
   import Info from './Info.svelte';
 </script>
 
 <div id="topBar">
-  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-  <div id="topBarTitle">TinyBase Drawing</div>
+  <Title />
   <Info />
 </div>
 ",
@@ -22034,6 +22442,23 @@ export const getDb = async () => {
   return {sqlite3: await sqlite3Promise, db};
 };
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -22046,19 +22471,6 @@ export const getDb = async () => {
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/src/vite-env.d.ts": "/// <reference types="vite/client" />
@@ -22229,7 +22641,10 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer">
+      <div id="topBarMount"></div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.ts"></script>
   </body>
@@ -22556,14 +22971,23 @@ stays synchronized with the underlying TinyBase store.
   });
 </script>
 ",
+  "client/src/Title.svelte": "<script lang="ts">
+  import './title.css';
+</script>
+
+<h1 id="topBarTitle">
+  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+  TinyBase Game
+</h1>
+",
   "client/src/TopBar.svelte": "<script lang="ts">
   import './topBar.css';
+  import Title from './Title.svelte';
   import Info from './Info.svelte';
 </script>
 
 <div id="topBar">
-  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-  <div id="topBarTitle">TinyBase Game</div>
+  <Title />
   <Info />
 </div>
 ",
@@ -22808,6 +23232,23 @@ export const createGameStore = () =>
     },
   ]);
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -22820,19 +23261,6 @@ export const createGameStore = () =>
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/src/vite-env.d.ts": "/// <reference types="vite/client" />
@@ -23004,7 +23432,10 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer">
+      <div id="topBarMount"></div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.ts"></script>
   </body>
@@ -23355,14 +23786,23 @@ stays synchronized with the underlying TinyBase store.
   });
 </script>
 ",
+  "client/src/Title.svelte": "<script lang="ts">
+  import './title.css';
+</script>
+
+<h1 id="topBarTitle">
+  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+  TinyBase Game
+</h1>
+",
   "client/src/TopBar.svelte": "<script lang="ts">
   import './topBar.css';
+  import Title from './Title.svelte';
   import Info from './Info.svelte';
 </script>
 
 <div id="topBar">
-  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-  <div id="topBarTitle">TinyBase Game</div>
+  <Title />
   <Info />
 </div>
 ",
@@ -23614,6 +24054,23 @@ export const createGameStore = () =>
     },
   ]);
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -23626,19 +24083,6 @@ export const createGameStore = () =>
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/src/vite-env.d.ts": "/// <reference types="vite/client" />
@@ -23800,7 +24244,10 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer">
+      <div id="topBarMount"></div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.ts"></script>
   </body>
@@ -24193,14 +24640,23 @@ stays synchronized with the underlying TinyBase store.
   });
 </script>
 ",
+  "client/src/Title.svelte": "<script lang="ts">
+  import './title.css';
+</script>
+
+<h1 id="topBarTitle">
+  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+  TinyBase Game
+</h1>
+",
   "client/src/TopBar.svelte": "<script lang="ts">
   import './topBar.css';
+  import Title from './Title.svelte';
   import Info from './Info.svelte';
 </script>
 
 <div id="topBar">
-  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-  <div id="topBarTitle">TinyBase Game</div>
+  <Title />
   <Info />
 </div>
 ",
@@ -24465,6 +24921,23 @@ export const createGameStore = () =>
     },
   ]);
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -24477,19 +24950,6 @@ export const createGameStore = () =>
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/src/vite-env.d.ts": "/// <reference types="vite/client" />
@@ -24660,7 +25120,10 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer">
+      <div id="topBarMount"></div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.ts"></script>
   </body>
@@ -24813,6 +25276,15 @@ stays synchronized with the underlying TinyBase store.
   });
 </script>
 ",
+  "client/src/Title.svelte": "<script lang="ts">
+  import './title.css';
+</script>
+
+<h1 id="topBarTitle">
+  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+  TinyBase Todos
+</h1>
+",
   "client/src/TodoInput.svelte": "<script lang="ts">
   import './input.css';
   import './todoInput.css';
@@ -24917,12 +25389,12 @@ stays synchronized with the underlying TinyBase store.
 ",
   "client/src/TopBar.svelte": "<script lang="ts">
   import './topBar.css';
+  import Title from './Title.svelte';
   import Info from './Info.svelte';
 </script>
 
 <div id="topBar">
-  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-  <div id="topBarTitle">TinyBase Todos</div>
+  <Title />
   <Info />
 </div>
 ",
@@ -25118,6 +25590,23 @@ export const createTodosStore = () =>
     {},
   ]);
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/todoInput.css": "#todoInput {
   display: flex;
   gap: 0.5rem;
@@ -25189,19 +25678,6 @@ export const createTodosStore = () =>
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/src/vite-env.d.ts": "/// <reference types="vite/client" />
@@ -25373,7 +25849,10 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer">
+      <div id="topBarMount"></div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.ts"></script>
   </body>
@@ -25550,6 +26029,15 @@ stays synchronized with the underlying TinyBase store.
   });
 </script>
 ",
+  "client/src/Title.svelte": "<script lang="ts">
+  import './title.css';
+</script>
+
+<h1 id="topBarTitle">
+  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+  TinyBase Todos
+</h1>
+",
   "client/src/TodoInput.svelte": "<script lang="ts">
   import './input.css';
   import './todoInput.css';
@@ -25654,12 +26142,12 @@ stays synchronized with the underlying TinyBase store.
 ",
   "client/src/TopBar.svelte": "<script lang="ts">
   import './topBar.css';
+  import Title from './Title.svelte';
   import Info from './Info.svelte';
 </script>
 
 <div id="topBar">
-  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-  <div id="topBarTitle">TinyBase Todos</div>
+  <Title />
   <Info />
 </div>
 ",
@@ -25862,6 +26350,23 @@ export const createTodosStore = () =>
     {},
   ]);
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/todoInput.css": "#todoInput {
   display: flex;
   gap: 0.5rem;
@@ -25933,19 +26438,6 @@ export const createTodosStore = () =>
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/src/vite-env.d.ts": "/// <reference types="vite/client" />
@@ -26107,7 +26599,10 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer">
+      <div id="topBarMount"></div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.ts"></script>
   </body>
@@ -26326,6 +26821,15 @@ stays synchronized with the underlying TinyBase store.
   });
 </script>
 ",
+  "client/src/Title.svelte": "<script lang="ts">
+  import './title.css';
+</script>
+
+<h1 id="topBarTitle">
+  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+  TinyBase Todos
+</h1>
+",
   "client/src/TodoInput.svelte": "<script lang="ts">
   import './input.css';
   import './todoInput.css';
@@ -26430,12 +26934,12 @@ stays synchronized with the underlying TinyBase store.
 ",
   "client/src/TopBar.svelte": "<script lang="ts">
   import './topBar.css';
+  import Title from './Title.svelte';
   import Info from './Info.svelte';
 </script>
 
 <div id="topBar">
-  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
-  <div id="topBarTitle">TinyBase Todos</div>
+  <Title />
   <Info />
 </div>
 ",
@@ -26651,6 +27155,23 @@ export const createTodosStore = () =>
     {},
   ]);
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
   "client/src/todoInput.css": "#todoInput {
   display: flex;
   gap: 0.5rem;
@@ -26722,19 +27243,6 @@ export const createTodosStore = () =>
   top: 0;
   z-index: 100;
   backdrop-filter: blur(4px);
-}
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
 }
 ",
   "client/src/vite-env.d.ts": "/// <reference types="vite/client" />
@@ -26902,7 +27410,10 @@ Your data is automatically saved and restored when you reload the page.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer">
+      <div id="topBarMount"></div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.ts"></script>
   </body>
@@ -27413,6 +27924,40 @@ settingsPersister.load([{}, DEFAULT_VALUES]).then(() => {
 
 export type SettingsStore = typeof settingsStore;
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
+  "client/src/title.ts": "import './title.css';
+
+export const createTitle = (): HTMLHeadingElement => {
+  const title = document.createElement('h1');
+  title.id = 'topBarTitle';
+
+  const logo = document.createElement('img');
+  logo.src = '/favicon.svg';
+  logo.id = 'topBarLogo';
+  logo.alt = 'TinyBase';
+  title.appendChild(logo);
+
+  title.append('TinyBase Chat');
+
+  return title;
+};
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -27426,38 +27971,16 @@ export type SettingsStore = typeof settingsStore;
   z-index: 100;
   backdrop-filter: blur(4px);
 }
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
-}
 ",
   "client/src/topBar.ts": "import './topBar.css';
+import {createTitle} from './title';
 import {createInfo} from './info';
 
 export const createTopBar = (): HTMLDivElement => {
   const topBar = document.createElement('div');
   topBar.id = 'topBar';
 
-  const logo = document.createElement('img');
-  logo.src = '/favicon.svg';
-  logo.id = 'topBarLogo';
-  logo.alt = 'TinyBase';
-  topBar.appendChild(logo);
-
-  const title = document.createElement('div');
-  title.id = 'topBarTitle';
-  title.textContent = 'TinyBase Chat';
-  topBar.appendChild(title);
-
+  topBar.appendChild(createTitle());
   topBar.appendChild(createInfo());
 
   return topBar;
@@ -27679,7 +28202,10 @@ Your data is automatically saved and restored when you reload the page.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer">
+      <div id="topBarMount"></div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.ts"></script>
   </body>
@@ -28304,6 +28830,40 @@ settingsPersister.load([{}, DEFAULT_VALUES]).then(() => {
 
 export type SettingsStore = typeof settingsStore;
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
+  "client/src/title.ts": "import './title.css';
+
+export const createTitle = (): HTMLHeadingElement => {
+  const title = document.createElement('h1');
+  title.id = 'topBarTitle';
+
+  const logo = document.createElement('img');
+  logo.src = '/favicon.svg';
+  logo.id = 'topBarLogo';
+  logo.alt = 'TinyBase';
+  title.appendChild(logo);
+
+  title.append('TinyBase Drawing');
+
+  return title;
+};
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -28317,38 +28877,16 @@ export type SettingsStore = typeof settingsStore;
   z-index: 100;
   backdrop-filter: blur(4px);
 }
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
-}
 ",
   "client/src/topBar.ts": "import './topBar.css';
+import {createTitle} from './title';
 import {createInfo} from './info';
 
 export const createTopBar = (): HTMLDivElement => {
   const topBar = document.createElement('div');
   topBar.id = 'topBar';
 
-  const logo = document.createElement('img');
-  logo.src = '/favicon.svg';
-  logo.id = 'topBarLogo';
-  logo.alt = 'TinyBase';
-  topBar.appendChild(logo);
-
-  const title = document.createElement('div');
-  title.id = 'topBarTitle';
-  title.textContent = 'TinyBase Drawing';
-  topBar.appendChild(title);
-
+  topBar.appendChild(createTitle());
   topBar.appendChild(createInfo());
 
   return topBar;
@@ -28492,7 +29030,10 @@ Your data is automatically saved and restored when you reload the page.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer">
+      <div id="topBarMount"></div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.ts"></script>
   </body>
@@ -29028,6 +29569,40 @@ persister.load().then(() => {
 
 export type GameStore = typeof store;
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
+  "client/src/title.ts": "import './title.css';
+
+export const createTitle = (): HTMLHeadingElement => {
+  const title = document.createElement('h1');
+  title.id = 'topBarTitle';
+
+  const logo = document.createElement('img');
+  logo.src = '/favicon.svg';
+  logo.id = 'topBarLogo';
+  logo.alt = 'TinyBase';
+  title.appendChild(logo);
+
+  title.append('TinyBase Game');
+
+  return title;
+};
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -29041,38 +29616,16 @@ export type GameStore = typeof store;
   z-index: 100;
   backdrop-filter: blur(4px);
 }
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
-}
 ",
   "client/src/topBar.ts": "import './topBar.css';
+import {createTitle} from './title';
 import {createInfo} from './info';
 
 export const createTopBar = (): HTMLDivElement => {
   const topBar = document.createElement('div');
   topBar.id = 'topBar';
 
-  const logo = document.createElement('img');
-  logo.src = '/favicon.svg';
-  logo.id = 'topBarLogo';
-  logo.alt = 'TinyBase';
-  topBar.appendChild(logo);
-
-  const title = document.createElement('div');
-  title.id = 'topBarTitle';
-  title.textContent = 'TinyBase Game';
-  topBar.appendChild(title);
-
+  topBar.appendChild(createTitle());
   topBar.appendChild(createInfo());
 
   return topBar;
@@ -29216,7 +29769,10 @@ Your data is automatically saved and restored when you reload the page.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer">
+      <div id="topBarMount"></div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.ts"></script>
   </body>
@@ -29778,6 +30334,40 @@ getPgLite().then((pgLite) => {
 
 export type GameStore = typeof store;
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
+  "client/src/title.ts": "import './title.css';
+
+export const createTitle = (): HTMLHeadingElement => {
+  const title = document.createElement('h1');
+  title.id = 'topBarTitle';
+
+  const logo = document.createElement('img');
+  logo.src = '/favicon.svg';
+  logo.id = 'topBarLogo';
+  logo.alt = 'TinyBase';
+  title.appendChild(logo);
+
+  title.append('TinyBase Game');
+
+  return title;
+};
+",
   "client/src/topBar.css": "#topBar {
   background: var(--bg-header);
   border-bottom: 1px solid var(--border);
@@ -29791,38 +30381,16 @@ export type GameStore = typeof store;
   z-index: 100;
   backdrop-filter: blur(4px);
 }
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
-}
 ",
   "client/src/topBar.ts": "import './topBar.css';
+import {createTitle} from './title';
 import {createInfo} from './info';
 
 export const createTopBar = (): HTMLDivElement => {
   const topBar = document.createElement('div');
   topBar.id = 'topBar';
 
-  const logo = document.createElement('img');
-  logo.src = '/favicon.svg';
-  logo.id = 'topBarLogo';
-  logo.alt = 'TinyBase';
-  topBar.appendChild(logo);
-
-  const title = document.createElement('div');
-  title.id = 'topBarTitle';
-  title.textContent = 'TinyBase Game';
-  topBar.appendChild(title);
-
+  topBar.appendChild(createTitle());
   topBar.appendChild(createInfo());
 
   return topBar;
@@ -29991,7 +30559,10 @@ Your data is automatically saved and restored when you reload the page.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer">
+      <div id="topBarMount"></div>
+      <div id="app"></div>
+    </div>
 
     <script type="module" src="/src/index.ts"></script>
   </body>
@@ -30348,6 +30919,40 @@ persister.load().then(() => {
 
 export type TodosStore = typeof store;
 ",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
+  "client/src/title.ts": "import './title.css';
+
+export const createTitle = (): HTMLHeadingElement => {
+  const title = document.createElement('h1');
+  title.id = 'topBarTitle';
+
+  const logo = document.createElement('img');
+  logo.src = '/favicon.svg';
+  logo.id = 'topBarLogo';
+  logo.alt = 'TinyBase';
+  title.appendChild(logo);
+
+  title.append('TinyBase Todos');
+
+  return title;
+};
+",
   "client/src/todoInput.css": "#todoInput {
   display: flex;
   gap: 0.5rem;
@@ -30520,38 +31125,16 @@ export const createTodoList = (store: TodosStore): HTMLDivElement => {
   z-index: 100;
   backdrop-filter: blur(4px);
 }
-
-#topBarLogo {
-  height: 2rem;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-#topBarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  flex: 1;
-}
 ",
   "client/src/topBar.ts": "import './topBar.css';
+import {createTitle} from './title';
 import {createInfo} from './info';
 
 export const createTopBar = (): HTMLDivElement => {
   const topBar = document.createElement('div');
   topBar.id = 'topBar';
 
-  const logo = document.createElement('img');
-  logo.src = '/favicon.svg';
-  logo.id = 'topBarLogo';
-  logo.alt = 'TinyBase';
-  topBar.appendChild(logo);
-
-  const title = document.createElement('div');
-  title.id = 'topBarTitle';
-  title.textContent = 'TinyBase Todos';
-  topBar.appendChild(title);
-
+  topBar.appendChild(createTitle());
   topBar.appendChild(createInfo());
 
   return topBar;

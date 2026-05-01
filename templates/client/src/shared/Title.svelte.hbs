@@ -1,0 +1,10 @@
+{{includeFile template="client/src/shared/title.css.hbs" output="client/src/title.css"}}
+
+<script{{#if typescript}} lang="ts" {{/if}}>
+  import './title.css';
+</script>
+
+<h1 id="topBarTitle">
+  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+  TinyBase {{#if (eq appType "chat")}}Chat{{else if (eq appType "drawing")}}Drawing{{else if (eq appType "game")}}Game{{else}}Todos{{/if}}
+</h1>

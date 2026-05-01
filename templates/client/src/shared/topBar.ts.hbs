@@ -1,23 +1,15 @@
 {{includeFile template="client/src/shared/topBar.css.hbs" output="client/src/topBar.css"}}
+{{includeFile template="client/src/shared/title.ts.hbs" output="client/src/title.{{scriptExt}}"}}
 {{includeFile template="client/src/shared/info.ts.hbs" output="client/src/info.{{scriptExt}}"}}
 {{addImport "import './topBar.css';"}}
+{{addImport "import {createTitle} from './title';"}}
 {{addImport "import {createInfo} from './info';"}}
 
 export const createTopBar = (): HTMLDivElement => {
 const topBar = document.createElement('div');
 topBar.id = 'topBar';
 
-const logo = document.createElement('img');
-logo.src = '/favicon.svg';
-logo.id = 'topBarLogo';
-logo.alt = 'TinyBase';
-topBar.appendChild(logo);
-
-const title = document.createElement('div');
-title.id = 'topBarTitle';
-title.textContent = 'TinyBase {{#if (eq appType "chat")}}Chat{{else if (eq appType "drawing")}}Drawing{{else if (eq appType "game")}}Game{{else}}Todos{{/if}}';
-topBar.appendChild(title);
-
+topBar.appendChild(createTitle());
 topBar.appendChild(createInfo());
 
 return topBar;

@@ -1,8 +1,10 @@
 {{addImport "import {App as TinyBaseApp} from './TinyBaseApp';"}}
 {{#if tinyWidgets}}
-  {{addImport "import {App as TinyWidgetsApp, Image} from 'tinywidgets';"}}
+  {{addImport "import {App as TinyWidgetsApp} from 'tinywidgets';"}}
   {{includeFile template="client/src/shared/Info.tsx.hbs" output="client/src/Info.{{componentExt}}"}}
+  {{includeFile template="client/src/shared/Title.tsx.hbs" output="client/src/Title.{{componentExt}}"}}
   {{addImport "import {Info} from './Info';"}}
+  {{addImport "import {Title} from './Title';"}}
 {{else}}
   {{includeFile template="client/src/shared/TopBar.tsx.hbs" output="client/src/TopBar.{{componentExt}}"}}
   {{addImport "import {TopBar} from './TopBar';"}}
@@ -11,13 +13,6 @@
 export const App = () =>
 {{#if tinyWidgets}}
   <TinyWidgetsApp title={Title} topNavRight={Info} main={Main} />;
-
-const Title = () => (
-<h1>
-  <Image src="/favicon.svg" variant="logo" alt="TinyBase" />
-  TinyBase {{#if (eq appType "chat")}}Chat{{else if (eq appType "drawing")}}Drawing{{else if (eq appType "game")}}Game{{else}}Todos{{/if}}
-</h1>
-);
 
 const Main = () => <TinyBaseApp />;
 {{else}}
