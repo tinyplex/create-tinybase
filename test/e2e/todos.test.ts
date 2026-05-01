@@ -151,13 +151,15 @@ const syncCombinations = [
 ];
 
 async function testTodosApp(page: Page) {
-  const input = await page.waitForSelector('input[type="text"]');
-  await page.type('input[type="text"]', 'Test todo item');
+  const inputSelector = '#todoInput input';
+  const checkboxSelector =
+    '.todoItem input[type="checkbox"], .todoItem button[title^="Toggle"]';
+
+  const input = await page.waitForSelector(inputSelector);
+  await page.type(inputSelector, 'Test todo item');
 
   const inputValue = await page.evaluate(() => {
-    const inp = document.querySelector(
-      'input[type="text"]',
-    ) as HTMLInputElement;
+    const inp = document.querySelector('#todoInput input') as HTMLInputElement;
     return inp ? inp.value : '';
   });
 
@@ -167,20 +169,20 @@ async function testTodosApp(page: Page) {
 
   await waitForTextInPage(page, 'Test todo item');
 
-  const checkbox = await page.waitForSelector('input[type="checkbox"]');
+  const checkbox = await page.waitForSelector(checkboxSelector);
   await checkbox!.click();
   await page.waitForFunction(() => {
-    const cb = document.querySelector(
-      'input[type="checkbox"]',
-    ) as HTMLInputElement;
-    return cb && cb.checked;
+    return !!document.querySelector('.todoItem.completed');
   });
 }
 
 async function testTodosPersistence(page: Page, persistenceType: string) {
+  const inputSelector = '#todoInput input';
+  const checkboxSelector =
+    '.todoItem input[type="checkbox"], .todoItem button[title^="Toggle"]';
   const testTodo = `Persisted todo ${persistenceType}`;
-  await page.waitForSelector('input[type="text"]', {visible: true});
-  await page.type('input[type="text"]', testTodo);
+  await page.waitForSelector(inputSelector, {visible: true});
+  await page.type(inputSelector, testTodo);
   await page.keyboard.press('Enter');
   await waitForTextInPage(page, testTodo);
 
@@ -190,32 +192,29 @@ async function testTodosPersistence(page: Page, persistenceType: string) {
 
   await waitForTextInPage(page, testTodo);
 
-  const checkbox = await page.waitForSelector('input[type="checkbox"]');
+  const checkbox = await page.waitForSelector(checkboxSelector);
   await checkbox!.click();
   await page.waitForFunction(() => {
-    const cb = document.querySelector(
-      'input[type="checkbox"]',
-    ) as HTMLInputElement;
-    return cb && cb.checked;
+    return !!document.querySelector('.todoItem.completed');
   });
 
   await sleepForPersistence(persistenceType);
   await page.reload({waitUntil: 'domcontentloaded'});
 
   await page.waitForFunction(() => {
-    const cb = document.querySelector(
-      'input[type="checkbox"]',
-    ) as HTMLInputElement;
-    return cb && cb.checked;
+    return !!document.querySelector('.todoItem.completed');
   });
 }
 
 async function testTodosSync(page1: Page, page2: Page) {
+  const inputSelector = '#todoInput input';
+  const checkboxSelector =
+    '.todoItem input[type="checkbox"], .todoItem button[title^="Toggle"]';
   // Add a todo in page1 and verify it syncs to page2
   const testTodo = 'Synced todo item';
   await page1.bringToFront();
-  await page1.waitForSelector('input[type="text"]', {visible: true});
-  await page1.type('input[type="text"]', testTodo);
+  await page1.waitForSelector(inputSelector, {visible: true});
+  await page1.type(inputSelector, testTodo);
   await page1.keyboard.press('Enter');
   await waitForTextInPage(page1, testTodo);
 
@@ -223,21 +222,15 @@ async function testTodosSync(page1: Page, page2: Page) {
   await waitForTextInPage(page2, testTodo);
 
   // Check a todo in page2 and verify it syncs to page1
-  const checkbox = await page2.waitForSelector('input[type="checkbox"]');
+  const checkbox = await page2.waitForSelector(checkboxSelector);
   await checkbox!.click();
   await page2.waitForFunction(() => {
-    const cb = document.querySelector(
-      'input[type="checkbox"]',
-    ) as HTMLInputElement;
-    return cb && cb.checked;
+    return !!document.querySelector('.todoItem.completed');
   });
 
   await page1.bringToFront();
   await page1.waitForFunction(() => {
-    const cb = document.querySelector(
-      'input[type="checkbox"]',
-    ) as HTMLInputElement;
-    return cb && cb.checked;
+    return !!document.querySelector('.todoItem.completed');
   });
 }
 

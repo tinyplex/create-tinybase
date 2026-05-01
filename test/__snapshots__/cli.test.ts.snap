@@ -3879,6 +3879,7 @@ export const createTodosStore = () =>
   border-radius: 0.375rem;
   overflow: hidden;
   background: var(--bg2);
+  width: 100%;
 }
 
 #todoList:empty::before {
@@ -4761,6 +4762,7 @@ export const createTodosStore = () =>
   border-radius: 0.375rem;
   overflow: hidden;
   background: var(--bg2);
+  width: 100%;
 }
 
 #todoList:empty::before {
@@ -7756,6 +7758,7 @@ export const createTodosStore = () =>
   border-radius: 0.375rem;
   overflow: hidden;
   background: var(--bg2);
+  width: 100%;
 }
 
 #todoList:empty::before {
@@ -11336,6 +11339,7 @@ export const createTodoItem = (id, text, completed, onToggle, onDelete) => {
   border-radius: 0.375rem;
   overflow: hidden;
   background: var(--bg2);
+  width: 100%;
 }
 
 #todoList:empty::before {
@@ -15547,6 +15551,7 @@ export const createTodosStore = () =>
   border-radius: 0.375rem;
   overflow: hidden;
   background: var(--bg2);
+  width: 100%;
 }
 
 #todoList:empty::before {
@@ -16357,6 +16362,7 @@ export const createTodosStore = () =>
   border-radius: 0.375rem;
   overflow: hidden;
   background: var(--bg2);
+  width: 100%;
 }
 
 #todoList:empty::before {
@@ -16604,31 +16610,6 @@ const Main = () => (
   </div>
 );
 ",
-  "client/src/Button.tsx": "import './button.css';
-import {ReactNode} from 'react';
-
-interface ButtonProps {
-  children: ReactNode;
-  onClick?: () => void;
-  variant?: 'default' | 'primary';
-  type?: 'button' | 'submit';
-}
-
-export const Button = ({
-  children,
-  onClick,
-  variant = 'default',
-  type = 'button',
-}: ButtonProps) => (
-  <button
-    onClick={onClick}
-    type={type}
-    className={variant === 'primary' ? 'primary' : undefined}
-  >
-    {children}
-  </button>
-);
-",
   "client/src/Info.tsx": "import './info.css';
 
 export const Info = () => (
@@ -16655,33 +16636,6 @@ export const Info = () => (
       </div>
     </div>
   </div>
-);
-",
-  "client/src/Input.tsx": "import './input.css';
-
-interface InputProps {
-  id?: string;
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  autoFocus?: boolean;
-}
-
-export const Input = ({
-  id,
-  value,
-  onChange,
-  placeholder = '',
-  autoFocus = false,
-}: InputProps) => (
-  <input
-    id={id}
-    type="text"
-    value={value}
-    onChange={(e) => onChange(e.target.value)}
-    placeholder={placeholder}
-    autoFocus={autoFocus}
-  />
 );
 ",
   "client/src/Loading.tsx": "import './loading.css';
@@ -16772,8 +16726,8 @@ export const Title = () => (
   "client/src/TodoInput.tsx": "import './todoInput.css';
 import {useState} from 'react';
 import {useAddRowCallback, STORE_ID} from './Store';
-import {Button} from './Button';
-import {Input} from './Input';
+import {Button, TextInput} from 'tinywidgets';
+import {todoInputText} from './todoInput.css.ts';
 
 export const TodoInput = () => {
   const [text, setText] = useState('');
@@ -16794,15 +16748,14 @@ export const TodoInput = () => {
 
   return (
     <form id="todoInput" onSubmit={handleSubmit}>
-      <Input
-        value={text}
-        onChange={setText}
-        placeholder="What needs to be done?"
-        autoFocus
-      />
-      <Button type="submit" variant="primary">
-        Add
-      </Button>
+      <div className={todoInputText}>
+        <TextInput
+          initialText={text}
+          onChange={setText}
+          placeholder="What needs to be done?"
+        />
+      </div>
+      <Button title="Add" variant="accent" />
     </form>
   );
 };
@@ -16815,7 +16768,7 @@ import {
   type TodoRow,
   STORE_ID,
 } from './Store';
-import {Button} from './Button';
+import {Button, Checkbox} from 'tinywidgets';
 
 export const TodoItem = ({rowId}: {rowId: string}) => {
   const todo = useRow('todos', rowId, STORE_ID) as TodoRow;
@@ -16830,14 +16783,17 @@ export const TodoItem = ({rowId}: {rowId: string}) => {
 
   return (
     <div className={\`todoItem\${todo.completed ? ' completed' : ''}\`}>
-      <input
-        type="checkbox"
-        checked={todo.completed}
-        onChange={setPartialRow}
-        id={\`todo-\${rowId}\`}
+      <Checkbox
+        initialChecked={todo.completed}
+        onChange={(completed) =>
+          setPartialRow({
+            target: {checked: completed},
+          } as React.ChangeEvent<HTMLInputElement>)
+        }
+        alt={\`Toggle \${todo.text}\`}
       />
       <label htmlFor={\`todo-\${rowId}\`}>{todo.text}</label>
-      <Button onClick={delRow}>Delete</Button>
+      <Button title="Delete" onClick={delRow} />
     </div>
   );
 };
@@ -16870,32 +16826,6 @@ export const TodoList = () => {
   width: 100%;
   margin: 0 auto;
   padding: 2rem 1.5rem;
-}
-",
-  "client/src/button.css": "button {
-  padding: 0.5rem 1rem;
-  border: 1px solid #666;
-  border-radius: 0.25rem;
-  background: #222;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 800;
-  cursor: pointer;
-  margin: 0.5rem;
-}
-
-button:hover {
-  border-color: #d81b60;
-}
-
-button.primary {
-  background: #d81b60;
-  border: none;
-  padding: 0.75rem 1.5rem;
-}
-
-button.primary:hover {
-  background: #c2185b;
 }
 ",
   "client/src/index.tsx": "import ReactDOM from 'react-dom/client';
@@ -16998,29 +16928,6 @@ addEventListener('load', () => {
   transform: rotate(45deg);
 }
 ",
-  "client/src/input.css": "input[type='text'] {
-  padding: 0.5rem 0.75rem;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 0.375rem;
-  color: var(--fg);
-  font-family: inherit;
-  font-size: 1rem;
-  line-height: 1.5;
-  width: 100%;
-  box-sizing: border-box;
-  align-self: center;
-}
-
-input[type='text']:focus {
-  outline: none;
-  border-color: var(--accent);
-}
-
-input[type='text']::placeholder {
-  color: var(--fg2);
-}
-",
   "client/src/loading.css": "#loading {
   animation: spin 1s infinite linear;
   height: 2rem;
@@ -17085,6 +16992,12 @@ export const createTodosStore = () =>
   flex: 1;
 }
 ",
+  "client/src/todoInput.css.ts": "import {style} from '@vanilla-extract/css';
+
+export const todoInputText = style({
+  flex: 1,
+});
+",
   "client/src/todoItem.css": ".todoItem {
   display: flex;
   align-items: center;
@@ -17124,6 +17037,7 @@ export const createTodosStore = () =>
   border-radius: 0.375rem;
   overflow: hidden;
   background: var(--bg2);
+  width: 100%;
 }
 
 #todoList:empty::before {
@@ -25615,6 +25529,7 @@ export const createTodosStore = () =>
   border-radius: 0.375rem;
   overflow: hidden;
   background: var(--bg2);
+  width: 100%;
 }
 
 #todoList:empty::before {
@@ -26372,6 +26287,7 @@ export const createTodosStore = () =>
   border-radius: 0.375rem;
   overflow: hidden;
   background: var(--bg2);
+  width: 100%;
 }
 
 #todoList:empty::before {
@@ -27174,6 +27090,7 @@ export const createTodosStore = () =>
   border-radius: 0.375rem;
   overflow: hidden;
   background: var(--bg2);
+  width: 100%;
 }
 
 #todoList:empty::before {
@@ -31000,6 +30917,7 @@ export const createTodoItem = (
   border-radius: 0.375rem;
   overflow: hidden;
   background: var(--bg2);
+  width: 100%;
 }
 
 #todoList:empty::before {

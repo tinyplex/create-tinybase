@@ -2,10 +2,16 @@
 {{addImport "import './todoInput.css';"}}
 {{addImport "import {useState} from 'react';"}}
 {{addImport "import {useAddRowCallback, STORE_ID} from './Store';"}}
-{{includeFile template="client/src/shared/Button.tsx.hbs" output="client/src/Button.{{ext}}"}}
-{{addImport "import {Button} from './Button';"}}
-{{includeFile template="client/src/shared/Input.tsx.hbs" output="client/src/Input.{{ext}}"}}
-{{addImport "import {Input} from './Input';"}}
+{{#if tinyWidgets}}
+  {{includeFile template="client/src/todos/todoInput.css.ts.hbs" output="client/src/todoInput.css.ts"}}
+  {{addImport "import {todoInputText} from './todoInput.css.ts';"}}
+  {{addImport "import {Button, TextInput} from 'tinywidgets';"}}
+{{else}}
+  {{includeFile template="client/src/shared/Button.tsx.hbs" output="client/src/Button.{{ext}}"}}
+  {{addImport "import {Button} from './Button';"}}
+  {{includeFile template="client/src/shared/Input.tsx.hbs" output="client/src/Input.{{ext}}"}}
+  {{addImport "import {Input} from './Input';"}}
+{{/if}}
 
 export const TodoInput = () => {
 const [text, setText] = useState('');
@@ -21,8 +27,13 @@ setText('');
 
 return (
 <form id="todoInput" onSubmit={handleSubmit}>
-  <Input value={text} onChange={setText} placeholder="What needs to be done?" autoFocus />
-  <Button type="submit" variant="primary">Add</Button>
+  {{#if tinyWidgets}}
+    <TextInput className={todoInputText} initialText={text} onChange={setText} placeholder="What needs to be done?" />
+    <Button title="Add" variant="accent" />
+  {{else}}
+    <Input value={text} onChange={setText} placeholder="What needs to be done?" autoFocus />
+    <Button type="submit" variant="primary">Add</Button>
+  {{/if}}
 </form>
 );
 };
