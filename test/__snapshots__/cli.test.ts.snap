@@ -244,8 +244,8 @@ export const Info = () => (
     <div id="infoIcon">
       i
       <div id="infoTooltip">
-        A real-time chat application demonstrating TinyBase&apos;s reactive data
-        management.
+        A real-time chat application demonstrating TinyBase's reactive data
+        management.{' '}
       </div>
     </div>
   </div>
@@ -1087,8 +1087,8 @@ export const Info = () => (
     <div id="infoIcon">
       i
       <div id="infoTooltip">
-        A real-time chat application demonstrating TinyBase&apos;s reactive data
-        management.
+        A real-time chat application demonstrating TinyBase's reactive data
+        management.{' '}
       </div>
     </div>
   </div>
@@ -2097,8 +2097,8 @@ export const Info = () => (
     <div id="infoIcon">
       i
       <div id="infoTooltip">
-        A collaborative drawing canvas showcasing TinyBase&apos;s state
-        synchronization.
+        A collaborative drawing canvas showcasing TinyBase's state
+        synchronization.{' '}
       </div>
     </div>
   </div>
@@ -2805,7 +2805,7 @@ export const Info = () => (
       i
       <div id="infoTooltip">
         A tic-tac-toe game demonstrating turn-based logic and computed game
-        state using TinyBase.
+        state using TinyBase.{' '}
       </div>
     </div>
   </div>
@@ -3424,8 +3424,8 @@ export const Info = () => (
     <div id="infoIcon">
       i
       <div id="infoTooltip">
-        A simple todo list application demonstrating TinyBase&apos;s reactive
-        data management with CRUD operations.
+        A simple todo list application demonstrating TinyBase's reactive data
+        management with CRUD operations.{' '}
       </div>
     </div>
   </div>
@@ -4259,8 +4259,8 @@ export const Info = () => (
     <div id="infoIcon">
       i
       <div id="infoTooltip">
-        A simple todo list application demonstrating TinyBase&apos;s reactive
-        data management with CRUD operations.
+        A simple todo list application demonstrating TinyBase's reactive data
+        management with CRUD operations.{' '}
       </div>
     </div>
   </div>
@@ -8178,8 +8178,7 @@ export const createInfo = () => {
 
   const tooltip = document.createElement('div');
   tooltip.id = 'infoTooltip';
-  tooltip.textContent =
-    "A real-time chat application demonstrating TinyBase's reactive data management.";
+  tooltip.textContent = \`A real-time chat application demonstrating TinyBase's reactive data management.\`;
 
   infoIcon.appendChild(tooltip);
   container.appendChild(infoIcon);
@@ -8441,7 +8440,7 @@ export const createTitle = () => {
   logo.alt = 'TinyBase';
   title.appendChild(logo);
 
-  title.append('TinyBase Chat');
+  title.append(\`TinyBase Chat\`);
 
   return title;
 };
@@ -9187,8 +9186,7 @@ export const createInfo = () => {
 
   const tooltip = document.createElement('div');
   tooltip.id = 'infoTooltip';
-  tooltip.textContent =
-    "A collaborative drawing canvas showcasing TinyBase's state synchronization.";
+  tooltip.textContent = \`A collaborative drawing canvas showcasing TinyBase's state synchronization.\`;
 
   infoIcon.appendChild(tooltip);
   container.appendChild(infoIcon);
@@ -9289,7 +9287,7 @@ export const createTitle = () => {
   logo.alt = 'TinyBase';
   title.appendChild(logo);
 
-  title.append('TinyBase Drawing');
+  title.append(\`TinyBase Drawing\`);
 
   return title;
 };
@@ -9953,8 +9951,7 @@ export const createInfo = () => {
 
   const tooltip = document.createElement('div');
   tooltip.id = 'infoTooltip';
-  tooltip.textContent =
-    "A collaborative drawing canvas showcasing TinyBase's state synchronization.";
+  tooltip.textContent = \`A collaborative drawing canvas showcasing TinyBase's state synchronization.\`;
 
   infoIcon.appendChild(tooltip);
   container.appendChild(infoIcon);
@@ -10053,7 +10050,7 @@ export const createTitle = () => {
   logo.alt = 'TinyBase';
   title.appendChild(logo);
 
-  title.append('TinyBase Drawing');
+  title.append(\`TinyBase Drawing\`);
 
   return title;
 };
@@ -10591,8 +10588,7 @@ export const createInfo = () => {
 
   const tooltip = document.createElement('div');
   tooltip.id = 'infoTooltip';
-  tooltip.textContent =
-    'A tic-tac-toe game demonstrating turn-based logic and computed game state using TinyBase.';
+  tooltip.textContent = \`A tic-tac-toe game demonstrating turn-based logic and computed game state using TinyBase.\`;
 
   infoIcon.appendChild(tooltip);
   container.appendChild(infoIcon);
@@ -10748,7 +10744,7 @@ export const createTitle = () => {
   logo.alt = 'TinyBase';
   title.appendChild(logo);
 
-  title.append('TinyBase Game');
+  title.append(\`TinyBase Game\`);
 
   return title;
 };
@@ -11122,8 +11118,7 @@ export const createInfo = () => {
 
   const tooltip = document.createElement('div');
   tooltip.id = 'infoTooltip';
-  tooltip.textContent =
-    "A simple todo list application demonstrating TinyBase's reactive data management with CRUD operations.";
+  tooltip.textContent = \`A simple todo list application demonstrating TinyBase's reactive data management with CRUD operations.\`;
 
   infoIcon.appendChild(tooltip);
   container.appendChild(infoIcon);
@@ -11267,7 +11262,7 @@ export const createTitle = () => {
   logo.alt = 'TinyBase';
   title.appendChild(logo);
 
-  title.append('TinyBase Todos');
+  title.append(\`TinyBase Todos\`);
 
   return title;
 };
@@ -11713,8 +11708,8 @@ export const Info = () => (
     <div id="infoIcon">
       i
       <div id="infoTooltip">
-        A real-time chat application demonstrating TinyBase&apos;s reactive data
-        management.
+        A real-time chat application demonstrating TinyBase's reactive data
+        management.{' '}
       </div>
     </div>
   </div>
@@ -12618,8 +12613,8 @@ export const Info = () => (
     <div id="infoIcon">
       i
       <div id="infoTooltip">
-        A real-time chat application demonstrating TinyBase&apos;s reactive data
-        management.
+        A real-time chat application demonstrating TinyBase's reactive data
+        management.{' '}
       </div>
     </div>
   </div>
@@ -13709,8 +13704,8 @@ export const Info = () => (
     <div id="infoIcon">
       i
       <div id="infoTooltip">
-        A collaborative drawing canvas showcasing TinyBase&apos;s state
-        synchronization.
+        A collaborative drawing canvas showcasing TinyBase's state
+        synchronization.{' '}
       </div>
     </div>
   </div>
@@ -14458,7 +14453,7 @@ export const Info = () => (
       i
       <div id="infoTooltip">
         A tic-tac-toe game demonstrating turn-based logic and computed game
-        state using TinyBase.
+        state using TinyBase.{' '}
       </div>
     </div>
   </div>
@@ -15124,8 +15119,8 @@ export const Info = () => (
     <div id="infoIcon">
       i
       <div id="infoTooltip">
-        A simple todo list application demonstrating TinyBase&apos;s reactive
-        data management with CRUD operations.
+        A simple todo list application demonstrating TinyBase's reactive data
+        management with CRUD operations.{' '}
       </div>
     </div>
   </div>
@@ -15908,8 +15903,8 @@ export const Info = () => (
     <div id="infoIcon">
       i
       <div id="infoTooltip">
-        A simple todo list application demonstrating TinyBase&apos;s reactive
-        data management with CRUD operations.
+        A simple todo list application demonstrating TinyBase's reactive data
+        management with CRUD operations.{' '}
       </div>
     </div>
   </div>
@@ -16668,8 +16663,8 @@ export const Info = () => (
     <div id="infoIcon">
       i
       <div id="infoTooltip">
-        A simple todo list application demonstrating TinyBase&apos;s reactive
-        data management with CRUD operations.
+        A simple todo list application demonstrating TinyBase's reactive data
+        management with CRUD operations.{' '}
       </div>
     </div>
   </div>
@@ -27671,8 +27666,7 @@ export const createInfo = (): HTMLDivElement => {
 
   const tooltip = document.createElement('div');
   tooltip.id = 'infoTooltip';
-  tooltip.textContent =
-    "A real-time chat application demonstrating TinyBase's reactive data management.";
+  tooltip.textContent = \`A real-time chat application demonstrating TinyBase's reactive data management.\`;
 
   infoIcon.appendChild(tooltip);
   container.appendChild(infoIcon);
@@ -27953,7 +27947,7 @@ export const createTitle = (): HTMLHeadingElement => {
   logo.alt = 'TinyBase';
   title.appendChild(logo);
 
-  title.append('TinyBase Chat');
+  title.append(\`TinyBase Chat\`);
 
   return title;
 };
@@ -28751,8 +28745,7 @@ export const createInfo = (): HTMLDivElement => {
 
   const tooltip = document.createElement('div');
   tooltip.id = 'infoTooltip';
-  tooltip.textContent =
-    "A collaborative drawing canvas showcasing TinyBase's state synchronization.";
+  tooltip.textContent = \`A collaborative drawing canvas showcasing TinyBase's state synchronization.\`;
 
   infoIcon.appendChild(tooltip);
   container.appendChild(infoIcon);
@@ -28859,7 +28852,7 @@ export const createTitle = (): HTMLHeadingElement => {
   logo.alt = 'TinyBase';
   title.appendChild(logo);
 
-  title.append('TinyBase Drawing');
+  title.append(\`TinyBase Drawing\`);
 
   return title;
 };
@@ -29430,8 +29423,7 @@ export const createInfo = (): HTMLDivElement => {
 
   const tooltip = document.createElement('div');
   tooltip.id = 'infoTooltip';
-  tooltip.textContent =
-    'A tic-tac-toe game demonstrating turn-based logic and computed game state using TinyBase.';
+  tooltip.textContent = \`A tic-tac-toe game demonstrating turn-based logic and computed game state using TinyBase.\`;
 
   infoIcon.appendChild(tooltip);
   container.appendChild(infoIcon);
@@ -29598,7 +29590,7 @@ export const createTitle = (): HTMLHeadingElement => {
   logo.alt = 'TinyBase';
   title.appendChild(logo);
 
-  title.append('TinyBase Game');
+  title.append(\`TinyBase Game\`);
 
   return title;
 };
@@ -30180,8 +30172,7 @@ export const createInfo = (): HTMLDivElement => {
 
   const tooltip = document.createElement('div');
   tooltip.id = 'infoTooltip';
-  tooltip.textContent =
-    'A tic-tac-toe game demonstrating turn-based logic and computed game state using TinyBase.';
+  tooltip.textContent = \`A tic-tac-toe game demonstrating turn-based logic and computed game state using TinyBase.\`;
 
   infoIcon.appendChild(tooltip);
   container.appendChild(infoIcon);
@@ -30363,7 +30354,7 @@ export const createTitle = (): HTMLHeadingElement => {
   logo.alt = 'TinyBase';
   title.appendChild(logo);
 
-  title.append('TinyBase Game');
+  title.append(\`TinyBase Game\`);
 
   return title;
 };
@@ -30791,8 +30782,7 @@ export const createInfo = (): HTMLDivElement => {
 
   const tooltip = document.createElement('div');
   tooltip.id = 'infoTooltip';
-  tooltip.textContent =
-    "A simple todo list application demonstrating TinyBase's reactive data management with CRUD operations.";
+  tooltip.textContent = \`A simple todo list application demonstrating TinyBase's reactive data management with CRUD operations.\`;
 
   infoIcon.appendChild(tooltip);
   container.appendChild(infoIcon);
@@ -30948,7 +30938,7 @@ export const createTitle = (): HTMLHeadingElement => {
   logo.alt = 'TinyBase';
   title.appendChild(logo);
 
-  title.append('TinyBase Todos');
+  title.append(\`TinyBase Todos\`);
 
   return title;
 };

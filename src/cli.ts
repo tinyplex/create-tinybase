@@ -4,12 +4,47 @@ import {dirname, join} from 'path';
 import {
   createCLI,
   detectPackageManager,
+  TemplateEngine,
   type FileConfig,
   type TemplateContext,
 } from 'tinycreate';
 import {fileURLToPath} from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const templateRoot = join(__dirname, 'templates');
+
+const registerSharedPartials = () => {
+  const processTemplate = TemplateEngine.prototype.processTemplate;
+  const partials = new Map<string, string>();
+
+  TemplateEngine.prototype.processTemplate = async function (
+    templatePath: string,
+  ) {
+    const {readFile} = await import('fs/promises');
+    const handlebars = (
+      this as unknown as {
+        handlebars: {registerPartial: (name: string, partial: string) => void};
+      }
+    ).handlebars;
+
+    for (const partialName of ['title.hbs', 'info.hbs']) {
+      if (!partials.has(partialName)) {
+        partials.set(
+          partialName,
+          await readFile(
+            join(templateRoot, 'client/src/shared', partialName),
+            'utf-8',
+          ),
+        );
+      }
+      handlebars.registerPartial(partialName, partials.get(partialName) ?? '');
+    }
+
+    return processTemplate.call(this, templatePath);
+  };
+};
+
+registerSharedPartials();
 
 const config = {
   welcomeMessage: '🎉 Welcome to TinyBase!\n',
@@ -225,6 +260,21 @@ const config = {
     const settingsStoreStem = react ? 'SettingsStore' : 'settingsStore';
     const settingsStoreExt = react ? componentExt : scriptExt;
     const configExt = react ? componentExt : scriptExt;
+    const techIcons = [
+      typescript
+        ? {src: '/ts.svg', title: 'Written in TypeScript'}
+        : {src: '/js.svg', title: 'Written in JavaScript'},
+      ...(react ? [{src: '/react.svg', title: 'Built with React'}] : []),
+      ...(svelte ? [{src: '/svelte.svg', title: 'Built with Svelte'}] : []),
+      ...(persistSqlite
+        ? [{src: '/sqlite.svg', title: 'Persists data to SQLite'}]
+        : persistPglite
+          ? [{src: '/pglite.svg', title: 'Persists data to PGlite'}]
+          : []),
+      ...(sync
+        ? [{src: '/sync.svg', title: 'Data synchronization enabled'}]
+        : []),
+    ];
 
     return {
       projectName,
@@ -259,6 +309,7 @@ const config = {
       settingsStoreStem,
       settingsStoreExt,
       configExt,
+      techIcons,
       installAndRun: installAndRun === true || installAndRun === 'true',
       typescript,
       javascript,
@@ -313,7 +364,7 @@ const config = {
     };
   },
 
-  templateRoot: join(__dirname, 'templates'),
+  templateRoot,
 
   installCommand: '{pm} install',
   devCommand: '{pm} run dev',
