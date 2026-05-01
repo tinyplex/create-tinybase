@@ -244,8 +244,9 @@ export const Info = () => (
     <div id="infoIcon">
       i
       <div id="infoTooltip">
-        A real-time chat application demonstrating TinyBase's reactive data
-        management.{' '}
+        {
+          "A real-time chat application demonstrating TinyBase's reactive data management."
+        }
       </div>
     </div>
   </div>
@@ -754,8 +755,8 @@ export const getRandomName = () =>
 export const getDefaultContent = () => [
   {
     messages: {
-      1: {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
-      2: {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
+      1: {username: 'Alice', text: 'Hello!', timestamp: 1704067200000},
+      2: {username: 'Bob', text: 'Hi there!', timestamp: 1704067230000},
     },
   },
   {},
@@ -1087,8 +1088,9 @@ export const Info = () => (
     <div id="infoIcon">
       i
       <div id="infoTooltip">
-        A real-time chat application demonstrating TinyBase's reactive data
-        management.{' '}
+        {
+          "A real-time chat application demonstrating TinyBase's reactive data management."
+        }
       </div>
     </div>
   </div>
@@ -1618,8 +1620,8 @@ export const getRandomName = () =>
 export const getDefaultContent = () => [
   {
     messages: {
-      1: {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
-      2: {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
+      1: {username: 'Alice', text: 'Hello!', timestamp: 1704067200000},
+      2: {username: 'Bob', text: 'Hi there!', timestamp: 1704067230000},
     },
   },
   {},
@@ -2097,8 +2099,9 @@ export const Info = () => (
     <div id="infoIcon">
       i
       <div id="infoTooltip">
-        A collaborative drawing canvas showcasing TinyBase's state
-        synchronization.{' '}
+        {
+          "A collaborative drawing canvas showcasing TinyBase's state synchronization."
+        }
       </div>
     </div>
   </div>
@@ -2804,8 +2807,9 @@ export const Info = () => (
     <div id="infoIcon">
       i
       <div id="infoTooltip">
-        A tic-tac-toe game demonstrating turn-based logic and computed game
-        state using TinyBase.{' '}
+        {
+          'A tic-tac-toe game demonstrating turn-based logic and computed game state using TinyBase.'
+        }
       </div>
     </div>
   </div>
@@ -3424,8 +3428,9 @@ export const Info = () => (
     <div id="infoIcon">
       i
       <div id="infoTooltip">
-        A simple todo list application demonstrating TinyBase's reactive data
-        management with CRUD operations.{' '}
+        {
+          "A simple todo list application demonstrating TinyBase's reactive data management with CRUD operations."
+        }
       </div>
     </div>
   </div>
@@ -4259,8 +4264,9 @@ export const Info = () => (
     <div id="infoIcon">
       i
       <div id="infoTooltip">
-        A simple todo list application demonstrating TinyBase's reactive data
-        management with CRUD operations.{' '}
+        {
+          "A simple todo list application demonstrating TinyBase's reactive data management with CRUD operations."
+        }
       </div>
     </div>
   </div>
@@ -5623,8 +5629,8 @@ export const getRandomName = () =>
 export const getDefaultContent = () => [
   {
     messages: {
-      1: {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
-      2: {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
+      1: {username: 'Alice', text: 'Hello!', timestamp: 1704067200000},
+      2: {username: 'Bob', text: 'Hi there!', timestamp: 1704067230000},
     },
   },
   {},
@@ -8540,8 +8546,8 @@ export const getRandomName = () =>
 export const getDefaultContent = () => [
   {
     messages: {
-      1: {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
-      2: {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
+      1: {username: 'Alice', text: 'Hello!', timestamp: 1704067200000},
+      2: {username: 'Bob', text: 'Hi there!', timestamp: 1704067230000},
     },
   },
   {},
@@ -11708,8 +11714,9 @@ export const Info = () => (
     <div id="infoIcon">
       i
       <div id="infoTooltip">
-        A real-time chat application demonstrating TinyBase's reactive data
-        management.{' '}
+        {
+          "A real-time chat application demonstrating TinyBase's reactive data management."
+        }
       </div>
     </div>
   </div>
@@ -12236,8 +12243,8 @@ export const getRandomName = (): string =>
 export const getDefaultContent = (): [any, any] => [
   {
     messages: {
-      '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
-      '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
+      '1': {username: 'Alice', text: 'Hello!', timestamp: 1704067200000},
+      '2': {username: 'Bob', text: 'Hi there!', timestamp: 1704067230000},
     },
   },
   {},
@@ -12613,8 +12620,9 @@ export const Info = () => (
     <div id="infoIcon">
       i
       <div id="infoTooltip">
-        A real-time chat application demonstrating TinyBase's reactive data
-        management.{' '}
+        {
+          "A real-time chat application demonstrating TinyBase's reactive data management."
+        }
       </div>
     </div>
   </div>
@@ -13148,8 +13156,8 @@ export const getRandomName = (): string =>
 export const getDefaultContent = (): [any, any] => [
   {
     messages: {
-      '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
-      '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
+      '1': {username: 'Alice', text: 'Hello!', timestamp: 1704067200000},
+      '2': {username: 'Bob', text: 'Hi there!', timestamp: 1704067230000},
     },
   },
   {},
@@ -13704,8 +13712,9 @@ export const Info = () => (
     <div id="infoIcon">
       i
       <div id="infoTooltip">
-        A collaborative drawing canvas showcasing TinyBase's state
-        synchronization.{' '}
+        {
+          "A collaborative drawing canvas showcasing TinyBase's state synchronization."
+        }
       </div>
     </div>
   </div>
@@ -14452,8 +14461,9 @@ export const Info = () => (
     <div id="infoIcon">
       i
       <div id="infoTooltip">
-        A tic-tac-toe game demonstrating turn-based logic and computed game
-        state using TinyBase.{' '}
+        {
+          'A tic-tac-toe game demonstrating turn-based logic and computed game state using TinyBase.'
+        }
       </div>
     </div>
   </div>
@@ -15119,8 +15129,9 @@ export const Info = () => (
     <div id="infoIcon">
       i
       <div id="infoTooltip">
-        A simple todo list application demonstrating TinyBase's reactive data
-        management with CRUD operations.{' '}
+        {
+          "A simple todo list application demonstrating TinyBase's reactive data management with CRUD operations."
+        }
       </div>
     </div>
   </div>
@@ -15903,8 +15914,9 @@ export const Info = () => (
     <div id="infoIcon">
       i
       <div id="infoTooltip">
-        A simple todo list application demonstrating TinyBase's reactive data
-        management with CRUD operations.{' '}
+        {
+          "A simple todo list application demonstrating TinyBase's reactive data management with CRUD operations."
+        }
       </div>
     </div>
   </div>
@@ -16663,8 +16675,9 @@ export const Info = () => (
     <div id="infoIcon">
       i
       <div id="infoTooltip">
-        A simple todo list application demonstrating TinyBase's reactive data
-        management with CRUD operations.{' '}
+        {
+          "A simple todo list application demonstrating TinyBase's reactive data management with CRUD operations."
+        }
       </div>
     </div>
   </div>
@@ -17959,8 +17972,8 @@ export const getRandomName = (): string =>
 export const getDefaultContent = (): [any, any] => [
   {
     messages: {
-      '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
-      '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
+      '1': {username: 'Alice', text: 'Hello!', timestamp: 1704067200000},
+      '2': {username: 'Bob', text: 'Hi there!', timestamp: 1704067230000},
     },
   },
   {},
@@ -18826,8 +18839,8 @@ export const getRandomName = (): string =>
 export const getDefaultContent = (): [any, any] => [
   {
     messages: {
-      '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
-      '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
+      '1': {username: 'Alice', text: 'Hello!', timestamp: 1704067200000},
+      '2': {username: 'Bob', text: 'Hi there!', timestamp: 1704067230000},
     },
   },
   {},
@@ -19740,8 +19753,8 @@ export const getRandomName = (): string =>
 export const getDefaultContent = (): [any, any] => [
   {
     messages: {
-      '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
-      '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
+      '1': {username: 'Alice', text: 'Hello!', timestamp: 1704067200000},
+      '2': {username: 'Bob', text: 'Hi there!', timestamp: 1704067230000},
     },
   },
   {},
@@ -28050,8 +28063,8 @@ export const getRandomName = (): string =>
 export const getDefaultContent = (): [any, any] => [
   {
     messages: {
-      '1': {username: 'Alice', text: 'Hello!', timestamp: Date.now() - 60000},
-      '2': {username: 'Bob', text: 'Hi there!', timestamp: Date.now() - 30000},
+      '1': {username: 'Alice', text: 'Hello!', timestamp: 1704067200000},
+      '2': {username: 'Bob', text: 'Hi there!', timestamp: 1704067230000},
     },
   },
   {},

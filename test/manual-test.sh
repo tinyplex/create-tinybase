@@ -51,6 +51,7 @@ while [[ $# -gt 0 ]]; do
       echo "  $0                           # Build all configured projects (reuse node_modules)"
       echo "  $0 -t chat             # Build only chat projects"
       echo "  $0 -t ts-react-chat    # Build only ts-react-chat"
+      echo "  $0 -t tinywidgets      # Build only TinyWidgets projects"
       echo "  $0 -t svelte-todos     # Build only Svelte todo projects"
       echo "  $0 -t drawing --skip-install  # Build drawing projects, skip install"
       echo "  $0 --clean                   # Force fresh install for all projects"
@@ -92,6 +93,7 @@ declare -a all_projects=(
   "test-ts-react-todos-schemas:typescript:react:todos:5180:true"
   "test-ts-react-todos-persist-sqlite:typescript:react:todos:5181:false:sqlite"
   "test-ts-react-todos-persist-pglite:typescript:react:todos:5182:false:pglite"
+  "test-ts-react-todos-tinywidgets:typescript:react:todos:5233:false:local-storage:true"
   "test-js-svelte-todos:javascript:svelte:todos:5213:false"
   "test-ts-svelte-todos:typescript:svelte:todos:5214:false"
   "test-ts-svelte-todos-schemas:typescript:svelte:todos:5215:true"
@@ -108,6 +110,7 @@ declare -a all_projects=(
   "test-ts-react-chat-schemas:typescript:react:chat:5190:true"
   "test-ts-react-chat-persist-sqlite:typescript:react:chat:5191:false:sqlite"
   "test-ts-react-chat-persist-pglite:typescript:react:chat:5192:false:pglite"
+  "test-ts-react-chat-tinywidgets:typescript:react:chat:5234:false:local-storage:true"
   "test-js-svelte-chat:javascript:svelte:chat:5223:false"
   "test-ts-svelte-chat:typescript:svelte:chat:5224:false"
   "test-ts-svelte-chat-schemas:typescript:svelte:chat:5225:true"
@@ -124,6 +127,7 @@ declare -a all_projects=(
   "test-ts-react-drawing-schemas:typescript:react:drawing:5200:true"
   "test-ts-react-drawing-persist-sqlite:typescript:react:drawing:5201:false:sqlite"
   "test-ts-react-drawing-persist-pglite:typescript:react:drawing:5202:false:pglite"
+  "test-ts-react-drawing-tinywidgets:typescript:react:drawing:5235:false:local-storage:true"
   "test-js-svelte-drawing:javascript:svelte:drawing:5218:false"
   "test-ts-svelte-drawing:typescript:svelte:drawing:5219:false"
   "test-ts-svelte-drawing-schemas:typescript:svelte:drawing:5220:true"
@@ -140,6 +144,7 @@ declare -a all_projects=(
   "test-ts-react-game-schemas:typescript:react:game:5210:true"
   "test-ts-react-game-persist-sqlite:typescript:react:game:5211:false:sqlite"
   "test-ts-react-game-persist-pglite:typescript:react:game:5212:false:pglite"
+  "test-ts-react-game-tinywidgets:typescript:react:game:5236:false:local-storage:true"
   "test-js-svelte-game:javascript:svelte:game:5228:false"
   "test-ts-svelte-game:typescript:svelte:game:5229:false"
   "test-ts-svelte-game-schemas:typescript:svelte:game:5230:true"
@@ -152,7 +157,7 @@ declare -a projects=()
 if [ -n "$FILTER" ]; then
   echo "Filtering projects by: $FILTER"
   for project in "${all_projects[@]}"; do
-    IFS=':' read -r name _ _ _ _ _ _ <<< "$project"
+    IFS=':' read -r name _ _ _ _ _ _ _ <<< "$project"
     if [[ "$name" == *"$FILTER"* ]]; then
       projects+=("$project")
     fi
@@ -178,7 +183,7 @@ else
   echo "Smart mode: preserving node_modules where possible..."
   # For each project we're about to build, backup node_modules if it exists
   for project in "${projects[@]}"; do
-    IFS=':' read -r name _ _ _ _ _ _ <<< "$project"
+    IFS=':' read -r name _ _ _ _ _ _ _ <<< "$project"
     project_path="$TEST_DIR/$name"
     if [ -d "$project_path" ]; then
       # Check for client/node_modules (new structure)
@@ -206,9 +211,10 @@ cd "$TEST_DIR"
 
 echo "Creating projects..."
 for project in "${projects[@]}"; do
-  IFS=':' read -r name lang framework appType port schemas persistenceType <<< "$project"
+  IFS=':' read -r name lang framework appType port schemas persistenceType tinyWidgets <<< "$project"
   # Default to local-storage if not specified
   persistenceType="${persistenceType:-local-storage}"
+  tinyWidgets="${tinyWidgets:-false}"
   echo "Creating $name..."
   node "$CLI_PATH" \
     --non-interactive \
@@ -217,6 +223,7 @@ for project in "${projects[@]}"; do
     --framework "$framework" \
     --appType "$appType" \
     --schemas "$schemas" \
+    --tinyWidgets "$tinyWidgets" \
     --prettier true \
     --eslint true \
     --persistenceType "$persistenceType"
@@ -274,7 +281,7 @@ if [ "$SKIP_INSTALL" = false ]; then
     echo "Installing dependencies in parallel..."
     INSTALL_PIDS=()
     for project in "${projects[@]}"; do
-      IFS=':' read -r name _ _ _ _ _ _ <<< "$project"
+      IFS=':' read -r name _ _ _ _ _ _ _ <<< "$project"
       smart_install "$name" &
       INSTALL_PIDS+=($!)
     done
@@ -287,7 +294,7 @@ if [ "$SKIP_INSTALL" = false ]; then
   else
     echo "Installing dependencies sequentially..."
     for project in "${projects[@]}"; do
-      IFS=':' read -r name _ _ _ _ _ _ <<< "$project"
+      IFS=':' read -r name _ _ _ _ _ _ _ <<< "$project"
       smart_install "$name"
     done
   fi
@@ -302,7 +309,7 @@ if [ "$BUILD_ONLY" = true ]; then
   echo ""
   echo "Projects created:"
   for project in "${projects[@]}"; do
-    IFS=':' read -r name _ _ _ _ _ _ <<< "$project"
+    IFS=':' read -r name _ _ _ _ _ _ _ <<< "$project"
     echo "  - $name"
   done
   exit 0
@@ -312,7 +319,7 @@ echo ""
 echo "Starting dev servers..."
 PIDS=()
 for project in "${projects[@]}"; do
-  IFS=':' read -r name _ _ _ port _ _ <<< "$project"
+  IFS=':' read -r name _ _ _ port _ _ _ <<< "$project"
   echo "Starting $name on port $port..."
   # Check if package.json is in client/ subdirectory
   if [ -f "$name/client/package.json" ]; then
@@ -330,7 +337,7 @@ sleep 2
 echo ""
 echo "Opening browsers..."
 for project in "${projects[@]}"; do
-  IFS=':' read -r name _ _ _ port _ _ <<< "$project"
+  IFS=':' read -r name _ _ _ port _ _ _ <<< "$project"
   URL="http://localhost:$port"
   echo "Opening $name at $URL"
   open "$URL"
@@ -339,7 +346,7 @@ done
 echo ""
 echo "Projects running on ports:"
 for project in "${projects[@]}"; do
-  IFS=':' read -r name _ _ _ port _ _ <<< "$project"
+  IFS=':' read -r name _ _ _ port _ _ _ <<< "$project"
   printf "  - %-25s http://localhost:%s\n" "$name:" "$port"
 done
 echo ""
