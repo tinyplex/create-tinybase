@@ -4,11 +4,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  {{#unless tinyWidgets}}
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap" />
-  {{/unless}}
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap" />
   {{includeFile template="client/public/favicon.svg" output="client/public/favicon.svg"}}
   {{#if typescript}}{{includeFile template="client/public/ts.svg" output="client/public/ts.svg"}}{{else}}{{includeFile template="client/public/js.svg" output="client/public/js.svg"}}{{/if}}
   {{#if react}}{{includeFile template="client/public/react.svg" output="client/public/react.svg"}}{{/if}}
@@ -29,23 +27,20 @@
       user-select: none;
       margin: 0;
       padding: 0;
+      --hue: 270;
+      --fg: oklch(85% 0.01 var(--hue));
+      --fg2: oklch(60% 0.01 var(--hue));
+      --bg: oklch(20% 0.01 var(--hue));
+      --bg2: oklch(25% 0.01 var(--hue));
+      --border: oklch(30% 0.01 var(--hue));
+      --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+      --accent: #d81b60;
+      color: var(--fg);
+      background: var(--bg);
+      font-family: 'Inter', sans-serif;
     }
 
     {{#unless tinyWidgets}}
-      body {
-        --hue: 270;
-        --fg: oklch(85% 0.01 var(--hue));
-        --fg2: oklch(60% 0.01 var(--hue));
-        --bg: oklch(20% 0.01 var(--hue));
-        --bg2: oklch(25% 0.01 var(--hue));
-        --border: oklch(30% 0.01 var(--hue));
-        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
-        --accent: #d81b60;
-        color: var(--fg);
-        background: var(--bg);
-        font-family: 'Inter', sans-serif;
-      }
-
       #appContainer {
         display: flex;
         flex-direction: column;

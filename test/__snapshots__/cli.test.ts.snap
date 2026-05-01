@@ -86,9 +86,6 @@ with the store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -862,9 +859,6 @@ with the store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -1736,9 +1730,6 @@ with the store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -2556,9 +2547,6 @@ with the store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -3304,9 +3292,6 @@ with the store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -4066,9 +4051,6 @@ The \`server\` directory contains your Cloudflare Durable Objects WebSocket serv
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -4967,9 +4949,6 @@ stays synchronized with the underlying TinyBase store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -5728,9 +5707,6 @@ stays synchronized with the underlying TinyBase store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -6528,9 +6504,6 @@ stays synchronized with the underlying TinyBase store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -7236,9 +7209,6 @@ stays synchronized with the underlying TinyBase store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -7898,9 +7868,6 @@ Your data is automatically saved and restored when you reload the page.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -8634,9 +8601,6 @@ Your data is automatically saved and restored when you reload the page.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -9404,9 +9368,6 @@ The app uses **TinyBase** to manage application state in a reactive data store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -10169,9 +10130,6 @@ Your data is automatically saved and restored when you reload the page.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -10863,9 +10821,6 @@ Your data is automatically saved and restored when you reload the page.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -11543,9 +11498,6 @@ with the store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -12418,9 +12370,6 @@ The \`server\` directory contains your Node.js WebSocket server.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -13328,9 +13277,6 @@ with the store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -14198,9 +14144,6 @@ with the store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -14993,9 +14936,6 @@ with the store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -15768,9 +15708,6 @@ with the store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -16553,6 +16490,12 @@ with the store.
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>TinyBase Todos</title>
@@ -16565,6 +16508,17 @@ with the store.
         user-select: none;
         margin: 0;
         padding: 0;
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+        font-family: 'Inter', sans-serif;
       }
     </style>
   </head>
@@ -16626,6 +16580,7 @@ with the store.
 </svg>",
   "client/src/App.tsx": "import {App as TinyBaseApp} from './TinyBaseApp';
 import {App as TinyWidgetsApp} from 'tinywidgets';
+import './app.css';
 import {Info} from './Info';
 import {Title} from './Title';
 
@@ -16633,7 +16588,11 @@ export const App = () => (
   <TinyWidgetsApp title={Title} topNavRight={Info} main={Main} />
 );
 
-const Main = () => <TinyBaseApp />;
+const Main = () => (
+  <div id="tinyBaseApp">
+    <TinyBaseApp />
+  </div>
+);
 ",
   "client/src/Button.tsx": "import './button.css';
 import {ReactNode} from 'react';
@@ -16890,6 +16849,13 @@ export const TodoList = () => {
     </div>
   );
 };
+",
+  "client/src/app.css": "#tinyBaseApp {
+  max-width: 60rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
 ",
   "client/src/button.css": "button {
   padding: 0.5rem 1rem;
@@ -17281,9 +17247,6 @@ stays synchronized with the underlying TinyBase store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -18117,9 +18080,6 @@ stays synchronized with the underlying TinyBase store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -18974,9 +18934,6 @@ stays synchronized with the underlying TinyBase store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -19897,9 +19854,6 @@ stays synchronized with the underlying TinyBase store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -20768,9 +20722,6 @@ stays synchronized with the underlying TinyBase store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -21660,9 +21611,6 @@ stays synchronized with the underlying TinyBase store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -22617,9 +22565,6 @@ stays synchronized with the underlying TinyBase store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -23408,9 +23353,6 @@ stays synchronized with the underlying TinyBase store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -24220,9 +24162,6 @@ stays synchronized with the underlying TinyBase store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -25096,9 +25035,6 @@ stays synchronized with the underlying TinyBase store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -25825,9 +25761,6 @@ stays synchronized with the underlying TinyBase store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -26575,9 +26508,6 @@ stays synchronized with the underlying TinyBase store.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -27386,9 +27316,6 @@ Your data is automatically saved and restored when you reload the page.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -28177,9 +28104,6 @@ Your data is automatically saved and restored when you reload the page.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -29004,9 +28928,6 @@ Your data is automatically saved and restored when you reload the page.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -29742,9 +29663,6 @@ Your data is automatically saved and restored when you reload the page.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
@@ -30531,9 +30449,6 @@ Your data is automatically saved and restored when you reload the page.
         user-select: none;
         margin: 0;
         padding: 0;
-      }
-
-      body {
         --hue: 270;
         --fg: oklch(85% 0.01 var(--hue));
         --fg2: oklch(60% 0.01 var(--hue));
