@@ -14,6 +14,7 @@
   {{#if persistSqlite}}{{includeFile template="client/public/sqlite.svg" output="client/public/sqlite.svg"}}{{/if}}
   {{#if persistPglite}}{{includeFile template="client/public/pglite.svg" output="client/public/pglite.svg"}}{{/if}}
   {{#if sync}}{{includeFile template="client/public/sync.svg" output="client/public/sync.svg"}}{{/if}}
+  {{#if tinyWidgets}}{{includeFile template="client/public/tinywidgets.svg" output="client/public/tinywidgets.svg"}}{{/if}}
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <title>
     TinyBase {{#if (eq appType "chat")}}Chat{{else if (eq appType "drawing")}}Drawing{{else if (eq appType "game")}}Game{{else}}Todos{{/if}}

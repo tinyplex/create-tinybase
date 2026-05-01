@@ -16572,6 +16572,16 @@ with the store.
     <ellipse rx="11" ry="4.2" transform="rotate(120)" />
   </g>
 </svg>",
+  "client/public/tinywidgets.svg": "<svg xmlns="http://www.w3.org/2000/svg" viewBox="5 2.4 90 90" stroke="#fff" stroke-width="4" stroke-linecap="round"
+  stroke-linejoin="round">
+  <path d="M30 52.36l20 10v22.36l-20-10V52.36" fill="oklch(30% .1 240)" />
+  <path d="M50 62.36l20-10v22.36l-20 10V62.36" fill="oklch(50% .1 240)" />
+  <path d="M10 20l20-10 20 10-20 10-20-10" fill="oklch(70% .1 240)" />
+  <path d="M30 30l20-10 20 10-20 10-20-10" fill="oklch(70% .1 240)" />
+  <path d="M50 20l20-10 20 10-20 10-20-10" fill="oklch(70% .1 240)" />
+  <path d="M10 20l20 10v22.36l-20-10V20M30 30l20 10v22.36l-20-10V30" fill="oklch(30% .1 240)" />
+  <path d="M50 40l20-10v22.36l-20 10V40M70 30l20-10v22.36l-20 10V30" fill="oklch(50% .1 240)" />
+</svg>",
   "client/public/ts.svg": "<svg fill="none" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg">
   <rect fill="#3178c6" height="512" width="512" />
   <path clip-rule="evenodd"
@@ -16630,6 +16640,11 @@ export const Info = () => (
         title="Written in TypeScript"
       />
       <img src="/react.svg" className="infoTechIcon" title="Built with React" />
+      <img
+        src="/tinywidgets.svg"
+        className="infoTechIcon"
+        title="Uses TinyWidgets components"
+      />
     </div>
     <div id="infoIcon">
       i

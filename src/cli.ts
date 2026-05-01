@@ -265,6 +265,9 @@ const config = {
         ? {src: '/ts.svg', title: 'Written in TypeScript'}
         : {src: '/js.svg', title: 'Written in JavaScript'},
       ...(react ? [{src: '/react.svg', title: 'Built with React'}] : []),
+      ...(useTinyWidgets
+        ? [{src: '/tinywidgets.svg', title: 'Uses TinyWidgets components'}]
+        : []),
       ...(svelte ? [{src: '/svelte.svg', title: 'Built with Svelte'}] : []),
       ...(persistSqlite
         ? [{src: '/sqlite.svg', title: 'Persists data to SQLite'}]
