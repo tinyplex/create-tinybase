@@ -151,34 +151,30 @@ const syncCombinations = [
 ];
 
 async function testChatApp(page: Page) {
+  const messageInputSelector = '#messageInput input';
   const usernameInput = await page.waitForSelector(
     'input[placeholder*="name" i]',
   );
   await usernameInput!.type('TestUser');
 
-  await page.waitForSelector('input[type="text"]:not([placeholder*="name" i])');
-  await page.type(
-    'input[type="text"]:not([placeholder*="name" i])',
-    'Hello from e2e test!',
-  );
+  await page.waitForSelector(messageInputSelector);
+  await page.type(messageInputSelector, 'Hello from e2e test!');
   await page.keyboard.press('Enter');
 
   await waitForTextInPage(page, 'Hello from e2e test!');
 }
 
 async function testChatPersistence(page: Page, persistenceType: string) {
+  const messageInputSelector = '#messageInput input';
   const usernameInput = await page.waitForSelector(
     'input[placeholder*="name" i]',
   );
   await usernameInput!.click({clickCount: 3});
   await usernameInput!.type('PersistUser');
 
-  await page.waitForSelector('input[type="text"]:not([placeholder*="name" i])');
+  await page.waitForSelector(messageInputSelector);
   const testMessage = `Persisted message ${persistenceType}`;
-  await page.type(
-    'input[type="text"]:not([placeholder*="name" i])',
-    testMessage,
-  );
+  await page.type(messageInputSelector, testMessage);
   await page.keyboard.press('Enter');
   await waitForTextInPage(page, testMessage);
 
@@ -199,14 +195,10 @@ async function testChatPersistence(page: Page, persistenceType: string) {
 
 async function testChatSync(page1: Page, page2: Page) {
   // Send a message in page1 and verify it syncs to page2
-  await page1.waitForSelector(
-    'input[type="text"]:not([placeholder*="name" i])',
-  );
+  const messageInputSelector = '#messageInput input';
+  await page1.waitForSelector(messageInputSelector);
   const testMessage = 'Synced message';
-  await page1.type(
-    'input[type="text"]:not([placeholder*="name" i])',
-    testMessage,
-  );
+  await page1.type(messageInputSelector, testMessage);
   await page1.keyboard.press('Enter');
   await waitForTextInPage(page1, testMessage);
 

@@ -12,6 +12,7 @@
     "PIDS",
     "tinybase",
     "tinycreate",
-    "tinyplex"
+    "tinyplex",
+    "tinywidgets"
   ]
 }
