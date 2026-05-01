@@ -21,7 +21,7 @@
   {{includeFile template="client/src/App.tsx.hbs" output="client/src/App.{{componentExt}}"}}
   {{addImport "import {App} from './App';"}}
   addEventListener('load', () => {
-  ReactDOM.createRoot(document.getElementById('{{#if tinyWidgets}}app{{else}}appContainer{{/if}}')!).render(
+  ReactDOM.createRoot(document.getElementById('appContainer')!).render(
   <App />);
   });
 {{/if}}

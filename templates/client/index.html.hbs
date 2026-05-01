@@ -28,20 +28,23 @@
       user-select: none;
       margin: 0;
       padding: 0;
-      --hue: 270;
-      --fg: oklch(85% 0.01 var(--hue));
-      --fg2: oklch(60% 0.01 var(--hue));
-      --bg: oklch(20% 0.01 var(--hue));
-      --bg2: oklch(25% 0.01 var(--hue));
-      --border: oklch(30% 0.01 var(--hue));
-      --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
-      --accent: #d81b60;
-      color: var(--fg);
-      background: var(--bg);
       font-family: 'Inter', sans-serif;
     }
 
     {{#unless tinyWidgets}}
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+      }
+
       #appContainer {
         display: flex;
         flex-direction: column;
@@ -60,7 +63,7 @@
 
 <body>
   {{#if tinyWidgets}}
-    <div id="app"></div>
+    <div id="appContainer"></div>
   {{else}}
     <div id="appContainer">
       {{#unless react}}

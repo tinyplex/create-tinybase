@@ -1,8 +1,12 @@
 {{includeFile template="client/src/shared/info.css.hbs" output="client/src/info.css"}}
 {{addImport "import './info.css';"}}
+{{#if tinyWidgets}}
+  {{addImport "import {colors} from 'tinywidgets/css';"}}
+  {{addImport "import type {CSSProperties} from 'react';"}}
+{{/if}}
 
 export const Info = () => (
-<div id="info">
+<div id="info"{{#if tinyWidgets}} style={infoStyle}{{/if}}>
   <div id="infoTech">
     {{#each techIcons}}
       <img src="{{src}}" className="infoTechIcon" title="{{title}}" />
@@ -16,3 +20,13 @@ export const Info = () => (
   </div>
 </div>
 );
+
+{{#if tinyWidgets}}
+  const infoStyle = {
+  '--info-fg': colors.foreground,
+  '--info-fg2': colors.foregroundDim,
+  '--info-bg2': colors.background2,
+  '--info-border': colors.borderColor,
+  '--info-accent': colors.accent,
+  } as CSSProperties;
+{{/if}}

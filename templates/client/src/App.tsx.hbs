@@ -1,10 +1,10 @@
 {{addImport "import {App as TinyBaseApp} from './TinyBaseApp';"}}
 {{#if tinyWidgets}}
   {{addImport "import {App as TinyWidgetsApp} from 'tinywidgets';"}}
-  {{includeFile template="client/src/app.css.hbs" output="client/src/app.css"}}
+  {{includeFile template="client/src/app.css.ts.hbs" output="client/src/app.css.ts"}}
   {{includeFile template="client/src/shared/Info.tsx.hbs" output="client/src/Info.{{componentExt}}"}}
   {{includeFile template="client/src/shared/Title.tsx.hbs" output="client/src/Title.{{componentExt}}"}}
-  {{addImport "import './app.css';"}}
+  {{addImport "import './app.css.ts';"}}
   {{addImport "import {Info} from './Info';"}}
   {{addImport "import {Title} from './Title';"}}
 {{else}}
@@ -17,7 +17,7 @@ export const App = () =>
   <TinyWidgetsApp title={Title} topNavRight={Info} main={Main} />;
 
 const Main = () => (
-  <div id="tinyBaseApp">
+  <div id="app">
     <TinyBaseApp />
   </div>
 );
