@@ -68,6 +68,13 @@ const config = {
     },
     {
       type: (prev: unknown, answers: Record<string, unknown>) =>
+        answers.framework === 'react' ? ('confirm' as const) : null,
+      name: 'tinyWidgets',
+      message: 'Use TinyWidgets components?',
+      initial: false,
+    },
+    {
+      type: (prev: unknown, answers: Record<string, unknown>) =>
         answers.language === 'typescript' ? ('confirm' as const) : null,
       name: 'schemas',
       message: 'Include store schemas?',
@@ -131,6 +138,7 @@ const config = {
       appType,
       prettier,
       eslint,
+      tinyWidgets,
       schemas,
       syncType,
       persistenceType,
@@ -141,6 +149,8 @@ const config = {
     const react = framework === 'react';
     const vanilla = framework === 'vanilla';
     const svelte = framework === 'svelte';
+    const useTinyWidgets =
+      react && (tinyWidgets === true || tinyWidgets === 'true');
     const scriptExt = typescript ? 'ts' : 'js';
     const componentExt = svelte
       ? 'svelte'
@@ -164,7 +174,8 @@ const config = {
     const persistLocalStorage = normalizedPersistenceType === 'local-storage';
     const persistSqlite = normalizedPersistenceType === 'sqlite';
     const persistPglite = normalizedPersistenceType === 'pglite';
-    const needsViteConfig = react || svelte || persistSqlite || persistPglite;
+    const needsViteConfig =
+      react || svelte || persistSqlite || persistPglite || useTinyWidgets;
     const appSurface =
       appType === 'chat'
         ? 'chat interface'
@@ -222,6 +233,7 @@ const config = {
       appType,
       prettier,
       eslint,
+      tinyWidgets: useTinyWidgets,
       schemas: typescript && (schemas === true || schemas === 'true'),
       syncType: normalizedSyncType,
       sync,

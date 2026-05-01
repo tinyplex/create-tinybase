@@ -65,6 +65,13 @@ const combinations = [
     language: 'typescript',
     framework: 'react',
     appType: 'chat',
+    name: 'ts-react-chat-tinywidgets',
+    tinyWidgets: true,
+  },
+  {
+    language: 'typescript',
+    framework: 'react',
+    appType: 'chat',
     name: 'ts-react-chat-schemas',
     schemas: true,
   },
@@ -243,6 +250,9 @@ describe('chat e2e tests', {concurrent: false}, () => {
           combo.framework,
           combo.appType,
           combo.schemas,
+          'none',
+          'local-storage',
+          combo.tinyWidgets,
         );
 
         if (combo.language === 'typescript') {

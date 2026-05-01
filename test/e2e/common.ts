@@ -41,6 +41,7 @@ export async function runCLI(
   schemas = false,
   syncType = 'none',
   persistenceType = 'local-storage',
+  tinyWidgets = false,
 ) {
   return new Promise((resolve, reject) => {
     const args = [
@@ -62,6 +63,8 @@ export async function runCLI(
       syncType,
       '--persistenceType',
       persistenceType,
+      '--tinyWidgets',
+      tinyWidgets.toString(),
     ];
 
     if (schemas) {
@@ -108,6 +111,7 @@ export async function setupTestProject(
   schemas = false,
   syncType = 'none',
   persistenceType = 'local-storage',
+  tinyWidgets = false,
 ) {
   const projectPath = join(TEST_DIR, projectName);
   const clientPath = join(projectPath, 'client');
@@ -133,6 +137,7 @@ export async function setupTestProject(
     schemas,
     syncType,
     persistenceType,
+    tinyWidgets,
   );
 
   if (existsSync(nodeModulesBackup)) {

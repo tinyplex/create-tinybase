@@ -65,6 +65,13 @@ const combinations = [
     language: 'typescript',
     framework: 'react',
     appType: 'drawing',
+    name: 'ts-react-drawing-tinywidgets',
+    tinyWidgets: true,
+  },
+  {
+    language: 'typescript',
+    framework: 'react',
+    appType: 'drawing',
     name: 'ts-react-drawing-schemas',
     schemas: true,
   },
@@ -328,6 +335,9 @@ describe('drawing e2e tests', {concurrent: false}, () => {
           combo.framework,
           combo.appType,
           combo.schemas,
+          'none',
+          'local-storage',
+          combo.tinyWidgets,
         );
 
         if (combo.language === 'typescript') {

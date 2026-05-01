@@ -1,0 +1,15 @@
+{{includeFile template="client/src/shared/topBar.css.hbs" output="client/src/topBar.css"}}
+{{includeFile template="client/src/shared/Info.svelte.hbs" output="client/src/Info.svelte"}}
+
+<script{{#if typescript}} lang="ts" {{/if}}>
+  import './topBar.css';
+  import Info from './Info.svelte';
+</script>
+
+<div id="topBar">
+  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+  <div id="topBarTitle">
+    TinyBase {{#if (eq appType "chat")}}Chat{{else if (eq appType "drawing")}}Drawing{{else if (eq appType "game")}}Game{{else}}Todos{{/if}}
+  </div>
+  <Info />
+</div>

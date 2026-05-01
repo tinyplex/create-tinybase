@@ -64,6 +64,13 @@ const combinations = [
     language: 'typescript',
     framework: 'react',
     appType: 'game',
+    name: 'ts-react-game-tinywidgets',
+    tinyWidgets: true,
+  },
+  {
+    language: 'typescript',
+    framework: 'react',
+    appType: 'game',
     name: 'ts-react-game-schemas',
     schemas: true,
   },
@@ -287,6 +294,9 @@ describe('game e2e tests', {concurrent: false}, () => {
           combo.framework,
           combo.appType,
           combo.schemas,
+          'none',
+          'local-storage',
+          combo.tinyWidgets,
         );
 
         if (combo.language === 'typescript') {

@@ -6,26 +6,35 @@
 {{/if}}
 
 {{#if vanilla}}
+  {{includeFile template="client/src/shared/topBar.ts.hbs" output="client/src/topBar.{{scriptExt}}"}}
+  {{addImport "import {createTopBar} from './topBar';"}}
   {{addImport "import {app} from './app';"}}
   {{includeFile template="client/src/{{appType}}/app.ts.hbs" output="client/src/app.{{scriptExt}}"}}
   addEventListener('load', () => {
+  document.getElementById('topBarMount')?.replaceWith(createTopBar());
   app();
   });
 {{/if}}
 {{#if react}}
   {{addImport "import ReactDOM from 'react-dom/client';"}}
+  {{includeFile template="client/src/{{appType}}/App.tsx.hbs" output="client/src/TinyBaseApp.{{componentExt}}"}}
+  {{includeFile template="client/src/App.tsx.hbs" output="client/src/App.{{componentExt}}"}}
   {{addImport "import {App} from './App';"}}
-  {{includeFile template="client/src/{{appType}}/App.tsx.hbs" output="client/src/App.{{componentExt}}"}}
   addEventListener('load', () => {
-  ReactDOM.createRoot(document.getElementById('app')!).render(
+  ReactDOM.createRoot(document.getElementById('{{#if tinyWidgets}}app{{else}}appContainer{{/if}}')!).render(
   <App />);
   });
 {{/if}}
 {{#if svelte}}
   {{addImport "import {mount} from 'svelte';"}}
   {{addImport "import App from './App.svelte';"}}
+  {{includeFile template="client/src/shared/TopBar.svelte.hbs" output="client/src/TopBar.svelte"}}
+  {{addImport "import TopBar from './TopBar.svelte';"}}
   {{includeFile template="client/src/{{appType}}/App.svelte.hbs" output="client/src/App.{{componentExt}}"}}
   addEventListener('load', () => {
+  mount(TopBar, {
+  target: document.getElementById('topBarMount')!,
+  });
   mount(App, {
   target: document.getElementById('app')!,
   });

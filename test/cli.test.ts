@@ -14,6 +14,7 @@ interface Combination {
   appType: 'todos' | 'chat' | 'drawing' | 'game';
   syncType?: 'none' | 'remote' | 'node' | 'durable-objects';
   persistenceType?: 'none' | 'local-storage' | 'sqlite' | 'pglite';
+  tinyWidgets?: boolean;
   name: string;
 }
 
@@ -278,6 +279,15 @@ const combinations: Combination[] = [
     language: 'typescript',
     framework: 'react',
     appType: 'todos',
+    tinyWidgets: true,
+    syncType: 'none',
+    persistenceType: 'local-storage',
+    name: 'ts-react-todos-tinywidgets',
+  },
+  {
+    language: 'typescript',
+    framework: 'react',
+    appType: 'todos',
     syncType: 'remote',
     persistenceType: 'local-storage',
     name: 'ts-react-todos-remote-sync',
@@ -342,6 +352,7 @@ async function runCLI(
   appType: AppType = 'todos',
   syncType: SyncType = 'none',
   persistenceType: PersistenceType = 'local-storage',
+  tinyWidgets = false,
 ): Promise<CLIResult> {
   return runCLIWithOptions(
     projectName,
@@ -352,6 +363,7 @@ async function runCLI(
     persistenceType,
     false,
     false,
+    tinyWidgets,
   );
 }
 
@@ -364,6 +376,7 @@ async function runCLIWithOptions(
   persistenceType: PersistenceType,
   prettier: boolean,
   eslint: boolean,
+  tinyWidgets = false,
 ): Promise<CLIResult> {
   return new Promise((resolve, reject) => {
     const cli: ChildProcess = spawn(
@@ -387,6 +400,8 @@ async function runCLIWithOptions(
         prettier.toString(),
         '--eslint',
         eslint.toString(),
+        '--tinyWidgets',
+        tinyWidgets.toString(),
       ],
       {
         cwd: TEST_DIR,
@@ -469,6 +484,7 @@ describe('create-tinybase', () => {
           combo.appType,
           combo.syncType || 'none',
           combo.persistenceType || 'local-storage',
+          combo.tinyWidgets || false,
         );
       }, 10000);
 
@@ -487,6 +503,15 @@ describe('create-tinybase', () => {
         if (combo.framework === 'react') {
           expect(pkg.dependencies.react).toBeDefined();
           expect(pkg.dependencies['react-dom']).toBeDefined();
+        }
+
+        if (combo.tinyWidgets) {
+          expect(pkg.dependencies.tinywidgets).toBeDefined();
+          expect(
+            pkg.devDependencies?.['@vanilla-extract/vite-plugin'],
+          ).toBeDefined();
+        } else {
+          expect(pkg.dependencies.tinywidgets).toBeUndefined();
         }
 
         if (combo.framework === 'svelte') {
@@ -515,6 +540,10 @@ describe('create-tinybase', () => {
 
         if (combo.framework === 'react' || combo.framework === 'svelte') {
           expect(files).toContain('client/vite.config.js');
+        }
+
+        if (combo.tinyWidgets) {
+          expect(files).toContain('client/src/Info.tsx');
         }
 
         if (combo.framework === 'svelte') {

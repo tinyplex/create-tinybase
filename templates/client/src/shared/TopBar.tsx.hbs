@@ -1,0 +1,14 @@
+{{includeFile template="client/src/shared/topBar.css.hbs" output="client/src/topBar.css"}}
+{{includeFile template="client/src/shared/Info.tsx.hbs" output="client/src/Info.{{componentExt}}"}}
+{{addImport "import './topBar.css';"}}
+{{addImport "import {Info} from './Info';"}}
+
+export const TopBar = () => (
+<div id="topBar">
+  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+  <div id="topBarTitle">
+    TinyBase {{#if (eq appType "chat")}}Chat{{else if (eq appType "drawing")}}Drawing{{else if (eq appType "game")}}Game{{else}}Todos{{/if}}
+  </div>
+  <Info />
+</div>
+);

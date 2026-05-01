@@ -1,0 +1,66 @@
+{{includeFile template="client/src/shared/info.css.hbs" output="client/src/info.css"}}
+{{addImport "import './info.css';"}}
+
+export const createInfo = (): HTMLDivElement => {
+const container = document.createElement('div');
+container.id = 'info';
+
+const tech = document.createElement('div');
+tech.id = 'infoTech';
+container.appendChild(tech);
+
+{{#if typescript}}
+  addIcon(tech, '/ts.svg', 'Written in TypeScript');
+{{else}}
+  addIcon(tech, '/js.svg', 'Written in JavaScript');
+{{/if}}
+{{#if react}}
+  addIcon(tech, '/react.svg', 'Built with React');
+{{/if}}
+{{#if svelte}}
+  addIcon(tech, '/svelte.svg', 'Built with Svelte');
+{{/if}}
+{{#if persistSqlite}}
+  addIcon(tech, '/sqlite.svg', 'Persists data to SQLite');
+{{else if persistPglite}}
+  addIcon(tech, '/pglite.svg', 'Persists data to PGlite');
+{{/if}}
+{{#if sync}}
+  addIcon(tech, '/sync.svg', 'Data synchronization enabled');
+{{/if}}
+
+const infoIcon = document.createElement('div');
+infoIcon.id = 'infoIcon';
+infoIcon.textContent = 'i';
+
+const tooltip = document.createElement('div');
+tooltip.id = 'infoTooltip';
+tooltip.textContent =
+{{#if (eq appType "todos")}}
+  'A simple todo list application demonstrating TinyBase\'s reactive data management with CRUD operations.';
+{{else if (eq appType "chat")}}
+  'A real-time chat application demonstrating TinyBase\'s reactive data management.';
+{{else if (eq appType "drawing")}}
+  'A collaborative drawing canvas showcasing TinyBase\'s state synchronization.';
+{{else if (eq appType "game")}}
+  'A tic-tac-toe game demonstrating turn-based logic and computed game state using TinyBase.';
+{{/if}}
+
+infoIcon.appendChild(tooltip);
+container.appendChild(infoIcon);
+
+return container;
+};
+
+const addIcon = (
+container: HTMLElement,
+src: string,
+title: string,
+): HTMLImageElement => {
+const icon = document.createElement('img');
+icon.src = src;
+icon.className = 'infoTechIcon';
+icon.title = title;
+container.appendChild(icon);
+return icon;
+};

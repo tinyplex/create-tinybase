@@ -5,6 +5,9 @@
 {{#if svelte}}
   {{addImport "import {svelte} from '@sveltejs/vite-plugin-svelte';"}}
 {{/if}}
+{{#if tinyWidgets}}
+  {{addImport "import {vanillaExtractPlugin} from '@vanilla-extract/vite-plugin';"}}
+{{/if}}
 {{#if persistPglite}}
   {{addImport "import {viteStaticCopy} from 'vite-plugin-static-copy';"}}
 {{/if}}
@@ -18,6 +21,9 @@ plugins: [
 {{/if}}
 {{#if svelte}}
   svelte(),
+{{/if}}
+{{#if tinyWidgets}}
+  vanillaExtractPlugin(),
 {{/if}}
 {{#if persistPglite}}
   viteStaticCopy({
@@ -37,9 +43,6 @@ plugins: [
   'Cross-Origin-Embedder-Policy': 'require-corp',
   },
   },
-  optimizeDeps: {
-  exclude: ['@sqlite.org/sqlite-wasm'],
-  },
 {{/if}}
 {{#if persistPglite}}
   server: {
@@ -48,8 +51,29 @@ plugins: [
   'Cross-Origin-Embedder-Policy': 'require-corp',
   },
   },
+{{/if}}
+{{#if tinyWidgets}}
+  optimizeDeps: {
+  exclude: [
+  'tinywidgets',
+  {{#if persistSqlite}}
+    '@sqlite.org/sqlite-wasm',
+  {{/if}}
+  {{#if persistPglite}}
+    '@electric-sql/pglite',
+  {{/if}}
+  ],
+  },
+{{else}}
+{{#if persistSqlite}}
+  optimizeDeps: {
+  exclude: ['@sqlite.org/sqlite-wasm'],
+  },
+{{/if}}
+{{#if persistPglite}}
   optimizeDeps: {
   exclude: ['@electric-sql/pglite'],
   },
+{{/if}}
 {{/if}}
 });

@@ -65,6 +65,13 @@ const combinations = [
     language: 'typescript',
     framework: 'react',
     appType: 'todos',
+    name: 'ts-react-todos-tinywidgets',
+    tinyWidgets: true,
+  },
+  {
+    language: 'typescript',
+    framework: 'react',
+    appType: 'todos',
     name: 'ts-react-todos-schemas',
     schemas: true,
   },
@@ -257,6 +264,9 @@ describe('todos e2e tests', {concurrent: false}, () => {
           combo.framework,
           combo.appType,
           combo.schemas,
+          'none',
+          'local-storage',
+          combo.tinyWidgets,
         );
 
         if (combo.language === 'typescript') {

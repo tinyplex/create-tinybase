@@ -1,0 +1,43 @@
+{{includeFile template="client/src/shared/info.css.hbs" output="client/src/info.css"}}
+
+<script{{#if typescript}} lang="ts" {{/if}}>
+  import './info.css';
+</script>
+
+<div id="info">
+  <div id="infoTech">
+    {{#if typescript}}
+      <img src="/ts.svg" class="infoTechIcon" title="Written in TypeScript" />
+    {{else}}
+      <img src="/js.svg" class="infoTechIcon" title="Written in JavaScript" />
+    {{/if}}
+    {{#if react}}
+      <img src="/react.svg" class="infoTechIcon" title="Built with React" />
+    {{/if}}
+    {{#if svelte}}
+      <img src="/svelte.svg" class="infoTechIcon" title="Built with Svelte" />
+    {{/if}}
+    {{#if persistSqlite}}
+      <img src="/sqlite.svg" class="infoTechIcon" title="Persists data to SQLite" />
+    {{else if persistPglite}}
+      <img src="/pglite.svg" class="infoTechIcon" title="Persists data to PGlite" />
+    {{/if}}
+    {{#if sync}}
+      <img src="/sync.svg" class="infoTechIcon" title="Data synchronization enabled" />
+    {{/if}}
+  </div>
+  <div id="infoIcon">
+    i
+    <div id="infoTooltip">
+      {{#if (eq appType "todos")}}
+        A simple todo list application demonstrating TinyBase's reactive data management with CRUD operations.
+      {{else if (eq appType "chat")}}
+        A real-time chat application demonstrating TinyBase's reactive data management.
+      {{else if (eq appType "drawing")}}
+        A collaborative drawing canvas showcasing TinyBase's state synchronization.
+      {{else if (eq appType "game")}}
+        A tic-tac-toe game demonstrating turn-based logic and computed game state using TinyBase.
+      {{/if}}
+    </div>
+  </div>
+</div>
