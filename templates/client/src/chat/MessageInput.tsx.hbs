@@ -4,17 +4,6 @@
 {{addImport "import {useValue, STORE_ID as SETTINGS_STORE_ID} from './SettingsStore';"}}
 {{addImport "import './messageInput.css';"}}
 
-{{#if tinyWidgets}}
-  {{includeFile template="client/src/chat/messageInput.css.ts.hbs" output="client/src/messageInput.css.ts"}}
-  {{addImport "import {messageInputText} from './messageInput.css.ts';"}}
-  {{addImport "import {Button, TextInput} from 'tinywidgets';"}}
-{{else}}
-  {{includeFile template="client/src/shared/Button.tsx.hbs" output="client/src/Button.{{ext}}"}}
-  {{addImport "import {Button} from './Button';"}}
-  {{includeFile template="client/src/shared/Input.tsx.hbs" output="client/src/Input.{{ext}}"}}
-  {{addImport "import {Input} from './Input';"}}
-{{/if}}
-
 export const MessageInput = () => {
 const [message, setMessage] = useState('');
 const username = useValue('username', SETTINGS_STORE_ID) || 'Anonymous';
@@ -41,9 +30,16 @@ setMessage('');
 return (
 <form onSubmit={onSubmit} id="messageInput">
   {{#if tinyWidgets}}
+    {{includeFile template="client/src/chat/messageInput.css.ts.hbs" output="client/src/messageInput.css.ts"}}
+    {{addImport "import {messageInputText} from './messageInput.css.ts';"}}
+    {{addImport "import {Button, TextInput} from 'tinywidgets';"}}
     <TextInput className={messageInputText} initialText={message} onChange={setMessage} placeholder="Type a message..." />
     <Button title="Send" variant="accent" />
   {{else}}
+    {{includeFile template="client/src/shared/Input.tsx.hbs" output="client/src/Input.{{ext}}"}}
+    {{addImport "import {Input} from './Input';"}}
+    {{includeFile template="client/src/shared/Button.tsx.hbs" output="client/src/Button.{{ext}}"}}
+    {{addImport "import {Button} from './Button';"}}
     <Input value={message} onChange={setMessage} placeholder="Type a message..." autoFocus />
     <Button type="submit" variant="primary">Send</Button>
   {{/if}}

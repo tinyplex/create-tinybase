@@ -1,12 +1,6 @@
 {{includeFile template="client/src/todos/todoItem.css.hbs" output="client/src/todoItem.css"}}
 {{addImport "import './todoItem.css';"}}
 {{addImport "import {useDelRowCallback, useRow, useSetPartialRowCallback, type TodoRow, STORE_ID} from './Store';"}}
-{{#if tinyWidgets}}
-  {{addImport "import {Button, Checkbox} from 'tinywidgets';"}}
-{{else}}
-  {{includeFile template="client/src/shared/Button.tsx.hbs" output="client/src/Button.{{ext}}"}}
-  {{addImport "import {Button} from './Button';"}}
-{{/if}}
 
 export const TodoItem = ({rowId}: {rowId: string}) => {
 const todo = useRow('todos', rowId, STORE_ID) as TodoRow;
@@ -16,6 +10,7 @@ const setPartialRow = useSetPartialRowCallback('todos', rowId, (e: React.ChangeE
   return (
   <div className={`todoItem${todo.completed ? ' completed' : '' }`}>
     {{#if tinyWidgets}}
+      {{addImport "import {Button, Checkbox} from 'tinywidgets';"}}
       <Checkbox initialChecked={todo.completed} onChange={(completed) => setPartialRow({target: {checked: completed}} as React.ChangeEvent<HTMLInputElement>)} alt={`Toggle ${todo.text}`} />
     {{else}}
       <input type="checkbox" checked={todo.completed} onChange={setPartialRow} id={`todo-${rowId}`} />
@@ -24,6 +19,8 @@ const setPartialRow = useSetPartialRowCallback('todos', rowId, (e: React.ChangeE
     {{#if tinyWidgets}}
       <Button title="Delete" onClick={delRow} />
     {{else}}
+      {{includeFile template="client/src/shared/Button.tsx.hbs" output="client/src/Button.{{ext}}"}}
+      {{addImport "import {Button} from './Button';"}}
       <Button onClick={delRow}>Delete</Button>
     {{/if}}
   </div>

@@ -2,15 +2,6 @@
 {{addImport "import {useValueState, STORE_ID} from './SettingsStore';"}}
 {{addImport "import './usernameInput.css';"}}
 
-{{#if tinyWidgets}}
-  {{includeFile template="client/src/chat/usernameInput.css.ts.hbs" output="client/src/usernameInput.css.ts"}}
-  {{addImport "import {usernameInputText} from './usernameInput.css.ts';"}}
-  {{addImport "import {TextInput} from 'tinywidgets';"}}
-{{else}}
-  {{includeFile template="client/src/shared/Input.tsx.hbs" output="client/src/Input.{{ext}}"}}
-  {{addImport "import {Input} from './Input';"}}
-{{/if}}
-
 export const UsernameInput = () => {
 const [username, setUsername] = useValueState('username', STORE_ID);
 
@@ -18,8 +9,13 @@ return (
 <div id="usernameInput">
   <label htmlFor="usernameInputField">Your name:</label>
   {{#if tinyWidgets}}
+    {{includeFile template="client/src/chat/usernameInput.css.ts.hbs" output="client/src/usernameInput.css.ts"}}
+    {{addImport "import {usernameInputText} from './usernameInput.css.ts';"}}
+    {{addImport "import {TextInput} from 'tinywidgets';"}}
     <TextInput className={usernameInputText} initialText={String(username ?? '' )} onChange={setUsername} placeholder="Enter your name" />
   {{else}}
+    {{includeFile template="client/src/shared/Input.tsx.hbs" output="client/src/Input.{{ext}}"}}
+    {{addImport "import {Input} from './Input';"}}
     <Input id="usernameInputField" value={String(username ?? '' )} onChange={setUsername} placeholder="Enter your name" />
   {{/if}}
 </div>

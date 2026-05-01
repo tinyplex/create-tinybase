@@ -2,13 +2,6 @@
 {{addImport "import './drawingControls.css';"}}
 {{addImport "import {useDelTableCallback, STORE_ID} from './CanvasStore';"}}
 
-{{#if tinyWidgets}}
-  {{addImport "import {Button} from 'tinywidgets';"}}
-{{else}}
-  {{includeFile template="client/src/shared/Button.tsx.hbs" output="client/src/Button.{{ext}}"}}
-  {{addImport "import {Button} from './Button';"}}
-{{/if}}
-
 {{includeFile template="client/src/drawing/ColorPicker.tsx.hbs" output="client/src/ColorPicker.{{ext}}"}}
 {{addImport "import {ColorPicker} from './ColorPicker';"}}
 
@@ -23,8 +16,11 @@ return (
   <ColorPicker />
   <BrushSize />
   {{#if tinyWidgets}}
+    {{addImport "import {Button} from 'tinywidgets';"}}
     <Button onClick={clearStrokes} title="Clear" variant="accent" />
   {{else}}
+    {{includeFile template="client/src/shared/Button.tsx.hbs" output="client/src/Button.{{ext}}"}}
+    {{addImport "import {Button} from './Button';"}}
     <Button onClick={clearStrokes} variant="primary">Clear</Button>
   {{/if}}
 </div>

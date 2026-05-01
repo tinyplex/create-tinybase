@@ -1,12 +1,10 @@
 {{includeFile template="client/src/shared/title.css.hbs" output="client/src/title.css"}}
 {{addImport "import './title.css';"}}
-{{#if tinyWidgets}}
-  {{addImport "import {Image} from 'tinywidgets';"}}
-{{/if}}
 
 export const Title = () => (
 <h1 id="topBarTitle">
   {{#if tinyWidgets}}
+    {{addImport "import {Image} from 'tinywidgets';"}}
     <Image src="/favicon.svg" variant="logo" alt="TinyBase" />
   {{else}}
     <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
