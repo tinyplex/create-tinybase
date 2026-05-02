@@ -4,6 +4,9 @@
 {{includeFile template="client/src/drawing/canvasStore.ts.hbs" output="client/src/canvasStore.ts"}}
 {{addImport "import {canvasStore, canvasStoreReady} from './canvasStore';"}}
 
+{{includeFile template="client/src/shared/topBar.ts.hbs" output="client/src/topBar.{{scriptExt}}"}}
+{{addImport "import {createTopBar} from './topBar';"}}
+
 {{includeFile template="client/src/shared/loading.ts.hbs" output="client/src/loading.{{ext}}"}}
 {{addImport "import {showLoading, hideLoading} from './loading';"}}
 
@@ -13,11 +16,13 @@
 {{includeFile template="client/src/drawing/canvas.ts.hbs" output="client/src/canvas.{{ext}}"}}
 {{addImport "import {createCanvas} from './canvas';"}}
 
-export const app = async () => {
-const appContainer = document.getElementById('app')!;
+export const app = async (root: HTMLElement) => {
+const appElement = document.createElement('div');
+appElement.id = 'app';
+root.replaceChildren(createTopBar(), appElement);
 
 // Show loading spinner
-const loadingDiv = showLoading(appContainer);
+const loadingDiv = showLoading(appElement);
 
 // Wait for stores to be ready
 await Promise.all([settingsStoreReady, canvasStoreReady]);
@@ -25,6 +30,6 @@ await Promise.all([settingsStoreReady, canvasStoreReady]);
 // Remove loading spinner
 hideLoading(loadingDiv);
 
-appContainer.appendChild(createDrawingControls(settingsStore, canvasStore));
-appContainer.appendChild(createCanvas(settingsStore, canvasStore));
+appElement.appendChild(createDrawingControls(settingsStore, canvasStore));
+appElement.appendChild(createCanvas(settingsStore, canvasStore));
 };

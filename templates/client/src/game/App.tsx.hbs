@@ -11,22 +11,49 @@
 {{includeFile template="client/src/game/Game.tsx.hbs" output="client/src/Game.{{ext}}"}}
 {{addImport "import {Game} from './Game';"}}
 
-export const App = () => {
+{{#if tinyWidgets}}
+  {{addImport "import {App as TinyWidgetsApp} from 'tinywidgets';"}}
+  {{includeFile template="client/src/app.css.ts.hbs" output="client/src/app.css.ts"}}
+  {{includeFile template="client/src/shared/Info.tsx.hbs" output="client/src/Info.{{componentExt}}"}}
+  {{includeFile template="client/src/shared/Title.tsx.hbs" output="client/src/Title.{{componentExt}}"}}
+  {{addImport "import './app.css.ts';"}}
+  {{addImport "import {Info} from './Info';"}}
+  {{addImport "import {Title} from './Title';"}}
+{{else}}
+  {{includeFile template="client/src/shared/TopBar.tsx.hbs" output="client/src/TopBar.{{componentExt}}"}}
+  {{addImport "import {TopBar} from './TopBar';"}}
+{{/if}}
+
+export const App = () =>
+{{#if tinyWidgets}}
+  <TinyWidgetsApp title={Title} topNavRight={Info} main={Main} />;
+{{else}}
+  (
+  <>
+    <TopBar />
+    <Main />
+  </>
+  );
+{{/if}}
+
+const Main = () => {
 const [loading, setLoading] = useState(true);
 
 return (
-<StrictMode>
-  <Provider>
-    <Store onReady={()=> setLoading(false)} />
-      {loading ? (
-      <Loading />
-      ) : (
-      <>
-        <Game />
-        <Inspector />
-      </>
-      )}
-  </Provider>
-</StrictMode>
+<div id="app">
+  <StrictMode>
+    <Provider>
+      <Store onReady={()=> setLoading(false)} />
+        {loading ? (
+        <Loading />
+        ) : (
+        <>
+          <Game />
+          <Inspector />
+        </>
+        )}
+    </Provider>
+  </StrictMode>
+</div>
 );
 };

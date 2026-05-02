@@ -20,27 +20,54 @@
 {{includeFile template="client/src/chat/MessageInput.tsx.hbs" output="client/src/MessageInput.{{ext}}"}}
 {{addImport "import {MessageInput} from './MessageInput';"}}
 
-export const App = () => {
+{{#if tinyWidgets}}
+  {{addImport "import {App as TinyWidgetsApp} from 'tinywidgets';"}}
+  {{includeFile template="client/src/app.css.ts.hbs" output="client/src/app.css.ts"}}
+  {{includeFile template="client/src/shared/Info.tsx.hbs" output="client/src/Info.{{componentExt}}"}}
+  {{includeFile template="client/src/shared/Title.tsx.hbs" output="client/src/Title.{{componentExt}}"}}
+  {{addImport "import './app.css.ts';"}}
+  {{addImport "import {Info} from './Info';"}}
+  {{addImport "import {Title} from './Title';"}}
+{{else}}
+  {{includeFile template="client/src/shared/TopBar.tsx.hbs" output="client/src/TopBar.{{componentExt}}"}}
+  {{addImport "import {TopBar} from './TopBar';"}}
+{{/if}}
+
+export const App = () =>
+{{#if tinyWidgets}}
+  <TinyWidgetsApp title={Title} topNavRight={Info} main={Main} />;
+{{else}}
+  (
+  <>
+    <TopBar />
+    <Main />
+  </>
+  );
+{{/if}}
+
+const Main = () => {
 const [settingsReady, setSettingsReady] = useState(false);
 const [chatReady, setChatReady] = useState(false);
 const loading = !settingsReady || !chatReady;
 
 return (
-<StrictMode>
-  <Provider>
-    <SettingsStore onReady={()=> setSettingsReady(true)} />
-      <ChatStore onReady={()=> setChatReady(true)} />
-        {loading ? (
-        <Loading />
-        ) : (
-        <>
-          <UsernameInput />
-          <Messages />
-          <MessageInput />
-          <Inspector />
-        </>
-        )}
-  </Provider>
-</StrictMode>
+<div id="app">
+  <StrictMode>
+    <Provider>
+      <SettingsStore onReady={()=> setSettingsReady(true)} />
+        <ChatStore onReady={()=> setChatReady(true)} />
+          {loading ? (
+          <Loading />
+          ) : (
+          <>
+            <UsernameInput />
+            <Messages />
+            <MessageInput />
+            <Inspector />
+          </>
+          )}
+    </Provider>
+  </StrictMode>
+</div>
 );
 };

@@ -1,5 +1,6 @@
 {{includeFile template="client/src/todos/Store.svelte.hbs" output="client/src/Store.svelte"}}
 {{includeFile template="client/src/shared/Loading.svelte.hbs" output="client/src/Loading.svelte"}}
+{{includeFile template="client/src/shared/TopBar.svelte.hbs" output="client/src/TopBar.svelte"}}
 {{includeFile template="client/src/todos/TodoInput.svelte.hbs" output="client/src/TodoInput.svelte"}}
 {{includeFile template="client/src/todos/TodoList.svelte.hbs" output="client/src/TodoList.svelte"}}
 
@@ -10,10 +11,13 @@
   import Store from './Store.svelte';
   import TodoInput from './TodoInput.svelte';
   import TodoList from './TodoList.svelte';
+  import TopBar from './TopBar.svelte';
 
   let loading = $state(true);
 </script>
 
+<TopBar />
+<div id="app">
   <Provider>
     <Store onReady={()=> loading = false} />
       {#if loading}
@@ -24,3 +28,4 @@
     <Inspector />
   {/if}
 </Provider>
+</div>

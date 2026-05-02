@@ -1,6 +1,7 @@
 {{includeFile template="client/src/chat/SettingsStore.svelte.hbs" output="client/src/SettingsStore.svelte"}}
 {{includeFile template="client/src/chat/ChatStore.svelte.hbs" output="client/src/ChatStore.svelte"}}
 {{includeFile template="client/src/shared/Loading.svelte.hbs" output="client/src/Loading.svelte"}}
+{{includeFile template="client/src/shared/TopBar.svelte.hbs" output="client/src/TopBar.svelte"}}
 {{includeFile template="client/src/chat/UsernameInput.svelte.hbs" output="client/src/UsernameInput.svelte"}}
 {{includeFile template="client/src/chat/Messages.svelte.hbs" output="client/src/Messages.svelte"}}
 {{includeFile template="client/src/chat/MessageInput.svelte.hbs" output="client/src/MessageInput.svelte"}}
@@ -13,6 +14,7 @@
   import MessageInput from './MessageInput.svelte';
   import Messages from './Messages.svelte';
   import SettingsStore from './SettingsStore.svelte';
+  import TopBar from './TopBar.svelte';
   import UsernameInput from './UsernameInput.svelte';
 
   let settingsReady = $state(false);
@@ -20,6 +22,8 @@
   const loading = $derived(!settingsReady || !chatReady);
 </script>
 
+<TopBar />
+<div id="app">
   <Provider>
     <SettingsStore onReady={()=> settingsReady = true} />
       <ChatStore onReady={()=> chatReady = true} />
@@ -32,3 +36,4 @@
     <Inspector />
   {/if}
 </Provider>
+</div>

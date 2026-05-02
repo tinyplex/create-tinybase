@@ -31,6 +31,19 @@
       font-family: 'Inter', sans-serif;
     }
 
+    #root {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    #app {
+      max-width: 60rem;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
     {{#unless tinyWidgets}}
       body {
         --hue: 270;
@@ -44,34 +57,12 @@
         color: var(--fg);
         background: var(--bg);
       }
-
-      #appContainer {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-      }
-
-      #app {
-        max-width: 60rem;
-        width: 100%;
-        margin: 0 auto;
-        padding: 2rem 1.5rem;
-      }
     {{/unless}}
   </style>
 </head>
 
 <body>
-  {{#if tinyWidgets}}
-    <div id="appContainer"></div>
-  {{else}}
-    <div id="appContainer">
-      {{#unless react}}
-        <div id="topBarMount"></div>
-        <div id="app"></div>
-      {{/unless}}
-    </div>
-  {{/if}}
+  <div id="root"></div>
   {{includeFile template="client/src/index.tsx.hbs" output="client/src/index.{{entryExt}}"}}
   <script type="module" src="/src/index.{{entryExt}}"></script>
 </body>

@@ -1,6 +1,7 @@
 {{includeFile template="client/src/drawing/SettingsStore.svelte.hbs" output="client/src/SettingsStore.svelte"}}
 {{includeFile template="client/src/drawing/CanvasStore.svelte.hbs" output="client/src/CanvasStore.svelte"}}
 {{includeFile template="client/src/shared/Loading.svelte.hbs" output="client/src/Loading.svelte"}}
+{{includeFile template="client/src/shared/TopBar.svelte.hbs" output="client/src/TopBar.svelte"}}
 {{includeFile template="client/src/drawing/DrawingControls.svelte.hbs" output="client/src/DrawingControls.svelte"}}
 {{includeFile template="client/src/drawing/Canvas.svelte.hbs" output="client/src/Canvas.svelte"}}
 
@@ -12,12 +13,15 @@
   import DrawingControls from './DrawingControls.svelte';
   import Loading from './Loading.svelte';
   import SettingsStore from './SettingsStore.svelte';
+  import TopBar from './TopBar.svelte';
 
   let settingsReady = $state(false);
   let canvasReady = $state(false);
   const loading = $derived(!settingsReady || !canvasReady);
 </script>
 
+<TopBar />
+<div id="app">
   <Provider>
     <SettingsStore onReady={()=> settingsReady = true} />
       <CanvasStore onReady={()=> canvasReady = true} />
@@ -29,3 +33,4 @@
     <Inspector />
   {/if}
 </Provider>
+</div>

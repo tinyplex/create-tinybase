@@ -227,10 +227,12 @@ export {App};
 import {store} from './store'; // or multiple stores
 import {createComponentName} from './componentName';
 
-const app = () => {
-  const appContainer = document.getElementById('app')!;
+const app = (root: HTMLElement) => {
+  const appElement = document.createElement('div');
+  appElement.id = 'app';
+  root.appendChild(appElement);
 
-  appContainer.appendChild(createComponentName(store));
+  appElement.appendChild(createComponentName(store));
   // ... more components
 };
 

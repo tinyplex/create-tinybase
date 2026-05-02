@@ -1,5 +1,6 @@
 {{includeFile template="client/src/game/Store.svelte.hbs" output="client/src/Store.svelte"}}
 {{includeFile template="client/src/shared/Loading.svelte.hbs" output="client/src/Loading.svelte"}}
+{{includeFile template="client/src/shared/TopBar.svelte.hbs" output="client/src/TopBar.svelte"}}
 {{includeFile template="client/src/game/Game.svelte.hbs" output="client/src/Game.svelte"}}
 
 <script{{#if typescript}} lang="ts" {{/if}}>
@@ -8,10 +9,13 @@
   import Game from './Game.svelte';
   import Loading from './Loading.svelte';
   import Store from './Store.svelte';
+  import TopBar from './TopBar.svelte';
 
   let loading = $state(true);
 </script>
 
+<TopBar />
+<div id="app">
   <Provider>
     <Store onReady={()=> loading = false} />
       {#if loading}
@@ -21,3 +25,4 @@
     <Inspector />
   {/if}
 </Provider>
+</div>

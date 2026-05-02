@@ -1,17 +1,22 @@
 {{includeFile template="client/src/game/store.ts.hbs" output="client/src/store.ts"}}
 {{addImport "import {store, storeReady} from './store';"}}
 
+{{includeFile template="client/src/shared/topBar.ts.hbs" output="client/src/topBar.{{scriptExt}}"}}
+{{addImport "import {createTopBar} from './topBar';"}}
+
 {{includeFile template="client/src/shared/loading.ts.hbs" output="client/src/loading.{{ext}}"}}
 {{addImport "import {showLoading, hideLoading} from './loading';"}}
 
 {{includeFile template="client/src/game/game.ts.hbs" output="client/src/game.{{ext}}"}}
 {{addImport "import {createGame} from './game';"}}
 
-export const app = async () => {
-const appContainer = document.getElementById('app')!;
+export const app = async (root: HTMLElement) => {
+const appElement = document.createElement('div');
+appElement.id = 'app';
+root.replaceChildren(createTopBar(), appElement);
 
 // Show loading spinner
-const loadingDiv = showLoading(appContainer);
+const loadingDiv = showLoading(appElement);
 
 // Wait for store to be ready
 await storeReady;
@@ -19,5 +24,5 @@ await storeReady;
 // Remove loading spinner
 hideLoading(loadingDiv);
 
-appContainer.appendChild(createGame(store));
+appElement.appendChild(createGame(store));
 };

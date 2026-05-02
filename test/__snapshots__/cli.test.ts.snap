@@ -99,7 +99,7 @@ with the store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -115,7 +115,7 @@ with the store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="root"></div>
 
     <script type="module" src="/src/index.jsx"></script>
   </body>
@@ -504,7 +504,7 @@ export const createChatStore = () =>
 import {App} from './App';
 
 addEventListener('load', () => {
-  ReactDOM.createRoot(document.getElementById('appContainer')).render(<App />);
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 });
 ",
   "client/src/info.css": "#info {
@@ -872,7 +872,7 @@ with the store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -888,7 +888,7 @@ with the store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="root"></div>
 
     <script type="module" src="/src/index.jsx"></script>
   </body>
@@ -1349,7 +1349,7 @@ export const createChatStore = () =>
 import {App} from './App';
 
 addEventListener('load', () => {
-  ReactDOM.createRoot(document.getElementById('appContainer')).render(<App />);
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 });
 ",
   "client/src/info.css": "#info {
@@ -1743,7 +1743,7 @@ with the store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -1759,7 +1759,7 @@ with the store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="root"></div>
 
     <script type="module" src="/src/index.jsx"></script>
   </body>
@@ -2294,7 +2294,7 @@ export const createCanvasStore = () =>
 import {App} from './App';
 
 addEventListener('load', () => {
-  ReactDOM.createRoot(document.getElementById('appContainer')).render(<App />);
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 });
 ",
   "client/src/info.css": "#info {
@@ -2560,7 +2560,7 @@ with the store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -2576,7 +2576,7 @@ with the store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="root"></div>
 
     <script type="module" src="/src/index.jsx"></script>
   </body>
@@ -2993,7 +2993,7 @@ button.primary:hover {
 import {App} from './App';
 
 addEventListener('load', () => {
-  ReactDOM.createRoot(document.getElementById('appContainer')).render(<App />);
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 });
 ",
   "client/src/info.css": "#info {
@@ -3305,7 +3305,7 @@ with the store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -3321,7 +3321,7 @@ with the store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="root"></div>
 
     <script type="module" src="/src/index.jsx"></script>
   </body>
@@ -3659,7 +3659,7 @@ button.primary:hover {
 import {App} from './App';
 
 addEventListener('load', () => {
-  ReactDOM.createRoot(document.getElementById('appContainer')).render(<App />);
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 });
 ",
   "client/src/info.css": "#info {
@@ -4065,7 +4065,7 @@ The \`server\` directory contains your Cloudflare Durable Objects WebSocket serv
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -4081,7 +4081,7 @@ The \`server\` directory contains your Cloudflare Durable Objects WebSocket serv
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="root"></div>
 
     <script type="module" src="/src/index.jsx"></script>
   </body>
@@ -4525,7 +4525,7 @@ if (location.pathname === '/') {
 }
 
 addEventListener('load', () => {
-  ReactDOM.createRoot(document.getElementById('appContainer')).render(<App />);
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 });
 ",
   "client/src/info.css": "#info {
@@ -4964,7 +4964,7 @@ stays synchronized with the underlying TinyBase store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -4980,7 +4980,7 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer">
+    <div id="root">
       <div id="topBarMount"></div>
       <div id="app"></div>
     </div>
@@ -5722,7 +5722,7 @@ stays synchronized with the underlying TinyBase store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -5738,7 +5738,7 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer">
+    <div id="root">
       <div id="topBarMount"></div>
       <div id="app"></div>
     </div>
@@ -6519,7 +6519,7 @@ stays synchronized with the underlying TinyBase store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -6535,7 +6535,7 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer">
+    <div id="root">
       <div id="topBarMount"></div>
       <div id="app"></div>
     </div>
@@ -7224,7 +7224,7 @@ stays synchronized with the underlying TinyBase store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -7240,7 +7240,7 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer">
+    <div id="root">
       <div id="topBarMount"></div>
       <div id="app"></div>
     </div>
@@ -7884,7 +7884,7 @@ Your data is automatically saved and restored when you reload the page.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -7900,7 +7900,7 @@ Your data is automatically saved and restored when you reload the page.
   </head>
 
   <body>
-    <div id="appContainer">
+    <div id="root">
       <div id="topBarMount"></div>
       <div id="app"></div>
     </div>
@@ -7946,10 +7946,10 @@ import {createUsernameInput} from './usernameInput';
 import {createMessageInput} from './messageInput';
 
 export const app = async () => {
-  const appContainer = document.getElementById('app');
+  const root = document.getElementById('app');
 
   // Show loading spinner
-  const loadingDiv = showLoading(appContainer);
+  const loadingDiv = showLoading(root);
 
   // Wait for stores to be ready
   await Promise.all([settingsStoreReady, chatStoreReady]);
@@ -7957,11 +7957,11 @@ export const app = async () => {
   // Remove loading spinner
   hideLoading(loadingDiv);
 
-  appContainer.appendChild(createUsernameInput(settingsStore, chatStore));
-  appContainer.appendChild(createMessages(chatStore));
+  root.appendChild(createUsernameInput(settingsStore, chatStore));
+  root.appendChild(createMessages(chatStore));
 
   const messageInputContainer = createMessageInput(settingsStore, chatStore);
-  appContainer.appendChild(messageInputContainer);
+  root.appendChild(messageInputContainer);
 
   const messageInput = messageInputContainer.querySelector('input');
   messageInput.focus();
@@ -8617,7 +8617,7 @@ Your data is automatically saved and restored when you reload the page.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -8633,7 +8633,7 @@ Your data is automatically saved and restored when you reload the page.
   </head>
 
   <body>
-    <div id="appContainer">
+    <div id="root">
       <div id="topBarMount"></div>
       <div id="app"></div>
     </div>
@@ -8678,10 +8678,10 @@ import {createDrawingControls} from './drawingControls';
 import {createCanvas} from './canvas';
 
 export const app = async () => {
-  const appContainer = document.getElementById('app');
+  const root = document.getElementById('app');
 
   // Show loading spinner
-  const loadingDiv = showLoading(appContainer);
+  const loadingDiv = showLoading(root);
 
   // Wait for stores to be ready
   await Promise.all([settingsStoreReady, canvasStoreReady]);
@@ -8689,8 +8689,8 @@ export const app = async () => {
   // Remove loading spinner
   hideLoading(loadingDiv);
 
-  appContainer.appendChild(createDrawingControls(settingsStore, canvasStore));
-  appContainer.appendChild(createCanvas(settingsStore, canvasStore));
+  root.appendChild(createDrawingControls(settingsStore, canvasStore));
+  root.appendChild(createCanvas(settingsStore, canvasStore));
 };
 ",
   "client/src/brushSize.css": "#brushSize {
@@ -9384,7 +9384,7 @@ The app uses **TinyBase** to manage application state in a reactive data store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -9400,7 +9400,7 @@ The app uses **TinyBase** to manage application state in a reactive data store.
   </head>
 
   <body>
-    <div id="appContainer">
+    <div id="root">
       <div id="topBarMount"></div>
       <div id="app"></div>
     </div>
@@ -9445,10 +9445,10 @@ import {createDrawingControls} from './drawingControls';
 import {createCanvas} from './canvas';
 
 export const app = async () => {
-  const appContainer = document.getElementById('app');
+  const root = document.getElementById('app');
 
   // Show loading spinner
-  const loadingDiv = showLoading(appContainer);
+  const loadingDiv = showLoading(root);
 
   // Wait for stores to be ready
   await Promise.all([settingsStoreReady, canvasStoreReady]);
@@ -9456,8 +9456,8 @@ export const app = async () => {
   // Remove loading spinner
   hideLoading(loadingDiv);
 
-  appContainer.appendChild(createDrawingControls(settingsStore, canvasStore));
-  appContainer.appendChild(createCanvas(settingsStore, canvasStore));
+  root.appendChild(createDrawingControls(settingsStore, canvasStore));
+  root.appendChild(createCanvas(settingsStore, canvasStore));
 };
 ",
   "client/src/brushSize.css": "#brushSize {
@@ -10146,7 +10146,7 @@ Your data is automatically saved and restored when you reload the page.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -10162,7 +10162,7 @@ Your data is automatically saved and restored when you reload the page.
   </head>
 
   <body>
-    <div id="appContainer">
+    <div id="root">
       <div id="topBarMount"></div>
       <div id="app"></div>
     </div>
@@ -10205,10 +10205,10 @@ import {showLoading, hideLoading} from './loading';
 import {createGame} from './game';
 
 export const app = async () => {
-  const appContainer = document.getElementById('app');
+  const root = document.getElementById('app');
 
   // Show loading spinner
-  const loadingDiv = showLoading(appContainer);
+  const loadingDiv = showLoading(root);
 
   // Wait for store to be ready
   await storeReady;
@@ -10216,7 +10216,7 @@ export const app = async () => {
   // Remove loading spinner
   hideLoading(loadingDiv);
 
-  appContainer.appendChild(createGame(store));
+  root.appendChild(createGame(store));
 };
 ",
   "client/src/board.css": "#board {
@@ -10837,7 +10837,7 @@ Your data is automatically saved and restored when you reload the page.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -10853,7 +10853,7 @@ Your data is automatically saved and restored when you reload the page.
   </head>
 
   <body>
-    <div id="appContainer">
+    <div id="root">
       <div id="topBarMount"></div>
       <div id="app"></div>
     </div>
@@ -10897,10 +10897,10 @@ import {createTodoInput} from './todoInput';
 import {createTodoList} from './todoList';
 
 export const app = async () => {
-  const appContainer = document.getElementById('app');
+  const root = document.getElementById('app');
 
   // Show loading spinner
-  const loadingDiv = showLoading(appContainer);
+  const loadingDiv = showLoading(root);
 
   // Wait for store to be ready
   await storeReady;
@@ -10909,12 +10909,12 @@ export const app = async () => {
   hideLoading(loadingDiv);
 
   const todoInputContainer = createTodoInput(store);
-  appContainer.appendChild(todoInputContainer);
+  root.appendChild(todoInputContainer);
 
   const input = todoInputContainer.querySelector('input');
   input.focus();
 
-  appContainer.appendChild(createTodoList(store));
+  root.appendChild(createTodoList(store));
 };
 ",
   "client/src/button.css": "button {
@@ -11515,7 +11515,7 @@ with the store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -11531,7 +11531,7 @@ with the store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="root"></div>
 
     <script type="module" src="/src/index.tsx"></script>
   </body>
@@ -11951,7 +11951,7 @@ export const createChatStore = () =>
 import {App} from './App';
 
 addEventListener('load', () => {
-  ReactDOM.createRoot(document.getElementById('appContainer')!).render(<App />);
+  ReactDOM.createRoot(document.getElementById('root')!).render(<App />);
 });
 ",
   "client/src/info.css": "#info {
@@ -12387,7 +12387,7 @@ The \`server\` directory contains your Node.js WebSocket server.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -12403,7 +12403,7 @@ The \`server\` directory contains your Node.js WebSocket server.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="root"></div>
 
     <script type="module" src="/src/index.tsx"></script>
   </body>
@@ -12861,7 +12861,7 @@ if (location.pathname === '/') {
 }
 
 addEventListener('load', () => {
-  ReactDOM.createRoot(document.getElementById('appContainer')!).render(<App />);
+  ReactDOM.createRoot(document.getElementById('root')!).render(<App />);
 });
 ",
   "client/src/info.css": "#info {
@@ -13294,7 +13294,7 @@ with the store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -13310,7 +13310,7 @@ with the store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="root"></div>
 
     <script type="module" src="/src/index.tsx"></script>
   </body>
@@ -13868,7 +13868,7 @@ export const createCanvasStore = () =>
 import {App} from './App';
 
 addEventListener('load', () => {
-  ReactDOM.createRoot(document.getElementById('appContainer')!).render(<App />);
+  ReactDOM.createRoot(document.getElementById('root')!).render(<App />);
 });
 ",
   "client/src/info.css": "#info {
@@ -14161,7 +14161,7 @@ with the store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -14177,7 +14177,7 @@ with the store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="root"></div>
 
     <script type="module" src="/src/index.tsx"></script>
   </body>
@@ -14614,7 +14614,7 @@ button.primary:hover {
 import {App} from './App';
 
 addEventListener('load', () => {
-  ReactDOM.createRoot(document.getElementById('appContainer')!).render(<App />);
+  ReactDOM.createRoot(document.getElementById('root')!).render(<App />);
 });
 ",
   "client/src/info.css": "#info {
@@ -14953,7 +14953,7 @@ with the store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -14969,7 +14969,7 @@ with the store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="root"></div>
 
     <script type="module" src="/src/index.tsx"></script>
   </body>
@@ -15329,7 +15329,7 @@ button.primary:hover {
 import {App} from './App';
 
 addEventListener('load', () => {
-  ReactDOM.createRoot(document.getElementById('appContainer')!).render(<App />);
+  ReactDOM.createRoot(document.getElementById('root')!).render(<App />);
 });
 ",
   "client/src/info.css": "#info {
@@ -15726,7 +15726,7 @@ with the store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -15742,7 +15742,7 @@ with the store.
   </head>
 
   <body>
-    <div id="appContainer"></div>
+    <div id="root"></div>
 
     <script type="module" src="/src/index.tsx"></script>
   </body>
@@ -16140,7 +16140,7 @@ if (location.pathname === '/') {
 }
 
 addEventListener('load', () => {
-  ReactDOM.createRoot(document.getElementById('appContainer')!).render(<App />);
+  ReactDOM.createRoot(document.getElementById('root')!).render(<App />);
 });
 ",
   "client/src/info.css": "#info {
@@ -17189,7 +17189,7 @@ stays synchronized with the underlying TinyBase store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -17205,7 +17205,7 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer">
+    <div id="root">
       <div id="topBarMount"></div>
       <div id="app"></div>
     </div>
@@ -18022,7 +18022,7 @@ stays synchronized with the underlying TinyBase store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -18038,7 +18038,7 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer">
+    <div id="root">
       <div id="topBarMount"></div>
       <div id="app"></div>
     </div>
@@ -18876,7 +18876,7 @@ stays synchronized with the underlying TinyBase store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -18892,7 +18892,7 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer">
+    <div id="root">
       <div id="topBarMount"></div>
       <div id="app"></div>
     </div>
@@ -19796,7 +19796,7 @@ stays synchronized with the underlying TinyBase store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -19812,7 +19812,7 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer">
+    <div id="root">
       <div id="topBarMount"></div>
       <div id="app"></div>
     </div>
@@ -20664,7 +20664,7 @@ stays synchronized with the underlying TinyBase store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -20680,7 +20680,7 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer">
+    <div id="root">
       <div id="topBarMount"></div>
       <div id="app"></div>
     </div>
@@ -21553,7 +21553,7 @@ stays synchronized with the underlying TinyBase store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -21569,7 +21569,7 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer">
+    <div id="root">
       <div id="topBarMount"></div>
       <div id="app"></div>
     </div>
@@ -22507,7 +22507,7 @@ stays synchronized with the underlying TinyBase store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -22523,7 +22523,7 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer">
+    <div id="root">
       <div id="topBarMount"></div>
       <div id="app"></div>
     </div>
@@ -23295,7 +23295,7 @@ stays synchronized with the underlying TinyBase store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -23311,7 +23311,7 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer">
+    <div id="root">
       <div id="topBarMount"></div>
       <div id="app"></div>
     </div>
@@ -24104,7 +24104,7 @@ stays synchronized with the underlying TinyBase store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -24120,7 +24120,7 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer">
+    <div id="root">
       <div id="topBarMount"></div>
       <div id="app"></div>
     </div>
@@ -24977,7 +24977,7 @@ stays synchronized with the underlying TinyBase store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -24993,7 +24993,7 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer">
+    <div id="root">
       <div id="topBarMount"></div>
       <div id="app"></div>
     </div>
@@ -25704,7 +25704,7 @@ stays synchronized with the underlying TinyBase store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -25720,7 +25720,7 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer">
+    <div id="root">
       <div id="topBarMount"></div>
       <div id="app"></div>
     </div>
@@ -26452,7 +26452,7 @@ stays synchronized with the underlying TinyBase store.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -26468,7 +26468,7 @@ stays synchronized with the underlying TinyBase store.
   </head>
 
   <body>
-    <div id="appContainer">
+    <div id="root">
       <div id="topBarMount"></div>
       <div id="app"></div>
     </div>
@@ -27261,7 +27261,7 @@ Your data is automatically saved and restored when you reload the page.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -27277,7 +27277,7 @@ Your data is automatically saved and restored when you reload the page.
   </head>
 
   <body>
-    <div id="appContainer">
+    <div id="root">
       <div id="topBarMount"></div>
       <div id="app"></div>
     </div>
@@ -27326,10 +27326,10 @@ import {createUsernameInput} from './usernameInput';
 import {createMessageInput} from './messageInput';
 
 export const app = async () => {
-  const appContainer = document.getElementById('app')!;
+  const root = document.getElementById('app')!;
 
   // Show loading spinner
-  const loadingDiv = showLoading(appContainer);
+  const loadingDiv = showLoading(root);
 
   // Wait for stores to be ready
   await Promise.all([settingsStoreReady, chatStoreReady]);
@@ -27337,11 +27337,11 @@ export const app = async () => {
   // Remove loading spinner
   hideLoading(loadingDiv);
 
-  appContainer.appendChild(createUsernameInput(settingsStore, chatStore));
-  appContainer.appendChild(createMessages(chatStore));
+  root.appendChild(createUsernameInput(settingsStore, chatStore));
+  root.appendChild(createMessages(chatStore));
 
   const messageInputContainer = createMessageInput(settingsStore, chatStore);
-  appContainer.appendChild(messageInputContainer);
+  root.appendChild(messageInputContainer);
 
   const messageInput = messageInputContainer.querySelector('input')!;
   messageInput.focus();
@@ -28049,7 +28049,7 @@ Your data is automatically saved and restored when you reload the page.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -28065,7 +28065,7 @@ Your data is automatically saved and restored when you reload the page.
   </head>
 
   <body>
-    <div id="appContainer">
+    <div id="root">
       <div id="topBarMount"></div>
       <div id="app"></div>
     </div>
@@ -28113,10 +28113,10 @@ import {createDrawingControls} from './drawingControls';
 import {createCanvas} from './canvas';
 
 export const app = async () => {
-  const appContainer = document.getElementById('app')!;
+  const root = document.getElementById('app')!;
 
   // Show loading spinner
-  const loadingDiv = showLoading(appContainer);
+  const loadingDiv = showLoading(root);
 
   // Wait for stores to be ready
   await Promise.all([settingsStoreReady, canvasStoreReady]);
@@ -28124,8 +28124,8 @@ export const app = async () => {
   // Remove loading spinner
   hideLoading(loadingDiv);
 
-  appContainer.appendChild(createDrawingControls(settingsStore, canvasStore));
-  appContainer.appendChild(createCanvas(settingsStore, canvasStore));
+  root.appendChild(createDrawingControls(settingsStore, canvasStore));
+  root.appendChild(createCanvas(settingsStore, canvasStore));
 };
 ",
   "client/src/brushSize.css": "#brushSize {
@@ -28873,7 +28873,7 @@ Your data is automatically saved and restored when you reload the page.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -28889,7 +28889,7 @@ Your data is automatically saved and restored when you reload the page.
   </head>
 
   <body>
-    <div id="appContainer">
+    <div id="root">
       <div id="topBarMount"></div>
       <div id="app"></div>
     </div>
@@ -28935,10 +28935,10 @@ import {showLoading, hideLoading} from './loading';
 import {createGame} from './game';
 
 export const app = async () => {
-  const appContainer = document.getElementById('app')!;
+  const root = document.getElementById('app')!;
 
   // Show loading spinner
-  const loadingDiv = showLoading(appContainer);
+  const loadingDiv = showLoading(root);
 
   // Wait for store to be ready
   await storeReady;
@@ -28946,7 +28946,7 @@ export const app = async () => {
   // Remove loading spinner
   hideLoading(loadingDiv);
 
-  appContainer.appendChild(createGame(store));
+  root.appendChild(createGame(store));
 };
 ",
   "client/src/board.css": "#board {
@@ -29608,7 +29608,7 @@ Your data is automatically saved and restored when you reload the page.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -29624,7 +29624,7 @@ Your data is automatically saved and restored when you reload the page.
   </head>
 
   <body>
-    <div id="appContainer">
+    <div id="root">
       <div id="topBarMount"></div>
       <div id="app"></div>
     </div>
@@ -29680,10 +29680,10 @@ import {showLoading, hideLoading} from './loading';
 import {createGame} from './game';
 
 export const app = async () => {
-  const appContainer = document.getElementById('app')!;
+  const root = document.getElementById('app')!;
 
   // Show loading spinner
-  const loadingDiv = showLoading(appContainer);
+  const loadingDiv = showLoading(root);
 
   // Wait for store to be ready
   await storeReady;
@@ -29691,7 +29691,7 @@ export const app = async () => {
   // Remove loading spinner
   hideLoading(loadingDiv);
 
-  appContainer.appendChild(createGame(store));
+  root.appendChild(createGame(store));
 };
 ",
   "client/src/board.css": "#board {
@@ -30394,7 +30394,7 @@ Your data is automatically saved and restored when you reload the page.
         font-family: 'Inter', sans-serif;
       }
 
-      #appContainer {
+      #root {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -30410,7 +30410,7 @@ Your data is automatically saved and restored when you reload the page.
   </head>
 
   <body>
-    <div id="appContainer">
+    <div id="root">
       <div id="topBarMount"></div>
       <div id="app"></div>
     </div>
@@ -30457,10 +30457,10 @@ import {createTodoInput} from './todoInput';
 import {createTodoList} from './todoList';
 
 export const app = async () => {
-  const appContainer = document.getElementById('app')!;
+  const root = document.getElementById('app')!;
 
   // Show loading spinner
-  const loadingDiv = showLoading(appContainer);
+  const loadingDiv = showLoading(root);
 
   // Wait for store to be ready
   await storeReady;
@@ -30469,12 +30469,12 @@ export const app = async () => {
   hideLoading(loadingDiv);
 
   const todoInputContainer = createTodoInput(store);
-  appContainer.appendChild(todoInputContainer);
+  root.appendChild(todoInputContainer);
 
   const input = todoInputContainer.querySelector('input')!;
   input.focus();
 
-  appContainer.appendChild(createTodoList(store));
+  root.appendChild(createTodoList(store));
 };
 ",
   "client/src/button.css": "button {

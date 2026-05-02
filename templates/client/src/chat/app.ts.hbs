@@ -4,6 +4,9 @@
 {{includeFile template="client/src/chat/chatStore.ts.hbs" output="client/src/chatStore.ts"}}
 {{addImport "import {chatStore, chatStoreReady} from './chatStore';"}}
 
+{{includeFile template="client/src/shared/topBar.ts.hbs" output="client/src/topBar.{{scriptExt}}"}}
+{{addImport "import {createTopBar} from './topBar';"}}
+
 {{includeFile template="client/src/shared/loading.ts.hbs" output="client/src/loading.{{ext}}"}}
 {{addImport "import {showLoading, hideLoading} from './loading';"}}
 
@@ -16,11 +19,13 @@
 {{includeFile template="client/src/chat/messageInput.ts.hbs" output="client/src/messageInput.{{ext}}"}}
 {{addImport "import {createMessageInput} from './messageInput';"}}
 
-export const app = async () => {
-const appContainer = document.getElementById('app')!;
+export const app = async (root: HTMLElement) => {
+const appElement = document.createElement('div');
+appElement.id = 'app';
+root.replaceChildren(createTopBar(), appElement);
 
 // Show loading spinner
-const loadingDiv = showLoading(appContainer);
+const loadingDiv = showLoading(appElement);
 
 // Wait for stores to be ready
 await Promise.all([settingsStoreReady, chatStoreReady]);
@@ -28,11 +33,11 @@ await Promise.all([settingsStoreReady, chatStoreReady]);
 // Remove loading spinner
 hideLoading(loadingDiv);
 
-appContainer.appendChild(createUsernameInput(settingsStore, chatStore));
-appContainer.appendChild(createMessages(chatStore));
+appElement.appendChild(createUsernameInput(settingsStore, chatStore));
+appElement.appendChild(createMessages(chatStore));
 
 const messageInputContainer = createMessageInput(settingsStore, chatStore);
-appContainer.appendChild(messageInputContainer);
+appElement.appendChild(messageInputContainer);
 
 const messageInput = messageInputContainer.querySelector('input')!;
 messageInput.focus();

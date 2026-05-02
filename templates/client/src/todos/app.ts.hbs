@@ -1,5 +1,7 @@
 {{includeFile template="client/src/todos/store.ts.hbs" output="client/src/store.ts"}}
 {{addImport "import {store, storeReady} from './store';"}}
+{{includeFile template="client/src/shared/topBar.ts.hbs" output="client/src/topBar.{{scriptExt}}"}}
+{{addImport "import {createTopBar} from './topBar';"}}
 {{includeFile template="client/src/shared/loading.ts.hbs" output="client/src/loading.{{ext}}"}}
 {{addImport "import {showLoading, hideLoading} from './loading';"}}
 {{includeFile template="client/src/todos/todoInput.ts.hbs" output="client/src/todoInput.{{ext}}"}}
@@ -7,11 +9,13 @@
 {{includeFile template="client/src/todos/todoList.ts.hbs" output="client/src/todoList.{{ext}}"}}
 {{addImport "import {createTodoList} from './todoList';"}}
 
-export const app = async () => {
-const appContainer = document.getElementById('app')!;
+export const app = async (root: HTMLElement) => {
+const appElement = document.createElement('div');
+appElement.id = 'app';
+root.replaceChildren(createTopBar(), appElement);
 
 // Show loading spinner
-const loadingDiv = showLoading(appContainer);
+const loadingDiv = showLoading(appElement);
 
 // Wait for store to be ready
 await storeReady;
@@ -20,10 +24,10 @@ await storeReady;
 hideLoading(loadingDiv);
 
 const todoInputContainer = createTodoInput(store);
-appContainer.appendChild(todoInputContainer);
+appElement.appendChild(todoInputContainer);
 
 const input = todoInputContainer.querySelector('input')!;
 input.focus();
 
-appContainer.appendChild(createTodoList(store));
+appElement.appendChild(createTodoList(store));
 };
