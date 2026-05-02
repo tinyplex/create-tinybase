@@ -1,8 +1,5 @@
 {{addImport "import {useSetValuesCallback, useTableListener, STORE_ID} from './Store';"}}
 
-{{includeFile template="client/src/shared/Button.tsx.hbs" output="client/src/Button.{{ext}}"}}
-{{addImport "import {Button} from './Button';"}}
-
 {{includeFile template="client/src/game/Board.tsx.hbs" output="client/src/Board.{{ext}}"}}
 {{addImport "import {Board} from './Board';"}}
 
@@ -53,6 +50,8 @@ const resetGame = useSetValuesCallback(
 store.delTable('board');
 return {currentPlayer: 'X',
 gameStatus: 'playing',
+winner: '',
+winningLine: '',
 };
 },
 [],
@@ -64,7 +63,14 @@ return (
   <GameStatus />
   <Board />
   <div style=\{{textAlign: 'center', marginTop: '2rem'}}>
-    <Button onClick={resetGame} variant="primary">New Game</Button>
+    {{#if tinyWidgets}}
+      {{addImport "import {Button} from 'tinywidgets';"}}
+      <Button onClick={resetGame} title="New Game" variant="accent" />
+    {{else}}
+      {{includeFile template="client/src/shared/Button.tsx.hbs" output="client/src/Button.{{ext}}"}}
+      {{addImport "import {Button} from './Button';"}}
+      <Button onClick={resetGame} variant="primary">New Game</Button>
+    {{/if}}
   </div>
 </>
 );

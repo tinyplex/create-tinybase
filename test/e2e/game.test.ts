@@ -223,6 +223,38 @@ async function testGameApp(page: Page) {
 
   const bodyText = await page.evaluate(() => document.body.textContent);
   expect(bodyText).toMatch(/won|wins|winner/i);
+
+  const hasNewGameButton = await page.evaluate(() =>
+    [...document.querySelectorAll('button')].some((button) =>
+      [button.textContent, button.title, button.ariaLabel].some((label) =>
+        label?.match(/new game/i),
+      ),
+    ),
+  );
+  expect(hasNewGameButton).toBe(true);
+
+  await page.evaluate(() =>
+    [...document.querySelectorAll('button')]
+      .find((button) =>
+        [button.textContent, button.title, button.ariaLabel].some((label) =>
+          label?.match(/new game/i),
+        ),
+      )
+      ?.click(),
+  );
+  await page.waitForFunction(() => {
+    const squares = [
+      ...document.querySelectorAll('button.square, button[class*="square"]'),
+    ];
+    return (
+      squares.length >= 9 &&
+      squares.every((square) => square.textContent?.trim() === '') &&
+      document.body.textContent?.match(/player\s*x.*turn/i)
+    );
+  });
+
+  const resetBodyText = await page.evaluate(() => document.body.textContent);
+  expect(resetBodyText).not.toMatch(/won|wins|winner/i);
 }
 
 async function testGamePersistence(page: Page, persistenceType: string) {
