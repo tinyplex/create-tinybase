@@ -5,7 +5,7 @@
 
 # {{projectName}}
 
-A TinyBase app built with {{#if typescript}}TypeScript{{else}}JavaScript{{/if}} and {{frameworkName}}.
+A TinyBase app built with {{#if typescript}}TypeScript{{else}}JavaScript{{/if}} and {{frameworkName}}{{#if tinyWidgets}}, using TinyWidgets components{{/if}}.
 
 ## Getting Started
 
@@ -55,7 +55,12 @@ built with Vite and {{#if typescript}}TypeScript{{else}}JavaScript{{/if}}.
 {{#if needsSettingsStore}}
   - **`src/{{settingsStoreStem}}.{{settingsStoreExt}}`**: TinyBase settings store (not synchronized)
 {{/if}}
+{{#if tinyWidgets}}
+- **`src/app.css.ts`**: TinyWidgets theme variables for the generated app
+{{/if}}
+{{#if sync}}
 - **`src/config.{{configExt}}`**: Configuration settings{{#if server}} (including server connection URL){{/if}}
+{{/if}}
 
 #### How It Works
 
@@ -105,6 +110,13 @@ The app uses **TinyBase** to manage application state in a reactive data store.
   {{else}}`Game` uses TinyBase hooks to manage game state{{/if}} to interact
   with the store.
 
+{{#if tinyWidgets}}
+  **TinyWidgets UI**: This React app uses TinyWidgets for its app shell and
+  shared interface controls, including the top navigation, title, info badges,
+  buttons, inputs, and other common UI elements. The generated TinyBase
+  components still own the app behavior and store interactions.
+
+{{/if}}
 {{/if}}
 {{#if svelte}}
   **Svelte Integration**: TinyBase provides Svelte stores and helpers that keep the

@@ -20,6 +20,7 @@ This will prompt you with questions to configure your new TinyBase app:
 - **Project name** - Name of your project directory
 - **Language** - TypeScript or JavaScript
 - **Framework** - Vanilla JS, React, or Svelte
+- **TinyWidgets** - Use TinyWidgets components and app shell (React only)
 - **App type** - Todo app, Chat app, Drawing app, or Tic-tac-toe game
 - **Store schemas** - TypeScript type safety for stores (TypeScript only)
 - **Synchronization** - None, remote demo server, local Node server, or local Durable Objects server
@@ -120,6 +121,13 @@ are the details of what each option entails:
 - React hooks for TinyBase stores
 - Automatic re-rendering on store updates
 - Full ecosystem support
+
+React apps can optionally use **TinyWidgets**:
+
+- Pre-built TinyWidgets app shell, top navigation, inputs, buttons, and controls
+- Consistent visual styling across generated React examples
+- TinyBase title and technology badges integrated into the app chrome
+- Available for React projects only
 
 **Svelte** provides:
 
@@ -267,6 +275,7 @@ my-tinybase-app/
 │   └── src/             # Source code
 │       ├── App.tsx      # Main app component (React/Svelte)
 │       ├── Store.tsx    # TinyBase store setup
+│       ├── app.css.ts   # TinyWidgets theme variables (React + TinyWidgets only)
 │       └── ...          # App-specific components
 └── server/              # Server code (optional)
     ├── package.json     # Server dependencies
