@@ -372,6 +372,7 @@ describe('drawing e2e tests', {concurrent: false}, () => {
             combo.framework,
             combo.appType,
             testDrawingApp,
+            combo.name,
           );
         } finally {
           if (devServer) {

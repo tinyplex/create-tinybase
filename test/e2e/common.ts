@@ -476,6 +476,7 @@ export async function testBasicApp(
   framework: string,
   appType: string,
   testFunction: (page: Page) => Promise<void>,
+  screenshotName: string,
 ) {
   const url = `http://localhost:${port}`;
   const page = await browser.newPage();
@@ -483,30 +484,33 @@ export async function testBasicApp(
   const {checkErrors} = setupPageErrorHandling(page);
 
   try {
+    await page.evaluateOnNewDocument(() => {
+      Math.random = () => 0.5;
+    });
     await page.goto(url, {waitUntil: 'domcontentloaded'});
     await page.waitForFunction(() => !document.getElementById('loading'));
+    await page.evaluate(() => document.fonts.ready.then(() => undefined));
+    await page.evaluate(
+      () =>
+        new Promise((resolve) =>
+          requestAnimationFrame(() => requestAnimationFrame(resolve)),
+        ),
+    );
 
     expect(await page.title()).toContain('TinyBase');
     await waitForTextInPage(page, 'TinyBase');
 
-    if (framework === 'react') {
-      await page.waitForFunction(() => {
-        const app = document.getElementById('app');
-        return app && app.children.length > 0;
-      });
+    await page.waitForFunction(() => {
+      const app = document.getElementById('app');
+      return app && app.children.length > 0;
+    });
 
-      const screenshotPath = join(
-        __dirname,
-        '..',
-        '..',
-        'screenshots',
-        `${appType}.png`,
-      );
-      await page.screenshot({
-        path: screenshotPath,
-        fullPage: false,
-      });
-    }
+    const screenshotDir = join(__dirname, '..', '..', 'screenshots', 'e2e');
+    await mkdir(screenshotDir, {recursive: true});
+    await page.screenshot({
+      path: join(screenshotDir, `${screenshotName}.png`),
+      fullPage: false,
+    });
 
     await testFunction(page);
 

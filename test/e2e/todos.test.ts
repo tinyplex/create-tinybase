@@ -294,6 +294,7 @@ describe('todos e2e tests', {concurrent: false}, () => {
             combo.framework,
             combo.appType,
             testTodosApp,
+            combo.name,
           );
         } finally {
           if (devServer) {

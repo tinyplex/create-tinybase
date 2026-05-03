@@ -358,7 +358,13 @@ describe('game e2e tests', {concurrent: false}, () => {
         try {
           devServer = await startDevServer(projectPath, port);
 
-          await testBasicApp(port, combo.framework, combo.appType, testGameApp);
+          await testBasicApp(
+            port,
+            combo.framework,
+            combo.appType,
+            testGameApp,
+            combo.name,
+          );
         } finally {
           if (devServer) {
             await killProcess(devServer);

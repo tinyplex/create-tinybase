@@ -274,7 +274,13 @@ describe('chat e2e tests', {concurrent: false}, () => {
         try {
           devServer = await startDevServer(projectPath, port);
 
-          await testBasicApp(port, combo.framework, combo.appType, testChatApp);
+          await testBasicApp(
+            port,
+            combo.framework,
+            combo.appType,
+            testChatApp,
+            combo.name,
+          );
         } finally {
           if (devServer) {
             await killProcess(devServer);
