@@ -1,6 +1,8 @@
 {{addImport "import {StrictMode, useState} from 'react';"}}
-{{includeFile template="client/src/shared/Loading.tsx.hbs" output="client/src/Loading.{{ext}}"}}
-{{addImport "import {Loading} from './Loading';"}}
+{{#unless tinyWidgets}}
+  {{includeFile template="client/src/shared/Loading.tsx.hbs" output="client/src/Loading.{{ext}}"}}
+  {{addImport "import {Loading} from './Loading';"}}
+{{/unless}}
 
 {{addImport "import {Provider} from 'tinybase/ui-react';"}}
 {{addImport "import {Inspector} from 'tinybase/ui-react-inspector';"}}
@@ -21,7 +23,7 @@
 {{addImport "import {MessageInput} from './MessageInput';"}}
 
 {{#if tinyWidgets}}
-  {{addImport "import {App as TinyWidgetsApp} from 'tinywidgets';"}}
+  {{addImport "import {App as TinyWidgetsApp, Loading} from 'tinywidgets';"}}
   {{includeFile template="client/src/app.css.ts.hbs" output="client/src/app.css.ts"}}
   {{includeFile template="client/src/shared/Info.tsx.hbs" output="client/src/Info.{{componentExt}}"}}
   {{includeFile template="client/src/shared/Title.tsx.hbs" output="client/src/Title.{{componentExt}}"}}
@@ -57,7 +59,7 @@ return (
       <SettingsStore onReady={()=> setSettingsReady(true)} />
         <ChatStore onReady={()=> setChatReady(true)} />
           {loading ? (
-          <Loading />
+          {{#if tinyWidgets}}<div id="loading">{{/if}}<Loading />{{#if tinyWidgets}}</div>{{/if}}
           ) : (
           <>
             <UsernameInput />

@@ -16692,13 +16692,12 @@ components still own the app behavior and store interactions.
     fill="#fff" fill-rule="evenodd" />
 </svg>",
   "client/src/App.tsx": "import {StrictMode, useState} from 'react';
-import {Loading} from './Loading';
 import {Provider} from 'tinybase/ui-react';
 import {Inspector} from 'tinybase/ui-react-inspector';
 import {Store} from './Store';
 import {TodoInput} from './TodoInput';
 import {TodoList} from './TodoList';
-import {App as TinyWidgetsApp} from 'tinywidgets';
+import {App as TinyWidgetsApp, Loading} from 'tinywidgets';
 import './app.css.ts';
 import {Info} from './Info';
 import {Title} from './Title';
@@ -16716,7 +16715,9 @@ const Main = () => {
         <Provider>
           <Store onReady={() => setLoading(false)} />
           {loading ? (
-            <Loading />
+            <div id="loading">
+              <Loading />
+            </div>
           ) : (
             <>
               <TodoInput />
@@ -16767,10 +16768,6 @@ const infoStyle = {
   '--info-border': colors.borderColor,
   '--info-accent': colors.accent,
 } as CSSProperties;
-",
-  "client/src/Loading.tsx": "import './loading.css';
-
-export const Loading = () => <div id="loading" />;
 ",
   "client/src/Store.tsx": "import {
   useCreateMergeableStore,
@@ -17037,26 +17034,6 @@ addEventListener('load', () => {
   border-left: 1px solid var(--info-border);
   border-top: 1px solid var(--info-border);
   transform: rotate(45deg);
-}
-",
-  "client/src/loading.css": "#loading {
-  animation: spin 1s infinite linear;
-  height: 2rem;
-  margin: 40vh auto;
-  width: 2rem;
-}
-
-#loading::before {
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
 ",
   "client/src/storeData.ts": "import {createMergeableStore} from 'tinybase';

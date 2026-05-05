@@ -544,6 +544,8 @@ describe('create-tinybase', () => {
 
         if (combo.tinyWidgets) {
           expect(files).toContain('client/src/Info.tsx');
+          expect(files).not.toContain('client/src/Loading.tsx');
+          expect(files).not.toContain('client/src/loading.css');
         }
 
         if (combo.framework === 'svelte') {
