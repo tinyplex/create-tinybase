@@ -169,7 +169,7 @@ async function testChatPersistence(page: Page, persistenceType: string) {
   const usernameInput = await page.waitForSelector(
     'input[placeholder*="name" i]',
   );
-  await usernameInput!.click({clickCount: 3});
+  await usernameInput!.click({count: 3});
   await usernameInput!.type('PersistUser');
 
   await page.waitForSelector(messageInputSelector);

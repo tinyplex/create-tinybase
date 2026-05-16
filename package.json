@@ -44,17 +44,17 @@
     "node": ">=18.0.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.2",
-    "@types/node": "^25.5.0",
-    "esbuild": "^0.27.4",
-    "eslint": "^9.39.2",
+    "@eslint/js": "^9.39.4",
+    "@types/node": "^25.8.0",
+    "esbuild": "^0.28.0",
+    "eslint": "^9.39.4",
     "eslint-plugin-import": "^2.32.0",
-    "globals": "^17.4.0",
-    "prettier": "^3.8.1",
+    "globals": "^17.6.0",
+    "prettier": "^3.8.3",
     "prettier-plugin-organize-imports": "^4.3.0",
-    "puppeteer": "^24.40.0",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.58.0",
-    "vitest": "^4.1.2"
+    "puppeteer": "^25.0.2",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.3",
+    "vitest": "^4.1.6"
   }
 }
