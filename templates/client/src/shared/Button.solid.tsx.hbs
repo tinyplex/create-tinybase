@@ -1,0 +1,16 @@
+{{includeFile template="client/src/shared/button.css.hbs" output="client/src/button.css"}}
+{{addImport "import './button.css';"}}
+{{addImport "import type {JSXElement} from 'solid-js';"}}
+
+interface ButtonProps {
+children: JSXElement;
+onClick?: () => void;
+variant?: 'default' | 'primary';
+type?: 'button' | 'submit';
+}
+
+export const Button = (props: ButtonProps) => (
+<button onClick={props.onClick} type={props.type ?? 'button'} class={props.variant === 'primary' ? 'primary' : undefined}>
+  {props.children}
+</button>
+);

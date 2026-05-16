@@ -1,0 +1,16 @@
+{{includeFile template="client/src/chat/usernameInput.css.hbs" output="client/src/usernameInput.css"}}
+{{addImport "import {useValueState, STORE_ID} from './SettingsStore';"}}
+{{addImport "import './usernameInput.css';"}}
+{{includeFile template="client/src/shared/Input.solid.tsx.hbs" output="client/src/Input.{{ext}}"}}
+{{addImport "import {Input} from './Input';"}}
+
+export const UsernameInput = () => {
+const [username, setUsername] = useValueState('username', STORE_ID) as [() => string | undefined, (value: string) => void];
+
+return (
+<div id="usernameInput">
+  <label for="usernameInputField">Your name:</label>
+  <Input id="usernameInputField" value={String(username() ?? '')} onChange={setUsername} placeholder="Enter your name" />
+</div>
+);
+};

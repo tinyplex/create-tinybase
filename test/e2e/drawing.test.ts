@@ -44,6 +44,18 @@ const combinations = [
   },
   {
     language: 'javascript',
+    framework: 'solid',
+    appType: 'drawing',
+    name: 'js-solid-drawing',
+  },
+  {
+    language: 'typescript',
+    framework: 'solid',
+    appType: 'drawing',
+    name: 'ts-solid-drawing',
+  },
+  {
+    language: 'javascript',
     framework: 'svelte',
     appType: 'drawing',
     name: 'js-svelte-drawing',
@@ -73,6 +85,13 @@ const combinations = [
     framework: 'react',
     appType: 'drawing',
     name: 'ts-react-drawing-schemas',
+    schemas: true,
+  },
+  {
+    language: 'typescript',
+    framework: 'solid',
+    appType: 'drawing',
+    name: 'ts-solid-drawing-schemas',
     schemas: true,
   },
   {
@@ -115,6 +134,20 @@ const persistenceCombinations = [
   },
   {
     language: 'typescript',
+    framework: 'solid',
+    appType: 'drawing',
+    persistenceType: 'sqlite',
+    name: 'ts-solid-drawing-persist-sqlite',
+  },
+  {
+    language: 'typescript',
+    framework: 'solid',
+    appType: 'drawing',
+    persistenceType: 'pglite',
+    name: 'ts-solid-drawing-persist-pglite',
+  },
+  {
+    language: 'typescript',
     framework: 'svelte',
     appType: 'drawing',
     persistenceType: 'sqlite',
@@ -141,6 +174,12 @@ const syncCombinations = [
     framework: 'react',
     appType: 'drawing',
     name: 'js-react-drawing-sync',
+  },
+  {
+    language: 'javascript',
+    framework: 'solid',
+    appType: 'drawing',
+    name: 'js-solid-drawing-sync',
   },
   {
     language: 'javascript',

@@ -43,6 +43,18 @@ const combinations = [
   },
   {
     language: 'javascript',
+    framework: 'solid',
+    appType: 'game',
+    name: 'js-solid-game',
+  },
+  {
+    language: 'typescript',
+    framework: 'solid',
+    appType: 'game',
+    name: 'ts-solid-game',
+  },
+  {
+    language: 'javascript',
     framework: 'svelte',
     appType: 'game',
     name: 'js-svelte-game',
@@ -72,6 +84,13 @@ const combinations = [
     framework: 'react',
     appType: 'game',
     name: 'ts-react-game-schemas',
+    schemas: true,
+  },
+  {
+    language: 'typescript',
+    framework: 'solid',
+    appType: 'game',
+    name: 'ts-solid-game-schemas',
     schemas: true,
   },
   {
@@ -114,6 +133,20 @@ const persistenceCombinations = [
   },
   {
     language: 'typescript',
+    framework: 'solid',
+    appType: 'game',
+    persistenceType: 'sqlite',
+    name: 'ts-solid-game-persist-sqlite',
+  },
+  {
+    language: 'typescript',
+    framework: 'solid',
+    appType: 'game',
+    persistenceType: 'pglite',
+    name: 'ts-solid-game-persist-pglite',
+  },
+  {
+    language: 'typescript',
     framework: 'svelte',
     appType: 'game',
     persistenceType: 'sqlite',
@@ -140,6 +173,12 @@ const syncCombinations = [
     framework: 'react',
     appType: 'game',
     name: 'js-react-game-sync',
+  },
+  {
+    language: 'javascript',
+    framework: 'solid',
+    appType: 'game',
+    name: 'js-solid-game-sync',
   },
   {
     language: 'javascript',

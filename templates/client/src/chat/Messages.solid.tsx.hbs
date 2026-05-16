@@ -1,0 +1,18 @@
+{{addImport "import {For} from 'solid-js';"}}
+{{addImport "import {useSortedRowIds, STORE_ID} from './ChatStore';"}}
+
+{{includeFile template="client/src/chat/messages.css.hbs" output="client/src/messages.css"}}
+{{addImport "import './messages.css';"}}
+
+{{includeFile template="client/src/chat/Message.solid.tsx.hbs" output="client/src/Message.{{ext}}"}}
+{{addImport "import {Message} from './Message';"}}
+
+export const Messages = () => {
+const sortedIds = useSortedRowIds('messages', 'timestamp', false, 0, undefined, STORE_ID);
+
+return (
+<div id="messages">
+  <For each={sortedIds()}>{(id) => <Message rowId={id} />}</For>
+</div>
+);
+};

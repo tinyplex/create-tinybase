@@ -118,6 +118,20 @@ The app uses **TinyBase** to manage application state in a reactive data store.
 
 {{/if}}
 {{/if}}
+{{#if solid}}
+  **Solid Integration**: TinyBase provides Solid primitives that automatically
+  subscribe to store changes and update the UI through Solid's fine-grained
+  reactivity. Components can read TinyBase data as accessors and use callback
+  primitives to change the store.
+
+  Components like {{#if (eq appType "todos")}}`TodoList` and `TodoItem` use primitives like `useSortedRowIds`, `useRow`, and
+    callback primitives like `useAddRowCallback` and `useDelRowCallback`
+  {{else if (eq appType "chat")}}`MessageList` and `MessageInput` use TinyBase primitives to display and send messages
+  {{else if (eq appType "drawing")}}`Canvas` uses TinyBase primitives to track drawing state across users
+  {{else}}`Game` uses TinyBase primitives to manage game state{{/if}} to interact
+  with the store.
+
+{{/if}}
 {{#if svelte}}
   **Svelte Integration**: TinyBase provides Svelte stores and helpers that keep the
   UI reactive as data changes. Components subscribe declaratively so the interface

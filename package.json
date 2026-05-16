@@ -17,6 +17,7 @@
     "state",
     "data",
     "react",
+    "solid",
     "svelte",
     "sqlite",
     "pglite",

@@ -97,6 +97,7 @@ const config = {
       choices: [
         {title: 'Vanilla', value: 'vanilla'},
         {title: 'React', value: 'react'},
+        {title: 'Solid', value: 'solid'},
         {title: 'Svelte', value: 'svelte'},
       ],
       initial: 0,
@@ -182,6 +183,7 @@ const config = {
     const typescript = language === 'typescript';
     const javascript = !typescript;
     const react = framework === 'react';
+    const solid = framework === 'solid';
     const vanilla = framework === 'vanilla';
     const svelte = framework === 'svelte';
     const useTinyWidgets =
@@ -190,10 +192,10 @@ const config = {
     const componentExt = svelte
       ? 'svelte'
       : typescript
-        ? react
+        ? react || solid
           ? 'tsx'
           : 'ts'
-        : react
+        : react || solid
           ? 'jsx'
           : 'js';
     const entryExt = svelte ? scriptExt : componentExt;
@@ -210,7 +212,12 @@ const config = {
     const persistSqlite = normalizedPersistenceType === 'sqlite';
     const persistPglite = normalizedPersistenceType === 'pglite';
     const needsViteConfig =
-      react || svelte || persistSqlite || persistPglite || useTinyWidgets;
+      react ||
+      solid ||
+      svelte ||
+      persistSqlite ||
+      persistPglite ||
+      useTinyWidgets;
     const appSurface =
       appType === 'chat'
         ? 'chat interface'
@@ -219,36 +226,49 @@ const config = {
           : appType === 'game'
             ? 'game'
             : 'todo list';
-    const frameworkName = react ? 'React' : vanilla ? 'Vanilla JS' : 'Svelte';
+    const frameworkName = react
+      ? 'React'
+      : solid
+        ? 'Solid'
+        : vanilla
+          ? 'Vanilla JS'
+          : 'Svelte';
     const clientFrameworkDescription = react
       ? 'React-based'
-      : vanilla
-        ? 'vanilla JavaScript'
-        : 'Svelte-based';
+      : solid
+        ? 'Solid-based'
+        : vanilla
+          ? 'vanilla JavaScript'
+          : 'Svelte-based';
     const entryFileDescription = react
       ? 'Entry point that bootstraps and renders the React app'
-      : svelte
-        ? 'Entry point that bootstraps and mounts the Svelte app'
-        : 'Entry point that bootstraps the app';
+      : solid
+        ? 'Entry point that bootstraps and renders the Solid app'
+        : svelte
+          ? 'Entry point that bootstraps and mounts the Svelte app'
+          : 'Entry point that bootstraps the app';
     const appFileStem = vanilla ? 'app' : 'App';
     const appFileExt = vanilla ? scriptExt : componentExt;
     const appFileDescription = react
       ? `Main React component that renders the ${appSurface}`
-      : vanilla
-        ? 'Main application logic'
-        : `Main Svelte component that renders the ${appSurface}`;
-    const primaryStoreStem = react
-      ? appType === 'chat'
-        ? 'ChatStore'
-        : appType === 'drawing'
-          ? 'CanvasStore'
-          : 'Store'
-      : appType === 'chat'
-        ? 'chatStore'
-        : appType === 'drawing'
-          ? 'canvasStore'
-          : 'store';
-    const primaryStoreExt = react ? componentExt : scriptExt;
+      : solid
+        ? `Main Solid component that renders the ${appSurface}`
+        : vanilla
+          ? 'Main application logic'
+          : `Main Svelte component that renders the ${appSurface}`;
+    const primaryStoreStem =
+      react || solid
+        ? appType === 'chat'
+          ? 'ChatStore'
+          : appType === 'drawing'
+            ? 'CanvasStore'
+            : 'Store'
+        : appType === 'chat'
+          ? 'chatStore'
+          : appType === 'drawing'
+            ? 'canvasStore'
+            : 'store';
+    const primaryStoreExt = react || solid ? componentExt : scriptExt;
     const primaryStoreDescription = `TinyBase ${
       appType === 'chat'
         ? 'chat messages'
@@ -257,14 +277,16 @@ const config = {
           : 'main'
     } store configuration`;
     const needsSettingsStore = appType === 'chat' || appType === 'drawing';
-    const settingsStoreStem = react ? 'SettingsStore' : 'settingsStore';
-    const settingsStoreExt = react ? componentExt : scriptExt;
-    const configExt = react ? componentExt : scriptExt;
+    const settingsStoreStem =
+      react || solid ? 'SettingsStore' : 'settingsStore';
+    const settingsStoreExt = react || solid ? componentExt : scriptExt;
+    const configExt = react || solid ? componentExt : scriptExt;
     const techIcons = [
       typescript
         ? {src: '/ts.svg', title: 'Written in TypeScript'}
         : {src: '/js.svg', title: 'Written in JavaScript'},
       ...(react ? [{src: '/react.svg', title: 'Built with React'}] : []),
+      ...(solid ? [{src: '/solid.svg', title: 'Built with Solid'}] : []),
       ...(useTinyWidgets
         ? [{src: '/tinywidgets.svg', title: 'Uses TinyWidgets components'}]
         : []),
@@ -317,6 +339,7 @@ const config = {
       typescript,
       javascript,
       react,
+      solid,
       vanilla,
       svelte,
       scriptExt,

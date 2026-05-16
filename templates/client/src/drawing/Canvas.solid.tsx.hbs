@@ -1,0 +1,107 @@
+{{includeFile template="client/src/drawing/canvas.css.hbs" output="client/src/canvas.css"}}
+{{addImport "import {createEffect} from 'solid-js';"}}
+{{addImport "import {useSortedRowIds, useTable, useStore, type StrokeRow, STORE_ID as CANVAS_STORE_ID} from './CanvasStore';"}}
+{{addImport "import {useValues, STORE_ID as SETTINGS_STORE_ID} from './SettingsStore';"}}
+{{addImport "import {getHlcFunctions} from 'tinybase';"}}
+{{addImport "import './canvas.css';"}}
+
+const [getNextHlc] = getHlcFunctions();
+
+export const Canvas = () => {
+let canvas!: HTMLCanvasElement;
+let isDrawing = false;
+let currentStrokeId: string | null = null;
+const settings = useValues(SETTINGS_STORE_ID);
+const sortedIds = useSortedRowIds('strokes', undefined, false, 0, undefined, CANVAS_STORE_ID);
+const strokes = useTable('strokes', CANVAS_STORE_ID);
+const store = useStore(CANVAS_STORE_ID);
+
+const draw = () => {
+const ctx = canvas.getContext('2d');
+if (!ctx) return;
+
+ctx.fillStyle = '#111';
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+sortedIds().forEach((id) => {
+const stroke = store()?.getRow('strokes', id) as StrokeRow | undefined;
+if (stroke?.points) {
+const pointsArray = JSON.parse(stroke.points) as number[];
+if (pointsArray.length >= 2) {
+ctx.strokeStyle = stroke.color;
+ctx.lineWidth = stroke.size * 2;
+ctx.lineCap = 'round';
+ctx.lineJoin = 'round';
+ctx.beginPath();
+ctx.moveTo(pointsArray[0], pointsArray[1]);
+for (let i = 2; i < pointsArray.length; i += 2) {
+ctx.lineTo(pointsArray[i], pointsArray[i + 1]);
+}
+ctx.stroke();
+}
+}
+});
+};
+
+createEffect(() => {
+strokes();
+draw();
+});
+
+const getPoint = (event: MouseEvent | TouchEvent) => {
+const rect = canvas.getBoundingClientRect();
+const clientX = 'touches' in event ? event.touches[0].clientX : event.clientX;
+const clientY = 'touches' in event ? event.touches[0].clientY : event.clientY;
+
+return {
+x: clientX - rect.left,
+y: clientY - rect.top,
+};
+};
+
+const handleStart = (event: MouseEvent | TouchEvent) => {
+isDrawing = true;
+currentStrokeId = getNextHlc();
+
+const point = getPoint(event);
+if (point && store()) {
+store()!.setRow('strokes', currentStrokeId, {
+color: String(settings().brushColor),
+size: Number(settings().brushSize),
+points: JSON.stringify([point.x, point.y]),
+});
+}
+};
+
+const handleMove = (event: MouseEvent | TouchEvent) => {
+if (isDrawing && currentStrokeId && store()) {
+const point = getPoint(event);
+if (point) {
+const pointsArray = JSON.parse((store()!.getCell('strokes', currentStrokeId, 'points') as string) ?? '[]');
+pointsArray.push(point.x, point.y);
+store()!.setCell('strokes', currentStrokeId, 'points', JSON.stringify(pointsArray));
+}
+}
+};
+
+const handleEnd = () => {
+isDrawing = false;
+currentStrokeId = null;
+};
+
+return (
+<canvas
+  ref={canvas}
+  width={600}
+  height={400}
+  id="drawingCanvas"
+  onMouseDown={handleStart}
+  onMouseMove={handleMove}
+  onMouseUp={handleEnd}
+  onMouseLeave={handleEnd}
+  onTouchStart={handleStart}
+  onTouchMove={handleMove}
+  onTouchEnd={handleEnd}
+/>
+);
+};

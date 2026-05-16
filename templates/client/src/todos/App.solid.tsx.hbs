@@ -1,0 +1,41 @@
+{{addImport "import {createSignal} from 'solid-js';"}}
+{{includeFile template="client/src/shared/Loading.solid.tsx.hbs" output="client/src/Loading.{{ext}}"}}
+{{addImport "import {Loading} from './Loading';"}}
+{{addImport "import {Provider} from 'tinybase/ui-solid';"}}
+{{addImport "import {Inspector} from 'tinybase/ui-solid-inspector';"}}
+{{includeFile template="client/src/todos/Store.solid.tsx.hbs" output="client/src/Store.{{ext}}"}}
+{{addImport "import {Store} from './Store';"}}
+{{includeFile template="client/src/todos/TodoInput.solid.tsx.hbs" output="client/src/TodoInput.{{ext}}"}}
+{{addImport "import {TodoInput} from './TodoInput';"}}
+{{includeFile template="client/src/todos/TodoList.solid.tsx.hbs" output="client/src/TodoList.{{ext}}"}}
+{{addImport "import {TodoList} from './TodoList';"}}
+{{includeFile template="client/src/shared/TopBar.solid.tsx.hbs" output="client/src/TopBar.{{componentExt}}"}}
+{{addImport "import {TopBar} from './TopBar';"}}
+
+export const App = () => (
+<>
+  <TopBar />
+  <Main />
+</>
+);
+
+const Main = () => {
+const [loading, setLoading] = createSignal(true);
+
+return (
+<div id="app">
+  <Provider>
+    <Store onReady={() => setLoading(false)} />
+    {loading() ? (
+      <Loading />
+    ) : (
+      <>
+        <TodoInput />
+        <TodoList />
+        <Inspector />
+      </>
+    )}
+  </Provider>
+</div>
+);
+};

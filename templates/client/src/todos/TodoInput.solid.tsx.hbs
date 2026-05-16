@@ -1,0 +1,28 @@
+{{includeFile template="client/src/todos/todoInput.css.hbs" output="client/src/todoInput.css"}}
+{{addImport "import './todoInput.css';"}}
+{{addImport "import {createSignal} from 'solid-js';"}}
+{{addImport "import {useAddRowCallback, STORE_ID} from './Store';"}}
+{{includeFile template="client/src/shared/Input.solid.tsx.hbs" output="client/src/Input.{{ext}}"}}
+{{addImport "import {Input} from './Input';"}}
+{{includeFile template="client/src/shared/Button.solid.tsx.hbs" output="client/src/Button.{{ext}}"}}
+{{addImport "import {Button} from './Button';"}}
+
+export const TodoInput = () => {
+const [text, setText] = createSignal('');
+const addRow = useAddRowCallback('todos', () => ({text: text().trim(), completed: false}), STORE_ID);
+
+const handleSubmit = (event: SubmitEvent) => {
+event.preventDefault();
+if (text().trim()) {
+addRow();
+setText('');
+}
+};
+
+return (
+<form id="todoInput" onSubmit={handleSubmit}>
+  <Input value={text()} onChange={setText} placeholder="What needs to be done?" autoFocus />
+  <Button type="submit" variant="primary">Add</Button>
+</form>
+);
+};

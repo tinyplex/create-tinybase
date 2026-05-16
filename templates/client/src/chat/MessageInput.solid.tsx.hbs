@@ -1,0 +1,39 @@
+{{includeFile template="client/src/chat/messageInput.css.hbs" output="client/src/messageInput.css"}}
+{{addImport "import {createSignal} from 'solid-js';"}}
+{{addImport "import {useAddRowCallback, STORE_ID as CHAT_STORE_ID} from './ChatStore';"}}
+{{addImport "import {useValue, STORE_ID as SETTINGS_STORE_ID} from './SettingsStore';"}}
+{{addImport "import './messageInput.css';"}}
+{{includeFile template="client/src/shared/Input.solid.tsx.hbs" output="client/src/Input.{{ext}}"}}
+{{addImport "import {Input} from './Input';"}}
+{{includeFile template="client/src/shared/Button.solid.tsx.hbs" output="client/src/Button.{{ext}}"}}
+{{addImport "import {Button} from './Button';"}}
+
+export const MessageInput = () => {
+const [message, setMessage] = createSignal('');
+const username = useValue('username', SETTINGS_STORE_ID) as () => string | undefined;
+
+const handleSend = useAddRowCallback(
+'messages',
+() => ({
+username: username() || 'Anonymous',
+text: message().trim(),
+timestamp: Date.now(),
+}),
+CHAT_STORE_ID,
+);
+
+const onSubmit = (event: SubmitEvent) => {
+event.preventDefault();
+if (message().trim()) {
+handleSend();
+setMessage('');
+}
+};
+
+return (
+<form onSubmit={onSubmit} id="messageInput">
+  <Input value={message()} onChange={setMessage} placeholder="Type a message..." autoFocus />
+  <Button type="submit" variant="primary">Send</Button>
+</form>
+);
+};

@@ -4,8 +4,8 @@ A CLI tool to scaffold a new TinyBase application with full synchronization and
 local-first capabilities.
 
 Build a todo list, a drawing app, a chat app, or a tic-tac-toe game using
-TypeScript or JavaScript, with React, Svelte, or Vanilla JS - in just a matter
-of seconds.
+TypeScript or JavaScript, with React, Solid, Svelte, or Vanilla JS - in just a
+matter of seconds.
 
 ## Usage
 
@@ -19,7 +19,7 @@ This will prompt you with questions to configure your new TinyBase app:
 
 - **Project name** - Name of your project directory
 - **Language** - TypeScript or JavaScript
-- **Framework** - Vanilla JS, React, or Svelte
+- **Framework** - Vanilla JS, React, Solid, or Svelte
 - **TinyWidgets** - Use TinyWidgets components and app shell (React only)
 - **App type** - Todo app, Chat app, Drawing app, or Tic-tac-toe game
 - **Store schemas** - TypeScript type safety for stores (TypeScript only)
@@ -128,6 +128,13 @@ React apps can optionally use **TinyWidgets**:
 - Consistent visual styling across generated React examples
 - TinyBase title and technology badges integrated into the app chrome
 - Available for React projects only
+
+**Solid** provides:
+
+- Component-based architecture with fine-grained reactivity
+- Solid primitives for TinyBase stores
+- Automatic UI updates from store changes
+- JSX components with a small runtime
 
 **Svelte** provides:
 
@@ -273,7 +280,7 @@ my-tinybase-app/
 │   ├── index.html       # Entry HTML
 │   ├── public/          # Static assets
 │   └── src/             # Source code
-│       ├── App.tsx      # Main app component (React/Svelte)
+│       ├── App.tsx      # Main app component (React/Solid/Svelte)
 │       ├── Store.tsx    # TinyBase store setup
 │       ├── app.css.ts   # TinyWidgets theme variables (React + TinyWidgets only)
 │       └── ...          # App-specific components
@@ -289,6 +296,7 @@ my-tinybase-app/
 - [TinyBase GitHub](https://github.com/tinyplex/tinybase)
 - [Synchronization Guide](https://tinybase.org/guides/synchronization)
 - [React Integration](https://tinybase.org/guides/building-uis/using-react)
+- [Solid Integration](https://tinybase.org/guides/building-uis/using-solid)
 - [Svelte Integration](https://tinybase.org/guides/building-uis/using-svelte)
 
 ## License

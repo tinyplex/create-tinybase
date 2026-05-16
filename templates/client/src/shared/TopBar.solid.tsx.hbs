@@ -1,0 +1,13 @@
+{{includeFile template="client/src/shared/topBar.css.hbs" output="client/src/topBar.css"}}
+{{includeFile template="client/src/shared/Info.solid.tsx.hbs" output="client/src/Info.{{componentExt}}"}}
+{{includeFile template="client/src/shared/Title.solid.tsx.hbs" output="client/src/Title.{{componentExt}}"}}
+{{addImport "import './topBar.css';"}}
+{{addImport "import {Info} from './Info';"}}
+{{addImport "import {Title} from './Title';"}}
+
+export const TopBar = () => (
+<div id="topBar">
+  <Title />
+  <Info />
+</div>
+);

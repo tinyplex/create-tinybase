@@ -1,0 +1,16 @@
+{{addImport "import {useRow, type MessageRow, STORE_ID} from './ChatStore';"}}
+
+{{includeFile template="client/src/chat/message.css.hbs" output="client/src/message.css"}}
+{{addImport "import './message.css';"}}
+
+export const Message = (props: {rowId: string}) => {
+const message = useRow('messages', () => props.rowId, STORE_ID) as () => MessageRow;
+
+return (
+<div class="message">
+  <span class="username">{message().username}:</span>
+  <span class="text">{message().text}</span>
+  <span class="time">{new Date(message().timestamp).toLocaleTimeString()}</span>
+</div>
+);
+};

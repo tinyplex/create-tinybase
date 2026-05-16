@@ -1,0 +1,18 @@
+{{includeFile template="client/src/shared/info.css.hbs" output="client/src/info.css"}}
+{{addImport "import './info.css';"}}
+
+export const Info = () => (
+<div id="info">
+  <div id="infoTech">
+    {{#each techIcons}}
+      <img src="{{src}}" class="infoTechIcon" title="{{title}}" />
+    {{/each}}
+  </div>
+  <div id="infoIcon">
+    i
+    <div id="infoTooltip">
+      {"{{> info.hbs}}"}
+    </div>
+  </div>
+</div>
+);

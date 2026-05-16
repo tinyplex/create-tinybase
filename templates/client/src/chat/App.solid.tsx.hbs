@@ -1,0 +1,49 @@
+{{addImport "import {createSignal} from 'solid-js';"}}
+{{includeFile template="client/src/chat/SettingsStore.solid.tsx.hbs" output="client/src/SettingsStore.{{ext}}"}}
+{{addImport "import {SettingsStore} from './SettingsStore';"}}
+{{includeFile template="client/src/chat/ChatStore.solid.tsx.hbs" output="client/src/ChatStore.{{ext}}"}}
+{{addImport "import {ChatStore} from './ChatStore';"}}
+{{includeFile template="client/src/shared/Loading.solid.tsx.hbs" output="client/src/Loading.{{ext}}"}}
+{{addImport "import {Loading} from './Loading';"}}
+{{addImport "import {Provider} from 'tinybase/ui-solid';"}}
+{{addImport "import {Inspector} from 'tinybase/ui-solid-inspector';"}}
+{{includeFile template="client/src/chat/UsernameInput.solid.tsx.hbs" output="client/src/UsernameInput.{{ext}}"}}
+{{addImport "import {UsernameInput} from './UsernameInput';"}}
+{{includeFile template="client/src/chat/Messages.solid.tsx.hbs" output="client/src/Messages.{{ext}}"}}
+{{addImport "import {Messages} from './Messages';"}}
+{{includeFile template="client/src/chat/MessageInput.solid.tsx.hbs" output="client/src/MessageInput.{{ext}}"}}
+{{addImport "import {MessageInput} from './MessageInput';"}}
+{{includeFile template="client/src/shared/TopBar.solid.tsx.hbs" output="client/src/TopBar.{{componentExt}}"}}
+{{addImport "import {TopBar} from './TopBar';"}}
+
+export const App = () => (
+<>
+  <TopBar />
+  <Main />
+</>
+);
+
+const Main = () => {
+const [settingsReady, setSettingsReady] = createSignal(false);
+const [chatReady, setChatReady] = createSignal(false);
+const loading = () => !settingsReady() || !chatReady();
+
+return (
+<div id="app">
+  <Provider>
+    <SettingsStore onReady={() => setSettingsReady(true)} />
+    <ChatStore onReady={() => setChatReady(true)} />
+    {loading() ? (
+      <Loading />
+    ) : (
+      <>
+        <UsernameInput />
+        <Messages />
+        <MessageInput />
+        <Inspector />
+      </>
+    )}
+  </Provider>
+</div>
+);
+};

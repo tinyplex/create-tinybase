@@ -1,0 +1,25 @@
+{{includeFile template="client/src/game/board.css.hbs" output="client/src/board.css"}}
+{{addImport "import './board.css';"}}
+{{addImport "import {For, createMemo} from 'solid-js';"}}
+{{addImport "import {useValue, STORE_ID} from './Store';"}}
+{{includeFile template="client/src/game/Square.solid.tsx.hbs" output="client/src/Square.{{ext}}"}}
+{{addImport "import {Square} from './Square';"}}
+
+export const Board = () => {
+const gameStatus = useValue('gameStatus', STORE_ID);
+const winningLine = useValue('winningLine', STORE_ID);
+
+const winningPositions = createMemo(() => {
+const line = winningLine();
+if (!line || typeof line !== 'string') return new Set();
+return new Set(line.split(','));
+});
+
+return (
+<div id="board">
+  <For each={Array.from({length: 9}, (_, index) => index.toString())}>
+    {(position) => <Square position={position} isDisabled={gameStatus() !== 'playing'} winning={winningPositions().has(position)} />}
+  </For>
+</div>
+);
+};

@@ -23,6 +23,14 @@ const root = document.getElementById('root')!;
   <App />);
   });
 {{/if}}
+{{#if solid}}
+  {{addImport "import {render} from 'solid-js/web';"}}
+  {{includeFile template="client/src/{{appType}}/App.solid.tsx.hbs" output="client/src/App.{{componentExt}}"}}
+  {{addImport "import {App} from './App';"}}
+  addEventListener('load', () => {
+  render(() => <App />, root);
+  });
+{{/if}}
 {{#if svelte}}
   {{addImport "import {mount} from 'svelte';"}}
   {{includeFile template="client/src/{{appType}}/App.svelte.hbs" output="client/src/App.svelte"}}

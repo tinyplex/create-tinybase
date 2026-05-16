@@ -10,7 +10,7 @@ const TEST_DIR = join(__dirname, '.test-output');
 
 interface Combination {
   language: 'javascript' | 'typescript';
-  framework: 'vanilla' | 'react' | 'svelte';
+  framework: 'vanilla' | 'react' | 'solid' | 'svelte';
   appType: 'todos' | 'chat' | 'drawing' | 'game';
   syncType?: 'none' | 'remote' | 'node' | 'durable-objects';
   persistenceType?: 'none' | 'local-storage' | 'sqlite' | 'pglite';
@@ -53,11 +53,43 @@ const combinations: Combination[] = [
   },
   {
     language: 'javascript',
+    framework: 'solid',
+    appType: 'todos',
+    syncType: 'none',
+    persistenceType: 'local-storage',
+    name: 'js-solid-todos',
+  },
+  {
+    language: 'typescript',
+    framework: 'solid',
+    appType: 'todos',
+    syncType: 'none',
+    persistenceType: 'local-storage',
+    name: 'ts-solid-todos',
+  },
+  {
+    language: 'javascript',
     framework: 'svelte',
     appType: 'todos',
     syncType: 'none',
     persistenceType: 'local-storage',
     name: 'js-svelte-todos',
+  },
+  {
+    language: 'typescript',
+    framework: 'solid',
+    appType: 'todos',
+    syncType: 'remote',
+    persistenceType: 'local-storage',
+    name: 'ts-solid-todos-remote-sync',
+  },
+  {
+    language: 'typescript',
+    framework: 'solid',
+    appType: 'todos',
+    syncType: 'none',
+    persistenceType: 'sqlite',
+    name: 'ts-solid-todos-sqlite',
   },
   {
     language: 'typescript',
@@ -117,11 +149,43 @@ const combinations: Combination[] = [
   },
   {
     language: 'javascript',
+    framework: 'solid',
+    appType: 'chat',
+    syncType: 'none',
+    persistenceType: 'local-storage',
+    name: 'js-solid-chat',
+  },
+  {
+    language: 'typescript',
+    framework: 'solid',
+    appType: 'chat',
+    syncType: 'none',
+    persistenceType: 'local-storage',
+    name: 'ts-solid-chat',
+  },
+  {
+    language: 'javascript',
     framework: 'svelte',
     appType: 'chat',
     syncType: 'none',
     persistenceType: 'local-storage',
     name: 'js-svelte-chat',
+  },
+  {
+    language: 'typescript',
+    framework: 'solid',
+    appType: 'chat',
+    syncType: 'none',
+    persistenceType: 'sqlite',
+    name: 'ts-solid-chat-sqlite',
+  },
+  {
+    language: 'typescript',
+    framework: 'solid',
+    appType: 'chat',
+    syncType: 'remote',
+    persistenceType: 'local-storage',
+    name: 'ts-solid-chat-remote-sync',
   },
   {
     language: 'typescript',
@@ -181,11 +245,43 @@ const combinations: Combination[] = [
   },
   {
     language: 'javascript',
+    framework: 'solid',
+    appType: 'drawing',
+    syncType: 'none',
+    persistenceType: 'local-storage',
+    name: 'js-solid-drawing',
+  },
+  {
+    language: 'typescript',
+    framework: 'solid',
+    appType: 'drawing',
+    syncType: 'none',
+    persistenceType: 'local-storage',
+    name: 'ts-solid-drawing',
+  },
+  {
+    language: 'javascript',
     framework: 'svelte',
     appType: 'drawing',
     syncType: 'none',
     persistenceType: 'local-storage',
     name: 'js-svelte-drawing',
+  },
+  {
+    language: 'typescript',
+    framework: 'solid',
+    appType: 'drawing',
+    syncType: 'none',
+    persistenceType: 'sqlite',
+    name: 'ts-solid-drawing-sqlite',
+  },
+  {
+    language: 'typescript',
+    framework: 'solid',
+    appType: 'drawing',
+    syncType: 'remote',
+    persistenceType: 'local-storage',
+    name: 'ts-solid-drawing-remote-sync',
   },
   {
     language: 'typescript',
@@ -245,11 +341,43 @@ const combinations: Combination[] = [
   },
   {
     language: 'javascript',
+    framework: 'solid',
+    appType: 'game',
+    syncType: 'none',
+    persistenceType: 'local-storage',
+    name: 'js-solid-game',
+  },
+  {
+    language: 'typescript',
+    framework: 'solid',
+    appType: 'game',
+    syncType: 'none',
+    persistenceType: 'local-storage',
+    name: 'ts-solid-game',
+  },
+  {
+    language: 'javascript',
     framework: 'svelte',
     appType: 'game',
     syncType: 'none',
     persistenceType: 'local-storage',
     name: 'js-svelte-game',
+  },
+  {
+    language: 'typescript',
+    framework: 'solid',
+    appType: 'game',
+    syncType: 'none',
+    persistenceType: 'sqlite',
+    name: 'ts-solid-game-sqlite',
+  },
+  {
+    language: 'typescript',
+    framework: 'solid',
+    appType: 'game',
+    syncType: 'remote',
+    persistenceType: 'local-storage',
+    name: 'ts-solid-game-remote-sync',
   },
   {
     language: 'typescript',
@@ -340,7 +468,7 @@ interface CLIResult {
 }
 
 type Language = 'javascript' | 'typescript';
-type Framework = 'vanilla' | 'react' | 'svelte';
+type Framework = 'vanilla' | 'react' | 'solid' | 'svelte';
 type AppType = 'todos' | 'chat' | 'drawing' | 'game';
 type SyncType = 'none' | 'remote' | 'node' | 'durable-objects';
 type PersistenceType = 'none' | 'local-storage' | 'sqlite' | 'pglite';
@@ -505,6 +633,11 @@ describe('create-tinybase', () => {
           expect(pkg.dependencies['react-dom']).toBeDefined();
         }
 
+        if (combo.framework === 'solid') {
+          expect(pkg.dependencies['solid-js']).toBeDefined();
+          expect(pkg.devDependencies?.['vite-plugin-solid']).toBeDefined();
+        }
+
         if (combo.tinyWidgets) {
           expect(pkg.dependencies.tinywidgets).toBeDefined();
           expect(
@@ -538,7 +671,11 @@ describe('create-tinybase', () => {
           expect(files).toContain('client/tsconfig.json');
         }
 
-        if (combo.framework === 'react' || combo.framework === 'svelte') {
+        if (
+          combo.framework === 'react' ||
+          combo.framework === 'solid' ||
+          combo.framework === 'svelte'
+        ) {
           expect(files).toContain('client/vite.config.js');
         }
 

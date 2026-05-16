@@ -1,0 +1,9 @@
+{{includeFile template="client/src/shared/title.css.hbs" output="client/src/title.css"}}
+{{addImport "import './title.css';"}}
+
+export const Title = () => (
+<h1 id="topBarTitle">
+  <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+  {{> title.hbs}}
+</h1>
+);

@@ -1,0 +1,70 @@
+{{addImport "import {useSetValuesCallback, useTableListener, STORE_ID} from './Store';"}}
+{{includeFile template="client/src/game/Board.solid.tsx.hbs" output="client/src/Board.{{ext}}"}}
+{{addImport "import {Board} from './Board';"}}
+{{includeFile template="client/src/game/GameStatus.solid.tsx.hbs" output="client/src/GameStatus.{{ext}}"}}
+{{addImport "import {GameStatus} from './GameStatus';"}}
+{{includeFile template="client/src/shared/Button.solid.tsx.hbs" output="client/src/Button.{{ext}}"}}
+{{addImport "import {Button} from './Button';"}}
+
+const WINNING_LINES = [
+['0', '1', '2'], ['3', '4', '5'], ['6', '7', '8'],
+['0', '3', '6'], ['1', '4', '7'], ['2', '5', '8'],
+['0', '4', '8'], ['2', '4', '6'],
+];
+
+export const Game = () => {
+useTableListener(
+'board',
+(store) => {
+const gameStatus = store.getValue('gameStatus');
+if (gameStatus !== 'playing') return;
+
+for (const line of WINNING_LINES) {
+const [a, b, c] = line;
+const cellA = store.getCell('board', a, 'value');
+const cellB = store.getCell('board', b, 'value');
+const cellC = store.getCell('board', c, 'value');
+
+if (cellA && cellA === cellB && cellA === cellC) {
+store.setValue('gameStatus', 'won');
+store.setValue('winner', cellA);
+store.setValue('winningLine', line.join(','));
+return;
+}
+}
+
+if (store.getRowCount('board') === 9) {
+store.setValue('gameStatus', 'draw');
+return;
+}
+
+const currentPlayer = store.getValue('currentPlayer');
+store.setValue('currentPlayer', currentPlayer === 'X' ? 'O' : 'X');
+},
+true,
+STORE_ID,
+);
+
+const resetGame = useSetValuesCallback(
+(_, store) => {
+store.delTable('board');
+return {
+currentPlayer: 'X',
+gameStatus: 'playing',
+winner: '',
+winningLine: '',
+};
+},
+STORE_ID,
+);
+
+return (
+<>
+  <GameStatus />
+  <Board />
+  <div style=\{{'text-align': 'center', 'margin-top': '2rem'}}>
+    <Button onClick={resetGame} variant="primary">New Game</Button>
+  </div>
+</>
+);
+};

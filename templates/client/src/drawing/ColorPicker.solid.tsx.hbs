@@ -1,0 +1,17 @@
+{{includeFile template="client/src/drawing/colorPicker.css.hbs" output="client/src/colorPicker.css"}}
+{{addImport "import {For} from 'solid-js';"}}
+{{addImport "import {useValueState, STORE_ID} from './SettingsStore';"}}
+{{addImport "import './colorPicker.css';"}}
+
+export const ColorPicker = () => {
+const colors = ['#d81b60', '#1976d2', '#388e3c', '#f57c00', '#7b1fa2', '#fff'];
+const [currentColor, setColor] = useValueState('brushColor', STORE_ID) as [() => string | undefined, (value: string) => void];
+
+return (
+<div id="colorPicker">
+  <For each={colors}>{(color) => (
+  <button class={`colorBtn${currentColor() === color ? ' active' : ''}`} style=\{{background: color}} onClick={() => setColor(color)} />
+  )}</For>
+</div>
+);
+};

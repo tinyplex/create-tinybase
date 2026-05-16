@@ -52,6 +52,7 @@ while [[ $# -gt 0 ]]; do
       echo "  $0 -t chat             # Build only chat projects"
       echo "  $0 -t ts-react-chat    # Build only ts-react-chat"
       echo "  $0 -t tinywidgets      # Build only TinyWidgets projects"
+      echo "  $0 -t solid-todos      # Build only Solid todo projects"
       echo "  $0 -t svelte-todos     # Build only Svelte todo projects"
       echo "  $0 -t drawing --skip-install  # Build drawing projects, skip install"
       echo "  $0 --clean                   # Force fresh install for all projects"
@@ -71,14 +72,14 @@ cleanup() {
   echo "Stopping servers..."
   pkill -P $$ 2>/dev/null || true
   kill ${PIDS[@]} 2>/dev/null || true
-  pkill -f "vite.*--port.*(51[7-9][0-9]|52[0-3][0-9])" 2>/dev/null || true
+  pkill -f "vite.*--port.*(51[7-9][0-9]|52[0-5][0-9])" 2>/dev/null || true
   exit 0
 }
 
 trap cleanup INT TERM EXIT
 
 echo "Cleaning up any previous servers..."
-pkill -f "vite.*--port.*(51[7-9][0-9]|52[0-3][0-9])" 2>/dev/null || true
+pkill -f "vite.*--port.*(51[7-9][0-9]|52[0-5][0-9])" 2>/dev/null || true
 
 mkdir -p "$TEST_DIR"
 
@@ -94,6 +95,11 @@ declare -a all_projects=(
   "test-ts-react-todos-persist-sqlite:typescript:react:todos:5181:false:sqlite"
   "test-ts-react-todos-persist-pglite:typescript:react:todos:5182:false:pglite"
   "test-ts-react-todos-tinywidgets:typescript:react:todos:5233:false:local-storage:true"
+  "test-js-solid-todos:javascript:solid:todos:5240:false"
+  "test-ts-solid-todos:typescript:solid:todos:5241:false"
+  "test-ts-solid-todos-schemas:typescript:solid:todos:5242:true"
+  "test-ts-solid-todos-persist-sqlite:typescript:solid:todos:5243:false:sqlite"
+  "test-ts-solid-todos-persist-pglite:typescript:solid:todos:5244:false:pglite"
   "test-js-svelte-todos:javascript:svelte:todos:5213:false"
   "test-ts-svelte-todos:typescript:svelte:todos:5214:false"
   "test-ts-svelte-todos-schemas:typescript:svelte:todos:5215:true"
@@ -111,6 +117,11 @@ declare -a all_projects=(
   "test-ts-react-chat-persist-sqlite:typescript:react:chat:5191:false:sqlite"
   "test-ts-react-chat-persist-pglite:typescript:react:chat:5192:false:pglite"
   "test-ts-react-chat-tinywidgets:typescript:react:chat:5234:false:local-storage:true"
+  "test-js-solid-chat:javascript:solid:chat:5245:false"
+  "test-ts-solid-chat:typescript:solid:chat:5246:false"
+  "test-ts-solid-chat-schemas:typescript:solid:chat:5247:true"
+  "test-ts-solid-chat-persist-sqlite:typescript:solid:chat:5248:false:sqlite"
+  "test-ts-solid-chat-persist-pglite:typescript:solid:chat:5249:false:pglite"
   "test-js-svelte-chat:javascript:svelte:chat:5223:false"
   "test-ts-svelte-chat:typescript:svelte:chat:5224:false"
   "test-ts-svelte-chat-schemas:typescript:svelte:chat:5225:true"
@@ -128,6 +139,11 @@ declare -a all_projects=(
   "test-ts-react-drawing-persist-sqlite:typescript:react:drawing:5201:false:sqlite"
   "test-ts-react-drawing-persist-pglite:typescript:react:drawing:5202:false:pglite"
   "test-ts-react-drawing-tinywidgets:typescript:react:drawing:5235:false:local-storage:true"
+  "test-js-solid-drawing:javascript:solid:drawing:5250:false"
+  "test-ts-solid-drawing:typescript:solid:drawing:5251:false"
+  "test-ts-solid-drawing-schemas:typescript:solid:drawing:5252:true"
+  "test-ts-solid-drawing-persist-sqlite:typescript:solid:drawing:5253:false:sqlite"
+  "test-ts-solid-drawing-persist-pglite:typescript:solid:drawing:5254:false:pglite"
   "test-js-svelte-drawing:javascript:svelte:drawing:5218:false"
   "test-ts-svelte-drawing:typescript:svelte:drawing:5219:false"
   "test-ts-svelte-drawing-schemas:typescript:svelte:drawing:5220:true"
@@ -145,6 +161,11 @@ declare -a all_projects=(
   "test-ts-react-game-persist-sqlite:typescript:react:game:5211:false:sqlite"
   "test-ts-react-game-persist-pglite:typescript:react:game:5212:false:pglite"
   "test-ts-react-game-tinywidgets:typescript:react:game:5236:false:local-storage:true"
+  "test-js-solid-game:javascript:solid:game:5255:false"
+  "test-ts-solid-game:typescript:solid:game:5256:false"
+  "test-ts-solid-game-schemas:typescript:solid:game:5257:true"
+  "test-ts-solid-game-persist-sqlite:typescript:solid:game:5258:false:sqlite"
+  "test-ts-solid-game-persist-pglite:typescript:solid:game:5259:false:pglite"
   "test-js-svelte-game:javascript:svelte:game:5228:false"
   "test-ts-svelte-game:typescript:svelte:game:5229:false"
   "test-ts-svelte-game-schemas:typescript:svelte:game:5230:true"

@@ -1,0 +1,16 @@
+{{includeFile template="client/src/game/square.css.hbs" output="client/src/square.css"}}
+{{addImport "import './square.css';"}}
+{{addImport "import {useCell, useSetCellCallback, useValue, STORE_ID} from './Store';"}}
+
+export const Square = (props: {position: string; isDisabled: boolean; winning: boolean}) => {
+const value = useCell('board', () => props.position, 'value', STORE_ID) as () => string | undefined;
+const currentPlayer = useValue('currentPlayer', STORE_ID);
+
+const handleClick = useSetCellCallback('board', () => props.position, 'value', () => currentPlayer() || 'X', STORE_ID);
+
+return (
+<button class={`square${props.isDisabled || !!value() ? ' disabled' : ''}${props.winning ? ' winning' : ''}`} onClick={handleClick} disabled={props.isDisabled || !!value()}>
+  {value() || ''}
+</button>
+);
+};

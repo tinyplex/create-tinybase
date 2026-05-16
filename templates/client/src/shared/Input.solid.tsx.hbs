@@ -1,0 +1,21 @@
+{{includeFile template="client/src/shared/input.css.hbs" output="client/src/input.css"}}
+{{addImport "import './input.css';"}}
+
+interface InputProps {
+id?: string;
+value: string;
+onChange: (value: string) => void;
+placeholder?: string;
+autoFocus?: boolean;
+}
+
+export const Input = (props: InputProps) => (
+<input
+  id={props.id}
+  type="text"
+  value={props.value}
+  onInput={(event) => props.onChange(event.currentTarget.value)}
+  placeholder={props.placeholder ?? ''}
+  autofocus={props.autoFocus}
+/>
+);

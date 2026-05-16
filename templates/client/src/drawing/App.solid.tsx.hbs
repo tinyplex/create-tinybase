@@ -1,0 +1,46 @@
+{{addImport "import {createSignal} from 'solid-js';"}}
+{{includeFile template="client/src/drawing/SettingsStore.solid.tsx.hbs" output="client/src/SettingsStore.{{ext}}"}}
+{{addImport "import {SettingsStore} from './SettingsStore';"}}
+{{includeFile template="client/src/drawing/CanvasStore.solid.tsx.hbs" output="client/src/CanvasStore.{{ext}}"}}
+{{addImport "import {CanvasStore} from './CanvasStore';"}}
+{{includeFile template="client/src/shared/Loading.solid.tsx.hbs" output="client/src/Loading.{{ext}}"}}
+{{addImport "import {Loading} from './Loading';"}}
+{{addImport "import {Provider} from 'tinybase/ui-solid';"}}
+{{addImport "import {Inspector} from 'tinybase/ui-solid-inspector';"}}
+{{includeFile template="client/src/drawing/DrawingControls.solid.tsx.hbs" output="client/src/DrawingControls.{{ext}}"}}
+{{addImport "import {DrawingControls} from './DrawingControls';"}}
+{{includeFile template="client/src/drawing/Canvas.solid.tsx.hbs" output="client/src/Canvas.{{ext}}"}}
+{{addImport "import {Canvas} from './Canvas';"}}
+{{includeFile template="client/src/shared/TopBar.solid.tsx.hbs" output="client/src/TopBar.{{componentExt}}"}}
+{{addImport "import {TopBar} from './TopBar';"}}
+
+export const App = () => (
+<>
+  <TopBar />
+  <Main />
+</>
+);
+
+const Main = () => {
+const [settingsReady, setSettingsReady] = createSignal(false);
+const [canvasReady, setCanvasReady] = createSignal(false);
+const loading = () => !settingsReady() || !canvasReady();
+
+return (
+<div id="app">
+  <Provider>
+    <SettingsStore onReady={() => setSettingsReady(true)} />
+    <CanvasStore onReady={() => setCanvasReady(true)} />
+    {loading() ? (
+      <Loading />
+    ) : (
+      <>
+        <DrawingControls />
+        <Canvas />
+        <Inspector />
+      </>
+    )}
+  </Provider>
+</div>
+);
+};

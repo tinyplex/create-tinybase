@@ -1,0 +1,21 @@
+{{includeFile template="client/src/todos/todoItem.css.hbs" output="client/src/todoItem.css"}}
+{{addImport "import './todoItem.css';"}}
+{{addImport "import {useDelRowCallback, useRow, useSetPartialRowCallback, type TodoRow, STORE_ID} from './Store';"}}
+{{includeFile template="client/src/shared/Button.solid.tsx.hbs" output="client/src/Button.{{ext}}"}}
+{{addImport "import {Button} from './Button';"}}
+
+export const TodoItem = (props: {rowId: string}) => {
+const todo = useRow('todos', () => props.rowId, STORE_ID) as () => TodoRow;
+const setPartialRow = useSetPartialRowCallback('todos', () => props.rowId, (event: Event) => ({
+completed: (event.currentTarget as HTMLInputElement).checked,
+}), STORE_ID);
+const delRow = useDelRowCallback('todos', () => props.rowId, STORE_ID);
+
+return (
+<div class={`todoItem${todo().completed ? ' completed' : ''}`}>
+  <input type="checkbox" checked={todo().completed} onChange={setPartialRow} id={`todo-${props.rowId}`} />
+  <label for={`todo-${props.rowId}`}>{todo().text}</label>
+  <Button onClick={delRow}>Delete</Button>
+</div>
+);
+};
