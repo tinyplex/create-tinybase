@@ -39,7 +39,7 @@
     "prePublishPackage": "npm run ts && npm run prettier && npm run lint && npm run test && npm run test:e2e"
   },
   "dependencies": {
-    "tinycreate": "^1.0.7"
+    "tinycreate": "^1.0.8"
   },
   "engines": {
     "node": ">=18.0.0"

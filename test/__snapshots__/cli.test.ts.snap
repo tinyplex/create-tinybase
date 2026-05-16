@@ -240,6 +240,7 @@ import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 import {useCreatePersister} from 'tinybase/ui-react';
 
 export {STORE_ID};
+
 export {useAddRowCallback, useRow, useSortedRowIds, useStore};
 
 export const ChatStore = ({onReady}) => {
@@ -1077,6 +1078,7 @@ import {useCreatePersister} from 'tinybase/ui-react';
 import {getDb} from './sqlite';
 
 export {STORE_ID};
+
 export {useAddRowCallback, useRow, useSortedRowIds, useStore};
 
 export const ChatStore = ({onReady}) => {
@@ -2047,6 +2049,7 @@ import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 import {useCreatePersister} from 'tinybase/ui-react';
 
 export {STORE_ID};
+
 export {useDelTableCallback, useRow, useSortedRowIds, useStore, useTable};
 
 export const CanvasStore = ({onReady}) => {
@@ -2819,7 +2822,7 @@ export const GameStatus = () => {
           Player <span className="winner">{winner}</span> wins!
         </>
       )}
-      {gameStatus === 'draw' && <>It&apos;s a draw </>}
+      {gameStatus === 'draw' && <>It&apos;s a draw!</>}
     </div>
   );
 };
@@ -3507,6 +3510,7 @@ import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 import {useCreatePersister} from 'tinybase/ui-react';
 
 export {STORE_ID};
+
 export {
   useAddRowCallback,
   useDelRowCallback,
@@ -4352,6 +4356,7 @@ import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-clien
 import {useCreateSynchronizer} from 'tinybase/ui-react';
 
 export {STORE_ID};
+
 export {
   useAddRowCallback,
   useDelRowCallback,
@@ -5056,18 +5061,33 @@ with the store.
 </svg>",
   "client/public/solid.svg": "<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <defs>
-    <linearGradient id="solid-a" x1="24" x2="104" y1="20" y2="108" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#335d92"/>
+    <linearGradient id="a" x1="27.5" x2="152" y1="3" y2="63.5" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset=".1" stop-color="#76b3e1" />
+      <stop offset=".3" stop-color="#dcf2fd" />
+      <stop offset="1" stop-color="#76b3e1" />
     </linearGradient>
-    <linearGradient id="solid-b" x1="24" x2="104" y1="108" y2="20" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#4d7fbc"/>
+    <linearGradient id="b" x1="95.8" x2="74" y1="32.6" y2="105.2" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#76b3e1" />
+      <stop offset=".5" stop-color="#4377bb" />
+      <stop offset="1" stop-color="#1f3b77" />
+    </linearGradient>
+    <linearGradient id="c" x1="18.4" x2="144.3" y1="64.2" y2="149.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#315aa9" />
+      <stop offset=".5" stop-color="#518ac8" />
+      <stop offset="1" stop-color="#315aa9" />
+    </linearGradient>
+    <linearGradient id="d" x1="75.2" x2="24.4" y1="74.5" y2="260.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4377bb" />
+      <stop offset=".5" stop-color="#1a336b" />
+      <stop offset="1" stop-color="#1a336b" />
     </linearGradient>
   </defs>
-  <path fill="url(#solid-a)" d="M64 8 12 36l52 28 52-28L64 8Z"/>
-  <path fill="url(#solid-b)" d="M12 92l52 28 52-28V36L64 64 12 36v56Z"/>
-  <path fill="#fff" fill-opacity=".9" d="M64 48 31 31l33-18 33 18-33 17Zm0 32L31 63V45l33 17 33-17v18L64 80Zm0 35L31 97V78l33 17 33-17v19l-33 18Z"/>
+  <path fill="#76b3e1" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" />
+  <path fill="url(#a)" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" opacity=".3" />
+  <path fill="#518ac8" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" />
+  <path fill="url(#b)" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" opacity=".3" />
+  <path fill="url(#c)" d="M104.654 65.91a36.226 36.226 0 0 0-38.641-12.076L16.1 69.934 0 98.111l90.164 15.295 16.1-28.981c3.22-5.635 2.415-12.075-1.61-18.516z" />
+  <path fill="url(#d)" d="M88.553 94.085A36.226 36.226 0 0 0 49.912 82.01L0 98.11s42.667 32.202 75.673 24.152l2.415-.806c13.686-4.025 18.516-16.905 10.465-27.37z" />
 </svg>
 ",
   "client/src/App.jsx": "import {createSignal} from 'solid-js';
@@ -5114,6 +5134,7 @@ const Main = () => {
 };
 ",
   "client/src/Button.jsx": "import './button.css';
+
 export const Button = (props) => (
   <button
     onClick={props.onClick}
@@ -5137,6 +5158,7 @@ import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 import {useCreatePersister} from 'tinybase/ui-solid';
 
 export {STORE_ID};
+
 export {useAddRowCallback, useRow, useSortedRowIds, useStore};
 
 export const ChatStore = (props) => {
@@ -5814,18 +5836,33 @@ with the store.
 </svg>",
   "client/public/solid.svg": "<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <defs>
-    <linearGradient id="solid-a" x1="24" x2="104" y1="20" y2="108" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#335d92"/>
+    <linearGradient id="a" x1="27.5" x2="152" y1="3" y2="63.5" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset=".1" stop-color="#76b3e1" />
+      <stop offset=".3" stop-color="#dcf2fd" />
+      <stop offset="1" stop-color="#76b3e1" />
     </linearGradient>
-    <linearGradient id="solid-b" x1="24" x2="104" y1="108" y2="20" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#4d7fbc"/>
+    <linearGradient id="b" x1="95.8" x2="74" y1="32.6" y2="105.2" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#76b3e1" />
+      <stop offset=".5" stop-color="#4377bb" />
+      <stop offset="1" stop-color="#1f3b77" />
+    </linearGradient>
+    <linearGradient id="c" x1="18.4" x2="144.3" y1="64.2" y2="149.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#315aa9" />
+      <stop offset=".5" stop-color="#518ac8" />
+      <stop offset="1" stop-color="#315aa9" />
+    </linearGradient>
+    <linearGradient id="d" x1="75.2" x2="24.4" y1="74.5" y2="260.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4377bb" />
+      <stop offset=".5" stop-color="#1a336b" />
+      <stop offset="1" stop-color="#1a336b" />
     </linearGradient>
   </defs>
-  <path fill="url(#solid-a)" d="M64 8 12 36l52 28 52-28L64 8Z"/>
-  <path fill="url(#solid-b)" d="M12 92l52 28 52-28V36L64 64 12 36v56Z"/>
-  <path fill="#fff" fill-opacity=".9" d="M64 48 31 31l33-18 33 18-33 17Zm0 32L31 63V45l33 17 33-17v18L64 80Zm0 35L31 97V78l33 17 33-17v19l-33 18Z"/>
+  <path fill="#76b3e1" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" />
+  <path fill="url(#a)" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" opacity=".3" />
+  <path fill="#518ac8" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" />
+  <path fill="url(#b)" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" opacity=".3" />
+  <path fill="url(#c)" d="M104.654 65.91a36.226 36.226 0 0 0-38.641-12.076L16.1 69.934 0 98.111l90.164 15.295 16.1-28.981c3.22-5.635 2.415-12.075-1.61-18.516z" />
+  <path fill="url(#d)" d="M88.553 94.085A36.226 36.226 0 0 0 49.912 82.01L0 98.11s42.667 32.202 75.673 24.152l2.415-.806c13.686-4.025 18.516-16.905 10.465-27.37z" />
 </svg>
 ",
   "client/src/App.jsx": "import {createSignal} from 'solid-js';
@@ -5896,6 +5933,7 @@ export const BrushSize = () => {
 };
 ",
   "client/src/Button.jsx": "import './button.css';
+
 export const Button = (props) => (
   <button
     onClick={props.onClick}
@@ -6048,6 +6086,7 @@ import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 import {useCreatePersister} from 'tinybase/ui-solid';
 
 export {STORE_ID};
+
 export {useDelTableCallback, useRow, useSortedRowIds, useStore, useTable};
 
 export const CanvasStore = (props) => {
@@ -6622,18 +6661,33 @@ with the store.
 </svg>",
   "client/public/solid.svg": "<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <defs>
-    <linearGradient id="solid-a" x1="24" x2="104" y1="20" y2="108" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#335d92"/>
+    <linearGradient id="a" x1="27.5" x2="152" y1="3" y2="63.5" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset=".1" stop-color="#76b3e1" />
+      <stop offset=".3" stop-color="#dcf2fd" />
+      <stop offset="1" stop-color="#76b3e1" />
     </linearGradient>
-    <linearGradient id="solid-b" x1="24" x2="104" y1="108" y2="20" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#4d7fbc"/>
+    <linearGradient id="b" x1="95.8" x2="74" y1="32.6" y2="105.2" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#76b3e1" />
+      <stop offset=".5" stop-color="#4377bb" />
+      <stop offset="1" stop-color="#1f3b77" />
+    </linearGradient>
+    <linearGradient id="c" x1="18.4" x2="144.3" y1="64.2" y2="149.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#315aa9" />
+      <stop offset=".5" stop-color="#518ac8" />
+      <stop offset="1" stop-color="#315aa9" />
+    </linearGradient>
+    <linearGradient id="d" x1="75.2" x2="24.4" y1="74.5" y2="260.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4377bb" />
+      <stop offset=".5" stop-color="#1a336b" />
+      <stop offset="1" stop-color="#1a336b" />
     </linearGradient>
   </defs>
-  <path fill="url(#solid-a)" d="M64 8 12 36l52 28 52-28L64 8Z"/>
-  <path fill="url(#solid-b)" d="M12 92l52 28 52-28V36L64 64 12 36v56Z"/>
-  <path fill="#fff" fill-opacity=".9" d="M64 48 31 31l33-18 33 18-33 17Zm0 32L31 63V45l33 17 33-17v18L64 80Zm0 35L31 97V78l33 17 33-17v19l-33 18Z"/>
+  <path fill="#76b3e1" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" />
+  <path fill="url(#a)" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" opacity=".3" />
+  <path fill="#518ac8" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" />
+  <path fill="url(#b)" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" opacity=".3" />
+  <path fill="url(#c)" d="M104.654 65.91a36.226 36.226 0 0 0-38.641-12.076L16.1 69.934 0 98.111l90.164 15.295 16.1-28.981c3.22-5.635 2.415-12.075-1.61-18.516z" />
+  <path fill="url(#d)" d="M88.553 94.085A36.226 36.226 0 0 0 49.912 82.01L0 98.11s42.667 32.202 75.673 24.152l2.415-.806c13.686-4.025 18.516-16.905 10.465-27.37z" />
 </svg>
 ",
   "client/src/App.jsx": "import {createSignal} from 'solid-js';
@@ -6692,7 +6746,7 @@ export const Board = () => {
         {(position) => (
           <Square
             position={position}
-            inactive={gameStatus() !== 'playing'}
+            isDisabled={gameStatus() !== 'playing'}
             winning={winningPositions().has(position)}
           />
         )}
@@ -6702,6 +6756,7 @@ export const Board = () => {
 };
 ",
   "client/src/Button.jsx": "import './button.css';
+
 export const Button = (props) => (
   <button
     onClick={props.onClick}
@@ -6796,15 +6851,15 @@ export const GameStatus = () => {
     <div id="gameStatus">
       {gameStatus() === 'playing' && (
         <>
-          Player <span class="player">{}</span>&apos;s turn
+          Player <span class="player">{currentPlayer()}</span>&apos;s turn
         </>
       )}
       {gameStatus() === 'won' && (
         <>
-          Player <span class="winner">{}</span> wins!
+          Player <span class="winner">{winner()}</span> wins!
         </>
       )}
-      {gameStatus() === 'draw' && <>It&apos;s a draw </>}
+      {gameStatus() === 'draw' && <>It&apos;s a draw!</>}
     </div>
   );
 };
@@ -6849,9 +6904,9 @@ export const Square = (props) => {
 
   return (
     <button
-      class={\`square\${props.inactive || !!value() ? ' disabled' : ''}\${props.winning ? ' winning' : ''}\`}
+      class={\`square\${props.isDisabled || !!value() ? ' disabled' : ''}\${props.winning ? ' winning' : ''}\`}
       onClick={handleClick}
-      disabled={props.inactive || !!value()}
+      disabled={props.isDisabled || !!value()}
     >
       {value() || ''}
     </button>
@@ -7356,18 +7411,33 @@ with the store.
 </svg>",
   "client/public/solid.svg": "<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <defs>
-    <linearGradient id="solid-a" x1="24" x2="104" y1="20" y2="108" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#335d92"/>
+    <linearGradient id="a" x1="27.5" x2="152" y1="3" y2="63.5" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset=".1" stop-color="#76b3e1" />
+      <stop offset=".3" stop-color="#dcf2fd" />
+      <stop offset="1" stop-color="#76b3e1" />
     </linearGradient>
-    <linearGradient id="solid-b" x1="24" x2="104" y1="108" y2="20" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#4d7fbc"/>
+    <linearGradient id="b" x1="95.8" x2="74" y1="32.6" y2="105.2" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#76b3e1" />
+      <stop offset=".5" stop-color="#4377bb" />
+      <stop offset="1" stop-color="#1f3b77" />
+    </linearGradient>
+    <linearGradient id="c" x1="18.4" x2="144.3" y1="64.2" y2="149.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#315aa9" />
+      <stop offset=".5" stop-color="#518ac8" />
+      <stop offset="1" stop-color="#315aa9" />
+    </linearGradient>
+    <linearGradient id="d" x1="75.2" x2="24.4" y1="74.5" y2="260.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4377bb" />
+      <stop offset=".5" stop-color="#1a336b" />
+      <stop offset="1" stop-color="#1a336b" />
     </linearGradient>
   </defs>
-  <path fill="url(#solid-a)" d="M64 8 12 36l52 28 52-28L64 8Z"/>
-  <path fill="url(#solid-b)" d="M12 92l52 28 52-28V36L64 64 12 36v56Z"/>
-  <path fill="#fff" fill-opacity=".9" d="M64 48 31 31l33-18 33 18-33 17Zm0 32L31 63V45l33 17 33-17v18L64 80Zm0 35L31 97V78l33 17 33-17v19l-33 18Z"/>
+  <path fill="#76b3e1" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" />
+  <path fill="url(#a)" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" opacity=".3" />
+  <path fill="#518ac8" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" />
+  <path fill="url(#b)" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" opacity=".3" />
+  <path fill="url(#c)" d="M104.654 65.91a36.226 36.226 0 0 0-38.641-12.076L16.1 69.934 0 98.111l90.164 15.295 16.1-28.981c3.22-5.635 2.415-12.075-1.61-18.516z" />
+  <path fill="url(#d)" d="M88.553 94.085A36.226 36.226 0 0 0 49.912 82.01L0 98.11s42.667 32.202 75.673 24.152l2.415-.806c13.686-4.025 18.516-16.905 10.465-27.37z" />
 </svg>
 ",
   "client/src/App.jsx": "import {createSignal} from 'solid-js';
@@ -7408,6 +7478,7 @@ const Main = () => {
 };
 ",
   "client/src/Button.jsx": "import './button.css';
+
 export const Button = (props) => (
   <button
     onClick={props.onClick}
@@ -7468,6 +7539,7 @@ import {createLocalPersister} from 'tinybase/persisters/persister-browser';
 import {useCreatePersister} from 'tinybase/ui-solid';
 
 export {STORE_ID};
+
 export {
   useAddRowCallback,
   useDelRowCallback,
@@ -11302,6 +11374,7 @@ export const hideLoading = (loadingDiv) => {
 }
 ",
   "client/src/message.js": "import './message.css';
+
 export const createMessage = ({username, text, timestamp}) => {
   const time = new Date(timestamp).toLocaleTimeString();
 
@@ -11758,6 +11831,7 @@ export const app = async (root) => {
 }
 ",
   "client/src/brushSize.js": "import './brushSize.css';
+
 export const createBrushSize = (store) => {
   const container = document.createElement('div');
   container.id = 'brushSize';
@@ -11854,6 +11928,7 @@ export const createButton = (
 ",
   "client/src/canvas.js": "import './canvas.css';
 import {getHlcFunctions} from 'tinybase';
+
 const [getNextHlc] = getHlcFunctions();
 
 export const createCanvas = (settingsStore, canvasStore) => {
@@ -12009,6 +12084,7 @@ canvasPersister.load().then(() => {
 }
 ",
   "client/src/colorPicker.js": "import './colorPicker.css';
+
 export const createColorPicker = (store) => {
   const colors = [
     '#d81b60',
@@ -12061,6 +12137,7 @@ export const createColorPicker = (store) => {
 }
 ",
   "client/src/drawingControls.js": "import './drawingControls.css';
+
 import {createButton} from './button';
 import {createColorPicker} from './colorPicker';
 import {createBrushSize} from './brushSize';
@@ -12528,6 +12605,7 @@ export const app = async (root) => {
 }
 ",
   "client/src/brushSize.js": "import './brushSize.css';
+
 export const createBrushSize = (store) => {
   const container = document.createElement('div');
   container.id = 'brushSize';
@@ -12624,6 +12702,7 @@ export const createButton = (
 ",
   "client/src/canvas.js": "import './canvas.css';
 import {getHlcFunctions} from 'tinybase';
+
 const [getNextHlc] = getHlcFunctions();
 
 export const createCanvas = (settingsStore, canvasStore) => {
@@ -12774,6 +12853,7 @@ resolveCanvasReady();
 }
 ",
   "client/src/colorPicker.js": "import './colorPicker.css';
+
 export const createColorPicker = (store) => {
   const colors = [
     '#d81b60',
@@ -12826,6 +12906,7 @@ export const createColorPicker = (store) => {
 }
 ",
   "client/src/drawingControls.js": "import './drawingControls.css';
+
 import {createButton} from './button';
 import {createColorPicker} from './colorPicker';
 import {createBrushSize} from './brushSize';
@@ -13282,6 +13363,7 @@ export const app = async (root) => {
 }
 ",
   "client/src/board.js": "import './board.css';
+
 import {createSquare} from './square';
 
 export const createBoard = (store) => {
@@ -13462,6 +13544,7 @@ export const createGame = (store) => {
 }
 ",
   "client/src/gameStatus.js": "import './gameStatus.css';
+
 export const createGameStatus = (store) => {
   const status = document.createElement('div');
   status.id = 'gameStatus';
@@ -20338,18 +20421,33 @@ with the store.
 </svg>",
   "client/public/solid.svg": "<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <defs>
-    <linearGradient id="solid-a" x1="24" x2="104" y1="20" y2="108" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#335d92"/>
+    <linearGradient id="a" x1="27.5" x2="152" y1="3" y2="63.5" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset=".1" stop-color="#76b3e1" />
+      <stop offset=".3" stop-color="#dcf2fd" />
+      <stop offset="1" stop-color="#76b3e1" />
     </linearGradient>
-    <linearGradient id="solid-b" x1="24" x2="104" y1="108" y2="20" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#4d7fbc"/>
+    <linearGradient id="b" x1="95.8" x2="74" y1="32.6" y2="105.2" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#76b3e1" />
+      <stop offset=".5" stop-color="#4377bb" />
+      <stop offset="1" stop-color="#1f3b77" />
+    </linearGradient>
+    <linearGradient id="c" x1="18.4" x2="144.3" y1="64.2" y2="149.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#315aa9" />
+      <stop offset=".5" stop-color="#518ac8" />
+      <stop offset="1" stop-color="#315aa9" />
+    </linearGradient>
+    <linearGradient id="d" x1="75.2" x2="24.4" y1="74.5" y2="260.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4377bb" />
+      <stop offset=".5" stop-color="#1a336b" />
+      <stop offset="1" stop-color="#1a336b" />
     </linearGradient>
   </defs>
-  <path fill="url(#solid-a)" d="M64 8 12 36l52 28 52-28L64 8Z"/>
-  <path fill="url(#solid-b)" d="M12 92l52 28 52-28V36L64 64 12 36v56Z"/>
-  <path fill="#fff" fill-opacity=".9" d="M64 48 31 31l33-18 33 18-33 17Zm0 32L31 63V45l33 17 33-17v18L64 80Zm0 35L31 97V78l33 17 33-17v19l-33 18Z"/>
+  <path fill="#76b3e1" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" />
+  <path fill="url(#a)" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" opacity=".3" />
+  <path fill="#518ac8" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" />
+  <path fill="url(#b)" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" opacity=".3" />
+  <path fill="url(#c)" d="M104.654 65.91a36.226 36.226 0 0 0-38.641-12.076L16.1 69.934 0 98.111l90.164 15.295 16.1-28.981c3.22-5.635 2.415-12.075-1.61-18.516z" />
+  <path fill="url(#d)" d="M88.553 94.085A36.226 36.226 0 0 0 49.912 82.01L0 98.11s42.667 32.202 75.673 24.152l2.415-.806c13.686-4.025 18.516-16.905 10.465-27.37z" />
 </svg>
 ",
   "client/public/ts.svg": "<svg fill="none" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg">
@@ -21168,18 +21266,33 @@ with the store.
 </svg>",
   "client/public/solid.svg": "<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <defs>
-    <linearGradient id="solid-a" x1="24" x2="104" y1="20" y2="108" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#335d92"/>
+    <linearGradient id="a" x1="27.5" x2="152" y1="3" y2="63.5" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset=".1" stop-color="#76b3e1" />
+      <stop offset=".3" stop-color="#dcf2fd" />
+      <stop offset="1" stop-color="#76b3e1" />
     </linearGradient>
-    <linearGradient id="solid-b" x1="24" x2="104" y1="108" y2="20" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#4d7fbc"/>
+    <linearGradient id="b" x1="95.8" x2="74" y1="32.6" y2="105.2" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#76b3e1" />
+      <stop offset=".5" stop-color="#4377bb" />
+      <stop offset="1" stop-color="#1f3b77" />
+    </linearGradient>
+    <linearGradient id="c" x1="18.4" x2="144.3" y1="64.2" y2="149.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#315aa9" />
+      <stop offset=".5" stop-color="#518ac8" />
+      <stop offset="1" stop-color="#315aa9" />
+    </linearGradient>
+    <linearGradient id="d" x1="75.2" x2="24.4" y1="74.5" y2="260.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4377bb" />
+      <stop offset=".5" stop-color="#1a336b" />
+      <stop offset="1" stop-color="#1a336b" />
     </linearGradient>
   </defs>
-  <path fill="url(#solid-a)" d="M64 8 12 36l52 28 52-28L64 8Z"/>
-  <path fill="url(#solid-b)" d="M12 92l52 28 52-28V36L64 64 12 36v56Z"/>
-  <path fill="#fff" fill-opacity=".9" d="M64 48 31 31l33-18 33 18-33 17Zm0 32L31 63V45l33 17 33-17v18L64 80Zm0 35L31 97V78l33 17 33-17v19l-33 18Z"/>
+  <path fill="#76b3e1" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" />
+  <path fill="url(#a)" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" opacity=".3" />
+  <path fill="#518ac8" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" />
+  <path fill="url(#b)" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" opacity=".3" />
+  <path fill="url(#c)" d="M104.654 65.91a36.226 36.226 0 0 0-38.641-12.076L16.1 69.934 0 98.111l90.164 15.295 16.1-28.981c3.22-5.635 2.415-12.075-1.61-18.516z" />
+  <path fill="url(#d)" d="M88.553 94.085A36.226 36.226 0 0 0 49.912 82.01L0 98.11s42.667 32.202 75.673 24.152l2.415-.806c13.686-4.025 18.516-16.905 10.465-27.37z" />
 </svg>
 ",
   "client/public/sync.svg": "<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#8a8f98">
@@ -22025,18 +22138,33 @@ with the store.
 </svg>",
   "client/public/solid.svg": "<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <defs>
-    <linearGradient id="solid-a" x1="24" x2="104" y1="20" y2="108" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#335d92"/>
+    <linearGradient id="a" x1="27.5" x2="152" y1="3" y2="63.5" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset=".1" stop-color="#76b3e1" />
+      <stop offset=".3" stop-color="#dcf2fd" />
+      <stop offset="1" stop-color="#76b3e1" />
     </linearGradient>
-    <linearGradient id="solid-b" x1="24" x2="104" y1="108" y2="20" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#4d7fbc"/>
+    <linearGradient id="b" x1="95.8" x2="74" y1="32.6" y2="105.2" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#76b3e1" />
+      <stop offset=".5" stop-color="#4377bb" />
+      <stop offset="1" stop-color="#1f3b77" />
+    </linearGradient>
+    <linearGradient id="c" x1="18.4" x2="144.3" y1="64.2" y2="149.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#315aa9" />
+      <stop offset=".5" stop-color="#518ac8" />
+      <stop offset="1" stop-color="#315aa9" />
+    </linearGradient>
+    <linearGradient id="d" x1="75.2" x2="24.4" y1="74.5" y2="260.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4377bb" />
+      <stop offset=".5" stop-color="#1a336b" />
+      <stop offset="1" stop-color="#1a336b" />
     </linearGradient>
   </defs>
-  <path fill="url(#solid-a)" d="M64 8 12 36l52 28 52-28L64 8Z"/>
-  <path fill="url(#solid-b)" d="M12 92l52 28 52-28V36L64 64 12 36v56Z"/>
-  <path fill="#fff" fill-opacity=".9" d="M64 48 31 31l33-18 33 18-33 17Zm0 32L31 63V45l33 17 33-17v18L64 80Zm0 35L31 97V78l33 17 33-17v19l-33 18Z"/>
+  <path fill="#76b3e1" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" />
+  <path fill="url(#a)" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" opacity=".3" />
+  <path fill="#518ac8" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" />
+  <path fill="url(#b)" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" opacity=".3" />
+  <path fill="url(#c)" d="M104.654 65.91a36.226 36.226 0 0 0-38.641-12.076L16.1 69.934 0 98.111l90.164 15.295 16.1-28.981c3.22-5.635 2.415-12.075-1.61-18.516z" />
+  <path fill="url(#d)" d="M88.553 94.085A36.226 36.226 0 0 0 49.912 82.01L0 98.11s42.667 32.202 75.673 24.152l2.415-.806c13.686-4.025 18.516-16.905 10.465-27.37z" />
 </svg>
 ",
   "client/public/sqlite.svg": "﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -22943,18 +23071,33 @@ with the store.
 </svg>",
   "client/public/solid.svg": "<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <defs>
-    <linearGradient id="solid-a" x1="24" x2="104" y1="20" y2="108" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#335d92"/>
+    <linearGradient id="a" x1="27.5" x2="152" y1="3" y2="63.5" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset=".1" stop-color="#76b3e1" />
+      <stop offset=".3" stop-color="#dcf2fd" />
+      <stop offset="1" stop-color="#76b3e1" />
     </linearGradient>
-    <linearGradient id="solid-b" x1="24" x2="104" y1="108" y2="20" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#4d7fbc"/>
+    <linearGradient id="b" x1="95.8" x2="74" y1="32.6" y2="105.2" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#76b3e1" />
+      <stop offset=".5" stop-color="#4377bb" />
+      <stop offset="1" stop-color="#1f3b77" />
+    </linearGradient>
+    <linearGradient id="c" x1="18.4" x2="144.3" y1="64.2" y2="149.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#315aa9" />
+      <stop offset=".5" stop-color="#518ac8" />
+      <stop offset="1" stop-color="#315aa9" />
+    </linearGradient>
+    <linearGradient id="d" x1="75.2" x2="24.4" y1="74.5" y2="260.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4377bb" />
+      <stop offset=".5" stop-color="#1a336b" />
+      <stop offset="1" stop-color="#1a336b" />
     </linearGradient>
   </defs>
-  <path fill="url(#solid-a)" d="M64 8 12 36l52 28 52-28L64 8Z"/>
-  <path fill="url(#solid-b)" d="M12 92l52 28 52-28V36L64 64 12 36v56Z"/>
-  <path fill="#fff" fill-opacity=".9" d="M64 48 31 31l33-18 33 18-33 17Zm0 32L31 63V45l33 17 33-17v18L64 80Zm0 35L31 97V78l33 17 33-17v19l-33 18Z"/>
+  <path fill="#76b3e1" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" />
+  <path fill="url(#a)" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" opacity=".3" />
+  <path fill="#518ac8" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" />
+  <path fill="url(#b)" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" opacity=".3" />
+  <path fill="url(#c)" d="M104.654 65.91a36.226 36.226 0 0 0-38.641-12.076L16.1 69.934 0 98.111l90.164 15.295 16.1-28.981c3.22-5.635 2.415-12.075-1.61-18.516z" />
+  <path fill="url(#d)" d="M88.553 94.085A36.226 36.226 0 0 0 49.912 82.01L0 98.11s42.667 32.202 75.673 24.152l2.415-.806c13.686-4.025 18.516-16.905 10.465-27.37z" />
 </svg>
 ",
   "client/public/ts.svg": "<svg fill="none" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg">
@@ -23816,18 +23959,33 @@ with the store.
 </svg>",
   "client/public/solid.svg": "<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <defs>
-    <linearGradient id="solid-a" x1="24" x2="104" y1="20" y2="108" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#335d92"/>
+    <linearGradient id="a" x1="27.5" x2="152" y1="3" y2="63.5" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset=".1" stop-color="#76b3e1" />
+      <stop offset=".3" stop-color="#dcf2fd" />
+      <stop offset="1" stop-color="#76b3e1" />
     </linearGradient>
-    <linearGradient id="solid-b" x1="24" x2="104" y1="108" y2="20" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#4d7fbc"/>
+    <linearGradient id="b" x1="95.8" x2="74" y1="32.6" y2="105.2" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#76b3e1" />
+      <stop offset=".5" stop-color="#4377bb" />
+      <stop offset="1" stop-color="#1f3b77" />
+    </linearGradient>
+    <linearGradient id="c" x1="18.4" x2="144.3" y1="64.2" y2="149.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#315aa9" />
+      <stop offset=".5" stop-color="#518ac8" />
+      <stop offset="1" stop-color="#315aa9" />
+    </linearGradient>
+    <linearGradient id="d" x1="75.2" x2="24.4" y1="74.5" y2="260.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4377bb" />
+      <stop offset=".5" stop-color="#1a336b" />
+      <stop offset="1" stop-color="#1a336b" />
     </linearGradient>
   </defs>
-  <path fill="url(#solid-a)" d="M64 8 12 36l52 28 52-28L64 8Z"/>
-  <path fill="url(#solid-b)" d="M12 92l52 28 52-28V36L64 64 12 36v56Z"/>
-  <path fill="#fff" fill-opacity=".9" d="M64 48 31 31l33-18 33 18-33 17Zm0 32L31 63V45l33 17 33-17v18L64 80Zm0 35L31 97V78l33 17 33-17v19l-33 18Z"/>
+  <path fill="#76b3e1" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" />
+  <path fill="url(#a)" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" opacity=".3" />
+  <path fill="#518ac8" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" />
+  <path fill="url(#b)" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" opacity=".3" />
+  <path fill="url(#c)" d="M104.654 65.91a36.226 36.226 0 0 0-38.641-12.076L16.1 69.934 0 98.111l90.164 15.295 16.1-28.981c3.22-5.635 2.415-12.075-1.61-18.516z" />
+  <path fill="url(#d)" d="M88.553 94.085A36.226 36.226 0 0 0 49.912 82.01L0 98.11s42.667 32.202 75.673 24.152l2.415-.806c13.686-4.025 18.516-16.905 10.465-27.37z" />
 </svg>
 ",
   "client/public/sync.svg": "<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#8a8f98">
@@ -24716,18 +24874,33 @@ with the store.
 </svg>",
   "client/public/solid.svg": "<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <defs>
-    <linearGradient id="solid-a" x1="24" x2="104" y1="20" y2="108" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#335d92"/>
+    <linearGradient id="a" x1="27.5" x2="152" y1="3" y2="63.5" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset=".1" stop-color="#76b3e1" />
+      <stop offset=".3" stop-color="#dcf2fd" />
+      <stop offset="1" stop-color="#76b3e1" />
     </linearGradient>
-    <linearGradient id="solid-b" x1="24" x2="104" y1="108" y2="20" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#4d7fbc"/>
+    <linearGradient id="b" x1="95.8" x2="74" y1="32.6" y2="105.2" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#76b3e1" />
+      <stop offset=".5" stop-color="#4377bb" />
+      <stop offset="1" stop-color="#1f3b77" />
+    </linearGradient>
+    <linearGradient id="c" x1="18.4" x2="144.3" y1="64.2" y2="149.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#315aa9" />
+      <stop offset=".5" stop-color="#518ac8" />
+      <stop offset="1" stop-color="#315aa9" />
+    </linearGradient>
+    <linearGradient id="d" x1="75.2" x2="24.4" y1="74.5" y2="260.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4377bb" />
+      <stop offset=".5" stop-color="#1a336b" />
+      <stop offset="1" stop-color="#1a336b" />
     </linearGradient>
   </defs>
-  <path fill="url(#solid-a)" d="M64 8 12 36l52 28 52-28L64 8Z"/>
-  <path fill="url(#solid-b)" d="M12 92l52 28 52-28V36L64 64 12 36v56Z"/>
-  <path fill="#fff" fill-opacity=".9" d="M64 48 31 31l33-18 33 18-33 17Zm0 32L31 63V45l33 17 33-17v18L64 80Zm0 35L31 97V78l33 17 33-17v19l-33 18Z"/>
+  <path fill="#76b3e1" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" />
+  <path fill="url(#a)" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" opacity=".3" />
+  <path fill="#518ac8" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" />
+  <path fill="url(#b)" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" opacity=".3" />
+  <path fill="url(#c)" d="M104.654 65.91a36.226 36.226 0 0 0-38.641-12.076L16.1 69.934 0 98.111l90.164 15.295 16.1-28.981c3.22-5.635 2.415-12.075-1.61-18.516z" />
+  <path fill="url(#d)" d="M88.553 94.085A36.226 36.226 0 0 0 49.912 82.01L0 98.11s42.667 32.202 75.673 24.152l2.415-.806c13.686-4.025 18.516-16.905 10.465-27.37z" />
 </svg>
 ",
   "client/public/sqlite.svg": "﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -25675,18 +25848,33 @@ with the store.
 </svg>",
   "client/public/solid.svg": "<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <defs>
-    <linearGradient id="solid-a" x1="24" x2="104" y1="20" y2="108" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#335d92"/>
+    <linearGradient id="a" x1="27.5" x2="152" y1="3" y2="63.5" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset=".1" stop-color="#76b3e1" />
+      <stop offset=".3" stop-color="#dcf2fd" />
+      <stop offset="1" stop-color="#76b3e1" />
     </linearGradient>
-    <linearGradient id="solid-b" x1="24" x2="104" y1="108" y2="20" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#4d7fbc"/>
+    <linearGradient id="b" x1="95.8" x2="74" y1="32.6" y2="105.2" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#76b3e1" />
+      <stop offset=".5" stop-color="#4377bb" />
+      <stop offset="1" stop-color="#1f3b77" />
+    </linearGradient>
+    <linearGradient id="c" x1="18.4" x2="144.3" y1="64.2" y2="149.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#315aa9" />
+      <stop offset=".5" stop-color="#518ac8" />
+      <stop offset="1" stop-color="#315aa9" />
+    </linearGradient>
+    <linearGradient id="d" x1="75.2" x2="24.4" y1="74.5" y2="260.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4377bb" />
+      <stop offset=".5" stop-color="#1a336b" />
+      <stop offset="1" stop-color="#1a336b" />
     </linearGradient>
   </defs>
-  <path fill="url(#solid-a)" d="M64 8 12 36l52 28 52-28L64 8Z"/>
-  <path fill="url(#solid-b)" d="M12 92l52 28 52-28V36L64 64 12 36v56Z"/>
-  <path fill="#fff" fill-opacity=".9" d="M64 48 31 31l33-18 33 18-33 17Zm0 32L31 63V45l33 17 33-17v18L64 80Zm0 35L31 97V78l33 17 33-17v19l-33 18Z"/>
+  <path fill="#76b3e1" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" />
+  <path fill="url(#a)" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" opacity=".3" />
+  <path fill="#518ac8" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" />
+  <path fill="url(#b)" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" opacity=".3" />
+  <path fill="url(#c)" d="M104.654 65.91a36.226 36.226 0 0 0-38.641-12.076L16.1 69.934 0 98.111l90.164 15.295 16.1-28.981c3.22-5.635 2.415-12.075-1.61-18.516z" />
+  <path fill="url(#d)" d="M88.553 94.085A36.226 36.226 0 0 0 49.912 82.01L0 98.11s42.667 32.202 75.673 24.152l2.415-.806c13.686-4.025 18.516-16.905 10.465-27.37z" />
 </svg>
 ",
   "client/public/ts.svg": "<svg fill="none" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg">
@@ -25751,7 +25939,7 @@ export const Board = () => {
         {(position) => (
           <Square
             position={position}
-            inactive={gameStatus() !== 'playing'}
+            isDisabled={gameStatus() !== 'playing'}
             winning={winningPositions().has(position)}
           />
         )}
@@ -25905,7 +26093,7 @@ import {useCell, useSetCellCallback, useValue, STORE_ID} from './Store';
 
 export const Square = (props: {
   position: string;
-  inactive: boolean;
+  isDisabled: boolean;
   winning: boolean;
 }) => {
   const value = useCell(
@@ -25926,9 +26114,9 @@ export const Square = (props: {
 
   return (
     <button
-      class={\`square\${props.inactive || !!value() ? ' disabled' : ''}\${props.winning ? ' winning' : ''}\`}
+      class={\`square\${props.isDisabled || !!value() ? ' disabled' : ''}\${props.winning ? ' winning' : ''}\`}
       onClick={handleClick}
-      disabled={props.inactive || !!value()}
+      disabled={props.isDisabled || !!value()}
     >
       {value() || ''}
     </button>
@@ -26468,18 +26656,33 @@ with the store.
 </svg>",
   "client/public/solid.svg": "<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <defs>
-    <linearGradient id="solid-a" x1="24" x2="104" y1="20" y2="108" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#335d92"/>
+    <linearGradient id="a" x1="27.5" x2="152" y1="3" y2="63.5" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset=".1" stop-color="#76b3e1" />
+      <stop offset=".3" stop-color="#dcf2fd" />
+      <stop offset="1" stop-color="#76b3e1" />
     </linearGradient>
-    <linearGradient id="solid-b" x1="24" x2="104" y1="108" y2="20" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#4d7fbc"/>
+    <linearGradient id="b" x1="95.8" x2="74" y1="32.6" y2="105.2" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#76b3e1" />
+      <stop offset=".5" stop-color="#4377bb" />
+      <stop offset="1" stop-color="#1f3b77" />
+    </linearGradient>
+    <linearGradient id="c" x1="18.4" x2="144.3" y1="64.2" y2="149.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#315aa9" />
+      <stop offset=".5" stop-color="#518ac8" />
+      <stop offset="1" stop-color="#315aa9" />
+    </linearGradient>
+    <linearGradient id="d" x1="75.2" x2="24.4" y1="74.5" y2="260.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4377bb" />
+      <stop offset=".5" stop-color="#1a336b" />
+      <stop offset="1" stop-color="#1a336b" />
     </linearGradient>
   </defs>
-  <path fill="url(#solid-a)" d="M64 8 12 36l52 28 52-28L64 8Z"/>
-  <path fill="url(#solid-b)" d="M12 92l52 28 52-28V36L64 64 12 36v56Z"/>
-  <path fill="#fff" fill-opacity=".9" d="M64 48 31 31l33-18 33 18-33 17Zm0 32L31 63V45l33 17 33-17v18L64 80Zm0 35L31 97V78l33 17 33-17v19l-33 18Z"/>
+  <path fill="#76b3e1" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" />
+  <path fill="url(#a)" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" opacity=".3" />
+  <path fill="#518ac8" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" />
+  <path fill="url(#b)" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" opacity=".3" />
+  <path fill="url(#c)" d="M104.654 65.91a36.226 36.226 0 0 0-38.641-12.076L16.1 69.934 0 98.111l90.164 15.295 16.1-28.981c3.22-5.635 2.415-12.075-1.61-18.516z" />
+  <path fill="url(#d)" d="M88.553 94.085A36.226 36.226 0 0 0 49.912 82.01L0 98.11s42.667 32.202 75.673 24.152l2.415-.806c13.686-4.025 18.516-16.905 10.465-27.37z" />
 </svg>
 ",
   "client/public/sync.svg": "<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#8a8f98">
@@ -26549,7 +26752,7 @@ export const Board = () => {
         {(position) => (
           <Square
             position={position}
-            inactive={gameStatus() !== 'playing'}
+            isDisabled={gameStatus() !== 'playing'}
             winning={winningPositions().has(position)}
           />
         )}
@@ -26708,7 +26911,7 @@ import {useCell, useSetCellCallback, useValue, STORE_ID} from './Store';
 
 export const Square = (props: {
   position: string;
-  inactive: boolean;
+  isDisabled: boolean;
   winning: boolean;
 }) => {
   const value = useCell(
@@ -26729,9 +26932,9 @@ export const Square = (props: {
 
   return (
     <button
-      class={\`square\${props.inactive || !!value() ? ' disabled' : ''}\${props.winning ? ' winning' : ''}\`}
+      class={\`square\${props.isDisabled || !!value() ? ' disabled' : ''}\${props.winning ? ' winning' : ''}\`}
       onClick={handleClick}
-      disabled={props.inactive || !!value()}
+      disabled={props.isDisabled || !!value()}
     >
       {value() || ''}
     </button>
@@ -27288,18 +27491,33 @@ with the store.
 </svg>",
   "client/public/solid.svg": "<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <defs>
-    <linearGradient id="solid-a" x1="24" x2="104" y1="20" y2="108" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#335d92"/>
+    <linearGradient id="a" x1="27.5" x2="152" y1="3" y2="63.5" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset=".1" stop-color="#76b3e1" />
+      <stop offset=".3" stop-color="#dcf2fd" />
+      <stop offset="1" stop-color="#76b3e1" />
     </linearGradient>
-    <linearGradient id="solid-b" x1="24" x2="104" y1="108" y2="20" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#4d7fbc"/>
+    <linearGradient id="b" x1="95.8" x2="74" y1="32.6" y2="105.2" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#76b3e1" />
+      <stop offset=".5" stop-color="#4377bb" />
+      <stop offset="1" stop-color="#1f3b77" />
+    </linearGradient>
+    <linearGradient id="c" x1="18.4" x2="144.3" y1="64.2" y2="149.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#315aa9" />
+      <stop offset=".5" stop-color="#518ac8" />
+      <stop offset="1" stop-color="#315aa9" />
+    </linearGradient>
+    <linearGradient id="d" x1="75.2" x2="24.4" y1="74.5" y2="260.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4377bb" />
+      <stop offset=".5" stop-color="#1a336b" />
+      <stop offset="1" stop-color="#1a336b" />
     </linearGradient>
   </defs>
-  <path fill="url(#solid-a)" d="M64 8 12 36l52 28 52-28L64 8Z"/>
-  <path fill="url(#solid-b)" d="M12 92l52 28 52-28V36L64 64 12 36v56Z"/>
-  <path fill="#fff" fill-opacity=".9" d="M64 48 31 31l33-18 33 18-33 17Zm0 32L31 63V45l33 17 33-17v18L64 80Zm0 35L31 97V78l33 17 33-17v19l-33 18Z"/>
+  <path fill="#76b3e1" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" />
+  <path fill="url(#a)" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" opacity=".3" />
+  <path fill="#518ac8" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" />
+  <path fill="url(#b)" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" opacity=".3" />
+  <path fill="url(#c)" d="M104.654 65.91a36.226 36.226 0 0 0-38.641-12.076L16.1 69.934 0 98.111l90.164 15.295 16.1-28.981c3.22-5.635 2.415-12.075-1.61-18.516z" />
+  <path fill="url(#d)" d="M88.553 94.085A36.226 36.226 0 0 0 49.912 82.01L0 98.11s42.667 32.202 75.673 24.152l2.415-.806c13.686-4.025 18.516-16.905 10.465-27.37z" />
 </svg>
 ",
   "client/public/sqlite.svg": "﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -27422,7 +27640,7 @@ export const Board = () => {
         {(position) => (
           <Square
             position={position}
-            inactive={gameStatus() !== 'playing'}
+            isDisabled={gameStatus() !== 'playing'}
             winning={winningPositions().has(position)}
           />
         )}
@@ -27581,7 +27799,7 @@ import {useCell, useSetCellCallback, useValue, STORE_ID} from './Store';
 
 export const Square = (props: {
   position: string;
-  inactive: boolean;
+  isDisabled: boolean;
   winning: boolean;
 }) => {
   const value = useCell(
@@ -27602,9 +27820,9 @@ export const Square = (props: {
 
   return (
     <button
-      class={\`square\${props.inactive || !!value() ? ' disabled' : ''}\${props.winning ? ' winning' : ''}\`}
+      class={\`square\${props.isDisabled || !!value() ? ' disabled' : ''}\${props.winning ? ' winning' : ''}\`}
       onClick={handleClick}
-      disabled={props.inactive || !!value()}
+      disabled={props.isDisabled || !!value()}
     >
       {value() || ''}
     </button>
@@ -28167,18 +28385,33 @@ with the store.
 </svg>",
   "client/public/solid.svg": "<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <defs>
-    <linearGradient id="solid-a" x1="24" x2="104" y1="20" y2="108" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#335d92"/>
+    <linearGradient id="a" x1="27.5" x2="152" y1="3" y2="63.5" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset=".1" stop-color="#76b3e1" />
+      <stop offset=".3" stop-color="#dcf2fd" />
+      <stop offset="1" stop-color="#76b3e1" />
     </linearGradient>
-    <linearGradient id="solid-b" x1="24" x2="104" y1="108" y2="20" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#4d7fbc"/>
+    <linearGradient id="b" x1="95.8" x2="74" y1="32.6" y2="105.2" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#76b3e1" />
+      <stop offset=".5" stop-color="#4377bb" />
+      <stop offset="1" stop-color="#1f3b77" />
+    </linearGradient>
+    <linearGradient id="c" x1="18.4" x2="144.3" y1="64.2" y2="149.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#315aa9" />
+      <stop offset=".5" stop-color="#518ac8" />
+      <stop offset="1" stop-color="#315aa9" />
+    </linearGradient>
+    <linearGradient id="d" x1="75.2" x2="24.4" y1="74.5" y2="260.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4377bb" />
+      <stop offset=".5" stop-color="#1a336b" />
+      <stop offset="1" stop-color="#1a336b" />
     </linearGradient>
   </defs>
-  <path fill="url(#solid-a)" d="M64 8 12 36l52 28 52-28L64 8Z"/>
-  <path fill="url(#solid-b)" d="M12 92l52 28 52-28V36L64 64 12 36v56Z"/>
-  <path fill="#fff" fill-opacity=".9" d="M64 48 31 31l33-18 33 18-33 17Zm0 32L31 63V45l33 17 33-17v18L64 80Zm0 35L31 97V78l33 17 33-17v19l-33 18Z"/>
+  <path fill="#76b3e1" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" />
+  <path fill="url(#a)" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" opacity=".3" />
+  <path fill="#518ac8" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" />
+  <path fill="url(#b)" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" opacity=".3" />
+  <path fill="url(#c)" d="M104.654 65.91a36.226 36.226 0 0 0-38.641-12.076L16.1 69.934 0 98.111l90.164 15.295 16.1-28.981c3.22-5.635 2.415-12.075-1.61-18.516z" />
+  <path fill="url(#d)" d="M88.553 94.085A36.226 36.226 0 0 0 49.912 82.01L0 98.11s42.667 32.202 75.673 24.152l2.415-.806c13.686-4.025 18.516-16.905 10.465-27.37z" />
 </svg>
 ",
   "client/public/ts.svg": "<svg fill="none" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg">
@@ -28928,18 +29161,33 @@ with the store.
 </svg>",
   "client/public/solid.svg": "<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <defs>
-    <linearGradient id="solid-a" x1="24" x2="104" y1="20" y2="108" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#335d92"/>
+    <linearGradient id="a" x1="27.5" x2="152" y1="3" y2="63.5" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset=".1" stop-color="#76b3e1" />
+      <stop offset=".3" stop-color="#dcf2fd" />
+      <stop offset="1" stop-color="#76b3e1" />
     </linearGradient>
-    <linearGradient id="solid-b" x1="24" x2="104" y1="108" y2="20" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#4d7fbc"/>
+    <linearGradient id="b" x1="95.8" x2="74" y1="32.6" y2="105.2" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#76b3e1" />
+      <stop offset=".5" stop-color="#4377bb" />
+      <stop offset="1" stop-color="#1f3b77" />
+    </linearGradient>
+    <linearGradient id="c" x1="18.4" x2="144.3" y1="64.2" y2="149.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#315aa9" />
+      <stop offset=".5" stop-color="#518ac8" />
+      <stop offset="1" stop-color="#315aa9" />
+    </linearGradient>
+    <linearGradient id="d" x1="75.2" x2="24.4" y1="74.5" y2="260.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4377bb" />
+      <stop offset=".5" stop-color="#1a336b" />
+      <stop offset="1" stop-color="#1a336b" />
     </linearGradient>
   </defs>
-  <path fill="url(#solid-a)" d="M64 8 12 36l52 28 52-28L64 8Z"/>
-  <path fill="url(#solid-b)" d="M12 92l52 28 52-28V36L64 64 12 36v56Z"/>
-  <path fill="#fff" fill-opacity=".9" d="M64 48 31 31l33-18 33 18-33 17Zm0 32L31 63V45l33 17 33-17v18L64 80Zm0 35L31 97V78l33 17 33-17v19l-33 18Z"/>
+  <path fill="#76b3e1" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" />
+  <path fill="url(#a)" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" opacity=".3" />
+  <path fill="#518ac8" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" />
+  <path fill="url(#b)" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" opacity=".3" />
+  <path fill="url(#c)" d="M104.654 65.91a36.226 36.226 0 0 0-38.641-12.076L16.1 69.934 0 98.111l90.164 15.295 16.1-28.981c3.22-5.635 2.415-12.075-1.61-18.516z" />
+  <path fill="url(#d)" d="M88.553 94.085A36.226 36.226 0 0 0 49.912 82.01L0 98.11s42.667 32.202 75.673 24.152l2.415-.806c13.686-4.025 18.516-16.905 10.465-27.37z" />
 </svg>
 ",
   "client/public/sync.svg": "<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#8a8f98">
@@ -29716,18 +29964,33 @@ with the store.
 </svg>",
   "client/public/solid.svg": "<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <defs>
-    <linearGradient id="solid-a" x1="24" x2="104" y1="20" y2="108" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#335d92"/>
+    <linearGradient id="a" x1="27.5" x2="152" y1="3" y2="63.5" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset=".1" stop-color="#76b3e1" />
+      <stop offset=".3" stop-color="#dcf2fd" />
+      <stop offset="1" stop-color="#76b3e1" />
     </linearGradient>
-    <linearGradient id="solid-b" x1="24" x2="104" y1="108" y2="20" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#76b3e1"/>
-      <stop offset="1" stop-color="#4d7fbc"/>
+    <linearGradient id="b" x1="95.8" x2="74" y1="32.6" y2="105.2" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#76b3e1" />
+      <stop offset=".5" stop-color="#4377bb" />
+      <stop offset="1" stop-color="#1f3b77" />
+    </linearGradient>
+    <linearGradient id="c" x1="18.4" x2="144.3" y1="64.2" y2="149.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#315aa9" />
+      <stop offset=".5" stop-color="#518ac8" />
+      <stop offset="1" stop-color="#315aa9" />
+    </linearGradient>
+    <linearGradient id="d" x1="75.2" x2="24.4" y1="74.5" y2="260.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4377bb" />
+      <stop offset=".5" stop-color="#1a336b" />
+      <stop offset="1" stop-color="#1a336b" />
     </linearGradient>
   </defs>
-  <path fill="url(#solid-a)" d="M64 8 12 36l52 28 52-28L64 8Z"/>
-  <path fill="url(#solid-b)" d="M12 92l52 28 52-28V36L64 64 12 36v56Z"/>
-  <path fill="#fff" fill-opacity=".9" d="M64 48 31 31l33-18 33 18-33 17Zm0 32L31 63V45l33 17 33-17v18L64 80Zm0 35L31 97V78l33 17 33-17v19l-33 18Z"/>
+  <path fill="#76b3e1" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" />
+  <path fill="url(#a)" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" opacity=".3" />
+  <path fill="#518ac8" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" />
+  <path fill="url(#b)" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" opacity=".3" />
+  <path fill="url(#c)" d="M104.654 65.91a36.226 36.226 0 0 0-38.641-12.076L16.1 69.934 0 98.111l90.164 15.295 16.1-28.981c3.22-5.635 2.415-12.075-1.61-18.516z" />
+  <path fill="url(#d)" d="M88.553 94.085A36.226 36.226 0 0 0 49.912 82.01L0 98.11s42.667 32.202 75.673 24.152l2.415-.806c13.686-4.025 18.516-16.905 10.465-27.37z" />
 </svg>
 ",
   "client/public/sqlite.svg": "﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
