@@ -13,7 +13,7 @@
 {{#if schemas}}
   type Schemas = [typeof TABLES_SCHEMA, typeof VALUES_SCHEMA];
 
-  const {useCell, useCreateMergeableStore, {{#if persist}}useCreatePersister, {{/if}}useProvideStore, useSetCellCallback, useSetValuesCallback, useStore, useTableListener, useValue} = UiReact as UiReact.WithSchemas<Schemas>;
+  const {useCell, useCreateMergeableStore, {{#if persist}}useCreatePersister, {{/if}}{{#if sync}}useCreateSynchronizer, {{/if}}useProvideStore, useSetCellCallback, useSetValuesCallback, useStore, useTableListener, useValue} = UiReact as UiReact.WithSchemas<Schemas>;
 {{/if}}
 
 {{#if schemas}}
@@ -111,11 +111,9 @@ useProvideStore(STORE_ID, store);
   {{else}}
     {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';"}}
   {{/if}}
-  {{#if schemas}}
-    {{addImport "import {useCreateSynchronizer} from 'tinybase/ui-react/with-schemas';"}}
-  {{else}}
+  {{#unless schemas}}
     {{addImport "import {useCreateSynchronizer} from 'tinybase/ui-react';"}}
-  {{/if}}
+  {{/unless}}
 
   useCreateSynchronizer(store, async (store) => {
   const serverPathId = location.pathname;

@@ -19597,6 +19597,840 @@ export default defineConfig({
 }
 `;
 
+exports[`create-tinybase > ts-react-todos-remote-sync-schemas > should match snapshot 1`] = `
+{
+  "README.md": "# test-ts-react-todos-remote-sync-schemas
+
+A TinyBase app built with TypeScript and React.
+
+## Getting Started
+
+Alongside this file, you will see a directory called \`client\`.
+
+To start the web client with Vite, run the following commands:
+
+\`\`\`bash
+cd client
+npm install
+npm run dev
+\`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your React-based web application,
+built with Vite and TypeScript.
+
+#### Key Files
+
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.tsx\`**: Entry point that bootstraps and renders the React app
+- **\`src/App.tsx\`**: Main React component that renders the todo list
+- **\`src/Store.tsx\`**: TinyBase main store configuration
+- **\`src/config.tsx\`**: Configuration settings
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+Type-safe schemas define the structure of your data, providing autocomplete
+and compile-time type checking.
+
+The store is a **MergeableStore**, which supports real-time synchronization across
+multiple clients. When you open the app, it generates a unique room ID in the URL
+path (e.g., \`/abc123\`). Anyone who visits the same URL will share the same data
+and see live updates from other users.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
+
+**Synchronization** is powered by TinyBase's WebSocket synchronizer (connecting to a demo server at vite.tinybase.org).
+When data changes locally, it's sent to the server and broadcast to all other
+clients in the same room. The MergeableStore handles conflict resolution using
+CRDTs, ensuring all clients converge to the same state.
+
+**React Integration**: TinyBase provides React hooks that automatically subscribe
+to store changes and trigger re-renders when data updates. This means your UI
+stays in sync with your data with minimal boilerplate.
+
+Components like \`TodoList\` and \`TodoItem\` use hooks like \`useSortedRowIds\`, \`useRow\`, and
+callback hooks like \`useAddRowCallback\` and \`useDelRowCallback\`
+to interact
+with the store.
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/.npmrc": "legacy-peer-deps=true
+",
+  "client/index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase Todos</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        user-select: none;
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', sans-serif;
+      }
+
+      #root {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
+</html>
+",
+  "client/package.json": "{
+  "name": "test-ts-react-todos-remote-sync-schemas",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^8.0.13",
+    "typescript": "^6.0.3",
+    "@types/node": "^25.8.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.2"
+  },
+  "dependencies": {
+    "tinybase": "^8.4.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "reconnecting-websocket": "^4.4.0"
+  }
+}
+",
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "client/public/react.svg": "<svg xmlns="http://www.w3.org/2000/svg" viewBox="-11.5 -10.23174 23 20.46348">
+  <title>React Logo</title>
+  <circle cx="0" cy="0" r="2.05" fill="#61dafb" />
+  <g stroke="#61dafb" stroke-width="1" fill="none">
+    <ellipse rx="11" ry="4.2" />
+    <ellipse rx="11" ry="4.2" transform="rotate(60)" />
+    <ellipse rx="11" ry="4.2" transform="rotate(120)" />
+  </g>
+</svg>",
+  "client/public/sync.svg": "<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#8a8f98">
+  <path
+    d="M160-160v-80h110l-16-14q-52-46-73-105t-21-119q0-111 66.5-197.5T400-790v84q-72 26-116 88.5T240-478q0 45 17 87.5t53 78.5l10 10v-98h80v240H160Zm400-10v-84q72-26 116-88.5T720-482q0-45-17-87.5T650-648l-10-10v98h-80v-240h240v80H690l16 14q49 49 71.5 106.5T800-482q0 111-66.5 197.5T560-170Z" />
+</svg>
+",
+  "client/public/ts.svg": "<svg fill="none" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg">
+  <rect fill="#3178c6" height="512" width="512" />
+  <path clip-rule="evenodd"
+    d="m316.939 407.424v50.061c8.138 4.172 17.763 7.3 28.875 9.386s22.823 3.129 35.135 3.129c11.999 0 23.397-1.147 34.196-3.442 10.799-2.294 20.268-6.075 28.406-11.342 8.138-5.266 14.581-12.15 19.328-20.65s7.121-19.007 7.121-31.522c0-9.074-1.356-17.026-4.069-23.857s-6.625-12.906-11.738-18.225c-5.112-5.319-11.242-10.091-18.389-14.315s-15.207-8.213-24.18-11.967c-6.573-2.712-12.468-5.345-17.685-7.9-5.217-2.556-9.651-5.163-13.303-7.822-3.652-2.66-6.469-5.476-8.451-8.448-1.982-2.973-2.974-6.336-2.974-10.091 0-3.441.887-6.544 2.661-9.308s4.278-5.136 7.512-7.118c3.235-1.981 7.199-3.52 11.894-4.615 4.696-1.095 9.912-1.642 15.651-1.642 4.173 0 8.581.313 13.224.938 4.643.626 9.312 1.591 14.008 2.894 4.695 1.304 9.259 2.947 13.694 4.928 4.434 1.982 8.529 4.276 12.285 6.884v-46.776c-7.616-2.92-15.937-5.084-24.962-6.492s-19.381-2.112-31.066-2.112c-11.895 0-23.163 1.278-33.805 3.833s-20.006 6.544-28.093 11.967c-8.086 5.424-14.476 12.333-19.171 20.729-4.695 8.395-7.043 18.433-7.043 30.114 0 14.914 4.304 27.638 12.912 38.172 8.607 10.533 21.675 19.45 39.204 26.751 6.886 2.816 13.303 5.579 19.25 8.291s11.086 5.528 15.415 8.448c4.33 2.92 7.747 6.101 10.252 9.543 2.504 3.441 3.756 7.352 3.756 11.733 0 3.233-.783 6.231-2.348 8.995s-3.939 5.162-7.121 7.196-7.147 3.624-11.894 4.771c-4.748 1.148-10.303 1.721-16.668 1.721-10.851 0-21.597-1.903-32.24-5.71-10.642-3.806-20.502-9.516-29.579-17.13zm-84.159-123.342h64.22v-41.082h-179v41.082h63.906v182.918h50.874z"
+    fill="#fff" fill-rule="evenodd" />
+</svg>",
+  "client/src/App.tsx": "import {StrictMode, useState} from 'react';
+import {Loading} from './Loading';
+import {Provider} from 'tinybase/ui-react';
+import {Inspector} from 'tinybase/ui-react-inspector';
+import {Store} from './Store';
+import {TodoInput} from './TodoInput';
+import {TodoList} from './TodoList';
+import {TopBar} from './TopBar';
+
+export const App = () => (
+  <>
+    <TopBar />
+    <Main />
+  </>
+);
+
+const Main = () => {
+  const [loading, setLoading] = useState(true);
+
+  return (
+    <div id="app">
+      <StrictMode>
+        <Provider>
+          <Store onReady={() => setLoading(false)} />
+          {loading ? (
+            <Loading />
+          ) : (
+            <>
+              <TodoInput />
+              <TodoList />
+              <Inspector />
+            </>
+          )}
+        </Provider>
+      </StrictMode>
+    </div>
+  );
+};
+",
+  "client/src/Button.tsx": "import './button.css';
+import {ReactNode} from 'react';
+
+interface ButtonProps {
+  children: ReactNode;
+  onClick?: () => void;
+  variant?: 'default' | 'primary';
+  type?: 'button' | 'submit';
+}
+
+export const Button = ({
+  children,
+  onClick,
+  variant = 'default',
+  type = 'button',
+}: ButtonProps) => (
+  <button
+    onClick={onClick}
+    type={type}
+    className={variant === 'primary' ? 'primary' : undefined}
+  >
+    {children}
+  </button>
+);
+",
+  "client/src/Info.tsx": "import './info.css';
+
+export const Info = () => (
+  <div id="info">
+    <div id="infoTech">
+      <img
+        src="/ts.svg"
+        className="infoTechIcon"
+        title="Written in TypeScript"
+      />
+      <img src="/react.svg" className="infoTechIcon" title="Built with React" />
+      <img
+        src="/sync.svg"
+        className="infoTechIcon"
+        title="Data synchronization enabled"
+      />
+    </div>
+    <div id="infoIcon">
+      i
+      <div id="infoTooltip">
+        {
+          "A simple todo list application demonstrating TinyBase's reactive data management with CRUD operations."
+        }
+      </div>
+    </div>
+  </div>
+);
+",
+  "client/src/Input.tsx": "import './input.css';
+
+interface InputProps {
+  id?: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  autoFocus?: boolean;
+}
+
+export const Input = ({
+  id,
+  value,
+  onChange,
+  placeholder = '',
+  autoFocus = false,
+}: InputProps) => (
+  <input
+    id={id}
+    type="text"
+    value={value}
+    onChange={(e) => onChange(e.target.value)}
+    placeholder={placeholder}
+    autoFocus={autoFocus}
+  />
+);
+",
+  "client/src/Loading.tsx": "import './loading.css';
+
+export const Loading = () => <div id="loading" />;
+",
+  "client/src/Store.tsx": "import * as UiReact from 'tinybase/ui-react/with-schemas';
+import {type NoValuesSchema} from 'tinybase/with-schemas';
+import {TABLES_SCHEMA} from './storeData';
+import {STORE_ID, createTodosStore, type TodoRow} from './storeData';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser/with-schemas';
+import {SERVER} from './config';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client/with-schemas';
+
+type Schemas = [typeof TABLES_SCHEMA, NoValuesSchema];
+
+const {
+  useAddRowCallback,
+  useCreateMergeableStore,
+  useCreatePersister,
+  useCreateSynchronizer,
+  useDelRowCallback,
+  useProvideStore,
+  useRow,
+  useSetPartialRowCallback,
+  useSortedRowIds,
+} = UiReact as UiReact.WithSchemas<Schemas>;
+
+export {STORE_ID};
+export type {TodoRow};
+export {
+  useAddRowCallback,
+  useDelRowCallback,
+  useRow,
+  useSortedRowIds,
+  useSetPartialRowCallback,
+};
+
+export const Store = ({onReady}: {onReady?: () => void}) => {
+  const store = useCreateMergeableStore(() => createTodosStore());
+
+  useProvideStore(STORE_ID, store);
+
+  useCreatePersister(
+    store,
+    (store) => createLocalPersister(store, STORE_ID),
+    [],
+    async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      onReady?.();
+    },
+  );
+
+  useCreateSynchronizer(store, async (store) => {
+    const serverPathId = location.pathname;
+    const synchronizer = await createWsSynchronizer(
+      store,
+      new ReconnectingWebSocket(SERVER + serverPathId),
+    );
+    await synchronizer.startSync();
+
+    synchronizer.getWebSocket().addEventListener('open', () => {
+      synchronizer.load().then(() => {
+        synchronizer.save();
+      });
+    });
+
+    return synchronizer;
+  });
+
+  return null;
+};
+",
+  "client/src/Title.tsx": "import './title.css';
+
+export const Title = () => (
+  <h1 id="topBarTitle">
+    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+    TinyBase Todos
+  </h1>
+);
+",
+  "client/src/TodoInput.tsx": "import './todoInput.css';
+import {useState} from 'react';
+import {useAddRowCallback, STORE_ID} from './Store';
+import {Input} from './Input';
+import {Button} from './Button';
+
+export const TodoInput = () => {
+  const [text, setText] = useState('');
+  const addRow = useAddRowCallback(
+    'todos',
+    () => ({text: text.trim(), completed: false}),
+    [text],
+    STORE_ID,
+  );
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (text.trim()) {
+      addRow();
+      setText('');
+    }
+  };
+
+  return (
+    <form id="todoInput" onSubmit={handleSubmit}>
+      <Input
+        value={text}
+        onChange={setText}
+        placeholder="What needs to be done?"
+        autoFocus
+      />
+      <Button type="submit" variant="primary">
+        Add
+      </Button>
+    </form>
+  );
+};
+",
+  "client/src/TodoItem.tsx": "import './todoItem.css';
+import {
+  useDelRowCallback,
+  useRow,
+  useSetPartialRowCallback,
+  type TodoRow,
+  STORE_ID,
+} from './Store';
+import {Button} from './Button';
+
+export const TodoItem = ({rowId}: {rowId: string}) => {
+  const todo = useRow('todos', rowId, STORE_ID) as TodoRow;
+  const setPartialRow = useSetPartialRowCallback(
+    'todos',
+    rowId,
+    (e: React.ChangeEvent<HTMLInputElement>) => ({completed: e.target.checked}),
+    [],
+    STORE_ID,
+  );
+  const delRow = useDelRowCallback('todos', rowId, STORE_ID);
+
+  return (
+    <div className={\`todoItem\${todo.completed ? ' completed' : ''}\`}>
+      <input
+        type="checkbox"
+        checked={todo.completed}
+        onChange={setPartialRow}
+        id={\`todo-\${rowId}\`}
+      />
+      <label htmlFor={\`todo-\${rowId}\`}>{todo.text}</label>
+
+      <Button onClick={delRow}>Delete</Button>
+    </div>
+  );
+};
+",
+  "client/src/TodoList.tsx": "import './todoList.css';
+import {useSortedRowIds, STORE_ID} from './Store';
+import {TodoItem} from './TodoItem';
+
+export const TodoList = () => {
+  const todoIds = useSortedRowIds(
+    'todos',
+    undefined,
+    false,
+    0,
+    undefined,
+    STORE_ID,
+  );
+
+  return (
+    <div id="todoList">
+      {todoIds.map((id) => (
+        <TodoItem key={id} rowId={id} />
+      ))}
+    </div>
+  );
+};
+",
+  "client/src/TopBar.tsx": "import './topBar.css';
+import {Info} from './Info';
+import {Title} from './Title';
+
+export const TopBar = () => (
+  <div id="topBar">
+    <Title />
+    <Info />
+  </div>
+);
+",
+  "client/src/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "client/src/config.ts": "export const SERVER = 'wss://vite.tinybase.org';
+",
+  "client/src/index.tsx": "import {getUniqueId} from 'tinybase';
+import ReactDOM from 'react-dom/client';
+import {App} from './App';
+
+if (location.pathname === '/') {
+  location.assign('/' + getUniqueId());
+}
+
+const root = document.getElementById('root')!;
+
+addEventListener('load', () => {
+  ReactDOM.createRoot(root).render(<App />);
+});
+",
+  "client/src/info.css": "#info {
+  --info-fg: var(--fg, oklch(85% 0.01 270));
+  --info-fg2: var(--fg2, oklch(60% 0.01 270));
+  --info-bg2: var(--bg2, oklch(25% 0.01 270));
+  --info-border: var(--border, oklch(30% 0.01 270));
+  --info-accent: var(--accent, #d81b60);
+  --info-icon: #8a8f98;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#infoTech {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.infoTechIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  display: block;
+  flex-shrink: 0;
+}
+
+#infoIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--info-icon);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--info-icon);
+  cursor: help;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+#infoIcon:hover {
+  border-color: var(--info-accent);
+  color: var(--info-accent);
+}
+
+#infoIcon:hover #infoTooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+#infoTooltip {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  background: var(--info-bg2);
+  border: 1px solid var(--info-border);
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 400;
+  width: 20rem;
+  white-space: normal;
+  color: var(--info-fg);
+  line-height: 1.5;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.25rem);
+  transition: all 0.2s;
+  pointer-events: none;
+  box-shadow: 0 1px 2px 0 #0007;
+  z-index: 1;
+}
+
+#infoTooltip a {
+  color: var(--info-fg);
+  text-decoration: underline;
+}
+
+#infoTooltip::before {
+  content: '';
+  position: absolute;
+  right: 0.75rem;
+  top: -0.375rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: var(--info-bg2);
+  border-left: 1px solid var(--info-border);
+  border-top: 1px solid var(--info-border);
+  transform: rotate(45deg);
+}
+",
+  "client/src/input.css": "input[type='text'] {
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+input[type='text']:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input[type='text']::placeholder {
+  color: var(--fg2);
+}
+",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+",
+  "client/src/storeData.ts": "import {createMergeableStore, type Row} from 'tinybase/with-schemas';
+
+export const TABLES_SCHEMA = {
+  todos: {
+    text: {type: 'string', default: ''},
+    completed: {type: 'boolean', default: false},
+  },
+} as const;
+
+export type TodoRow = Row<typeof TABLES_SCHEMA, 'todos'>;
+
+export const STORE_ID = 'todos';
+
+export const createTodosStore = () =>
+  createMergeableStore()
+    .setTablesSchema(TABLES_SCHEMA)
+    .setDefaultContent([
+      {
+        todos: {
+          '1': {text: 'Learn TinyBase', completed: false},
+          '2': {text: 'Build an app', completed: false},
+        },
+      },
+      {},
+    ]);
+",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: inherit;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
+  "client/src/todoInput.css": "#todoInput {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+#todoInput input {
+  flex: 1;
+}
+",
+  "client/src/todoItem.css": ".todoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.todoItem:last-child {
+  border-bottom: none;
+}
+
+.todoItem input[type='checkbox'] {
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.todoItem label {
+  flex: 1;
+  cursor: pointer;
+  user-select: none;
+}
+
+.todoItem.completed label {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.todoItem button {
+  flex-shrink: 0;
+}
+",
+  "client/src/todoList.css": "#todoList {
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  overflow: hidden;
+  background: var(--bg2);
+  width: 100%;
+}
+
+#todoList:empty::before {
+  content: 'No todos yet. Add one above!';
+  display: block;
+  padding: 2rem;
+  text-align: center;
+  color: var(--fg2);
+}
+",
+  "client/src/topBar.css": "#topBar {
+  background: var(--bg-header);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 2px 0 #0007;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
+",
+  "client/src/vite-env.d.ts": "declare module '*.css' {
+  const content: string;
+  export default content;
+}
+",
+  "client/tsconfig.json": "{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src"]
+}
+",
+  "client/vite.config.js": "import {defineConfig} from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [
+    react({
+      jsxRuntime: 'automatic',
+    }),
+  ],
+});
+",
+}
+`;
+
 exports[`create-tinybase > ts-react-todos-tinywidgets > should match snapshot 1`] = `
 {
   "README.md": "# test-ts-react-todos-tinywidgets
@@ -29679,6 +30513,837 @@ export const createTodosStore = () =>
     },
     {},
   ]);
+",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: inherit;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
+  "client/src/todoInput.css": "#todoInput {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+#todoInput input {
+  flex: 1;
+}
+",
+  "client/src/todoItem.css": ".todoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.todoItem:last-child {
+  border-bottom: none;
+}
+
+.todoItem input[type='checkbox'] {
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.todoItem label {
+  flex: 1;
+  cursor: pointer;
+  user-select: none;
+}
+
+.todoItem.completed label {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.todoItem button {
+  flex-shrink: 0;
+}
+",
+  "client/src/todoList.css": "#todoList {
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  overflow: hidden;
+  background: var(--bg2);
+  width: 100%;
+}
+
+#todoList:empty::before {
+  content: 'No todos yet. Add one above!';
+  display: block;
+  padding: 2rem;
+  text-align: center;
+  color: var(--fg2);
+}
+",
+  "client/src/topBar.css": "#topBar {
+  background: var(--bg-header);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 2px 0 #0007;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
+",
+  "client/src/vite-env.d.ts": "declare module '*.css' {
+  const content: string;
+  export default content;
+}
+",
+  "client/tsconfig.json": "{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src"]
+}
+",
+  "client/vite.config.js": "import {defineConfig} from 'vite';
+import solid from 'vite-plugin-solid';
+
+export default defineConfig({
+  plugins: [solid()],
+});
+",
+}
+`;
+
+exports[`create-tinybase > ts-solid-todos-remote-sync-schemas > should match snapshot 1`] = `
+{
+  "README.md": "# test-ts-solid-todos-remote-sync-schemas
+
+A TinyBase app built with TypeScript and Solid.
+
+## Getting Started
+
+Alongside this file, you will see a directory called \`client\`.
+
+To start the web client with Vite, run the following commands:
+
+\`\`\`bash
+cd client
+npm install
+npm run dev
+\`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your Solid-based web application,
+built with Vite and TypeScript.
+
+#### Key Files
+
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.tsx\`**: Entry point that bootstraps and renders the Solid app
+- **\`src/App.tsx\`**: Main Solid component that renders the todo list
+- **\`src/Store.tsx\`**: TinyBase main store configuration
+- **\`src/config.tsx\`**: Configuration settings
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+Type-safe schemas define the structure of your data, providing autocomplete
+and compile-time type checking.
+
+The store is a **MergeableStore**, which supports real-time synchronization across
+multiple clients. When you open the app, it generates a unique room ID in the URL
+path (e.g., \`/abc123\`). Anyone who visits the same URL will share the same data
+and see live updates from other users.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
+
+**Synchronization** is powered by TinyBase's WebSocket synchronizer (connecting to a demo server at vite.tinybase.org).
+When data changes locally, it's sent to the server and broadcast to all other
+clients in the same room. The MergeableStore handles conflict resolution using
+CRDTs, ensuring all clients converge to the same state.
+
+**Solid Integration**: TinyBase provides Solid primitives that automatically
+subscribe to store changes and update the UI through Solid's fine-grained
+reactivity. Components can read TinyBase data as accessors and use callback
+primitives to change the store.
+
+Components like \`TodoList\` and \`TodoItem\` use primitives like \`useSortedRowIds\`, \`useRow\`, and
+callback primitives like \`useAddRowCallback\` and \`useDelRowCallback\`
+to interact
+with the store.
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/.npmrc": "legacy-peer-deps=true
+",
+  "client/index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase Todos</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        user-select: none;
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', sans-serif;
+      }
+
+      #root {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
+</html>
+",
+  "client/package.json": "{
+  "name": "test-ts-solid-todos-remote-sync-schemas",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^8.0.13",
+    "typescript": "^6.0.3",
+    "@types/node": "^25.8.0",
+    "vite-plugin-solid": "^2.11.12"
+  },
+  "dependencies": {
+    "tinybase": "^8.4.0",
+    "solid-js": "^1.9.13",
+    "reconnecting-websocket": "^4.4.0"
+  }
+}
+",
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "client/public/solid.svg": "<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="a" x1="27.5" x2="152" y1="3" y2="63.5" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset=".1" stop-color="#76b3e1" />
+      <stop offset=".3" stop-color="#dcf2fd" />
+      <stop offset="1" stop-color="#76b3e1" />
+    </linearGradient>
+    <linearGradient id="b" x1="95.8" x2="74" y1="32.6" y2="105.2" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#76b3e1" />
+      <stop offset=".5" stop-color="#4377bb" />
+      <stop offset="1" stop-color="#1f3b77" />
+    </linearGradient>
+    <linearGradient id="c" x1="18.4" x2="144.3" y1="64.2" y2="149.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#315aa9" />
+      <stop offset=".5" stop-color="#518ac8" />
+      <stop offset="1" stop-color="#315aa9" />
+    </linearGradient>
+    <linearGradient id="d" x1="75.2" x2="24.4" y1="74.5" y2="260.8" gradientTransform="translate(-3.22 1.507) scale(.80503)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4377bb" />
+      <stop offset=".5" stop-color="#1a336b" />
+      <stop offset="1" stop-color="#1a336b" />
+    </linearGradient>
+  </defs>
+  <path fill="#76b3e1" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" />
+  <path fill="url(#a)" d="M128 29.683S85.333-1.713 52.327 5.532l-2.415.805c-4.83 1.61-8.855 4.025-11.27 7.245l-1.61 2.415-12.076 20.931 20.93 4.025c8.856 5.636 20.127 8.05 30.592 5.636l37.031 7.245z" opacity=".3" />
+  <path fill="#518ac8" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" />
+  <path fill="url(#b)" d="m38.642 29.683-3.22.805C21.735 34.513 17.71 47.394 24.955 58.664c8.05 10.465 24.956 16.1 38.641 12.076l49.912-16.906S70.843 22.438 38.642 29.683z" opacity=".3" />
+  <path fill="url(#c)" d="M104.654 65.91a36.226 36.226 0 0 0-38.641-12.076L16.1 69.934 0 98.111l90.164 15.295 16.1-28.981c3.22-5.635 2.415-12.075-1.61-18.516z" />
+  <path fill="url(#d)" d="M88.553 94.085A36.226 36.226 0 0 0 49.912 82.01L0 98.11s42.667 32.202 75.673 24.152l2.415-.806c13.686-4.025 18.516-16.905 10.465-27.37z" />
+</svg>
+",
+  "client/public/sync.svg": "<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#8a8f98">
+  <path
+    d="M160-160v-80h110l-16-14q-52-46-73-105t-21-119q0-111 66.5-197.5T400-790v84q-72 26-116 88.5T240-478q0 45 17 87.5t53 78.5l10 10v-98h80v240H160Zm400-10v-84q72-26 116-88.5T720-482q0-45-17-87.5T650-648l-10-10v98h-80v-240h240v80H690l16 14q49 49 71.5 106.5T800-482q0 111-66.5 197.5T560-170Z" />
+</svg>
+",
+  "client/public/ts.svg": "<svg fill="none" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg">
+  <rect fill="#3178c6" height="512" width="512" />
+  <path clip-rule="evenodd"
+    d="m316.939 407.424v50.061c8.138 4.172 17.763 7.3 28.875 9.386s22.823 3.129 35.135 3.129c11.999 0 23.397-1.147 34.196-3.442 10.799-2.294 20.268-6.075 28.406-11.342 8.138-5.266 14.581-12.15 19.328-20.65s7.121-19.007 7.121-31.522c0-9.074-1.356-17.026-4.069-23.857s-6.625-12.906-11.738-18.225c-5.112-5.319-11.242-10.091-18.389-14.315s-15.207-8.213-24.18-11.967c-6.573-2.712-12.468-5.345-17.685-7.9-5.217-2.556-9.651-5.163-13.303-7.822-3.652-2.66-6.469-5.476-8.451-8.448-1.982-2.973-2.974-6.336-2.974-10.091 0-3.441.887-6.544 2.661-9.308s4.278-5.136 7.512-7.118c3.235-1.981 7.199-3.52 11.894-4.615 4.696-1.095 9.912-1.642 15.651-1.642 4.173 0 8.581.313 13.224.938 4.643.626 9.312 1.591 14.008 2.894 4.695 1.304 9.259 2.947 13.694 4.928 4.434 1.982 8.529 4.276 12.285 6.884v-46.776c-7.616-2.92-15.937-5.084-24.962-6.492s-19.381-2.112-31.066-2.112c-11.895 0-23.163 1.278-33.805 3.833s-20.006 6.544-28.093 11.967c-8.086 5.424-14.476 12.333-19.171 20.729-4.695 8.395-7.043 18.433-7.043 30.114 0 14.914 4.304 27.638 12.912 38.172 8.607 10.533 21.675 19.45 39.204 26.751 6.886 2.816 13.303 5.579 19.25 8.291s11.086 5.528 15.415 8.448c4.33 2.92 7.747 6.101 10.252 9.543 2.504 3.441 3.756 7.352 3.756 11.733 0 3.233-.783 6.231-2.348 8.995s-3.939 5.162-7.121 7.196-7.147 3.624-11.894 4.771c-4.748 1.148-10.303 1.721-16.668 1.721-10.851 0-21.597-1.903-32.24-5.71-10.642-3.806-20.502-9.516-29.579-17.13zm-84.159-123.342h64.22v-41.082h-179v41.082h63.906v182.918h50.874z"
+    fill="#fff" fill-rule="evenodd" />
+</svg>",
+  "client/src/App.tsx": "import {createSignal} from 'solid-js';
+import {Loading} from './Loading';
+import {Provider} from 'tinybase/ui-solid';
+import {Inspector} from 'tinybase/ui-solid-inspector';
+import {Store} from './Store';
+import {TodoInput} from './TodoInput';
+import {TodoList} from './TodoList';
+import {TopBar} from './TopBar';
+
+export const App = () => (
+  <>
+    <TopBar />
+    <Main />
+  </>
+);
+
+const Main = () => {
+  const [loading, setLoading] = createSignal(true);
+
+  return (
+    <div id="app">
+      <Provider>
+        <Store onReady={() => setLoading(false)} />
+        {loading() ? (
+          <Loading />
+        ) : (
+          <>
+            <TodoInput />
+            <TodoList />
+            <Inspector />
+          </>
+        )}
+      </Provider>
+    </div>
+  );
+};
+",
+  "client/src/Button.tsx": "import './button.css';
+import type {JSXElement} from 'solid-js';
+
+interface ButtonProps {
+  children: JSXElement;
+  onClick?: () => void;
+  variant?: 'default' | 'primary';
+  type?: 'button' | 'submit';
+}
+
+export const Button = (props: ButtonProps) => (
+  <button
+    onClick={props.onClick}
+    type={props.type ?? 'button'}
+    class={props.variant === 'primary' ? 'primary' : undefined}
+  >
+    {props.children}
+  </button>
+);
+",
+  "client/src/Info.tsx": "import './info.css';
+
+export const Info = () => (
+  <div id="info">
+    <div id="infoTech">
+      <img src="/ts.svg" class="infoTechIcon" title="Written in TypeScript" />
+      <img src="/solid.svg" class="infoTechIcon" title="Built with Solid" />
+      <img
+        src="/sync.svg"
+        class="infoTechIcon"
+        title="Data synchronization enabled"
+      />
+    </div>
+    <div id="infoIcon">
+      i
+      <div id="infoTooltip">
+        {
+          "A simple todo list application demonstrating TinyBase's reactive data management with CRUD operations."
+        }
+      </div>
+    </div>
+  </div>
+);
+",
+  "client/src/Input.tsx": "import './input.css';
+
+interface InputProps {
+  id?: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  autoFocus?: boolean;
+}
+
+export const Input = (props: InputProps) => (
+  <input
+    id={props.id}
+    type="text"
+    value={props.value}
+    onInput={(event) => props.onChange(event.currentTarget.value)}
+    placeholder={props.placeholder ?? ''}
+    autofocus={props.autoFocus}
+  />
+);
+",
+  "client/src/Loading.tsx": "import './loading.css';
+
+export const Loading = () => <div id="loading" />;
+",
+  "client/src/Store.tsx": "import * as UiSolid from 'tinybase/ui-solid/with-schemas';
+import {type NoValuesSchema} from 'tinybase/with-schemas';
+import {TABLES_SCHEMA} from './storeData';
+import {STORE_ID, createTodosStore, type TodoRow} from './storeData';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser/with-schemas';
+import {SERVER} from './config';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client/with-schemas';
+
+type Schemas = [typeof TABLES_SCHEMA, NoValuesSchema];
+
+const {
+  useAddRowCallback,
+  useCreateMergeableStore,
+  useCreatePersister,
+  useCreateSynchronizer,
+  useDelRowCallback,
+  useProvideStore,
+  useRow,
+  useSetPartialRowCallback,
+  useSortedRowIds,
+} = UiSolid as UiSolid.WithSchemas<Schemas>;
+
+export {STORE_ID};
+export type {TodoRow};
+export {
+  useAddRowCallback,
+  useDelRowCallback,
+  useRow,
+  useSortedRowIds,
+  useSetPartialRowCallback,
+};
+
+export const Store = (props: {onReady?: () => void}) => {
+  const store = useCreateMergeableStore(() => createTodosStore());
+
+  useProvideStore(STORE_ID, store());
+
+  useCreatePersister(
+    store,
+    (store) => createLocalPersister(store, STORE_ID),
+    async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      props.onReady?.();
+    },
+  );
+
+  useCreateSynchronizer(store, async (store) => {
+    const serverPathId = location.pathname;
+    const synchronizer = await createWsSynchronizer(
+      store,
+      new ReconnectingWebSocket(SERVER + serverPathId),
+    );
+    await synchronizer.startSync();
+
+    synchronizer.getWebSocket().addEventListener('open', () => {
+      synchronizer.load().then(() => {
+        synchronizer.save();
+      });
+    });
+
+    return synchronizer;
+  });
+
+  return null;
+};
+",
+  "client/src/Title.tsx": "import './title.css';
+
+export const Title = () => (
+  <h1 id="topBarTitle">
+    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+    TinyBase Todos
+  </h1>
+);
+",
+  "client/src/TodoInput.tsx": "import './todoInput.css';
+import {createSignal} from 'solid-js';
+import {useAddRowCallback, STORE_ID} from './Store';
+import {Input} from './Input';
+import {Button} from './Button';
+
+export const TodoInput = () => {
+  const [text, setText] = createSignal('');
+  const addRow = useAddRowCallback(
+    'todos',
+    () => ({text: text().trim(), completed: false}),
+    STORE_ID,
+  );
+
+  const handleSubmit = (event: SubmitEvent) => {
+    event.preventDefault();
+    if (text().trim()) {
+      addRow();
+      setText('');
+    }
+  };
+
+  return (
+    <form id="todoInput" onSubmit={handleSubmit}>
+      <Input
+        value={text()}
+        onChange={setText}
+        placeholder="What needs to be done?"
+        autoFocus
+      />
+      <Button type="submit" variant="primary">
+        Add
+      </Button>
+    </form>
+  );
+};
+",
+  "client/src/TodoItem.tsx": "import './todoItem.css';
+import {
+  useDelRowCallback,
+  useRow,
+  useSetPartialRowCallback,
+  type TodoRow,
+  STORE_ID,
+} from './Store';
+import {Button} from './Button';
+
+export const TodoItem = (props: {rowId: string}) => {
+  const todo = useRow('todos', () => props.rowId, STORE_ID) as () => TodoRow;
+  const setPartialRow = useSetPartialRowCallback(
+    'todos',
+    () => props.rowId,
+    (event: Event) => ({
+      completed: (event.currentTarget as HTMLInputElement).checked,
+    }),
+    STORE_ID,
+  );
+  const delRow = useDelRowCallback('todos', () => props.rowId, STORE_ID);
+
+  return (
+    <div class={\`todoItem\${todo().completed ? ' completed' : ''}\`}>
+      <input
+        type="checkbox"
+        checked={todo().completed}
+        onChange={setPartialRow}
+        id={\`todo-\${props.rowId}\`}
+      />
+      <label for={\`todo-\${props.rowId}\`}>{todo().text}</label>
+      <Button onClick={delRow}>Delete</Button>
+    </div>
+  );
+};
+",
+  "client/src/TodoList.tsx": "import './todoList.css';
+import {For} from 'solid-js';
+import {useSortedRowIds, STORE_ID} from './Store';
+import {TodoItem} from './TodoItem';
+
+export const TodoList = () => {
+  const todoIds = useSortedRowIds(
+    'todos',
+    undefined,
+    false,
+    0,
+    undefined,
+    STORE_ID,
+  );
+
+  return (
+    <div id="todoList">
+      <For each={todoIds()}>{(id) => <TodoItem rowId={id} />}</For>
+    </div>
+  );
+};
+",
+  "client/src/TopBar.tsx": "import './topBar.css';
+import {Info} from './Info';
+import {Title} from './Title';
+
+export const TopBar = () => (
+  <div id="topBar">
+    <Title />
+    <Info />
+  </div>
+);
+",
+  "client/src/button.css": "button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #666;
+  border-radius: 0.25rem;
+  background: #222;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+button:hover {
+  border-color: #d81b60;
+}
+
+button.primary {
+  background: #d81b60;
+  border: none;
+  padding: 0.75rem 1.5rem;
+}
+
+button.primary:hover {
+  background: #c2185b;
+}
+",
+  "client/src/config.ts": "export const SERVER = 'wss://vite.tinybase.org';
+",
+  "client/src/index.tsx": "import {getUniqueId} from 'tinybase';
+import {render} from 'solid-js/web';
+import {App} from './App';
+
+if (location.pathname === '/') {
+  location.assign('/' + getUniqueId());
+}
+
+const root = document.getElementById('root')!;
+
+addEventListener('load', () => {
+  render(() => <App />, root);
+});
+",
+  "client/src/info.css": "#info {
+  --info-fg: var(--fg, oklch(85% 0.01 270));
+  --info-fg2: var(--fg2, oklch(60% 0.01 270));
+  --info-bg2: var(--bg2, oklch(25% 0.01 270));
+  --info-border: var(--border, oklch(30% 0.01 270));
+  --info-accent: var(--accent, #d81b60);
+  --info-icon: #8a8f98;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#infoTech {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.infoTechIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  display: block;
+  flex-shrink: 0;
+}
+
+#infoIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--info-icon);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--info-icon);
+  cursor: help;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+#infoIcon:hover {
+  border-color: var(--info-accent);
+  color: var(--info-accent);
+}
+
+#infoIcon:hover #infoTooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+#infoTooltip {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  background: var(--info-bg2);
+  border: 1px solid var(--info-border);
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 400;
+  width: 20rem;
+  white-space: normal;
+  color: var(--info-fg);
+  line-height: 1.5;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.25rem);
+  transition: all 0.2s;
+  pointer-events: none;
+  box-shadow: 0 1px 2px 0 #0007;
+  z-index: 1;
+}
+
+#infoTooltip a {
+  color: var(--info-fg);
+  text-decoration: underline;
+}
+
+#infoTooltip::before {
+  content: '';
+  position: absolute;
+  right: 0.75rem;
+  top: -0.375rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: var(--info-bg2);
+  border-left: 1px solid var(--info-border);
+  border-top: 1px solid var(--info-border);
+  transform: rotate(45deg);
+}
+",
+  "client/src/input.css": "input[type='text'] {
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+input[type='text']:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input[type='text']::placeholder {
+  color: var(--fg2);
+}
+",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+",
+  "client/src/storeData.ts": "import {createMergeableStore, type Row} from 'tinybase/with-schemas';
+
+export const TABLES_SCHEMA = {
+  todos: {
+    text: {type: 'string', default: ''},
+    completed: {type: 'boolean', default: false},
+  },
+} as const;
+
+export type TodoRow = Row<typeof TABLES_SCHEMA, 'todos'>;
+
+export const STORE_ID = 'todos';
+
+export const createTodosStore = () =>
+  createMergeableStore()
+    .setTablesSchema(TABLES_SCHEMA)
+    .setDefaultContent([
+      {
+        todos: {
+          '1': {text: 'Learn TinyBase', completed: false},
+          '2': {text: 'Build an app', completed: false},
+        },
+      },
+      {},
+    ]);
 ",
   "client/src/title.css": "#topBarLogo {
   height: 2rem;

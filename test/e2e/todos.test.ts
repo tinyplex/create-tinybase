@@ -187,6 +187,20 @@ const syncCombinations = [
     appType: 'todos',
     name: 'js-svelte-todos-sync',
   },
+  {
+    language: 'typescript',
+    framework: 'react',
+    appType: 'todos',
+    schemas: true,
+    name: 'ts-react-todos-schemas-sync',
+  },
+  {
+    language: 'typescript',
+    framework: 'solid',
+    appType: 'todos',
+    schemas: true,
+    name: 'ts-solid-todos-schemas-sync',
+  },
 ];
 
 async function testTodosApp(page: Page) {
@@ -412,9 +426,18 @@ describe('todos sync e2e tests', () => {
           combo.language,
           combo.framework,
           combo.appType,
-          false,
+          combo.schemas ?? false,
           'remote',
         );
+
+        if (combo.language === 'typescript') {
+          const tsResult = (await runTypeScriptCheck(projectPath)) as any;
+          if (!tsResult.passed) {
+            throw new Error(
+              `TypeScript check failed for ${combo.name}:\n${tsResult.errors}`,
+            );
+          }
+        }
 
         let devServer;
         try {

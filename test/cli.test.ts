@@ -14,6 +14,7 @@ interface Combination {
   appType: 'todos' | 'chat' | 'drawing' | 'game';
   syncType?: 'none' | 'remote' | 'node' | 'durable-objects';
   persistenceType?: 'none' | 'local-storage' | 'sqlite' | 'pglite';
+  schemas?: boolean;
   tinyWidgets?: boolean;
   name: string;
 }
@@ -421,6 +422,24 @@ const combinations: Combination[] = [
     name: 'ts-react-todos-remote-sync',
   },
   {
+    language: 'typescript',
+    framework: 'react',
+    appType: 'todos',
+    syncType: 'remote',
+    persistenceType: 'local-storage',
+    schemas: true,
+    name: 'ts-react-todos-remote-sync-schemas',
+  },
+  {
+    language: 'typescript',
+    framework: 'solid',
+    appType: 'todos',
+    syncType: 'remote',
+    persistenceType: 'local-storage',
+    schemas: true,
+    name: 'ts-solid-todos-remote-sync-schemas',
+  },
+  {
     language: 'javascript',
     framework: 'react',
     appType: 'chat',
@@ -480,6 +499,7 @@ async function runCLI(
   appType: AppType = 'todos',
   syncType: SyncType = 'none',
   persistenceType: PersistenceType = 'local-storage',
+  schemas = false,
   tinyWidgets = false,
 ): Promise<CLIResult> {
   return runCLIWithOptions(
@@ -491,6 +511,7 @@ async function runCLI(
     persistenceType,
     false,
     false,
+    schemas,
     tinyWidgets,
   );
 }
@@ -504,6 +525,7 @@ async function runCLIWithOptions(
   persistenceType: PersistenceType,
   prettier: boolean,
   eslint: boolean,
+  schemas = false,
   tinyWidgets = false,
 ): Promise<CLIResult> {
   return new Promise((resolve, reject) => {
@@ -524,6 +546,8 @@ async function runCLIWithOptions(
         syncType,
         '--persistenceType',
         persistenceType,
+        '--schemas',
+        schemas.toString(),
         '--prettier',
         prettier.toString(),
         '--eslint',
@@ -612,6 +636,7 @@ describe('create-tinybase', () => {
           combo.appType,
           combo.syncType || 'none',
           combo.persistenceType || 'local-storage',
+          combo.schemas || false,
           combo.tinyWidgets || false,
         );
       }, 10000);

@@ -11,7 +11,7 @@
   {{addImport "import {TABLES_SCHEMA} from './storeData';"}}
   type Schemas = [typeof TABLES_SCHEMA, NoValuesSchema];
 
-  const {useAddRowCallback, useCreateMergeableStore, {{#if persist}}useCreatePersister, {{/if}}useDelRowCallback, useProvideStore, useRow, useSetPartialRowCallback, useSortedRowIds} = UiSolid as UiSolid.WithSchemas<Schemas>;
+  const {useAddRowCallback, useCreateMergeableStore, {{#if persist}}useCreatePersister, {{/if}}{{#if sync}}useCreateSynchronizer, {{/if}}useDelRowCallback, useProvideStore, useRow, useSetPartialRowCallback, useSortedRowIds} = UiSolid as UiSolid.WithSchemas<Schemas>;
 {{else}}
   {{addImport "import {useCreateMergeableStore, useProvideStore, useAddRowCallback, useDelRowCallback, useRow, useSortedRowIds, useSetPartialRowCallback} from 'tinybase/ui-solid';"}}
 {{/if}}
@@ -105,11 +105,9 @@ useProvideStore(STORE_ID, store());
   {{else}}
     {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';"}}
   {{/if}}
-  {{#if schemas}}
-    {{addImport "import {useCreateSynchronizer} from 'tinybase/ui-solid/with-schemas';"}}
-  {{else}}
+  {{#unless schemas}}
     {{addImport "import {useCreateSynchronizer} from 'tinybase/ui-solid';"}}
-  {{/if}}
+  {{/unless}}
 
   useCreateSynchronizer(store, async (store) => {
   const serverPathId = location.pathname;
