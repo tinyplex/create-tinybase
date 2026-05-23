@@ -2,6 +2,7 @@ import {Page} from 'puppeteer';
 import {afterAll, beforeAll, describe, expect, test} from 'vitest';
 import {
   BASE_PORT,
+  HOST,
   browser,
   closeBrowser,
   initBrowser,
@@ -382,7 +383,7 @@ describe('todos persistence e2e tests', () => {
         try {
           devServer = await startDevServer(projectPath, port);
 
-          const url = `http://localhost:${port}`;
+          const url = `http://${HOST}:${port}`;
           const page = await browser.newPage();
 
           const {checkErrors} = setupPageErrorHandling(page);
@@ -444,7 +445,7 @@ describe('todos sync e2e tests', () => {
           devServer = await startDevServer(projectPath, port);
 
           const uniqueId = `test${Math.random().toString(36).substring(2, 8)}`;
-          const url = `http://localhost:${port}/${uniqueId}`;
+          const url = `http://${HOST}:${port}/${uniqueId}`;
 
           const page1 = await browser.newPage();
           const page2 = await browser.newPage();

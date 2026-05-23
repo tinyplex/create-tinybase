@@ -12,6 +12,7 @@ export {sleep};
 const __dirname = dirname(fileURLToPath(import.meta.url));
 export const TEST_DIR = join(__dirname, '..', '..', 'tmp');
 export const BASE_PORT = 5173;
+export const HOST = '127.0.0.1';
 
 export let browser: Browser;
 
@@ -375,11 +376,24 @@ export async function startDevServer(projectPath: string, port: number) {
   const clientPath = join(projectPath, 'client');
 
   return new Promise((resolve, reject) => {
-    const dev = spawn('npm', ['run', 'dev', '--', '--port', port.toString()], {
-      cwd: clientPath,
-      stdio: 'pipe',
-      env: {...process.env, PORT: port.toString()},
-    });
+    const dev = spawn(
+      'npm',
+      [
+        'run',
+        'dev',
+        '--',
+        '--host',
+        HOST,
+        '--port',
+        port.toString(),
+        '--strictPort',
+      ],
+      {
+        cwd: clientPath,
+        stdio: 'pipe',
+        env: {...process.env, PORT: port.toString()},
+      },
+    );
 
     let output = '';
     let isReady = false;
@@ -478,7 +492,7 @@ export async function testBasicApp(
   testFunction: (page: Page) => Promise<void>,
   screenshotName: string,
 ) {
-  const url = `http://localhost:${port}`;
+  const url = `http://${HOST}:${port}`;
   const page = await browser.newPage();
 
   const {checkErrors} = setupPageErrorHandling(page);
