@@ -1,5 +1,5 @@
 {{#if isDurableObject}}
-  {{addImport "import {createMergeableStore} from 'tinybase';"}}
+  {{addImport "import {createMergeableStore, IdAddedOrRemoved} from 'tinybase';"}}
   {{addImport "import {createDurableObjectSqlStoragePersister} from 'tinybase/persisters/persister-durable-object-sql-storage';"}}
   {{addImport "import {getWsServerDurableObjectFetch, WsServerDurableObject} from 'tinybase/synchronizers/synchronizer-ws-server-durable-object';"}}
 
