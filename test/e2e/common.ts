@@ -11,7 +11,7 @@ export {sleep};
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 export const TEST_DIR = join(__dirname, '..', '..', 'tmp');
-export const BASE_PORT = 5173;
+export const BASE_PORT = 6173;
 export const HOST = '127.0.0.1';
 
 export let browser: Browser;

@@ -107,6 +107,7 @@ The app uses **TinyBase** to manage application state in a reactive data store.
     callback hooks like `useAddRowCallback` and `useDelRowCallback`
   {{else if (eq appType "chat")}}`MessageList` and `MessageInput` use TinyBase hooks to display and send messages
   {{else if (eq appType "drawing")}}`Canvas` uses TinyBase hooks to track drawing state across users
+  {{else if (eq appType "charting")}}`DataTable` and `ChartPanel` use hooks like `useSortedRowIds` and `useCell`, plus chart components
   {{else}}`Game` uses TinyBase hooks to manage game state{{/if}} to interact
   with the store.
 

@@ -1,0 +1,26 @@
+{{addImport "import {STORE_ID, useSortedRowIds} from './Store';"}}
+{{includeFile template="client/src/charting/DataRow.tsx.hbs" output="client/src/DataRow.{{ext}}"}}
+{{addImport "import {DataRow} from './DataRow';"}}
+
+export const DataTable = () => {
+const rowIds = useSortedRowIds('sales', 'order', false, 0, undefined, STORE_ID);
+
+return (
+<section className="chartingSheet" aria-label="Sales data">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Month</th>
+        <th scope="col">Revenue</th>
+        <th scope="col">Expenses</th>
+      </tr>
+    </thead>
+    <tbody>
+      {rowIds.map((rowId) => (
+      <DataRow key={rowId} rowId={rowId} />
+      ))}
+    </tbody>
+  </table>
+</section>
+);
+};

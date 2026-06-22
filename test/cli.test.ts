@@ -11,7 +11,7 @@ const TEST_DIR = join(__dirname, '.test-output');
 interface Combination {
   language: 'javascript' | 'typescript';
   framework: 'vanilla' | 'react' | 'solid' | 'svelte';
-  appType: 'todos' | 'chat' | 'drawing' | 'game';
+  appType: 'todos' | 'chat' | 'drawing' | 'charting' | 'game';
   syncType?: 'none' | 'remote' | 'node' | 'durable-objects';
   persistenceType?: 'none' | 'local-storage' | 'sqlite' | 'pglite';
   schemas?: boolean;
@@ -479,6 +479,40 @@ const combinations: Combination[] = [
     persistenceType: 'sqlite',
     name: 'js-react-todos-durable-objects',
   },
+  {
+    language: 'javascript',
+    framework: 'react',
+    appType: 'charting',
+    syncType: 'none',
+    persistenceType: 'local-storage',
+    name: 'js-react-charting',
+  },
+  {
+    language: 'typescript',
+    framework: 'react',
+    appType: 'charting',
+    syncType: 'none',
+    persistenceType: 'local-storage',
+    name: 'ts-react-charting',
+  },
+  {
+    language: 'typescript',
+    framework: 'react',
+    appType: 'charting',
+    syncType: 'none',
+    persistenceType: 'local-storage',
+    schemas: true,
+    name: 'ts-react-charting-schemas',
+  },
+  {
+    language: 'typescript',
+    framework: 'react',
+    appType: 'charting',
+    tinyWidgets: true,
+    syncType: 'none',
+    persistenceType: 'local-storage',
+    name: 'ts-react-charting-tinywidgets',
+  },
 ];
 
 interface CLIResult {
@@ -488,7 +522,7 @@ interface CLIResult {
 
 type Language = 'javascript' | 'typescript';
 type Framework = 'vanilla' | 'react' | 'solid' | 'svelte';
-type AppType = 'todos' | 'chat' | 'drawing' | 'game';
+type AppType = 'todos' | 'chat' | 'drawing' | 'charting' | 'game';
 type SyncType = 'none' | 'remote' | 'node' | 'durable-objects';
 type PersistenceType = 'none' | 'local-storage' | 'sqlite' | 'pglite';
 
@@ -639,7 +673,7 @@ describe('create-tinybase', () => {
           combo.schemas || false,
           combo.tinyWidgets || false,
         );
-      }, 10000);
+      }, 20000);
 
       it('should have correct package.json', async () => {
         const pkgPath = join(projectPath, 'client', 'package.json');

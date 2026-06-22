@@ -1,0 +1,74 @@
+{{addImport "import {STORE_ID, useCell, useSetCellCallback} from './Store';"}}
+{{#if tinyWidgets}}
+  {{addImport "import {TextInput} from 'tinywidgets';"}}
+{{/if}}
+
+type NumericCellId = 'revenue' | 'expenses';
+
+{{#if tinyWidgets}}
+  const getNumberFromText = (text: string) => {
+  const number = Number(text);
+  return Number.isFinite(number) ? number : 0;
+  };
+{{else}}
+  const getNumberFromInput = (event: React.ChangeEvent<HTMLInputElement>) =>
+    Number.isFinite(event.currentTarget.valueAsNumber)
+    ? event.currentTarget.valueAsNumber
+    : 0;
+{{/if}}
+
+const NumberCell = ({
+cellId,
+rowId,
+}: {
+cellId: NumericCellId;
+rowId: string;
+}) => {
+const value = useCell('sales', rowId, cellId, STORE_ID);
+const setValue = useSetCellCallback(
+'sales',
+rowId,
+cellId,
+{{#if tinyWidgets}}getNumberFromText{{else}}getNumberFromInput{{/if}},
+[],
+STORE_ID,
+);
+
+return (
+{{#if tinyWidgets}}
+  <TextInput alt={`${cellId} for ${rowId}`} className="chartingNumberInput" initialText={String(typeof value==='number' ? value : 0)} onChange={setValue} />
+{{else}}
+  <input aria-label={`${cellId} for ${rowId}`} className="chartingNumberInput" min="0" onChange={setValue} type="number" value={typeof value==='number' ? value : 0} />
+{{/if}}
+);
+};
+
+export const DataRow = ({rowId}: {rowId: string}) => {
+const month = useCell('sales', rowId, 'month', STORE_ID);
+const setMonth = useSetCellCallback(
+'sales',
+rowId,
+'month',
+{{#if tinyWidgets}}(text: string) => text{{else}}(event: React.ChangeEvent<HTMLInputElement>) => event.currentTarget.value{{/if}},
+[],
+STORE_ID,
+);
+
+return (
+<tr>
+  <th scope="row">
+    {{#if tinyWidgets}}
+      <TextInput alt={`month for ${rowId}`} className="chartingMonthInput" initialText={String(month ?? '' )} onChange={setMonth} />
+    {{else}}
+      <input aria-label={`month for ${rowId}`} className="chartingMonthInput" onChange={setMonth} type="text" value={String(month ?? '' )} />
+    {{/if}}
+  </th>
+  <td>
+    <NumberCell cellId="revenue" rowId={rowId} />
+  </td>
+  <td>
+    <NumberCell cellId="expenses" rowId={rowId} />
+  </td>
+</tr>
+);
+};

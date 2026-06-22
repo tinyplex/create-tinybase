@@ -1,5 +1,790 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`create-tinybase > js-react-charting > should match snapshot 1`] = `
+{
+  "README.md": "# test-js-react-charting
+
+A TinyBase app built with JavaScript and React.
+
+## Getting Started
+
+Alongside this file, you will see a directory called \`client\`.
+
+To start the web client with Vite, run the following commands:
+
+\`\`\`bash
+cd client
+npm install
+npm run dev
+\`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your React-based web application,
+built with Vite and JavaScript.
+
+#### Key Files
+
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.jsx\`**: Entry point that bootstraps and renders the React app
+- **\`src/App.jsx\`**: Main React component that renders the charting app
+- **\`src/Store.jsx\`**: TinyBase charting app store configuration
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
+
+**React Integration**: TinyBase provides React hooks that automatically subscribe
+to store changes and trigger re-renders when data updates. This means your UI
+stays in sync with your data with minimal boilerplate.
+
+Components like \`DataTable\` and \`ChartPanel\` use hooks like \`useSortedRowIds\` and \`useCell\`, plus chart components
+to interact
+with the store.
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/.npmrc": "legacy-peer-deps=true
+",
+  "client/index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase Charting</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        user-select: none;
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', sans-serif;
+      }
+
+      #root {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script type="module" src="/src/index.jsx"></script>
+  </body>
+</html>
+",
+  "client/package.json": "{
+  "name": "test-js-react-charting",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^8.0.13",
+    "@vitejs/plugin-react": "^6.0.2"
+  },
+  "dependencies": {
+    "tinybase": "^8.5.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
+  }
+}
+",
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "client/public/js.svg": "<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 630 630">
+  <rect width="630" height="630" fill="#f7df1e" />
+  <path
+    d="m423.2 492.19c12.69 20.72 29.2 35.95 58.4 35.95 24.53 0 40.2-12.26 40.2-29.2 0-20.3-16.1-27.49-43.1-39.3l-14.8-6.35c-42.72-18.2-71.1-41-71.1-89.2 0-44.4 33.83-78.2 86.7-78.2 37.64 0 64.7 13.1 84.2 47.4l-46.1 29.6c-10.15-18.2-21.1-25.37-38.1-25.37-17.34 0-28.33 11-28.33 25.37 0 17.76 11 24.95 36.4 35.95l14.8 6.34c50.3 21.57 78.7 43.56 78.7 93 0 53.3-41.87 82.5-98.1 82.5-54.98 0-90.5-26.2-107.88-60.54zm-209.13 5.13c9.3 16.5 17.76 30.45 38.1 30.45 19.45 0 31.72-7.61 31.72-37.2v-201.3h59.2v202.1c0 61.3-35.94 89.2-88.4 89.2-47.4 0-74.85-24.53-88.81-54.075z" />
+</svg>",
+  "client/public/react.svg": "<svg xmlns="http://www.w3.org/2000/svg" viewBox="-11.5 -10.23174 23 20.46348">
+  <title>React Logo</title>
+  <circle cx="0" cy="0" r="2.05" fill="#61dafb" />
+  <g stroke="#61dafb" stroke-width="1" fill="none">
+    <ellipse rx="11" ry="4.2" />
+    <ellipse rx="11" ry="4.2" transform="rotate(60)" />
+    <ellipse rx="11" ry="4.2" transform="rotate(120)" />
+  </g>
+</svg>",
+  "client/src/App.jsx": "import {StrictMode, useState} from 'react';
+import {Loading} from './Loading';
+import {Provider} from 'tinybase/ui-react';
+import {Inspector} from 'tinybase/ui-react-inspector';
+import './charting.css';
+import {Store} from './Store';
+import {DataTable} from './DataTable';
+import {ChartPanel} from './ChartPanel';
+import {TopBar} from './TopBar';
+
+export const App = () => (
+  <>
+    <TopBar />
+    <Main />
+  </>
+);
+
+const Main = () => {
+  const [loading, setLoading] = useState(true);
+
+  return (
+    <div id="app">
+      <StrictMode>
+        <Provider>
+          <Store onReady={() => setLoading(false)} />
+          {loading ? (
+            <Loading />
+          ) : (
+            <>
+              <div id="chartingApp">
+                <DataTable />
+                <ChartPanel />
+              </div>
+              <Inspector />
+            </>
+          )}
+        </Provider>
+      </StrictMode>
+    </div>
+  );
+};
+",
+  "client/src/ChartPanel.jsx": "import {
+  CartesianChart,
+  LineSeries,
+  XAxis,
+  YAxis,
+} from 'tinybase/ui-react-dom-charts';
+import {STORE_ID} from './Store';
+
+const formatCurrency = (value) => \`$\${Math.round(value / 1000)}k\`;
+
+export const ChartPanel = () => (
+  <section className="chartingChartPanel" aria-label="Sales chart">
+    <CartesianChart className="chartingChart" store={STORE_ID} tableId="sales">
+      <LineSeries
+        className="revenue"
+        label="Revenue"
+        sortCellId="order"
+        xCellId="month"
+        yCellId="revenue"
+      />
+      <LineSeries
+        className="expenses"
+        label="Expenses"
+        sortCellId="order"
+        xCellId="month"
+        yCellId="expenses"
+      />
+      <XAxis title="Month" />
+      <YAxis title="" tickFormatter={formatCurrency} />
+    </CartesianChart>
+  </section>
+);
+",
+  "client/src/DataRow.jsx": "import {STORE_ID, useCell, useSetCellCallback} from './Store';
+
+const getNumberFromInput = (event) =>
+  Number.isFinite(event.currentTarget.valueAsNumber)
+    ? event.currentTarget.valueAsNumber
+    : 0;
+
+const NumberCell = ({cellId, rowId}) => {
+  const value = useCell('sales', rowId, cellId, STORE_ID);
+  const setValue = useSetCellCallback(
+    'sales',
+    rowId,
+    cellId,
+    getNumberFromInput,
+    [],
+    STORE_ID,
+  );
+
+  return (
+    <input
+      aria-label={\`\${cellId} for \${rowId}\`}
+      className="chartingNumberInput"
+      min="0"
+      onChange={setValue}
+      type="number"
+      value={typeof value === 'number' ? value : 0}
+    />
+  );
+};
+
+export const DataRow = ({rowId}) => {
+  const month = useCell('sales', rowId, 'month', STORE_ID);
+  const setMonth = useSetCellCallback(
+    'sales',
+    rowId,
+    'month',
+    (event) => event.currentTarget.value,
+    [],
+    STORE_ID,
+  );
+
+  return (
+    <tr>
+      <th scope="row">
+        <input
+          aria-label={\`month for \${rowId}\`}
+          className="chartingMonthInput"
+          onChange={setMonth}
+          type="text"
+          value={String(month ?? '')}
+        />
+      </th>
+      <td>
+        <NumberCell cellId="revenue" rowId={rowId} />
+      </td>
+      <td>
+        <NumberCell cellId="expenses" rowId={rowId} />
+      </td>
+    </tr>
+  );
+};
+",
+  "client/src/DataTable.jsx": "import {STORE_ID, useSortedRowIds} from './Store';
+import {DataRow} from './DataRow';
+
+export const DataTable = () => {
+  const rowIds = useSortedRowIds(
+    'sales',
+    'order',
+    false,
+    0,
+    undefined,
+    STORE_ID,
+  );
+
+  return (
+    <section className="chartingSheet" aria-label="Sales data">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Month</th>
+            <th scope="col">Revenue</th>
+            <th scope="col">Expenses</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rowIds.map((rowId) => (
+            <DataRow key={rowId} rowId={rowId} />
+          ))}
+        </tbody>
+      </table>
+    </section>
+  );
+};
+",
+  "client/src/Info.jsx": "import './info.css';
+
+export const Info = () => (
+  <div id="info">
+    <div id="infoTech">
+      <img
+        src="/js.svg"
+        className="infoTechIcon"
+        title="Written in JavaScript"
+      />
+      <img src="/react.svg" className="infoTechIcon" title="Built with React" />
+    </div>
+    <div id="infoIcon">
+      i
+      <div id="infoTooltip">
+        {
+          'A charting app demonstrating editable TinyBase tables and reactive chart components.'
+        }
+      </div>
+    </div>
+  </div>
+);
+",
+  "client/src/Loading.jsx": "import './loading.css';
+
+export const Loading = () => <div id="loading" />;
+",
+  "client/src/Store.jsx": "import {
+  useCell,
+  useCreateMergeableStore,
+  useProvideStore,
+  useSetCellCallback,
+  useSortedRowIds,
+} from 'tinybase/ui-react';
+import {STORE_ID, createChartingStore} from './storeData';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+import {useCreatePersister} from 'tinybase/ui-react';
+
+export {STORE_ID};
+
+export {useCell, useSetCellCallback, useSortedRowIds};
+
+export const Store = ({onReady}) => {
+  const store = useCreateMergeableStore(() => createChartingStore());
+
+  useProvideStore(STORE_ID, store);
+
+  useCreatePersister(
+    store,
+    (store) => createLocalPersister(store, STORE_ID),
+    [],
+    async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      onReady?.();
+    },
+  );
+
+  return null;
+};
+",
+  "client/src/Title.jsx": "import './title.css';
+
+export const Title = () => (
+  <h1 id="topBarTitle">
+    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+    TinyBase Charting
+  </h1>
+);
+",
+  "client/src/TopBar.jsx": "import './topBar.css';
+import {Info} from './Info';
+import {Title} from './Title';
+
+export const TopBar = () => (
+  <div id="topBar">
+    <Title />
+    <Info />
+  </div>
+);
+",
+  "client/src/charting.css": "#app {
+  max-width: 76rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+#chartingApp {
+  display: grid;
+  grid-template-columns: minmax(22rem, 1fr) minmax(21rem, 1fr);
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.chartingAppWithCards {
+  grid-template-columns: minmax(22rem, 1fr) minmax(20rem, 1fr);
+}
+
+.chartingCard {
+  height: auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.chartingCard .chartingSheet,
+.chartingCard .chartingChartPanel {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+.chartingCard .chartingChartPanel {
+  overflow: visible;
+  padding: 0;
+}
+
+.chartingCard .chartingSheet {
+  height: 100%;
+}
+
+.chartingSheet,
+.chartingChartPanel {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.chartingSheet {
+  overflow-x: auto;
+}
+
+.chartingSheet table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.chartingSheet th,
+.chartingSheet td {
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.chartingSheet th {
+  color: var(--fg2);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.chartingSheet tbody tr:last-child th,
+.chartingSheet tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.chartingSheet tbody th {
+  text-transform: none;
+}
+
+.chartingMonthInput,
+.chartingNumberInput {
+  background: var(--bg);
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font: inherit;
+  line-height: 1.2;
+  min-width: 0;
+  padding: 0.5rem;
+  width: 100%;
+}
+
+.chartingCard .chartingSheet th > div,
+.chartingCard .chartingSheet td > div {
+  display: block;
+  min-width: 0;
+  width: 100%;
+}
+
+.chartingCard .chartingSheet th,
+.chartingCard .chartingSheet td {
+  padding: 0.55rem;
+}
+
+.chartingCard .chartingMonthInput,
+.chartingCard .chartingNumberInput {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  font-size: 0.95rem;
+  min-width: 0;
+  padding: 0;
+}
+
+.chartingMonthInput {
+  font-weight: 600;
+}
+
+.chartingNumberInput {
+  font-variant-numeric: tabular-nums;
+}
+
+.chartingMonthInput:focus,
+.chartingNumberInput:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.chartingChartPanel {
+  padding: 1rem;
+}
+
+.chartingChart {
+  color: var(--fg);
+  display: block;
+  height: 30rem;
+  overflow: visible;
+  width: 100%;
+}
+
+.chartingChart .grid {
+  opacity: 0.22;
+}
+
+.chartingChart .axes {
+  font-size: 1.2rem;
+}
+
+.chartingChart .axes .title {
+  font-weight: 700;
+}
+
+.chartingChart .revenue {
+  color: #f472b6;
+}
+
+.chartingChart .expenses {
+  color: #2dd4bf;
+}
+
+.chartingChart .line {
+  stroke-opacity: 0.95;
+}
+
+.chartingChart .area {
+  fill-opacity: 0.12;
+}
+
+.chartingChart .points circle {
+  stroke: var(--bg2);
+  stroke-width: 3;
+}
+
+@media (max-width: 720px) {
+  #chartingApp {
+    grid-template-columns: 1fr;
+  }
+
+  .chartingChart {
+    height: 24rem;
+  }
+}
+",
+  "client/src/index.jsx": "import ReactDOM from 'react-dom/client';
+import {App} from './App';
+
+const root = document.getElementById('root');
+
+addEventListener('load', () => {
+  ReactDOM.createRoot(root).render(<App />);
+});
+",
+  "client/src/info.css": "#info {
+  --info-fg: var(--fg, oklch(85% 0.01 270));
+  --info-fg2: var(--fg2, oklch(60% 0.01 270));
+  --info-bg2: var(--bg2, oklch(25% 0.01 270));
+  --info-border: var(--border, oklch(30% 0.01 270));
+  --info-accent: var(--accent, #d81b60);
+  --info-icon: #8a8f98;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#infoTech {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.infoTechIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  display: block;
+  flex-shrink: 0;
+}
+
+#infoIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--info-icon);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--info-icon);
+  cursor: help;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+#infoIcon:hover {
+  border-color: var(--info-accent);
+  color: var(--info-accent);
+}
+
+#infoIcon:hover #infoTooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+#infoTooltip {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  background: var(--info-bg2);
+  border: 1px solid var(--info-border);
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 400;
+  width: 20rem;
+  white-space: normal;
+  color: var(--info-fg);
+  line-height: 1.5;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.25rem);
+  transition: all 0.2s;
+  pointer-events: none;
+  box-shadow: 0 1px 2px 0 #0007;
+  z-index: 1;
+}
+
+#infoTooltip a {
+  color: var(--info-fg);
+  text-decoration: underline;
+}
+
+#infoTooltip::before {
+  content: '';
+  position: absolute;
+  right: 0.75rem;
+  top: -0.375rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: var(--info-bg2);
+  border-left: 1px solid var(--info-border);
+  border-top: 1px solid var(--info-border);
+  transform: rotate(45deg);
+}
+",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+",
+  "client/src/storeData.js": "import {createMergeableStore} from 'tinybase';
+
+export const STORE_ID = 'charting';
+
+export const createChartingStore = () =>
+  createMergeableStore().setDefaultContent([
+    {
+      sales: {
+        jan: {order: 1, month: 'Jan', revenue: 12000, expenses: 7000},
+        feb: {order: 2, month: 'Feb', revenue: 18000, expenses: 9000},
+        mar: {order: 3, month: 'Mar', revenue: 15000, expenses: 8000},
+        apr: {order: 4, month: 'Apr', revenue: 22000, expenses: 11000},
+        may: {order: 5, month: 'May', revenue: 26000, expenses: 13000},
+        jun: {order: 6, month: 'Jun', revenue: 31000, expenses: 15000},
+      },
+    },
+    {},
+  ]);
+",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: inherit;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
+  "client/src/topBar.css": "#topBar {
+  background: var(--bg-header);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 2px 0 #0007;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
+",
+  "client/vite.config.js": "import {defineConfig} from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [
+    react({
+      jsxRuntime: 'automatic',
+    }),
+  ],
+});
+",
+}
+`;
+
 exports[`create-tinybase > js-react-chat > should match snapshot 1`] = `
 {
   "README.md": "# test-js-react-chat
@@ -136,7 +921,7 @@ with the store.
     "@vitejs/plugin-react": "^6.0.2"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   }
@@ -914,7 +1699,7 @@ with the store.
     "@vitejs/plugin-react": "^6.0.2"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "@sqlite.org/sqlite-wasm": "^3.53.0-build1"
@@ -1790,7 +2575,7 @@ with the store.
     "@vitejs/plugin-react": "^6.0.2"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   }
@@ -2612,7 +3397,7 @@ with the store.
     "@vitejs/plugin-react": "^6.0.2"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   }
@@ -3365,7 +4150,7 @@ with the store.
     "@vitejs/plugin-react": "^6.0.2"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   }
@@ -4131,7 +4916,7 @@ The \`server\` directory contains your Cloudflare Durable Objects WebSocket serv
     "@vitejs/plugin-react": "^6.0.2"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "reconnecting-websocket": "^4.4.0",
@@ -4881,7 +5666,7 @@ export default {
     "start": "wrangler dev"
   },
   "dependencies": {
-    "tinybase": "^8.4.0"
+    "tinybase": "^8.5.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260516.1",
@@ -5041,7 +5826,7 @@ with the store.
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "solid-js": "^1.9.13"
   }
 }
@@ -5816,7 +6601,7 @@ with the store.
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "solid-js": "^1.9.13"
   }
 }
@@ -6641,7 +7426,7 @@ with the store.
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "solid-js": "^1.9.13"
   }
 }
@@ -7391,7 +8176,7 @@ with the store.
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "solid-js": "^1.9.13"
   }
 }
@@ -8101,7 +8886,7 @@ stays synchronized with the underlying TinyBase store.
     "svelte": "^5.55.7"
   },
   "dependencies": {
-    "tinybase": "^8.4.0"
+    "tinybase": "^8.5.0"
   }
 }
 ",
@@ -8861,7 +9646,7 @@ stays synchronized with the underlying TinyBase store.
     "svelte": "^5.55.7"
   },
   "dependencies": {
-    "tinybase": "^8.4.0"
+    "tinybase": "^8.5.0"
   }
 }
 ",
@@ -9660,7 +10445,7 @@ stays synchronized with the underlying TinyBase store.
     "svelte": "^5.55.7"
   },
   "dependencies": {
-    "tinybase": "^8.4.0"
+    "tinybase": "^8.5.0"
   }
 }
 ",
@@ -10369,7 +11154,7 @@ stays synchronized with the underlying TinyBase store.
     "svelte": "^5.55.7"
   },
   "dependencies": {
-    "tinybase": "^8.4.0"
+    "tinybase": "^8.5.0"
   }
 }
 ",
@@ -11029,7 +11814,7 @@ Your data is automatically saved and restored when you reload the page.
     "vite": "^8.0.13"
   },
   "dependencies": {
-    "tinybase": "^8.4.0"
+    "tinybase": "^8.5.0"
   }
 }
 ",
@@ -11766,7 +12551,7 @@ Your data is automatically saved and restored when you reload the page.
     "vite": "^8.0.13"
   },
   "dependencies": {
-    "tinybase": "^8.4.0"
+    "tinybase": "^8.5.0"
   }
 }
 ",
@@ -12540,7 +13325,7 @@ The app uses **TinyBase** to manage application state in a reactive data store.
     "vite": "^8.0.13"
   },
   "dependencies": {
-    "tinybase": "^8.4.0"
+    "tinybase": "^8.5.0"
   }
 }
 ",
@@ -13309,7 +14094,7 @@ Your data is automatically saved and restored when you reload the page.
     "vite": "^8.0.13"
   },
   "dependencies": {
-    "tinybase": "^8.4.0"
+    "tinybase": "^8.5.0"
   }
 }
 ",
@@ -14007,7 +14792,7 @@ Your data is automatically saved and restored when you reload the page.
     "vite": "^8.0.13"
   },
   "dependencies": {
-    "tinybase": "^8.4.0"
+    "tinybase": "^8.5.0"
   }
 }
 ",
@@ -14553,6 +15338,2515 @@ export const createTopBar = () => {
 }
 `;
 
+exports[`create-tinybase > ts-react-charting > should match snapshot 1`] = `
+{
+  "README.md": "# test-ts-react-charting
+
+A TinyBase app built with TypeScript and React.
+
+## Getting Started
+
+Alongside this file, you will see a directory called \`client\`.
+
+To start the web client with Vite, run the following commands:
+
+\`\`\`bash
+cd client
+npm install
+npm run dev
+\`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your React-based web application,
+built with Vite and TypeScript.
+
+#### Key Files
+
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.tsx\`**: Entry point that bootstraps and renders the React app
+- **\`src/App.tsx\`**: Main React component that renders the charting app
+- **\`src/Store.tsx\`**: TinyBase charting app store configuration
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
+
+**React Integration**: TinyBase provides React hooks that automatically subscribe
+to store changes and trigger re-renders when data updates. This means your UI
+stays in sync with your data with minimal boilerplate.
+
+Components like \`DataTable\` and \`ChartPanel\` use hooks like \`useSortedRowIds\` and \`useCell\`, plus chart components
+to interact
+with the store.
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/.npmrc": "legacy-peer-deps=true
+",
+  "client/index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase Charting</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        user-select: none;
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', sans-serif;
+      }
+
+      #root {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
+</html>
+",
+  "client/package.json": "{
+  "name": "test-ts-react-charting",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^8.0.13",
+    "typescript": "^6.0.3",
+    "@types/node": "^25.8.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.2"
+  },
+  "dependencies": {
+    "tinybase": "^8.5.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
+  }
+}
+",
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "client/public/react.svg": "<svg xmlns="http://www.w3.org/2000/svg" viewBox="-11.5 -10.23174 23 20.46348">
+  <title>React Logo</title>
+  <circle cx="0" cy="0" r="2.05" fill="#61dafb" />
+  <g stroke="#61dafb" stroke-width="1" fill="none">
+    <ellipse rx="11" ry="4.2" />
+    <ellipse rx="11" ry="4.2" transform="rotate(60)" />
+    <ellipse rx="11" ry="4.2" transform="rotate(120)" />
+  </g>
+</svg>",
+  "client/public/ts.svg": "<svg fill="none" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg">
+  <rect fill="#3178c6" height="512" width="512" />
+  <path clip-rule="evenodd"
+    d="m316.939 407.424v50.061c8.138 4.172 17.763 7.3 28.875 9.386s22.823 3.129 35.135 3.129c11.999 0 23.397-1.147 34.196-3.442 10.799-2.294 20.268-6.075 28.406-11.342 8.138-5.266 14.581-12.15 19.328-20.65s7.121-19.007 7.121-31.522c0-9.074-1.356-17.026-4.069-23.857s-6.625-12.906-11.738-18.225c-5.112-5.319-11.242-10.091-18.389-14.315s-15.207-8.213-24.18-11.967c-6.573-2.712-12.468-5.345-17.685-7.9-5.217-2.556-9.651-5.163-13.303-7.822-3.652-2.66-6.469-5.476-8.451-8.448-1.982-2.973-2.974-6.336-2.974-10.091 0-3.441.887-6.544 2.661-9.308s4.278-5.136 7.512-7.118c3.235-1.981 7.199-3.52 11.894-4.615 4.696-1.095 9.912-1.642 15.651-1.642 4.173 0 8.581.313 13.224.938 4.643.626 9.312 1.591 14.008 2.894 4.695 1.304 9.259 2.947 13.694 4.928 4.434 1.982 8.529 4.276 12.285 6.884v-46.776c-7.616-2.92-15.937-5.084-24.962-6.492s-19.381-2.112-31.066-2.112c-11.895 0-23.163 1.278-33.805 3.833s-20.006 6.544-28.093 11.967c-8.086 5.424-14.476 12.333-19.171 20.729-4.695 8.395-7.043 18.433-7.043 30.114 0 14.914 4.304 27.638 12.912 38.172 8.607 10.533 21.675 19.45 39.204 26.751 6.886 2.816 13.303 5.579 19.25 8.291s11.086 5.528 15.415 8.448c4.33 2.92 7.747 6.101 10.252 9.543 2.504 3.441 3.756 7.352 3.756 11.733 0 3.233-.783 6.231-2.348 8.995s-3.939 5.162-7.121 7.196-7.147 3.624-11.894 4.771c-4.748 1.148-10.303 1.721-16.668 1.721-10.851 0-21.597-1.903-32.24-5.71-10.642-3.806-20.502-9.516-29.579-17.13zm-84.159-123.342h64.22v-41.082h-179v41.082h63.906v182.918h50.874z"
+    fill="#fff" fill-rule="evenodd" />
+</svg>",
+  "client/src/App.tsx": "import {StrictMode, useState} from 'react';
+import {Loading} from './Loading';
+import {Provider} from 'tinybase/ui-react';
+import {Inspector} from 'tinybase/ui-react-inspector';
+import './charting.css';
+import {Store} from './Store';
+import {DataTable} from './DataTable';
+import {ChartPanel} from './ChartPanel';
+import {TopBar} from './TopBar';
+
+export const App = () => (
+  <>
+    <TopBar />
+    <Main />
+  </>
+);
+
+const Main = () => {
+  const [loading, setLoading] = useState(true);
+
+  return (
+    <div id="app">
+      <StrictMode>
+        <Provider>
+          <Store onReady={() => setLoading(false)} />
+          {loading ? (
+            <Loading />
+          ) : (
+            <>
+              <div id="chartingApp">
+                <DataTable />
+                <ChartPanel />
+              </div>
+              <Inspector />
+            </>
+          )}
+        </Provider>
+      </StrictMode>
+    </div>
+  );
+};
+",
+  "client/src/ChartPanel.tsx": "import {
+  CartesianChart,
+  LineSeries,
+  XAxis,
+  YAxis,
+} from 'tinybase/ui-react-dom-charts';
+import {STORE_ID} from './Store';
+
+const formatCurrency = (value: number) => \`$\${Math.round(value / 1000)}k\`;
+
+export const ChartPanel = () => (
+  <section className="chartingChartPanel" aria-label="Sales chart">
+    <CartesianChart className="chartingChart" store={STORE_ID} tableId="sales">
+      <LineSeries
+        className="revenue"
+        label="Revenue"
+        sortCellId="order"
+        xCellId="month"
+        yCellId="revenue"
+      />
+      <LineSeries
+        className="expenses"
+        label="Expenses"
+        sortCellId="order"
+        xCellId="month"
+        yCellId="expenses"
+      />
+      <XAxis title="Month" />
+      <YAxis title="" tickFormatter={formatCurrency} />
+    </CartesianChart>
+  </section>
+);
+",
+  "client/src/DataRow.tsx": "import {STORE_ID, useCell, useSetCellCallback} from './Store';
+
+type NumericCellId = 'revenue' | 'expenses';
+
+const getNumberFromInput = (event: React.ChangeEvent<HTMLInputElement>) =>
+  Number.isFinite(event.currentTarget.valueAsNumber)
+    ? event.currentTarget.valueAsNumber
+    : 0;
+
+const NumberCell = ({
+  cellId,
+  rowId,
+}: {
+  cellId: NumericCellId;
+  rowId: string;
+}) => {
+  const value = useCell('sales', rowId, cellId, STORE_ID);
+  const setValue = useSetCellCallback(
+    'sales',
+    rowId,
+    cellId,
+    getNumberFromInput,
+    [],
+    STORE_ID,
+  );
+
+  return (
+    <input
+      aria-label={\`\${cellId} for \${rowId}\`}
+      className="chartingNumberInput"
+      min="0"
+      onChange={setValue}
+      type="number"
+      value={typeof value === 'number' ? value : 0}
+    />
+  );
+};
+
+export const DataRow = ({rowId}: {rowId: string}) => {
+  const month = useCell('sales', rowId, 'month', STORE_ID);
+  const setMonth = useSetCellCallback(
+    'sales',
+    rowId,
+    'month',
+    (event: React.ChangeEvent<HTMLInputElement>) => event.currentTarget.value,
+    [],
+    STORE_ID,
+  );
+
+  return (
+    <tr>
+      <th scope="row">
+        <input
+          aria-label={\`month for \${rowId}\`}
+          className="chartingMonthInput"
+          onChange={setMonth}
+          type="text"
+          value={String(month ?? '')}
+        />
+      </th>
+      <td>
+        <NumberCell cellId="revenue" rowId={rowId} />
+      </td>
+      <td>
+        <NumberCell cellId="expenses" rowId={rowId} />
+      </td>
+    </tr>
+  );
+};
+",
+  "client/src/DataTable.tsx": "import {STORE_ID, useSortedRowIds} from './Store';
+import {DataRow} from './DataRow';
+
+export const DataTable = () => {
+  const rowIds = useSortedRowIds(
+    'sales',
+    'order',
+    false,
+    0,
+    undefined,
+    STORE_ID,
+  );
+
+  return (
+    <section className="chartingSheet" aria-label="Sales data">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Month</th>
+            <th scope="col">Revenue</th>
+            <th scope="col">Expenses</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rowIds.map((rowId) => (
+            <DataRow key={rowId} rowId={rowId} />
+          ))}
+        </tbody>
+      </table>
+    </section>
+  );
+};
+",
+  "client/src/Info.tsx": "import './info.css';
+
+export const Info = () => (
+  <div id="info">
+    <div id="infoTech">
+      <img
+        src="/ts.svg"
+        className="infoTechIcon"
+        title="Written in TypeScript"
+      />
+      <img src="/react.svg" className="infoTechIcon" title="Built with React" />
+    </div>
+    <div id="infoIcon">
+      i
+      <div id="infoTooltip">
+        {
+          'A charting app demonstrating editable TinyBase tables and reactive chart components.'
+        }
+      </div>
+    </div>
+  </div>
+);
+",
+  "client/src/Loading.tsx": "import './loading.css';
+
+export const Loading = () => <div id="loading" />;
+",
+  "client/src/Store.tsx": "import {
+  useCell,
+  useCreateMergeableStore,
+  useProvideStore,
+  useSetCellCallback,
+  useSortedRowIds,
+} from 'tinybase/ui-react';
+import {STORE_ID, createChartingStore, type SalesRow} from './storeData';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+import {useCreatePersister} from 'tinybase/ui-react';
+
+export {STORE_ID};
+export type {SalesRow};
+export {useCell, useSetCellCallback, useSortedRowIds};
+
+export const Store = ({onReady}: {onReady?: () => void}) => {
+  const store = useCreateMergeableStore(() => createChartingStore());
+
+  useProvideStore(STORE_ID, store);
+
+  useCreatePersister(
+    store,
+    (store) => createLocalPersister(store, STORE_ID),
+    [],
+    async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      onReady?.();
+    },
+  );
+
+  return null;
+};
+",
+  "client/src/Title.tsx": "import './title.css';
+
+export const Title = () => (
+  <h1 id="topBarTitle">
+    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+    TinyBase Charting
+  </h1>
+);
+",
+  "client/src/TopBar.tsx": "import './topBar.css';
+import {Info} from './Info';
+import {Title} from './Title';
+
+export const TopBar = () => (
+  <div id="topBar">
+    <Title />
+    <Info />
+  </div>
+);
+",
+  "client/src/charting.css": "#app {
+  max-width: 76rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+#chartingApp {
+  display: grid;
+  grid-template-columns: minmax(22rem, 1fr) minmax(21rem, 1fr);
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.chartingAppWithCards {
+  grid-template-columns: minmax(22rem, 1fr) minmax(20rem, 1fr);
+}
+
+.chartingCard {
+  height: auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.chartingCard .chartingSheet,
+.chartingCard .chartingChartPanel {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+.chartingCard .chartingChartPanel {
+  overflow: visible;
+  padding: 0;
+}
+
+.chartingCard .chartingSheet {
+  height: 100%;
+}
+
+.chartingSheet,
+.chartingChartPanel {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.chartingSheet {
+  overflow-x: auto;
+}
+
+.chartingSheet table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.chartingSheet th,
+.chartingSheet td {
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.chartingSheet th {
+  color: var(--fg2);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.chartingSheet tbody tr:last-child th,
+.chartingSheet tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.chartingSheet tbody th {
+  text-transform: none;
+}
+
+.chartingMonthInput,
+.chartingNumberInput {
+  background: var(--bg);
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font: inherit;
+  line-height: 1.2;
+  min-width: 0;
+  padding: 0.5rem;
+  width: 100%;
+}
+
+.chartingCard .chartingSheet th > div,
+.chartingCard .chartingSheet td > div {
+  display: block;
+  min-width: 0;
+  width: 100%;
+}
+
+.chartingCard .chartingSheet th,
+.chartingCard .chartingSheet td {
+  padding: 0.55rem;
+}
+
+.chartingCard .chartingMonthInput,
+.chartingCard .chartingNumberInput {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  font-size: 0.95rem;
+  min-width: 0;
+  padding: 0;
+}
+
+.chartingMonthInput {
+  font-weight: 600;
+}
+
+.chartingNumberInput {
+  font-variant-numeric: tabular-nums;
+}
+
+.chartingMonthInput:focus,
+.chartingNumberInput:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.chartingChartPanel {
+  padding: 1rem;
+}
+
+.chartingChart {
+  color: var(--fg);
+  display: block;
+  height: 30rem;
+  overflow: visible;
+  width: 100%;
+}
+
+.chartingChart .grid {
+  opacity: 0.22;
+}
+
+.chartingChart .axes {
+  font-size: 1.2rem;
+}
+
+.chartingChart .axes .title {
+  font-weight: 700;
+}
+
+.chartingChart .revenue {
+  color: #f472b6;
+}
+
+.chartingChart .expenses {
+  color: #2dd4bf;
+}
+
+.chartingChart .line {
+  stroke-opacity: 0.95;
+}
+
+.chartingChart .area {
+  fill-opacity: 0.12;
+}
+
+.chartingChart .points circle {
+  stroke: var(--bg2);
+  stroke-width: 3;
+}
+
+@media (max-width: 720px) {
+  #chartingApp {
+    grid-template-columns: 1fr;
+  }
+
+  .chartingChart {
+    height: 24rem;
+  }
+}
+",
+  "client/src/index.tsx": "import ReactDOM from 'react-dom/client';
+import {App} from './App';
+
+const root = document.getElementById('root')!;
+
+addEventListener('load', () => {
+  ReactDOM.createRoot(root).render(<App />);
+});
+",
+  "client/src/info.css": "#info {
+  --info-fg: var(--fg, oklch(85% 0.01 270));
+  --info-fg2: var(--fg2, oklch(60% 0.01 270));
+  --info-bg2: var(--bg2, oklch(25% 0.01 270));
+  --info-border: var(--border, oklch(30% 0.01 270));
+  --info-accent: var(--accent, #d81b60);
+  --info-icon: #8a8f98;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#infoTech {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.infoTechIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  display: block;
+  flex-shrink: 0;
+}
+
+#infoIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--info-icon);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--info-icon);
+  cursor: help;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+#infoIcon:hover {
+  border-color: var(--info-accent);
+  color: var(--info-accent);
+}
+
+#infoIcon:hover #infoTooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+#infoTooltip {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  background: var(--info-bg2);
+  border: 1px solid var(--info-border);
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 400;
+  width: 20rem;
+  white-space: normal;
+  color: var(--info-fg);
+  line-height: 1.5;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.25rem);
+  transition: all 0.2s;
+  pointer-events: none;
+  box-shadow: 0 1px 2px 0 #0007;
+  z-index: 1;
+}
+
+#infoTooltip a {
+  color: var(--info-fg);
+  text-decoration: underline;
+}
+
+#infoTooltip::before {
+  content: '';
+  position: absolute;
+  right: 0.75rem;
+  top: -0.375rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: var(--info-bg2);
+  border-left: 1px solid var(--info-border);
+  border-top: 1px solid var(--info-border);
+  transform: rotate(45deg);
+}
+",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+",
+  "client/src/storeData.ts": "import {createMergeableStore} from 'tinybase';
+
+export type SalesRow = {
+  order: number;
+  month: string;
+  revenue: number;
+  expenses: number;
+};
+
+export const STORE_ID = 'charting';
+
+export const createChartingStore = () =>
+  createMergeableStore().setDefaultContent([
+    {
+      sales: {
+        jan: {order: 1, month: 'Jan', revenue: 12000, expenses: 7000},
+        feb: {order: 2, month: 'Feb', revenue: 18000, expenses: 9000},
+        mar: {order: 3, month: 'Mar', revenue: 15000, expenses: 8000},
+        apr: {order: 4, month: 'Apr', revenue: 22000, expenses: 11000},
+        may: {order: 5, month: 'May', revenue: 26000, expenses: 13000},
+        jun: {order: 6, month: 'Jun', revenue: 31000, expenses: 15000},
+      },
+    },
+    {},
+  ]);
+",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: inherit;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
+  "client/src/topBar.css": "#topBar {
+  background: var(--bg-header);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 2px 0 #0007;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
+",
+  "client/src/vite-env.d.ts": "declare module '*.css' {
+  const content: string;
+  export default content;
+}
+",
+  "client/tsconfig.json": "{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src"]
+}
+",
+  "client/vite.config.js": "import {defineConfig} from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [
+    react({
+      jsxRuntime: 'automatic',
+    }),
+  ],
+});
+",
+}
+`;
+
+exports[`create-tinybase > ts-react-charting-schemas > should match snapshot 1`] = `
+{
+  "README.md": "# test-ts-react-charting-schemas
+
+A TinyBase app built with TypeScript and React.
+
+## Getting Started
+
+Alongside this file, you will see a directory called \`client\`.
+
+To start the web client with Vite, run the following commands:
+
+\`\`\`bash
+cd client
+npm install
+npm run dev
+\`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your React-based web application,
+built with Vite and TypeScript.
+
+#### Key Files
+
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.tsx\`**: Entry point that bootstraps and renders the React app
+- **\`src/App.tsx\`**: Main React component that renders the charting app
+- **\`src/Store.tsx\`**: TinyBase charting app store configuration
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+Type-safe schemas define the structure of your data, providing autocomplete
+and compile-time type checking.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
+
+**React Integration**: TinyBase provides React hooks that automatically subscribe
+to store changes and trigger re-renders when data updates. This means your UI
+stays in sync with your data with minimal boilerplate.
+
+Components like \`DataTable\` and \`ChartPanel\` use hooks like \`useSortedRowIds\` and \`useCell\`, plus chart components
+to interact
+with the store.
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/.npmrc": "legacy-peer-deps=true
+",
+  "client/index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase Charting</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        user-select: none;
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', sans-serif;
+      }
+
+      #root {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+
+      body {
+        --hue: 270;
+        --fg: oklch(85% 0.01 var(--hue));
+        --fg2: oklch(60% 0.01 var(--hue));
+        --bg: oklch(20% 0.01 var(--hue));
+        --bg2: oklch(25% 0.01 var(--hue));
+        --border: oklch(30% 0.01 var(--hue));
+        --bg-header: oklch(30% 0.008 var(--hue) / 0.5);
+        --accent: #d81b60;
+        color: var(--fg);
+        background: var(--bg);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
+</html>
+",
+  "client/package.json": "{
+  "name": "test-ts-react-charting-schemas",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^8.0.13",
+    "typescript": "^6.0.3",
+    "@types/node": "^25.8.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.2"
+  },
+  "dependencies": {
+    "tinybase": "^8.5.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
+  }
+}
+",
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "client/public/react.svg": "<svg xmlns="http://www.w3.org/2000/svg" viewBox="-11.5 -10.23174 23 20.46348">
+  <title>React Logo</title>
+  <circle cx="0" cy="0" r="2.05" fill="#61dafb" />
+  <g stroke="#61dafb" stroke-width="1" fill="none">
+    <ellipse rx="11" ry="4.2" />
+    <ellipse rx="11" ry="4.2" transform="rotate(60)" />
+    <ellipse rx="11" ry="4.2" transform="rotate(120)" />
+  </g>
+</svg>",
+  "client/public/ts.svg": "<svg fill="none" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg">
+  <rect fill="#3178c6" height="512" width="512" />
+  <path clip-rule="evenodd"
+    d="m316.939 407.424v50.061c8.138 4.172 17.763 7.3 28.875 9.386s22.823 3.129 35.135 3.129c11.999 0 23.397-1.147 34.196-3.442 10.799-2.294 20.268-6.075 28.406-11.342 8.138-5.266 14.581-12.15 19.328-20.65s7.121-19.007 7.121-31.522c0-9.074-1.356-17.026-4.069-23.857s-6.625-12.906-11.738-18.225c-5.112-5.319-11.242-10.091-18.389-14.315s-15.207-8.213-24.18-11.967c-6.573-2.712-12.468-5.345-17.685-7.9-5.217-2.556-9.651-5.163-13.303-7.822-3.652-2.66-6.469-5.476-8.451-8.448-1.982-2.973-2.974-6.336-2.974-10.091 0-3.441.887-6.544 2.661-9.308s4.278-5.136 7.512-7.118c3.235-1.981 7.199-3.52 11.894-4.615 4.696-1.095 9.912-1.642 15.651-1.642 4.173 0 8.581.313 13.224.938 4.643.626 9.312 1.591 14.008 2.894 4.695 1.304 9.259 2.947 13.694 4.928 4.434 1.982 8.529 4.276 12.285 6.884v-46.776c-7.616-2.92-15.937-5.084-24.962-6.492s-19.381-2.112-31.066-2.112c-11.895 0-23.163 1.278-33.805 3.833s-20.006 6.544-28.093 11.967c-8.086 5.424-14.476 12.333-19.171 20.729-4.695 8.395-7.043 18.433-7.043 30.114 0 14.914 4.304 27.638 12.912 38.172 8.607 10.533 21.675 19.45 39.204 26.751 6.886 2.816 13.303 5.579 19.25 8.291s11.086 5.528 15.415 8.448c4.33 2.92 7.747 6.101 10.252 9.543 2.504 3.441 3.756 7.352 3.756 11.733 0 3.233-.783 6.231-2.348 8.995s-3.939 5.162-7.121 7.196-7.147 3.624-11.894 4.771c-4.748 1.148-10.303 1.721-16.668 1.721-10.851 0-21.597-1.903-32.24-5.71-10.642-3.806-20.502-9.516-29.579-17.13zm-84.159-123.342h64.22v-41.082h-179v41.082h63.906v182.918h50.874z"
+    fill="#fff" fill-rule="evenodd" />
+</svg>",
+  "client/src/App.tsx": "import {StrictMode, useState} from 'react';
+import {Loading} from './Loading';
+import {Provider} from 'tinybase/ui-react';
+import {Inspector} from 'tinybase/ui-react-inspector';
+import './charting.css';
+import {Store} from './Store';
+import {DataTable} from './DataTable';
+import {ChartPanel} from './ChartPanel';
+import {TopBar} from './TopBar';
+
+export const App = () => (
+  <>
+    <TopBar />
+    <Main />
+  </>
+);
+
+const Main = () => {
+  const [loading, setLoading] = useState(true);
+
+  return (
+    <div id="app">
+      <StrictMode>
+        <Provider>
+          <Store onReady={() => setLoading(false)} />
+          {loading ? (
+            <Loading />
+          ) : (
+            <>
+              <div id="chartingApp">
+                <DataTable />
+                <ChartPanel />
+              </div>
+              <Inspector />
+            </>
+          )}
+        </Provider>
+      </StrictMode>
+    </div>
+  );
+};
+",
+  "client/src/ChartPanel.tsx": "import * as ChartComponents from 'tinybase/ui-react-dom-charts/with-schemas';
+import {type NoValuesSchema} from 'tinybase/with-schemas';
+import {STORE_ID, TABLES_SCHEMA} from './Store';
+
+type Schemas = [typeof TABLES_SCHEMA, NoValuesSchema];
+const {CartesianChart, LineSeries, XAxis, YAxis} =
+  ChartComponents as ChartComponents.WithSchemas<Schemas>;
+
+const formatCurrency = (value: number) => \`$\${Math.round(value / 1000)}k\`;
+
+export const ChartPanel = () => (
+  <section className="chartingChartPanel" aria-label="Sales chart">
+    <CartesianChart className="chartingChart" store={STORE_ID} tableId="sales">
+      <LineSeries
+        className="revenue"
+        label="Revenue"
+        sortCellId="order"
+        xCellId="month"
+        yCellId="revenue"
+      />
+      <LineSeries
+        className="expenses"
+        label="Expenses"
+        sortCellId="order"
+        xCellId="month"
+        yCellId="expenses"
+      />
+      <XAxis title="Month" />
+      <YAxis title="" tickFormatter={formatCurrency} />
+    </CartesianChart>
+  </section>
+);
+",
+  "client/src/DataRow.tsx": "import {STORE_ID, useCell, useSetCellCallback} from './Store';
+
+type NumericCellId = 'revenue' | 'expenses';
+
+const getNumberFromInput = (event: React.ChangeEvent<HTMLInputElement>) =>
+  Number.isFinite(event.currentTarget.valueAsNumber)
+    ? event.currentTarget.valueAsNumber
+    : 0;
+
+const NumberCell = ({
+  cellId,
+  rowId,
+}: {
+  cellId: NumericCellId;
+  rowId: string;
+}) => {
+  const value = useCell('sales', rowId, cellId, STORE_ID);
+  const setValue = useSetCellCallback(
+    'sales',
+    rowId,
+    cellId,
+    getNumberFromInput,
+    [],
+    STORE_ID,
+  );
+
+  return (
+    <input
+      aria-label={\`\${cellId} for \${rowId}\`}
+      className="chartingNumberInput"
+      min="0"
+      onChange={setValue}
+      type="number"
+      value={typeof value === 'number' ? value : 0}
+    />
+  );
+};
+
+export const DataRow = ({rowId}: {rowId: string}) => {
+  const month = useCell('sales', rowId, 'month', STORE_ID);
+  const setMonth = useSetCellCallback(
+    'sales',
+    rowId,
+    'month',
+    (event: React.ChangeEvent<HTMLInputElement>) => event.currentTarget.value,
+    [],
+    STORE_ID,
+  );
+
+  return (
+    <tr>
+      <th scope="row">
+        <input
+          aria-label={\`month for \${rowId}\`}
+          className="chartingMonthInput"
+          onChange={setMonth}
+          type="text"
+          value={String(month ?? '')}
+        />
+      </th>
+      <td>
+        <NumberCell cellId="revenue" rowId={rowId} />
+      </td>
+      <td>
+        <NumberCell cellId="expenses" rowId={rowId} />
+      </td>
+    </tr>
+  );
+};
+",
+  "client/src/DataTable.tsx": "import {STORE_ID, useSortedRowIds} from './Store';
+import {DataRow} from './DataRow';
+
+export const DataTable = () => {
+  const rowIds = useSortedRowIds(
+    'sales',
+    'order',
+    false,
+    0,
+    undefined,
+    STORE_ID,
+  );
+
+  return (
+    <section className="chartingSheet" aria-label="Sales data">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Month</th>
+            <th scope="col">Revenue</th>
+            <th scope="col">Expenses</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rowIds.map((rowId) => (
+            <DataRow key={rowId} rowId={rowId} />
+          ))}
+        </tbody>
+      </table>
+    </section>
+  );
+};
+",
+  "client/src/Info.tsx": "import './info.css';
+
+export const Info = () => (
+  <div id="info">
+    <div id="infoTech">
+      <img
+        src="/ts.svg"
+        className="infoTechIcon"
+        title="Written in TypeScript"
+      />
+      <img src="/react.svg" className="infoTechIcon" title="Built with React" />
+    </div>
+    <div id="infoIcon">
+      i
+      <div id="infoTooltip">
+        {
+          'A charting app demonstrating editable TinyBase tables and reactive chart components.'
+        }
+      </div>
+    </div>
+  </div>
+);
+",
+  "client/src/Loading.tsx": "import './loading.css';
+
+export const Loading = () => <div id="loading" />;
+",
+  "client/src/Store.tsx": "import * as UiReact from 'tinybase/ui-react/with-schemas';
+import {type NoValuesSchema} from 'tinybase/with-schemas';
+import {
+  STORE_ID,
+  TABLES_SCHEMA,
+  createChartingStore,
+  type SalesRow,
+} from './storeData';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser/with-schemas';
+
+type Schemas = [typeof TABLES_SCHEMA, NoValuesSchema];
+
+const {
+  useCell,
+  useCreateMergeableStore,
+  useCreatePersister,
+  useProvideStore,
+  useSetCellCallback,
+  useSortedRowIds,
+} = UiReact as UiReact.WithSchemas<Schemas>;
+
+export {STORE_ID, TABLES_SCHEMA};
+export type {SalesRow};
+export {useCell, useSetCellCallback, useSortedRowIds};
+
+export const Store = ({onReady}: {onReady?: () => void}) => {
+  const store = useCreateMergeableStore(() => createChartingStore());
+
+  useProvideStore(STORE_ID, store);
+
+  useCreatePersister(
+    store,
+    (store) => createLocalPersister(store, STORE_ID),
+    [],
+    async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      onReady?.();
+    },
+  );
+
+  return null;
+};
+",
+  "client/src/Title.tsx": "import './title.css';
+
+export const Title = () => (
+  <h1 id="topBarTitle">
+    <img src="/favicon.svg" id="topBarLogo" alt="TinyBase" />
+    TinyBase Charting
+  </h1>
+);
+",
+  "client/src/TopBar.tsx": "import './topBar.css';
+import {Info} from './Info';
+import {Title} from './Title';
+
+export const TopBar = () => (
+  <div id="topBar">
+    <Title />
+    <Info />
+  </div>
+);
+",
+  "client/src/charting.css": "#app {
+  max-width: 76rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+#chartingApp {
+  display: grid;
+  grid-template-columns: minmax(22rem, 1fr) minmax(21rem, 1fr);
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.chartingAppWithCards {
+  grid-template-columns: minmax(22rem, 1fr) minmax(20rem, 1fr);
+}
+
+.chartingCard {
+  height: auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.chartingCard .chartingSheet,
+.chartingCard .chartingChartPanel {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+.chartingCard .chartingChartPanel {
+  overflow: visible;
+  padding: 0;
+}
+
+.chartingCard .chartingSheet {
+  height: 100%;
+}
+
+.chartingSheet,
+.chartingChartPanel {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.chartingSheet {
+  overflow-x: auto;
+}
+
+.chartingSheet table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.chartingSheet th,
+.chartingSheet td {
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.chartingSheet th {
+  color: var(--fg2);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.chartingSheet tbody tr:last-child th,
+.chartingSheet tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.chartingSheet tbody th {
+  text-transform: none;
+}
+
+.chartingMonthInput,
+.chartingNumberInput {
+  background: var(--bg);
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font: inherit;
+  line-height: 1.2;
+  min-width: 0;
+  padding: 0.5rem;
+  width: 100%;
+}
+
+.chartingCard .chartingSheet th > div,
+.chartingCard .chartingSheet td > div {
+  display: block;
+  min-width: 0;
+  width: 100%;
+}
+
+.chartingCard .chartingSheet th,
+.chartingCard .chartingSheet td {
+  padding: 0.55rem;
+}
+
+.chartingCard .chartingMonthInput,
+.chartingCard .chartingNumberInput {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  font-size: 0.95rem;
+  min-width: 0;
+  padding: 0;
+}
+
+.chartingMonthInput {
+  font-weight: 600;
+}
+
+.chartingNumberInput {
+  font-variant-numeric: tabular-nums;
+}
+
+.chartingMonthInput:focus,
+.chartingNumberInput:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.chartingChartPanel {
+  padding: 1rem;
+}
+
+.chartingChart {
+  color: var(--fg);
+  display: block;
+  height: 30rem;
+  overflow: visible;
+  width: 100%;
+}
+
+.chartingChart .grid {
+  opacity: 0.22;
+}
+
+.chartingChart .axes {
+  font-size: 1.2rem;
+}
+
+.chartingChart .axes .title {
+  font-weight: 700;
+}
+
+.chartingChart .revenue {
+  color: #f472b6;
+}
+
+.chartingChart .expenses {
+  color: #2dd4bf;
+}
+
+.chartingChart .line {
+  stroke-opacity: 0.95;
+}
+
+.chartingChart .area {
+  fill-opacity: 0.12;
+}
+
+.chartingChart .points circle {
+  stroke: var(--bg2);
+  stroke-width: 3;
+}
+
+@media (max-width: 720px) {
+  #chartingApp {
+    grid-template-columns: 1fr;
+  }
+
+  .chartingChart {
+    height: 24rem;
+  }
+}
+",
+  "client/src/index.tsx": "import ReactDOM from 'react-dom/client';
+import {App} from './App';
+
+const root = document.getElementById('root')!;
+
+addEventListener('load', () => {
+  ReactDOM.createRoot(root).render(<App />);
+});
+",
+  "client/src/info.css": "#info {
+  --info-fg: var(--fg, oklch(85% 0.01 270));
+  --info-fg2: var(--fg2, oklch(60% 0.01 270));
+  --info-bg2: var(--bg2, oklch(25% 0.01 270));
+  --info-border: var(--border, oklch(30% 0.01 270));
+  --info-accent: var(--accent, #d81b60);
+  --info-icon: #8a8f98;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#infoTech {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.infoTechIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  display: block;
+  flex-shrink: 0;
+}
+
+#infoIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--info-icon);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--info-icon);
+  cursor: help;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+#infoIcon:hover {
+  border-color: var(--info-accent);
+  color: var(--info-accent);
+}
+
+#infoIcon:hover #infoTooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+#infoTooltip {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  background: var(--info-bg2);
+  border: 1px solid var(--info-border);
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 400;
+  width: 20rem;
+  white-space: normal;
+  color: var(--info-fg);
+  line-height: 1.5;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.25rem);
+  transition: all 0.2s;
+  pointer-events: none;
+  box-shadow: 0 1px 2px 0 #0007;
+  z-index: 1;
+}
+
+#infoTooltip a {
+  color: var(--info-fg);
+  text-decoration: underline;
+}
+
+#infoTooltip::before {
+  content: '';
+  position: absolute;
+  right: 0.75rem;
+  top: -0.375rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: var(--info-bg2);
+  border-left: 1px solid var(--info-border);
+  border-top: 1px solid var(--info-border);
+  transform: rotate(45deg);
+}
+",
+  "client/src/loading.css": "#loading {
+  animation: spin 1s infinite linear;
+  height: 2rem;
+  margin: 40vh auto;
+  width: 2rem;
+}
+
+#loading::before {
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 100 100"><path d="M50 10A40 40 0 1 1 10 50" stroke="%23d81b60" fill="none" stroke-width="4" /></svg>');
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+",
+  "client/src/storeData.ts": "import {createMergeableStore, type Row} from 'tinybase/with-schemas';
+
+export const TABLES_SCHEMA = {
+  sales: {
+    order: {type: 'number', default: 0},
+    month: {type: 'string', default: ''},
+    revenue: {type: 'number', default: 0},
+    expenses: {type: 'number', default: 0},
+  },
+} as const;
+
+export type SalesRow = Row<typeof TABLES_SCHEMA, 'sales'>;
+
+export const STORE_ID = 'charting';
+
+export const createChartingStore = () =>
+  createMergeableStore()
+    .setTablesSchema(TABLES_SCHEMA)
+    .setDefaultContent([
+      {
+        sales: {
+          jan: {order: 1, month: 'Jan', revenue: 12000, expenses: 7000},
+          feb: {order: 2, month: 'Feb', revenue: 18000, expenses: 9000},
+          mar: {order: 3, month: 'Mar', revenue: 15000, expenses: 8000},
+          apr: {order: 4, month: 'Apr', revenue: 22000, expenses: 11000},
+          may: {order: 5, month: 'May', revenue: 26000, expenses: 13000},
+          jun: {order: 6, month: 'Jun', revenue: 31000, expenses: 15000},
+        },
+      },
+      {},
+    ]);
+",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: inherit;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
+  "client/src/topBar.css": "#topBar {
+  background: var(--bg-header);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 2px 0 #0007;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
+",
+  "client/src/vite-env.d.ts": "declare module '*.css' {
+  const content: string;
+  export default content;
+}
+",
+  "client/tsconfig.json": "{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src"]
+}
+",
+  "client/vite.config.js": "import {defineConfig} from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [
+    react({
+      jsxRuntime: 'automatic',
+    }),
+  ],
+});
+",
+}
+`;
+
+exports[`create-tinybase > ts-react-charting-tinywidgets > should match snapshot 1`] = `
+{
+  "README.md": "# test-ts-react-charting-tinywidgets
+
+A TinyBase app built with TypeScript and React, using TinyWidgets components.
+
+## Getting Started
+
+Alongside this file, you will see a directory called \`client\`.
+
+To start the web client with Vite, run the following commands:
+
+\`\`\`bash
+cd client
+npm install
+npm run dev
+\`\`\`
+
+PNPM, Yarn, and Bun should also work. Your app will be available at
+\`http://localhost:5173\`, or whichever port Vite specifies in the console.
+
+After that, start hacking!
+
+## Structure
+
+This project is organized into a single \`client\` directory:
+
+### Client
+
+The \`client\` directory contains your React-based web application,
+built with Vite and TypeScript.
+
+#### Key Files
+
+- **\`index.html\`**: The main HTML file that loads your app
+- **\`src/index.tsx\`**: Entry point that bootstraps and renders the React app
+- **\`src/App.tsx\`**: Main React component that renders the charting app
+- **\`src/Store.tsx\`**: TinyBase charting app store configuration
+- **\`src/app.css.ts\`**: TinyWidgets theme variables for the generated app
+
+#### How It Works
+
+The app uses **TinyBase** to manage application state in a reactive data store.
+
+**Persistence** is enabled using browser LocalStorage.
+Your data is automatically saved and restored when you reload the page.
+
+**React Integration**: TinyBase provides React hooks that automatically subscribe
+to store changes and trigger re-renders when data updates. This means your UI
+stays in sync with your data with minimal boilerplate.
+
+Components like \`DataTable\` and \`ChartPanel\` use hooks like \`useSortedRowIds\` and \`useCell\`, plus chart components
+to interact
+with the store.
+
+**TinyWidgets UI**: This React app uses TinyWidgets for its app shell and
+shared interface controls, including the top navigation, title, info badges,
+buttons, inputs, and other common UI elements. The generated TinyBase
+components still own the app behavior and store interactions.
+
+## Learn More
+
+- [TinyBase Documentation](https://tinybase.org)
+- [TinyBase Examples](https://tinybase.org/demos/)
+",
+  "client/.npmrc": "legacy-peer-deps=true
+",
+  "client/index.html": "<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TinyBase Charting</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        user-select: none;
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', sans-serif;
+      }
+
+      #root {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #app {
+        max-width: 60rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
+</html>
+",
+  "client/package.json": "{
+  "name": "test-ts-react-charting-tinywidgets",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^8.0.13",
+    "typescript": "^6.0.3",
+    "@types/node": "^25.8.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.2",
+    "@vanilla-extract/vite-plugin": "^5.2.2"
+  },
+  "dependencies": {
+    "tinybase": "^8.5.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "tinywidgets": "^1.5.0"
+  }
+}
+",
+  "client/public/favicon.svg": "<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:680px;height:680px">
+  <path stroke="#fff" stroke-width="80" fill="none"
+    d="M340 617a84 241 90 11.01 0zM131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124zm-12-127a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+  <path fill="#d81b60"
+    d="M131 475a94 254 70 10428-124 114 286 70 01-428 124zm0-140a94 254 70 10428-124 114 286 70 01-428 124z" />
+  <path
+    d="M249 619a94 240 90 00308-128 114 289 70 01-308 128zM119 208a94 254 70 00306 38 90 260 90 01-306-38zm221 3a74 241 90 11.01 0z" />
+</svg>",
+  "client/public/react.svg": "<svg xmlns="http://www.w3.org/2000/svg" viewBox="-11.5 -10.23174 23 20.46348">
+  <title>React Logo</title>
+  <circle cx="0" cy="0" r="2.05" fill="#61dafb" />
+  <g stroke="#61dafb" stroke-width="1" fill="none">
+    <ellipse rx="11" ry="4.2" />
+    <ellipse rx="11" ry="4.2" transform="rotate(60)" />
+    <ellipse rx="11" ry="4.2" transform="rotate(120)" />
+  </g>
+</svg>",
+  "client/public/tinywidgets.svg": "<svg xmlns="http://www.w3.org/2000/svg" viewBox="5 2.4 90 90" stroke="#fff" stroke-width="4" stroke-linecap="round"
+  stroke-linejoin="round">
+  <path d="M30 52.36l20 10v22.36l-20-10V52.36" fill="oklch(30% .1 240)" />
+  <path d="M50 62.36l20-10v22.36l-20 10V62.36" fill="oklch(50% .1 240)" />
+  <path d="M10 20l20-10 20 10-20 10-20-10" fill="oklch(70% .1 240)" />
+  <path d="M30 30l20-10 20 10-20 10-20-10" fill="oklch(70% .1 240)" />
+  <path d="M50 20l20-10 20 10-20 10-20-10" fill="oklch(70% .1 240)" />
+  <path d="M10 20l20 10v22.36l-20-10V20M30 30l20 10v22.36l-20-10V30" fill="oklch(30% .1 240)" />
+  <path d="M50 40l20-10v22.36l-20 10V40M70 30l20-10v22.36l-20 10V30" fill="oklch(50% .1 240)" />
+</svg>",
+  "client/public/ts.svg": "<svg fill="none" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg">
+  <rect fill="#3178c6" height="512" width="512" />
+  <path clip-rule="evenodd"
+    d="m316.939 407.424v50.061c8.138 4.172 17.763 7.3 28.875 9.386s22.823 3.129 35.135 3.129c11.999 0 23.397-1.147 34.196-3.442 10.799-2.294 20.268-6.075 28.406-11.342 8.138-5.266 14.581-12.15 19.328-20.65s7.121-19.007 7.121-31.522c0-9.074-1.356-17.026-4.069-23.857s-6.625-12.906-11.738-18.225c-5.112-5.319-11.242-10.091-18.389-14.315s-15.207-8.213-24.18-11.967c-6.573-2.712-12.468-5.345-17.685-7.9-5.217-2.556-9.651-5.163-13.303-7.822-3.652-2.66-6.469-5.476-8.451-8.448-1.982-2.973-2.974-6.336-2.974-10.091 0-3.441.887-6.544 2.661-9.308s4.278-5.136 7.512-7.118c3.235-1.981 7.199-3.52 11.894-4.615 4.696-1.095 9.912-1.642 15.651-1.642 4.173 0 8.581.313 13.224.938 4.643.626 9.312 1.591 14.008 2.894 4.695 1.304 9.259 2.947 13.694 4.928 4.434 1.982 8.529 4.276 12.285 6.884v-46.776c-7.616-2.92-15.937-5.084-24.962-6.492s-19.381-2.112-31.066-2.112c-11.895 0-23.163 1.278-33.805 3.833s-20.006 6.544-28.093 11.967c-8.086 5.424-14.476 12.333-19.171 20.729-4.695 8.395-7.043 18.433-7.043 30.114 0 14.914 4.304 27.638 12.912 38.172 8.607 10.533 21.675 19.45 39.204 26.751 6.886 2.816 13.303 5.579 19.25 8.291s11.086 5.528 15.415 8.448c4.33 2.92 7.747 6.101 10.252 9.543 2.504 3.441 3.756 7.352 3.756 11.733 0 3.233-.783 6.231-2.348 8.995s-3.939 5.162-7.121 7.196-7.147 3.624-11.894 4.771c-4.748 1.148-10.303 1.721-16.668 1.721-10.851 0-21.597-1.903-32.24-5.71-10.642-3.806-20.502-9.516-29.579-17.13zm-84.159-123.342h64.22v-41.082h-179v41.082h63.906v182.918h50.874z"
+    fill="#fff" fill-rule="evenodd" />
+</svg>",
+  "client/src/App.tsx": "import {StrictMode, useState} from 'react';
+import {Provider} from 'tinybase/ui-react';
+import {Inspector} from 'tinybase/ui-react-inspector';
+import './charting.css';
+import {Store} from './Store';
+import {DataTable} from './DataTable';
+import {ChartPanel} from './ChartPanel';
+import {App as TinyWidgetsApp, Card, Loading} from 'tinywidgets';
+import './app.css.ts';
+import {Info} from './Info';
+import {Title} from './Title';
+
+export const App = () => (
+  <TinyWidgetsApp title={Title} topNavRight={Info} main={Main} />
+);
+
+const Main = () => {
+  const [loading, setLoading] = useState(true);
+
+  return (
+    <div id="app">
+      <StrictMode>
+        <Provider>
+          <Store onReady={() => setLoading(false)} />
+          {loading ? (
+            <div id="loading">
+              <Loading />
+            </div>
+          ) : (
+            <>
+              <div id="chartingApp" className="chartingAppWithCards">
+                <Card className="chartingCard">
+                  <DataTable />
+                </Card>
+                <Card className="chartingCard">
+                  <ChartPanel />
+                </Card>
+              </div>
+              <Inspector />
+            </>
+          )}
+        </Provider>
+      </StrictMode>
+    </div>
+  );
+};
+",
+  "client/src/ChartPanel.tsx": "import {
+  CartesianChart,
+  LineSeries,
+  XAxis,
+  YAxis,
+} from 'tinybase/ui-react-dom-charts';
+import {STORE_ID} from './Store';
+
+const formatCurrency = (value: number) => \`$\${Math.round(value / 1000)}k\`;
+
+export const ChartPanel = () => (
+  <section className="chartingChartPanel" aria-label="Sales chart">
+    <CartesianChart className="chartingChart" store={STORE_ID} tableId="sales">
+      <LineSeries
+        className="revenue"
+        label="Revenue"
+        sortCellId="order"
+        xCellId="month"
+        yCellId="revenue"
+      />
+      <LineSeries
+        className="expenses"
+        label="Expenses"
+        sortCellId="order"
+        xCellId="month"
+        yCellId="expenses"
+      />
+      <XAxis title="Month" />
+      <YAxis title="" tickFormatter={formatCurrency} />
+    </CartesianChart>
+  </section>
+);
+",
+  "client/src/DataRow.tsx": "import {STORE_ID, useCell, useSetCellCallback} from './Store';
+import {TextInput} from 'tinywidgets';
+
+type NumericCellId = 'revenue' | 'expenses';
+
+const getNumberFromText = (text: string) => {
+  const number = Number(text);
+  return Number.isFinite(number) ? number : 0;
+};
+
+const NumberCell = ({
+  cellId,
+  rowId,
+}: {
+  cellId: NumericCellId;
+  rowId: string;
+}) => {
+  const value = useCell('sales', rowId, cellId, STORE_ID);
+  const setValue = useSetCellCallback(
+    'sales',
+    rowId,
+    cellId,
+    getNumberFromText,
+    [],
+    STORE_ID,
+  );
+
+  return (
+    <TextInput
+      alt={\`\${cellId} for \${rowId}\`}
+      className="chartingNumberInput"
+      initialText={String(typeof value === 'number' ? value : 0)}
+      onChange={setValue}
+    />
+  );
+};
+
+export const DataRow = ({rowId}: {rowId: string}) => {
+  const month = useCell('sales', rowId, 'month', STORE_ID);
+  const setMonth = useSetCellCallback(
+    'sales',
+    rowId,
+    'month',
+    (text: string) => text,
+    [],
+    STORE_ID,
+  );
+
+  return (
+    <tr>
+      <th scope="row">
+        <TextInput
+          alt={\`month for \${rowId}\`}
+          className="chartingMonthInput"
+          initialText={String(month ?? '')}
+          onChange={setMonth}
+        />
+      </th>
+      <td>
+        <NumberCell cellId="revenue" rowId={rowId} />
+      </td>
+      <td>
+        <NumberCell cellId="expenses" rowId={rowId} />
+      </td>
+    </tr>
+  );
+};
+",
+  "client/src/DataTable.tsx": "import {STORE_ID, useSortedRowIds} from './Store';
+import {DataRow} from './DataRow';
+
+export const DataTable = () => {
+  const rowIds = useSortedRowIds(
+    'sales',
+    'order',
+    false,
+    0,
+    undefined,
+    STORE_ID,
+  );
+
+  return (
+    <section className="chartingSheet" aria-label="Sales data">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Month</th>
+            <th scope="col">Revenue</th>
+            <th scope="col">Expenses</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rowIds.map((rowId) => (
+            <DataRow key={rowId} rowId={rowId} />
+          ))}
+        </tbody>
+      </table>
+    </section>
+  );
+};
+",
+  "client/src/Info.tsx": "import './info.css';
+import {colors} from 'tinywidgets/css';
+import type {CSSProperties} from 'react';
+
+export const Info = () => (
+  <div id="info" style={infoStyle}>
+    <div id="infoTech">
+      <img
+        src="/ts.svg"
+        className="infoTechIcon"
+        title="Written in TypeScript"
+      />
+      <img src="/react.svg" className="infoTechIcon" title="Built with React" />
+      <img
+        src="/tinywidgets.svg"
+        className="infoTechIcon"
+        title="Uses TinyWidgets components"
+      />
+    </div>
+    <div id="infoIcon">
+      i
+      <div id="infoTooltip">
+        {
+          'A charting app demonstrating editable TinyBase tables and reactive chart components.'
+        }
+      </div>
+    </div>
+  </div>
+);
+
+const infoStyle = {
+  '--info-fg': colors.foreground,
+  '--info-fg2': colors.foregroundDim,
+  '--info-bg2': colors.background2,
+  '--info-border': colors.borderColor,
+  '--info-accent': colors.accent,
+} as CSSProperties;
+",
+  "client/src/Store.tsx": "import {
+  useCell,
+  useCreateMergeableStore,
+  useProvideStore,
+  useSetCellCallback,
+  useSortedRowIds,
+} from 'tinybase/ui-react';
+import {STORE_ID, createChartingStore, type SalesRow} from './storeData';
+import {createLocalPersister} from 'tinybase/persisters/persister-browser';
+import {useCreatePersister} from 'tinybase/ui-react';
+
+export {STORE_ID};
+export type {SalesRow};
+export {useCell, useSetCellCallback, useSortedRowIds};
+
+export const Store = ({onReady}: {onReady?: () => void}) => {
+  const store = useCreateMergeableStore(() => createChartingStore());
+
+  useProvideStore(STORE_ID, store);
+
+  useCreatePersister(
+    store,
+    (store) => createLocalPersister(store, STORE_ID),
+    [],
+    async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      onReady?.();
+    },
+  );
+
+  return null;
+};
+",
+  "client/src/Title.tsx": "import './title.css';
+import {Image} from 'tinywidgets';
+
+export const Title = () => (
+  <h1 id="topBarTitle">
+    <Image src="/favicon.svg" variant="logo" alt="TinyBase" />
+    TinyBase Charting
+  </h1>
+);
+",
+  "client/src/app.css.ts": "import {globalStyle} from '@vanilla-extract/css';
+import {colors} from 'tinywidgets/css';
+
+globalStyle('body', {
+  vars: {
+    '--fg': colors.foreground,
+    '--fg2': colors.foregroundDim,
+    '--bg': colors.background,
+    '--bg2': colors.background2,
+    '--border': colors.borderColor,
+    '--bg-header': colors.backgroundHaze,
+    '--accent': colors.accent,
+  },
+});
+",
+  "client/src/charting.css": "#app {
+  max-width: 76rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+#chartingApp {
+  display: grid;
+  grid-template-columns: minmax(22rem, 1fr) minmax(21rem, 1fr);
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.chartingAppWithCards {
+  grid-template-columns: minmax(22rem, 1fr) minmax(20rem, 1fr);
+}
+
+.chartingCard {
+  height: auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.chartingCard .chartingSheet,
+.chartingCard .chartingChartPanel {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+.chartingCard .chartingChartPanel {
+  overflow: visible;
+  padding: 0;
+}
+
+.chartingCard .chartingSheet {
+  height: 100%;
+}
+
+.chartingSheet,
+.chartingChartPanel {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.chartingSheet {
+  overflow-x: auto;
+}
+
+.chartingSheet table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.chartingSheet th,
+.chartingSheet td {
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.chartingSheet th {
+  color: var(--fg2);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.chartingSheet tbody tr:last-child th,
+.chartingSheet tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.chartingSheet tbody th {
+  text-transform: none;
+}
+
+.chartingMonthInput,
+.chartingNumberInput {
+  background: var(--bg);
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+  color: var(--fg);
+  font: inherit;
+  line-height: 1.2;
+  min-width: 0;
+  padding: 0.5rem;
+  width: 100%;
+}
+
+.chartingCard .chartingSheet th > div,
+.chartingCard .chartingSheet td > div {
+  display: block;
+  min-width: 0;
+  width: 100%;
+}
+
+.chartingCard .chartingSheet th,
+.chartingCard .chartingSheet td {
+  padding: 0.55rem;
+}
+
+.chartingCard .chartingMonthInput,
+.chartingCard .chartingNumberInput {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  font-size: 0.95rem;
+  min-width: 0;
+  padding: 0;
+}
+
+.chartingMonthInput {
+  font-weight: 600;
+}
+
+.chartingNumberInput {
+  font-variant-numeric: tabular-nums;
+}
+
+.chartingMonthInput:focus,
+.chartingNumberInput:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.chartingChartPanel {
+  padding: 1rem;
+}
+
+.chartingChart {
+  color: var(--fg);
+  display: block;
+  height: 30rem;
+  overflow: visible;
+  width: 100%;
+}
+
+.chartingChart .grid {
+  opacity: 0.22;
+}
+
+.chartingChart .axes {
+  font-size: 1.2rem;
+}
+
+.chartingChart .axes .title {
+  font-weight: 700;
+}
+
+.chartingChart .revenue {
+  color: #f472b6;
+}
+
+.chartingChart .expenses {
+  color: #2dd4bf;
+}
+
+.chartingChart .line {
+  stroke-opacity: 0.95;
+}
+
+.chartingChart .area {
+  fill-opacity: 0.12;
+}
+
+.chartingChart .points circle {
+  stroke: var(--bg2);
+  stroke-width: 3;
+}
+
+@media (max-width: 720px) {
+  #chartingApp {
+    grid-template-columns: 1fr;
+  }
+
+  .chartingChart {
+    height: 24rem;
+  }
+}
+",
+  "client/src/index.tsx": "import ReactDOM from 'react-dom/client';
+import {App} from './App';
+
+const root = document.getElementById('root')!;
+
+addEventListener('load', () => {
+  ReactDOM.createRoot(root).render(<App />);
+});
+",
+  "client/src/info.css": "#info {
+  --info-fg: var(--fg, oklch(85% 0.01 270));
+  --info-fg2: var(--fg2, oklch(60% 0.01 270));
+  --info-bg2: var(--bg2, oklch(25% 0.01 270));
+  --info-border: var(--border, oklch(30% 0.01 270));
+  --info-accent: var(--accent, #d81b60);
+  --info-icon: #8a8f98;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#infoTech {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.infoTechIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  display: block;
+  flex-shrink: 0;
+}
+
+#infoIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--info-icon);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--info-icon);
+  cursor: help;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+#infoIcon:hover {
+  border-color: var(--info-accent);
+  color: var(--info-accent);
+}
+
+#infoIcon:hover #infoTooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+#infoTooltip {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  background: var(--info-bg2);
+  border: 1px solid var(--info-border);
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 400;
+  width: 20rem;
+  white-space: normal;
+  color: var(--info-fg);
+  line-height: 1.5;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.25rem);
+  transition: all 0.2s;
+  pointer-events: none;
+  box-shadow: 0 1px 2px 0 #0007;
+  z-index: 1;
+}
+
+#infoTooltip a {
+  color: var(--info-fg);
+  text-decoration: underline;
+}
+
+#infoTooltip::before {
+  content: '';
+  position: absolute;
+  right: 0.75rem;
+  top: -0.375rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: var(--info-bg2);
+  border-left: 1px solid var(--info-border);
+  border-top: 1px solid var(--info-border);
+  transform: rotate(45deg);
+}
+",
+  "client/src/storeData.ts": "import {createMergeableStore} from 'tinybase';
+
+export type SalesRow = {
+  order: number;
+  month: string;
+  revenue: number;
+  expenses: number;
+};
+
+export const STORE_ID = 'charting';
+
+export const createChartingStore = () =>
+  createMergeableStore().setDefaultContent([
+    {
+      sales: {
+        jan: {order: 1, month: 'Jan', revenue: 12000, expenses: 7000},
+        feb: {order: 2, month: 'Feb', revenue: 18000, expenses: 9000},
+        mar: {order: 3, month: 'Mar', revenue: 15000, expenses: 8000},
+        apr: {order: 4, month: 'Apr', revenue: 22000, expenses: 11000},
+        may: {order: 5, month: 'May', revenue: 26000, expenses: 13000},
+        jun: {order: 6, month: 'Jun', revenue: 31000, expenses: 15000},
+      },
+    },
+    {},
+  ]);
+",
+  "client/src/title.css": "#topBarLogo {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+#topBarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: inherit;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+",
+  "client/src/vite-env.d.ts": "declare module '*.css' {
+  const content: string;
+  export default content;
+}
+",
+  "client/tsconfig.json": "{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src"]
+}
+",
+  "client/vite.config.js": "import {defineConfig} from 'vite';
+import react from '@vitejs/plugin-react';
+import {vanillaExtractPlugin} from '@vanilla-extract/vite-plugin';
+
+export default defineConfig({
+  plugins: [
+    react({
+      jsxRuntime: 'automatic',
+    }),
+    vanillaExtractPlugin(),
+  ],
+  optimizeDeps: {
+    exclude: ['tinywidgets'],
+  },
+});
+",
+}
+`;
+
 exports[`create-tinybase > ts-react-chat > should match snapshot 1`] = `
 {
   "README.md": "# test-ts-react-chat
@@ -14693,7 +17987,7 @@ with the store.
     "@vitejs/plugin-react": "^6.0.2"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   }
@@ -15570,7 +18864,7 @@ The \`server\` directory contains your Node.js WebSocket server.
     "@vitejs/plugin-react": "^6.0.2"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "reconnecting-websocket": "^4.4.0"
@@ -16329,7 +19623,7 @@ console.log(\`WebSocket server running on ws://localhost:\${PORT}\`);
     "start": "node index.js"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "ws": "^8.20.1"
   },
   "devDependencies": {
@@ -16482,7 +19776,7 @@ with the store.
     "@vitejs/plugin-react": "^6.0.2"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   }
@@ -17353,7 +20647,7 @@ with the store.
     "@vitejs/plugin-react": "^6.0.2"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   }
@@ -18153,7 +21447,7 @@ with the store.
     "@vitejs/plugin-react": "^6.0.2"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   }
@@ -18931,7 +22225,7 @@ with the store.
     "@vitejs/plugin-react": "^6.0.2"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "reconnecting-websocket": "^4.4.0"
@@ -19750,7 +23044,7 @@ with the store.
     "@vitejs/plugin-react": "^6.0.2"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "reconnecting-websocket": "^4.4.0"
@@ -20565,7 +23859,7 @@ components still own the app behavior and store interactions.
     "@vanilla-extract/vite-plugin": "^5.2.2"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "tinywidgets": "^1.5.0"
@@ -21240,7 +24534,7 @@ with the store.
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "solid-js": "^1.9.13"
   }
 }
@@ -22084,7 +25378,7 @@ with the store.
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "solid-js": "^1.9.13",
     "reconnecting-websocket": "^4.4.0"
   }
@@ -22956,7 +26250,7 @@ with the store.
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "solid-js": "^1.9.13",
     "@sqlite.org/sqlite-wasm": "^3.53.0-build1"
   }
@@ -23890,7 +27184,7 @@ with the store.
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "solid-js": "^1.9.13"
   }
 }
@@ -24777,7 +28071,7 @@ with the store.
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "solid-js": "^1.9.13",
     "reconnecting-websocket": "^4.4.0"
   }
@@ -25692,7 +28986,7 @@ with the store.
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "solid-js": "^1.9.13",
     "@sqlite.org/sqlite-wasm": "^3.53.0-build1"
   }
@@ -26667,7 +29961,7 @@ with the store.
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "solid-js": "^1.9.13"
   }
 }
@@ -27474,7 +30768,7 @@ with the store.
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "solid-js": "^1.9.13",
     "reconnecting-websocket": "^4.4.0"
   }
@@ -28309,7 +31603,7 @@ with the store.
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "solid-js": "^1.9.13",
     "@sqlite.org/sqlite-wasm": "^3.53.0-build1"
   }
@@ -29204,7 +32498,7 @@ with the store.
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "solid-js": "^1.9.13"
   }
 }
@@ -29979,7 +33273,7 @@ with the store.
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "solid-js": "^1.9.13",
     "reconnecting-websocket": "^4.4.0"
   }
@@ -30795,7 +34089,7 @@ with the store.
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "solid-js": "^1.9.13",
     "reconnecting-websocket": "^4.4.0"
   }
@@ -31613,7 +34907,7 @@ with the store.
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "solid-js": "^1.9.13",
     "@sqlite.org/sqlite-wasm": "^3.53.0-build1"
   }
@@ -32473,7 +35767,7 @@ stays synchronized with the underlying TinyBase store.
     "svelte": "^5.55.7"
   },
   "dependencies": {
-    "tinybase": "^8.4.0"
+    "tinybase": "^8.5.0"
   }
 }
 ",
@@ -33309,7 +36603,7 @@ stays synchronized with the underlying TinyBase store.
     "svelte": "^5.55.7"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "reconnecting-websocket": "^4.4.0"
   }
 }
@@ -34166,7 +37460,7 @@ stays synchronized with the underlying TinyBase store.
     "svelte": "^5.55.7"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "@sqlite.org/sqlite-wasm": "^3.53.0-build1"
   }
 }
@@ -35088,7 +38382,7 @@ stays synchronized with the underlying TinyBase store.
     "svelte": "^5.55.7"
   },
   "dependencies": {
-    "tinybase": "^8.4.0"
+    "tinybase": "^8.5.0"
   }
 }
 ",
@@ -35959,7 +39253,7 @@ stays synchronized with the underlying TinyBase store.
     "svelte": "^5.55.7"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "reconnecting-websocket": "^4.4.0"
   }
 }
@@ -36851,7 +40145,7 @@ stays synchronized with the underlying TinyBase store.
     "svelte": "^5.55.7"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "@sqlite.org/sqlite-wasm": "^3.53.0-build1"
   }
 }
@@ -37807,7 +41101,7 @@ stays synchronized with the underlying TinyBase store.
     "svelte": "^5.55.7"
   },
   "dependencies": {
-    "tinybase": "^8.4.0"
+    "tinybase": "^8.5.0"
   }
 }
 ",
@@ -38600,7 +41894,7 @@ stays synchronized with the underlying TinyBase store.
     "svelte": "^5.55.7"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "reconnecting-websocket": "^4.4.0"
   }
 }
@@ -39414,7 +42708,7 @@ stays synchronized with the underlying TinyBase store.
     "svelte": "^5.55.7"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "@sqlite.org/sqlite-wasm": "^3.53.0-build1"
   }
 }
@@ -40291,7 +43585,7 @@ stays synchronized with the underlying TinyBase store.
     "svelte": "^5.55.7"
   },
   "dependencies": {
-    "tinybase": "^8.4.0"
+    "tinybase": "^8.5.0"
   }
 }
 ",
@@ -41021,7 +44315,7 @@ stays synchronized with the underlying TinyBase store.
     "svelte": "^5.55.7"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "reconnecting-websocket": "^4.4.0"
   }
 }
@@ -41772,7 +45066,7 @@ stays synchronized with the underlying TinyBase store.
     "svelte": "^5.55.7"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "@sqlite.org/sqlite-wasm": "^3.53.0-build1"
   }
 }
@@ -42578,7 +45872,7 @@ Your data is automatically saved and restored when you reload the page.
     "@types/node": "^25.8.0"
   },
   "dependencies": {
-    "tinybase": "^8.4.0"
+    "tinybase": "^8.5.0"
   }
 }
 ",
@@ -43369,7 +46663,7 @@ Your data is automatically saved and restored when you reload the page.
     "@types/node": "^25.8.0"
   },
   "dependencies": {
-    "tinybase": "^8.4.0"
+    "tinybase": "^8.5.0"
   }
 }
 ",
@@ -44196,7 +47490,7 @@ Your data is automatically saved and restored when you reload the page.
     "@types/node": "^25.8.0"
   },
   "dependencies": {
-    "tinybase": "^8.4.0"
+    "tinybase": "^8.5.0"
   }
 }
 ",
@@ -44937,7 +48231,7 @@ Your data is automatically saved and restored when you reload the page.
     "vite-plugin-static-copy": "^4.1.0"
   },
   "dependencies": {
-    "tinybase": "^8.4.0",
+    "tinybase": "^8.5.0",
     "@electric-sql/pglite": "^0.4.5"
   }
 }
@@ -45727,7 +49021,7 @@ Your data is automatically saved and restored when you reload the page.
     "@types/node": "^25.8.0"
   },
   "dependencies": {
-    "tinybase": "^8.4.0"
+    "tinybase": "^8.5.0"
   }
 }
 ",

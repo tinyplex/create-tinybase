@@ -76,6 +76,7 @@ const config = {
         {title: 'Todo app', value: 'todos'},
         {title: 'Chat app', value: 'chat'},
         {title: 'Drawing app', value: 'drawing'},
+        {title: 'Charting app', value: 'charting'},
         {title: 'Tic-tac-toe game', value: 'game'},
       ],
       initial: 0,
@@ -91,7 +92,8 @@ const config = {
       initial: 0,
     },
     {
-      type: 'select' as const,
+      type: (prev: unknown, answers: Record<string, unknown>) =>
+        answers.appType === 'charting' ? null : ('select' as const),
       name: 'framework',
       message: 'Framework:',
       choices: [
@@ -104,7 +106,9 @@ const config = {
     },
     {
       type: (prev: unknown, answers: Record<string, unknown>) =>
-        answers.framework === 'react' ? ('confirm' as const) : null,
+        answers.framework === 'react' || answers.appType === 'charting'
+          ? ('confirm' as const)
+          : null,
       name: 'tinyWidgets',
       message: 'Use TinyWidgets components?',
       initial: false,
@@ -182,10 +186,11 @@ const config = {
     } = answers;
     const typescript = language === 'typescript';
     const javascript = !typescript;
-    const react = framework === 'react';
-    const solid = framework === 'solid';
-    const vanilla = framework === 'vanilla';
-    const svelte = framework === 'svelte';
+    const resolvedFramework = appType === 'charting' ? 'react' : framework;
+    const react = resolvedFramework === 'react';
+    const solid = resolvedFramework === 'solid';
+    const vanilla = resolvedFramework === 'vanilla';
+    const svelte = resolvedFramework === 'svelte';
     const useTinyWidgets =
       react && (tinyWidgets === true || tinyWidgets === 'true');
     const scriptExt = typescript ? 'ts' : 'js';
@@ -223,9 +228,11 @@ const config = {
         ? 'chat interface'
         : appType === 'drawing'
           ? 'drawing canvas'
-          : appType === 'game'
-            ? 'game'
-            : 'todo list';
+          : appType === 'charting'
+            ? 'charting app'
+            : appType === 'game'
+              ? 'game'
+              : 'todo list';
     const frameworkName = react
       ? 'React'
       : solid
@@ -274,7 +281,9 @@ const config = {
         ? 'chat messages'
         : appType === 'drawing'
           ? 'drawing canvas'
-          : 'main'
+          : appType === 'charting'
+            ? 'charting app'
+            : 'main'
     } store configuration`;
     const needsSettingsStore = appType === 'chat' || appType === 'drawing';
     const settingsStoreStem =
@@ -304,7 +313,7 @@ const config = {
     return {
       projectName,
       language,
-      framework,
+      framework: resolvedFramework,
       appType,
       prettier,
       eslint,

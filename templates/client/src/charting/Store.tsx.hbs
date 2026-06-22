@@ -1,0 +1,144 @@
+{{#unless persist}}{{#unless sync}}
+    {{addImport "import {useEffect} from 'react';"}}
+  {{/unless}}{{/unless}}
+
+{{includeFile template="client/src/charting/store.ts.hbs" output="client/src/storeData.{{#if typescript}}ts{{else}}js{{/if}}"}}
+
+  {{#if schemas}}
+    {{addImport "import * as UiReact from 'tinybase/ui-react/with-schemas';"}}
+    {{addImport "import {type NoValuesSchema} from 'tinybase/with-schemas';"}}
+
+    {{addImport "import {STORE_ID, TABLES_SCHEMA, createChartingStore, type SalesRow} from './storeData';"}}
+    type Schemas = [typeof TABLES_SCHEMA, NoValuesSchema];
+
+    const {useCell, useCreateMergeableStore, {{#if persist}}useCreatePersister, {{/if}}{{#if sync}}useCreateSynchronizer, {{/if}}useProvideStore, useSetCellCallback, useSortedRowIds} = UiReact as UiReact.WithSchemas<Schemas>;
+  {{else}}
+    {{addImport "import {useCell, useCreateMergeableStore, useProvideStore, useSetCellCallback, useSortedRowIds} from 'tinybase/ui-react';"}}
+    {{addImport "import {STORE_ID, createChartingStore, type SalesRow} from './storeData';"}}
+  {{/if}}
+
+  {{#if schemas}}
+    export {STORE_ID, TABLES_SCHEMA};
+  {{else}}
+    export {STORE_ID};
+  {{/if}}
+  export type {SalesRow};
+  export {useCell, useSetCellCallback, useSortedRowIds};
+
+  export const Store = ({onReady}: {onReady?: () => void}) => {
+  const store = useCreateMergeableStore(() =>
+  createChartingStore(),
+  );
+
+  useProvideStore(STORE_ID, store);
+
+  {{#if persist}}
+    {{#if persistLocalStorage}}
+      {{#if schemas}}
+        {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser/with-schemas';"}}
+      {{else}}
+        {{addImport "import {createLocalPersister} from 'tinybase/persisters/persister-browser';"}}
+        {{addImport "import {useCreatePersister} from 'tinybase/ui-react';"}}
+      {{/if}}
+
+      useCreatePersister(
+      store,
+      (store) => createLocalPersister(store, STORE_ID),
+      [],
+      async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      onReady?.();
+      },
+      );
+    {{/if}}
+    {{#if persistSqlite}}
+      {{#if schemas}}
+        {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm/with-schemas';"}}
+      {{else}}
+        {{addImport "import {createSqliteWasmPersister} from 'tinybase/persisters/persister-sqlite-wasm';"}}
+        {{addImport "import {useCreatePersister} from 'tinybase/ui-react';"}}
+      {{/if}}
+      {{includeFile template="client/src/shared/sqlite.ts.hbs" output="client/src/sqlite.{{ext}}"}}
+      {{addImport "import {getDb} from './sqlite';"}}
+
+      useCreatePersister(
+      store,
+      async (store) => {
+      const {sqlite3, db} = await getDb();
+      return createSqliteWasmPersister(store, sqlite3, db, STORE_ID);
+      },
+      [],
+      async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      onReady?.();
+      },
+      );
+    {{/if}}
+    {{#if persistPglite}}
+      {{#if schemas}}
+        {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite/with-schemas';"}}
+      {{else}}
+        {{addImport "import {createPglitePersister} from 'tinybase/persisters/persister-pglite';"}}
+        {{addImport "import {useCreatePersister} from 'tinybase/ui-react';"}}
+      {{/if}}
+      {{includeFile template="client/src/shared/pglite.ts.hbs" output="client/src/pglite.{{ext}}"}}
+      {{addImport "import {getPgLite} from './pglite';"}}
+
+      useCreatePersister(
+      store,
+      async (store) => {
+      const pgLite = await getPgLite();
+      return await createPglitePersister(store, pgLite, STORE_ID);
+      },
+      [],
+      async (persister) => {
+      await persister.load();
+      await persister.startAutoSave();
+      onReady?.();
+      },
+      );
+    {{/if}}
+  {{/if}}
+
+  {{#if sync}}
+    {{includeFile template="client/src/shared/config.ts.hbs" output="client/src/config.ts"}}
+    {{addImport "import {SERVER} from './config';"}}
+    {{addImport "import ReconnectingWebSocket from 'reconnecting-websocket';"}}
+    {{#if schemas}}
+      {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client/with-schemas';"}}
+    {{else}}
+      {{addImport "import {createWsSynchronizer} from 'tinybase/synchronizers/synchronizer-ws-client';"}}
+    {{/if}}
+    {{#unless schemas}}
+      {{addImport "import {useCreateSynchronizer} from 'tinybase/ui-react';"}}
+    {{/unless}}
+
+    useCreateSynchronizer(store, async (store) => {
+    const serverPathId = location.pathname;
+    const synchronizer = await createWsSynchronizer(
+    store,
+    new ReconnectingWebSocket(SERVER + serverPathId),
+    );
+    await synchronizer.startSync();
+
+    synchronizer.getWebSocket().addEventListener('open', () => {
+    synchronizer.load().then(() => {
+    synchronizer.save();
+    {{#unless persist}}onReady?.();{{/unless}}
+    });
+    });
+
+    return synchronizer;
+    });
+  {{/if}}
+
+  {{#unless persist}}{{#unless sync}}
+      useEffect(() => {
+      onReady?.();
+      }, [onReady]);
+    {{/unless}}{{/unless}}
+
+  return null;
+  };

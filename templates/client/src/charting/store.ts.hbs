@@ -1,0 +1,34 @@
+{{#if schemas}}
+  {{addImport "import {createMergeableStore, type Row} from 'tinybase/with-schemas';"}}
+  export const TABLES_SCHEMA = {
+  sales: {
+  order: {type: 'number', default: 0},
+  month: {type: 'string', default: ''},
+  revenue: {type: 'number', default: 0},
+  expenses: {type: 'number', default: 0},
+  },
+  } as const;
+{{else}}
+  {{addImport "import {createMergeableStore} from 'tinybase';"}}
+{{/if}}
+
+export type SalesRow = {{#if schemas}}Row<typeof TABLES_SCHEMA, 'sales'>{{else}}{order: number; month: string; revenue: number; expenses: number}{{/if}};
+
+export const STORE_ID = 'charting';
+
+export const createChartingStore = () =>
+createMergeableStore(){{#if schemas}}
+  .setTablesSchema(TABLES_SCHEMA){{/if}}
+.setDefaultContent([
+{
+sales: {
+jan: {order: 1, month: 'Jan', revenue: 12000, expenses: 7000},
+feb: {order: 2, month: 'Feb', revenue: 18000, expenses: 9000},
+mar: {order: 3, month: 'Mar', revenue: 15000, expenses: 8000},
+apr: {order: 4, month: 'Apr', revenue: 22000, expenses: 11000},
+may: {order: 5, month: 'May', revenue: 26000, expenses: 13000},
+jun: {order: 6, month: 'Jun', revenue: 31000, expenses: 15000},
+},
+},
+{},
+]);

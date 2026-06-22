@@ -1,0 +1,183 @@
+#app {
+max-width: 76rem;
+padding-left: 1rem;
+padding-right: 1rem;
+}
+
+#chartingApp {
+display: grid;
+grid-template-columns: minmax(22rem, 1fr) minmax(21rem, 1fr);
+gap: 1rem;
+align-items: stretch;
+}
+
+.chartingAppWithCards {
+grid-template-columns: minmax(22rem, 1fr) minmax(20rem, 1fr);
+}
+
+.chartingCard {
+height: auto;
+min-width: 0;
+overflow: hidden;
+}
+
+.chartingCard .chartingSheet,
+.chartingCard .chartingChartPanel {
+background: transparent;
+border: 0;
+border-radius: 0;
+}
+
+.chartingCard .chartingChartPanel {
+overflow: visible;
+padding: 0;
+}
+
+.chartingCard .chartingSheet {
+height: 100%;
+}
+
+.chartingSheet,
+.chartingChartPanel {
+background: var(--bg2);
+border: 1px solid var(--border);
+border-radius: 0.5rem;
+overflow: hidden;
+}
+
+.chartingSheet {
+overflow-x: auto;
+}
+
+.chartingSheet table {
+width: 100%;
+border-collapse: collapse;
+}
+
+.chartingSheet th,
+.chartingSheet td {
+border-bottom: 1px solid var(--border);
+padding: 0.75rem;
+text-align: left;
+}
+
+.chartingSheet th {
+color: var(--fg2);
+font-size: 0.8rem;
+font-weight: 600;
+text-transform: uppercase;
+}
+
+.chartingSheet tbody tr:last-child th,
+.chartingSheet tbody tr:last-child td {
+border-bottom: 0;
+}
+
+.chartingSheet tbody th {
+text-transform: none;
+}
+
+.chartingMonthInput,
+.chartingNumberInput {
+background: var(--bg);
+border: 1px solid transparent;
+border-radius: 0.375rem;
+color: var(--fg);
+font: inherit;
+line-height: 1.2;
+min-width: 0;
+padding: 0.5rem;
+width: 100%;
+}
+
+.chartingCard .chartingSheet th > div,
+.chartingCard .chartingSheet td > div {
+display: block;
+min-width: 0;
+width: 100%;
+}
+
+.chartingCard .chartingSheet th,
+.chartingCard .chartingSheet td {
+padding: 0.55rem;
+}
+
+.chartingCard .chartingMonthInput,
+.chartingCard .chartingNumberInput {
+background: transparent;
+border: 0;
+border-radius: 0;
+box-shadow: none;
+font-size: 0.95rem;
+min-width: 0;
+padding: 0;
+}
+
+.chartingMonthInput {
+font-weight: 600;
+}
+
+.chartingNumberInput {
+font-variant-numeric: tabular-nums;
+}
+
+.chartingMonthInput:focus,
+.chartingNumberInput:focus {
+border-color: var(--accent);
+outline: none;
+}
+
+.chartingChartPanel {
+padding: 1rem;
+}
+
+.chartingChart {
+color: var(--fg);
+display: block;
+height: 30rem;
+overflow: visible;
+width: 100%;
+}
+
+.chartingChart .grid {
+opacity: 0.22;
+}
+
+.chartingChart .axes {
+font-size: 1.2rem;
+}
+
+.chartingChart .axes .title {
+font-weight: 700;
+}
+
+.chartingChart .revenue {
+color: #f472b6;
+}
+
+.chartingChart .expenses {
+color: #2dd4bf;
+}
+
+.chartingChart .line {
+stroke-opacity: 0.95;
+}
+
+.chartingChart .area {
+fill-opacity: 0.12;
+}
+
+.chartingChart .points circle {
+stroke: var(--bg2);
+stroke-width: 3;
+}
+
+@media (max-width: 720px) {
+#chartingApp {
+grid-template-columns: 1fr;
+}
+
+.chartingChart {
+height: 24rem;
+}
+}

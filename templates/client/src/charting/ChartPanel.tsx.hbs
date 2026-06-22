@@ -1,0 +1,23 @@
+{{#if schemas}}
+  {{addImport "import * as ChartComponents from 'tinybase/ui-react-dom-charts/with-schemas';"}}
+  {{addImport "import {type NoValuesSchema} from 'tinybase/with-schemas';"}}
+  {{addImport "import {STORE_ID, TABLES_SCHEMA} from './Store';"}}
+  type Schemas = [typeof TABLES_SCHEMA, NoValuesSchema];
+  const {CartesianChart, LineSeries, XAxis, YAxis} = ChartComponents as ChartComponents.WithSchemas<Schemas>;
+{{else}}
+  {{addImport "import {CartesianChart, LineSeries, XAxis, YAxis} from 'tinybase/ui-react-dom-charts';"}}
+  {{addImport "import {STORE_ID} from './Store';"}}
+{{/if}}
+
+const formatCurrency = (value: number) => `$${Math.round(value / 1000)}k`;
+
+export const ChartPanel = () => (
+<section className="chartingChartPanel" aria-label="Sales chart">
+  <CartesianChart className="chartingChart" store={STORE_ID} tableId="sales">
+    <LineSeries className="revenue" label="Revenue" sortCellId="order" xCellId="month" yCellId="revenue" />
+    <LineSeries className="expenses" label="Expenses" sortCellId="order" xCellId="month" yCellId="expenses" />
+    <XAxis title="Month" />
+    <YAxis title="" tickFormatter={formatCurrency} />
+  </CartesianChart>
+</section>
+);

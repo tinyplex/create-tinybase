@@ -3,9 +3,9 @@
 A CLI tool to scaffold a new TinyBase application with full synchronization and
 local-first capabilities.
 
-Build a todo list, a drawing app, a chat app, or a tic-tac-toe game using
-TypeScript or JavaScript, with React, Solid, Svelte, or Vanilla JS - in just a
-matter of seconds.
+Build a todo list, a drawing app, a chat app, a charting app, or a tic-tac-toe
+game using TypeScript or JavaScript, with React, Solid, Svelte, or Vanilla JS -
+in just a matter of seconds.
 
 ## Usage
 
@@ -21,7 +21,7 @@ This will prompt you with questions to configure your new TinyBase app:
 - **Language** - TypeScript or JavaScript
 - **Framework** - Vanilla JS, React, Solid, or Svelte
 - **TinyWidgets** - Use TinyWidgets components and app shell (React only)
-- **App type** - Todo app, Chat app, Drawing app, or Tic-tac-toe game
+- **App type** - Todo app, Chat app, Drawing app, Charting app, or Tic-tac-toe game
 - **Store schemas** - TypeScript type safety for stores (TypeScript only)
 - **Synchronization** - None, remote demo server, local Node server, or local Durable Objects server
 - **Persistence** - None, Local Storage, SQLite, or PGLite
@@ -77,6 +77,15 @@ Your app should look something like this:
 - Dual stores: settings + canvas
 - Optimized point-based stroke storage
 
+### Charting App
+
+![Charting App](screenshots/charting.png)
+
+- Editable table with reactive chart output
+- Single store for sales data
+- Uses TinyBase React chart components
+- Available for React projects only
+
 ### Tic-tac-toe Game
 
 ![Tic-tac-toe Game](screenshots/game.png)
@@ -129,6 +138,9 @@ React apps can optionally use **TinyWidgets**:
 - TinyBase title and technology badges integrated into the app chrome
 - Available for React projects only
 
+The **Charting App** uses TinyBase's React chart components and is available for
+React projects only.
+
 **Solid** provides:
 
 - Component-based architecture with fine-grained reactivity
@@ -148,6 +160,7 @@ React apps can optionally use **TinyWidgets**:
 - **Todo App** - Simple task management with add, edit, delete features
 - **Chat App** - Real-time messaging between multiple clients
 - **Drawing App** - Collaborative canvas with basic drawing tools
+- **Charting App** - Editable TinyBase table with reactive chart output
 - **Tic-Tac-Toe Game** - Two-player game with real-time updates
 
 ### Store Schemas (TypeScript Only)
